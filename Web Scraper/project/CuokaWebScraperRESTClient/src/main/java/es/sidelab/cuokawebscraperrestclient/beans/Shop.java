@@ -1,4 +1,4 @@
-package cuoka.beans;
+package es.sidelab.cuokawebscraperrestclient.beans;
 
 /**
  * @class Clase que representa una tienda, contendrá la URL, 

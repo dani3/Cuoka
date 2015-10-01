@@ -1,4 +1,4 @@
-package cuoka.main;
+package es.sidelab.cuokawebscraperrestclient;
 
 import java.io.IOException;
 import java.util.logging.Level;
