@@ -8,8 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class main {
-
+public class main 
+{
     private static final String URL = "http://spf.com/es/tienda/man/abrigos";
     
     public static void main( String[] args ) 
