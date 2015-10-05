@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,11 +10,11 @@ import java.util.logging.Logger;
  */
 public class ScraperManager 
 {
-    public static GenericScraper getScraper( String shop ) 
+    public static GenericScraper getScraper( Shop shop ) 
     {
         try {
             return ( GenericScraper ) Class.forName( "es.sidelab.cuokawebscraperrestclient.scrapers." 
-                                        + shop + "Scraper" ).newInstance();
+                                        + shop.getName() + "Scraper" ).newInstance();
             
         } catch ( ClassNotFoundException ex ) {
             Logger.getLogger(ScraperManager.class.getName()).log(Level.SEVERE, null, ex);

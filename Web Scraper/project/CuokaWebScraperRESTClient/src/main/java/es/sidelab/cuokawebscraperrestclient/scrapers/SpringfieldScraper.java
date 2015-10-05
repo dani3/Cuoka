@@ -43,6 +43,7 @@ public class SpringfieldScraper implements GenericScraper
             // Obtener el campo info de todos los productos
             Elements products = document.select( "ul.product-listing li div div.content_product > a" );
             
+            int i = 0;
             for ( Element element : products )
             {
                 // Obtener el HTML del producto
@@ -62,7 +63,7 @@ public class SpringfieldScraper implements GenericScraper
                 Element image = document.select( "#image_preview img" ).first();
                 System.out.println( image.attr( "src" ) );
                 
-                // Creamos y añadimos el producto a una lista auxiliar
+                // Creamos y añadimos el producto a una lista auxiliar                
                 productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
                                         , name.ownText()
                                         , image.attr( "src" ) ) );
