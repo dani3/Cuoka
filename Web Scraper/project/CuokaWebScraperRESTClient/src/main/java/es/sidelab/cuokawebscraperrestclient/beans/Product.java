@@ -6,14 +6,14 @@ package es.sidelab.cuokawebscraperrestclient.beans;
  */
 public class Product 
 {
-    private double price;
-    private String name;
-    private String path;
+    private double _price;
+    private String _name;
+    private String _path;
 
     public Product( double price, String name, String path ) 
     {
-        this.price = price;
-        this.name = name;
-        this.path = path;
+        this._price = price;
+        this._name = name;
+        this._path = path;
     }   
 }

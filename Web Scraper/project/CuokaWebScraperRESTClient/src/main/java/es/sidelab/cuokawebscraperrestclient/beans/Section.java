@@ -10,15 +10,15 @@ import java.net.URL;
  */
 public class Section 
 {
-    private String name;
-    private URL url;
+    private String _name;
+    private URL _url;
 
     public Section( String name, URL url ) 
     {
-        this.name = name;
-        this.url = url;
+        this._name = name;
+        this._url = url;
     }
     
-    public String getName() { return this.name; }
-    public URL getURL() { return this.url; }
+    public String getName() { return _name; }
+    public URL getURL() { return _url; }
 }

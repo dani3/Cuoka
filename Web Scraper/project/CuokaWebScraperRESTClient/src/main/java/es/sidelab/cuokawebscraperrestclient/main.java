@@ -5,7 +5,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperManager;
-import es.sidelab.cuokawebscraperrestclient.scrapers.SpringfieldScraper;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
