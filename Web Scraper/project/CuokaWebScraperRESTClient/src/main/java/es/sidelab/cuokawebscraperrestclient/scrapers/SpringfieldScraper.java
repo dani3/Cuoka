@@ -49,7 +49,7 @@ public class SpringfieldScraper implements GenericScraper
                 // Obtener el HTML del producto
                 System.out.println( urlShop.toString() + element.attr( "href" ) );
                 document = Jsoup.connect( urlShop.toString() 
-                        + element.attr( "href" ) ).timeout( 10000 ).ignoreHttpErrors( true ).get();
+                        + element.attr( "href" ) ).timeout( 20000 ).ignoreHttpErrors( true ).get();
             
                 // Obtener el nombre
                 Element name = document.select( "h1" ).first();
