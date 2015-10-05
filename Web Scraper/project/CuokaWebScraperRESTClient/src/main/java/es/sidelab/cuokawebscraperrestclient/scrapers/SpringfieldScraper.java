@@ -32,13 +32,16 @@ public class SpringfieldScraper implements GenericScraper
         try {
             // Obtener el HTML
             Document document = Jsoup.connect( urlSection.toString() ).get();
+            
             // Obtener el link de 'Ver todos'
-            Element page = document.select( "div.pagination a" ).last();
-            // Obtener el nuevo HTML con todos los productos
-            document = Jsoup.connect( urlShop.toString() + page.attr( "href" ) ).get();
+            Element seeAll = document.select( "div.pagination a" ).last();
+            
+            // Comprobar que existe el link de 'Ver todos'
+            if ( seeAll != null )
+                document = Jsoup.connect( urlShop.toString() + seeAll.attr( "href" ) ).get();            
             
             // Obtener el campo info de todos los productos
-            Elements products = document.select( "ul.product-listing li div div.product-main-info a" );
+            Elements products = document.select( "ul.product-listing li div div.content_product > a" );
             
             for ( Element element : products )
             {
