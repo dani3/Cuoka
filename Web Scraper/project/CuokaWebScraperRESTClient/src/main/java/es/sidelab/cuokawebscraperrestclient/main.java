@@ -8,6 +8,6 @@ public class main
     public static void main( String[] args ) throws Exception
     {
         SpringfieldScraper spf = new SpringfieldScraper();
-        spf.scrap( new URL( "http://spf.com/" ) , new URL( "http://spf.com/es/tienda/man/cazadoras" ) );
+        spf.scrap( new URL( "http://spf.com/" ) , new URL( "http://spf.com/es/tienda/woman/kimonos-y-ponchos" ) );
     }    
 }
