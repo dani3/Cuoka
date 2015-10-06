@@ -3,11 +3,11 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 import org.springframework.stereotype.Component;
 
 /**
- * @class Clase que representa una tienda, contiene el nombre, la URL y la lista de categorias
+ * @class Clase que representa una categoria de una tienda, contiene el nombre y la URL
  * @author Daniel Mancebo Aldea
  */
 @Component
-public class Shop 
+public class BeanSection 
 {
     
 }
