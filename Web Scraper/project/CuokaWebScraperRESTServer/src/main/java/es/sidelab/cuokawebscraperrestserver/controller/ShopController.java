@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @class Controlador que maneja las peticiones entrantes
+ * @class Controlador que proporcionara las URLs a los scrapers y tambien guardara los productos
  * @author Daniel Mancebo Aldea
  */
 
@@ -23,27 +23,34 @@ public class ShopController
     @Autowired
     ShopsRepository shopsRepository;
     
+    /*
+     * Metodo que añade una nueva tienda, si ya existe se devuelve un error 400
+     */
     @RequestMapping( value = "/add", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody BeanShop shop )
     {        
-        // Si existe ya la tienda, se devuelve error
+        // Si existe ya la tienda, se devuelve error 400
         if ( shopsRepository.findByName( shop.getName() ) != null )
-        {
-            return new ResponseEntity<Boolean>( HttpStatus.NOT_ACCEPTABLE );
-            
-        } else {
-            shopsRepository.save( shop );
-            
-            return new ResponseEntity<Boolean>( HttpStatus.CREATED );
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+        
+        else {
+            shopsRepository.save( shop );            
+            return new ResponseEntity<>( HttpStatus.CREATED );
         }
-    } // addShop
+    }
     
+    /*
+     * Metodo que devuelve una tienda dado su nombre
+     */
     @RequestMapping( value = "/get/{name}", method = RequestMethod.GET )
     public BeanShop getShop( @PathVariable String name )
     {
         return shopsRepository.findByName( name );
     }
     
+    /*
+     * Metodo que devuelve una lista con todas las tiendas
+     */
     @RequestMapping( value = "/get", method = RequestMethod.GET )
     public List<BeanShop> getShops()
     {

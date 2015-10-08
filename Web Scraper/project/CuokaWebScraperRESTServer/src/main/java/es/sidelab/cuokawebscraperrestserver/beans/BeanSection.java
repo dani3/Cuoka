@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * @class 
+ * @class Bean que representa una categoria de una tienda
  * @author Daniel Mancebo Aldea
  */
 

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * @class Clase principal que arranca Spring
+ * @class Clase principal que arranca Spring y configura todo el entorno
  * @author Daniel Mancebo Aldea
  */
 
