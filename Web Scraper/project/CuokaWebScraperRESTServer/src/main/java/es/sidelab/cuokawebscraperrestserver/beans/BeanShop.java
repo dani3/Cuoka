@@ -1,10 +1,14 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
 import java.net.URL;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * @class Clase que representa una tienda, contiene el nombre, la URL y la lista de categorias
@@ -20,19 +24,23 @@ public class BeanShop
     private String name;
     private URL url;
     
+    @ElementCollection
+    @OneToMany( cascade = CascadeType.ALL )
+    private List<BeanSection> sections;
+    
     public BeanShop() {}
 
-    public BeanShop( String name, URL url ) 
+    public BeanShop( String name, URL url, List<BeanSection> sections ) 
     {
         this.name = name;
         this.url = url;
+        this.sections = sections;
     }
 
     public String getName() { return name; }
-
     public void setName( String name ) { this.name = name; }
-
     public URL getUrl() { return url; }
-
-    public void setUrl( URL url ) { this.url = url; }    
+    public void setUrl( URL url ) { this.url = url; }
+    public List<BeanSection> getSections() { return this.sections; }
+    public void setSections( List<BeanSection> sections ) { this.sections = sections; }
 }

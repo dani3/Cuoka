@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * @class Clase que representa una categoria de una tienda, contiene el nombre y la URL
+ * @class 
  * @author Daniel Mancebo Aldea
  */
 
@@ -29,10 +29,7 @@ public class BeanSection
     }
 
     public String getName() { return name; }
-
+    public URL getUrl() { return url; }  
     public void setName( String name ) { this.name = name; }
-
-    public URL getUrl() { return url; }
-
     public void setUrl( URL url ) { this.url = url; }    
 }
