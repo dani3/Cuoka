@@ -30,7 +30,7 @@ public class ShopController
     public ResponseEntity<Boolean> addShop( @RequestBody BeanShop shop )
     {        
         // Si existe ya la tienda, se devuelve error 400
-        if ( shopsRepository.findByName( shop.getName() ) != null )
+        if ( ( shopsRepository.findByName( shop.getName() ) != null ) && ( checkShop( shop ) ) )
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
         
         else {
@@ -55,5 +55,21 @@ public class ShopController
     public List<BeanShop> getShops()
     {
         return shopsRepository.findAll();
+    }
+    
+    /*
+     * Metodo que devuelve true si hay algun atributo incorrecto
+     */
+    private boolean checkShop( BeanShop shop )
+    {
+        if ( ( shop.getName() == null ) ||
+             ( shop.getUrl() == null ) ||
+             ( shop.getName().equals( "" ) ) )
+            return true;
+        
+        if ( shop.getSections().isEmpty() )
+            return true;
+        
+        return false;
     }
 }
