@@ -11,5 +11,7 @@ import java.util.List;
 
 public interface GenericScraper 
 {
+    final int TIMEOUT = 60000;
+    
     public List<Product> scrap( URL urlShop, URL urlSection );
 }

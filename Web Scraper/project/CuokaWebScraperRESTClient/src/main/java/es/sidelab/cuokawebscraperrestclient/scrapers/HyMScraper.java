@@ -28,7 +28,7 @@ public class HyMScraper implements GenericScraper
     {      
         try {
             // Obtener el HTML
-            Document document = Jsoup.connect( urlSection.toString() ).timeout( 20000 ).get();
+            Document document = Jsoup.connect( urlSection.toString() ).timeout( TIMEOUT ).get();
             
             // Obtener los links a todos los productos
             Elements elements = document.select( "h3.product-item-headline > a" );
@@ -38,7 +38,7 @@ public class HyMScraper implements GenericScraper
             {
                 // Obtener el HTML del producto
                 document = Jsoup.connect( urlShop.toString()
-                                + element.attr( "href" ).toString() ).timeout( 20000 ).ignoreHttpErrors( true ).get();
+                                + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos del producto
                 Element name = document.select( "h1.product-item-headline" ).first(); 

@@ -39,7 +39,8 @@ public class SpringfieldScraper implements GenericScraper
             
             // Comprobar que existe el link de 'Ver todos'
             if ( seeAll != null )
-                document = Jsoup.connect( urlShop.toString() + seeAll.attr( "href" ) ).timeout( 20000 ).get();            
+                document = Jsoup.connect( urlShop.toString() 
+                                + seeAll.attr( "href" ) ).timeout( TIMEOUT ).get();            
             
             // Obtener el campo info de todos los productos
             Elements products = document.select( "ul.product-listing li div div.content_product > a" );
@@ -50,7 +51,7 @@ public class SpringfieldScraper implements GenericScraper
                 // Obtener el HTML del producto
                 System.out.println( urlShop.toString() + element.attr( "href" ) );
                 document = Jsoup.connect( urlShop.toString() 
-                        + element.attr( "href" ) ).timeout( 20000 ).ignoreHttpErrors( true ).get();
+                                + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
             
                 // Obtener los atributos
                 Element name = document.select( "h1" ).first();
