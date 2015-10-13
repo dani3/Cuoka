@@ -9,6 +9,7 @@ import java.util.List;
  * 
  * @author Daniel Mancebo Aldea
  */
+
 public class Shop 
 {
     private String name;

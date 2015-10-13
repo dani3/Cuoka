@@ -24,6 +24,7 @@ import org.jsoup.select.Elements;
  */
 public class SpringfieldScraper implements GenericScraper 
 {
+    // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<Product>();
     
     @Override
@@ -51,19 +52,16 @@ public class SpringfieldScraper implements GenericScraper
                 document = Jsoup.connect( urlShop.toString() 
                         + element.attr( "href" ) ).timeout( 20000 ).ignoreHttpErrors( true ).get();
             
-                // Obtener el nombre
+                // Obtener los atributos
                 Element name = document.select( "h1" ).first();
-                System.out.println( name.ownText() );
-                
-                // Obtener el precio
                 Element price = document.select( "div.product-price-block strong" ).first();
-                System.out.println( price.ownText() );
-
-                // Obtener la ruta de la imagen
                 Element image = document.select( "#image_preview img" ).first();
+                
+                System.out.println( name.ownText() );
+                System.out.println( price.ownText() );
                 System.out.println( image.attr( "src" ) );
                 
-                // Creamos y añadimos el producto a una lista auxiliar                
+                // Creamos y añadimos el producto a la lista concurrente               
                 productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
                                         , name.ownText()
                                         , image.attr( "src" ) ) );

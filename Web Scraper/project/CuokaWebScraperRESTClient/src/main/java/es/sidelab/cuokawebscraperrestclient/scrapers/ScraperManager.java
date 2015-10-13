@@ -8,6 +8,7 @@ import java.util.logging.Logger;
  * @Class Clase que gestiona los distintos scrapers, actua de middleware.
  * @author Daniel Mancebo Aldea
  */
+
 public class ScraperManager 
 {
     public static GenericScraper getScraper( Shop shop ) 

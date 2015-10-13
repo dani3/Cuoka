@@ -15,12 +15,15 @@ import org.springframework.web.client.RestTemplate;
 public class main 
 {
     public static void main( String[] args ) throws Exception
-    {  
+    {   
+        // Creamos un cliente REST y configuramos la URL del servidor
         RestTemplate restClient = new RestTemplate();
         URL serverUrl = new URL( "http://192.168.33.10:8080/get" );
         
+        // Sacamos la lista de tiendas de la BD (tiene que ser final para poder usarlo en los Runnable)
         final Shop[] shops = restClient.getForObject( serverUrl.toString() , Shop[].class );
         
+        // Creamos un executor que creara un thread por cada tienda que haya.
         Executor executorShops = Executors.newFixedThreadPool( shops.length );
         
         for ( int i = 0; i < shops.length; i++ )
@@ -31,8 +34,10 @@ public class main
                 @Override
                 public void run() 
                 {
+                    // Sacamos el scraper especifico de la tienda
                     GenericScraper scraper = ScraperManager.getScraper( shop );
                     
+                    // Creamos un executor que creara tantos threads como secciones tenga la tienda
                     Executor executorSections = Executors.newFixedThreadPool( shop.getSections().size() );
                     
                     for ( int j = 0; j < shop.getSections().size(); j++ )
@@ -48,13 +53,11 @@ public class main
                             }
                         };
                         
-                        System.out.println( "Ejecutando seccion: " + ( j + 1 ) );
                         executorSections.execute( taskSection );
                     } // for
                 }
             };
             
-            System.out.println( "Ejecutando tienda: " + ( i + 1 ) );
             executorShops.execute( task );
         } 
     }    

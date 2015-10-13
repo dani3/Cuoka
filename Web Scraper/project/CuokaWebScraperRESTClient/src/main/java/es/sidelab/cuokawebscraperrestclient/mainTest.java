@@ -6,11 +6,8 @@
 package es.sidelab.cuokawebscraperrestclient;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,7 +24,7 @@ public class mainTest {
      */
     public static void main(String[] args) throws Exception {
         List<Product> productList = new ArrayList<Product>();
-            // Obtener el HTML
+        
         Document document = Jsoup.connect( "http://www2.hm.com/es_es/hombre/compra-por-producto/camisas/_jcr_content/main/productlisting.display.html?category=&sort=stock&sale=false&offset=0&page-size=1000" ).get();
             
         Elements elements = document.select( "h3.product-item-headline > a" );

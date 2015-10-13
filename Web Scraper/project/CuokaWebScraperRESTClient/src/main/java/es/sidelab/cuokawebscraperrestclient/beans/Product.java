@@ -1,19 +1,30 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
 /**
- * @class Clase que representa una prenda.
+ * @class Clase que representa un producto.
  * @author Daniel Mancebo Aldea
  */
+
 public class Product 
 {
-    private double _price;
-    private String _name;
-    private String _path;
+    private double price;
+    private String name;
+    private String path;
+    
+    public Product() {}
 
     public Product( double price, String name, String path ) 
     {
-        this._price = price;
-        this._name = name;
-        this._path = path;
-    }   
+        this.price = price;
+        this.name = name;
+        this.path = path;
+    }  
+    
+    public void setPrice( double price ) { this.price = price; }
+    public void setName( String name ) { this.name = name; }
+    public void setPath( String path ) { this.path = path; }
+    
+    public double getPrice() { return this.price; }
+    public String getName() { return this.name; }
+    public String getPath() { return this.path; }
 }
