@@ -1,14 +1,11 @@
 package es.sidelab.cuokawebscraperrestclient;
 
-import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperManager;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,7 +21,7 @@ public class main
         final Shop[] shops = restClient.getForObject( serverUrl.toString() , Shop[].class );
         
         // Creamos un executor que creara un thread por cada tienda que haya.
-        Executor executorShops = Executors.newFixedThreadPool( shops.length );
+        ExecutorService executorShops = Executors.newFixedThreadPool( shops.length );
         
         for ( int i = 0; i < shops.length; i++ )
         {
@@ -38,7 +35,7 @@ public class main
                     GenericScraper scraper = ScraperManager.getScraper( shop );
                     
                     // Creamos un executor que creara tantos threads como secciones tenga la tienda
-                    Executor executorSections = Executors.newFixedThreadPool( shop.getSections().size() );
+                    ExecutorService executorSections = Executors.newFixedThreadPool( shop.getSections().size() );
                     
                     for ( int j = 0; j < shop.getSections().size(); j++ )
                     {
@@ -59,6 +56,8 @@ public class main
             };
             
             executorShops.execute( task );
-        } 
-    }    
+        } // for 
+        
+        executorShops.shutdown();
+    } // main    
 }
