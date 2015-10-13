@@ -11,18 +11,24 @@ import java.util.List;
  */
 public class Shop 
 {
-    private String _name;
-    private URL _url;
-    private List<Section> _sections;
+    private String name;
+    private URL url;
+    private List<Section> sections;
+    
+    public Shop() {}
 
     public Shop( String name, URL url, List<Section> sections ) 
     {
-        this._name = name;
-        this._url = url;
-        this._sections = sections;
+        this.name = name;
+        this.url = url;
+        this.sections = sections;
     }
+
+    public void setUrl( URL url ) { this.url = url; }
+    public void setName( String name ) { this.name = name; }
+    public void setSections( List<Section> sections ) { this.sections = sections; }   
     
-    public String getName() { return _name; }
-    public URL getURL() { return _url; }
-    public List<Section> getSections() { return _sections; }
+    public String getName() { return name; }
+    public URL getURL() { return url; }
+    public List<Section> getSections() { return sections; }
 }

@@ -8,18 +8,22 @@ import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperManager;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.client.RestTemplate;
 
 public class main 
 {
     public static void main( String[] args ) throws Exception
-    {            
-        List<Section> aux = new ArrayList<Section>();
-        Section section = new Section( "Abrigos", new URL( "http://spf.com/es/tienda/man/abrigos" ) );
-        aux.add( section );
-        Shop shop = new Shop( "Springfield", new URL( "http://spf.com/" ), aux );
+    {  
+        RestTemplate restClient = new RestTemplate();
+        URL serverUrl = new URL( "http://192.168.33.10:8080/get" );
+        
+        Shop[] shops = restClient.getForObject( serverUrl.toString() , Shop[].class );
                 
-        GenericScraper spf = ScraperManager.getScraper( shop );
-        List<Product> list = spf.scrap( shop.getURL() , shop.getSections().get(0).getURL() );
-        System.out.println( "List productos:" + list.size() );
+        for ( Shop shop : shops )
+        {
+            GenericScraper spf = ScraperManager.getScraper( shop );
+            List<Product> list = spf.scrap( shop.getURL() , shop.getSections().get(0).getURL() );
+            System.out.println( "List productos:" + list.size() );
+        }       
     }    
 }
