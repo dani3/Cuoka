@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
@@ -19,48 +14,35 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @Class Scraper especifico para Springfield
- * @author Daniel Mancebo Aldea
+ *
+ * @author Dani
  */
-public class SpringfieldScraper implements GenericScraper 
+
+public class HyMScraper implements GenericScraper
 {
     private static List<Product> productList = new CopyOnWriteArrayList<Product>();
     
     @Override
     public List<Product> scrap( URL urlShop, URL urlSection ) 
-    {        
+    {      
         try {
             // Obtener el HTML
             Document document = Jsoup.connect( urlSection.toString() ).timeout( 20000 ).get();
             
-            // Obtener el link de 'Ver todos'
-            Element seeAll = document.select( "div.pagination a" ).last();
+            Elements elements = document.select( "h3.product-item-headline > a" );
             
-            // Comprobar que existe el link de 'Ver todos'
-            if ( seeAll != null )
-                document = Jsoup.connect( urlShop.toString() + seeAll.attr( "href" ) ).timeout( 20000 ).get();            
-            
-            // Obtener el campo info de todos los productos
-            Elements products = document.select( "ul.product-listing li div div.content_product > a" );
-            
-            int i = 0;
-            for ( Element element : products )
+            for ( Element element : elements )
             {
-                // Obtener el HTML del producto
-                System.out.println( urlShop.toString() + element.attr( "href" ) );
-                document = Jsoup.connect( urlShop.toString() 
-                        + element.attr( "href" ) ).timeout( 20000 ).ignoreHttpErrors( true ).get();
-            
-                // Obtener el nombre
-                Element name = document.select( "h1" ).first();
-                System.out.println( name.ownText() );
-                
-                // Obtener el precio
-                Element price = document.select( "div.product-price-block strong" ).first();
-                System.out.println( price.ownText() );
+                document = Jsoup.connect( urlShop.toString()
+                                + element.attr( "href" ).toString() ).timeout( 20000 ).ignoreHttpErrors( true ).get();
 
-                // Obtener la ruta de la imagen
-                Element image = document.select( "#image_preview img" ).first();
+                // Obtener los atributos del producto
+                Element name = document.select( "h1.product-item-headline" ).first(); 
+                Element price = document.select( "div.product-item-price span" ).first();
+                Element image = document.select( "div.product-detail-main-image-container img" ).first();
+
+                System.out.println( name.ownText() );
+                System.out.println( price.ownText() );
                 System.out.println( image.attr( "src" ) );
                 
                 // Creamos y añadimos el producto a una lista auxiliar                
@@ -78,4 +60,5 @@ public class SpringfieldScraper implements GenericScraper
         // No debería llegar aquí
         return null;
     }
+    
 }

@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
+import es.sidelab.cuokawebscraperrestserver.beans.BeanSection;
 import es.sidelab.cuokawebscraperrestserver.beans.BeanShop;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.List;
@@ -28,15 +29,19 @@ public class ShopController
      */
     @RequestMapping( value = "/add", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody BeanShop shop )
-    {        
-        // Si existe ya la tienda, se devuelve error 400
-        if ( ( shopsRepository.findByName( shop.getName() ) != null ) && ( checkShop( shop ) ) )
+    {      
+        // Se devuelve error 400 si hay algun atributo incorrecto
+        if ( checkShop( shop ) )
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
         
-        else {
-            shopsRepository.save( shop );            
-            return new ResponseEntity<>( HttpStatus.CREATED );
-        }
+        // Si existe ya la tienda, añadimos solo las URLs que no existan
+        BeanShop currentShop = shopsRepository.findByName( shop.getName() );
+        if ( currentShop != null )  
+            shopsRepository.delete( currentShop );
+        
+        shopsRepository.save( shop );   
+        
+        return new ResponseEntity<>( HttpStatus.CREATED );
     }
     
     /*
