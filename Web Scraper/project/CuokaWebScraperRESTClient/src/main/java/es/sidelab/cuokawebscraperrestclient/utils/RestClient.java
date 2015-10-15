@@ -2,6 +2,7 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.net.URL;
+import org.apache.log4j.Logger;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -11,13 +12,14 @@ import org.springframework.web.client.RestTemplate;
 
 public class RestClient 
 {
-    private final RestTemplate restClient;
-    private final URL serverIp;
+    private static final Logger LOG = Logger.getLogger( RestClient.class );
+    private RestTemplate restClient;
+    private final URL SERVER;
     
-    public RestClient( URL serverIp ) 
+    public RestClient( URL server ) 
     {
         this.restClient = new RestTemplate();
-        this.serverIp = serverIp;
+        this.SERVER = server;
     }
     
     /*
@@ -25,7 +27,8 @@ public class RestClient
      */
     public Shop[] getArrayOfShops()
     {
-        return deleteShopsOffline( restClient.getForObject( serverIp.toString() + "/get" , Shop[].class ) );
+        LOG.info( "Obteniendo lista de tiendas del servidor..." );
+        return deleteShopsOffline( restClient.getForObject( SERVER.toString() + "/get" , Shop[].class ) );
     } 
     
     /*
@@ -33,12 +36,24 @@ public class RestClient
      */
     private static Shop[] deleteShopsOffline( Shop[] shops )
     {
+        LOG.info( "Filtramos las tiendas que no estan disponibles" );
+        
         Shop[] aux = new Shop[ shops.length ];
         
         int j = 0;
         for ( Shop shop : shops )
+        {
             if ( ! shop.isOffline() )
+            {
+                LOG.info( "La tienda " + shop.getName() + " esta online" );
                 aux[ j++ ] = shop;
+                
+            } else {
+                LOG.info( "La tienda " + shop.getName() + " NO esta online" );
+            }
+        }
+        
+        LOG.info( "Filtro completado" );
         
         return aux;
     }

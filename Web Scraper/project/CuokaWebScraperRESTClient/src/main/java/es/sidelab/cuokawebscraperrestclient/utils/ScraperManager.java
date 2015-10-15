@@ -2,8 +2,7 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * @Class Clase que gestiona los distintos scrapers, actua de middleware.
@@ -12,6 +11,8 @@ import java.util.logging.Logger;
 
 public class ScraperManager 
 {
+    private static final Logger LOG = Logger.getLogger( ScraperManager.class );
+    
     /*
      * Metodo que dada una tienda devuelve su scraper
      */
@@ -22,13 +23,16 @@ public class ScraperManager
                                         + shop.getName() + "Scraper" ).newInstance();
             
         } catch ( ClassNotFoundException ex ) {
-            Logger.getLogger(ScraperManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error( "ERROR: No se encontro la clase" );
+            LOG.error( ex.getMessage() );
             
         } catch ( InstantiationException ex ) {
-            Logger.getLogger(ScraperManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error( "ERROR: No se pudo instanciar la clase" );
+            LOG.error( ex.getMessage() );
             
         } catch ( IllegalAccessException ex ) {
-            Logger.getLogger(ScraperManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error( "ERROR: Acceso no permitido" );
+            LOG.error( ex.getMessage() );
         }
         
         // No debería llegar aquí

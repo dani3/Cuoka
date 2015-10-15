@@ -13,8 +13,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * @class Clase que gestiona todas las tareas que se realicen en paralelo.
@@ -23,6 +22,8 @@ import java.util.logging.Logger;
 
 public class MultithreadManager 
 {
+    private static final Logger LOG = Logger.getLogger( MultithreadManager.class );
+    
     public static void parallelScrap( Shop[] shops )
     {
         // Creamos un executor que creara un thread por cada tienda que haya.
@@ -78,7 +79,8 @@ public class MultithreadManager
                         }                        
                         
                     } catch ( InterruptedException | ExecutionException ex ) {
-                        Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                        LOG.info( "ERROR: Se ha producido un error en un thread" );
+                        LOG.info( ex.getMessage() );
                         
                         finishedSections[ j ] = true;                        
                     }                    
