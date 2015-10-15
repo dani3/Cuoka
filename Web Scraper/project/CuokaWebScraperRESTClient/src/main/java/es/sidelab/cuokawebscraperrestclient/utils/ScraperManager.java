@@ -1,6 +1,7 @@
-package es.sidelab.cuokawebscraperrestclient.scrapers;
+package es.sidelab.cuokawebscraperrestclient.utils;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +12,9 @@ import java.util.logging.Logger;
 
 public class ScraperManager 
 {
+    /*
+     * Metodo que dada una tienda devuelve su scraper
+     */
     public static GenericScraper getScraper( Shop shop ) 
     {
         try {

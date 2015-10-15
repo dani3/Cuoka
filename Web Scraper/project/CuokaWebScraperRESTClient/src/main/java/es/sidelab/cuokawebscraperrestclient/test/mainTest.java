@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.sidelab.cuokawebscraperrestclient;
+package es.sidelab.cuokawebscraperrestclient.test;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import java.util.ArrayList;
