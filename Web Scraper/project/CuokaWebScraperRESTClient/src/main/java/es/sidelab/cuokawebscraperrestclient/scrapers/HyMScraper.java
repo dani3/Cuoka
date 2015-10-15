@@ -47,7 +47,7 @@ public class HyMScraper implements GenericScraper
 
                 System.out.println( name.ownText() );
                 System.out.println( price.ownText() );
-                System.out.println( image.attr( "src" ) );
+                //System.out.println( image.attr( "src" ) );
                 
                 // Creamos y añadimos el producto a la lista concurrente               
                 productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )

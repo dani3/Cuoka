@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
@@ -22,6 +17,7 @@ import org.jsoup.select.Elements;
  * @Class Scraper especifico para Springfield
  * @author Daniel Mancebo Aldea
  */
+
 public class SpringfieldScraper implements GenericScraper 
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
@@ -49,7 +45,6 @@ public class SpringfieldScraper implements GenericScraper
             for ( Element element : products )
             {
                 // Obtener el HTML del producto
-                System.out.println( urlShop.toString() + element.attr( "href" ) );
                 document = Jsoup.connect( urlShop.toString() 
                                 + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
             
@@ -60,7 +55,7 @@ public class SpringfieldScraper implements GenericScraper
                 
                 System.out.println( name.ownText() );
                 System.out.println( price.ownText() );
-                System.out.println( image.attr( "src" ) );
+                //System.out.println( image.attr( "src" ) );
                 
                 // Creamos y añadimos el producto a la lista concurrente               
                 productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
