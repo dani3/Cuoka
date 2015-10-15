@@ -24,9 +24,8 @@ public class HyMScraper implements GenericScraper
     private static List<Product> productList = new CopyOnWriteArrayList<Product>();
     
     @Override
-    public List<Product> scrap( URL urlShop, URL urlSection ) 
+    public List<Product> scrap( URL urlShop, URL urlSection ) throws IOException 
     {      
-        try {
             // Obtener el HTML
             Document document = Jsoup.connect( urlSection.toString() ).timeout( TIMEOUT ).get();
             
@@ -56,13 +55,6 @@ public class HyMScraper implements GenericScraper
             }
             
             return productList;
-            
-        } catch ( IOException ex ) {
-            Logger.getLogger( main.class.getName()).log(Level.SEVERE, null, ex );
-        } 
-       
-        // No debería llegar aquí
-        return null;
     }
     
 }

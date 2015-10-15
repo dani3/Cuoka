@@ -27,14 +27,16 @@ public class BeanShop
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
     private List<BeanSection> sections;
+    private boolean offline;
     
     public BeanShop() {}
 
-    public BeanShop( String name, URL url, List<BeanSection> sections ) 
+    public BeanShop( String name, URL url, List<BeanSection> sections, boolean offline ) 
     {
         this.name = name;
         this.url = url;
         this.sections = sections;
+        this.offline = offline;
     }
 
     public String getName() { return name; }
@@ -42,5 +44,7 @@ public class BeanShop
     public URL getUrl() { return url; }
     public void setUrl( URL url ) { this.url = url; }
     public List<BeanSection> getSections() { return this.sections; }
-    public void setSections( List<BeanSection> sections ) { this.sections = sections; }
+    public void setSections( List<BeanSection> sections ) { this.sections = sections; } 
+    public void setOffline( boolean offline ) { this.offline = offline; }
+    public boolean isOffline() { return this.offline; }
 }

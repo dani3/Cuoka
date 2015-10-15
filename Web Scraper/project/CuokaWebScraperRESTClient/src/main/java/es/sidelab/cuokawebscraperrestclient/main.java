@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperManager;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -20,6 +21,16 @@ import org.springframework.web.client.RestTemplate;
 
 public class main 
 {
+    private static Shop[] checkOffline( Shop[] shops )
+    {
+        return null;
+    }
+    
+    private static boolean hasEveryoneFinished( boolean[] finishedSections )
+    {
+        return false;
+    }
+    
     public static void main( String[] args ) throws Exception
     {   
         // Creamos un cliente REST y configuramos la URL del servidor
@@ -35,7 +46,6 @@ public class main
         for ( int i = 0; i < shops.length; i++ )
         {
             final int k = i;
-            System.out.println( "Creando thread para tienda " + i );
             
             final Shop shop = shops[i];
             Runnable task = new Runnable() 
@@ -51,6 +61,8 @@ public class main
                     CompletionService< List<Product> > completionSections = 
                             new ExecutorCompletionService< List<Product> > ( executorSections );
                     
+                    boolean[] finishedSections = new boolean[ shop.getSections().size() ];
+                            
                     for ( int j = 0; j < shop.getSections().size(); j++ )
                     {
                         final Section section = shop.getSections().get( j );
@@ -59,19 +71,16 @@ public class main
                         Callable< List<Product> > taskSection = new Callable< List<Product> >()
                         {
                             @Override
-                            public List<Product> call()
+                            public List<Product> call() throws IOException
                             {
                                 return scraper.scrap( shop.getURL(), section.getURL() );
                             }
                         };                        
                         
                         // Ejecucion de cada tarea
-                        System.out.println( "Ejecutando sección " + j + " de la tienda " + k );
                         completionSections.submit( taskSection );                        
                         
                     } // for
-                    
-                    System.out.println( "Todos los threads ejecutando... Esperamos resultados" );
                     
                     // Esperamos a que terminen los threads
                     for ( int j = 0; j < shop.getSections().size(); j++ )
@@ -82,27 +91,28 @@ public class main
                         
                             future = completionSections.take();
                             List<Product> productList = future.get();
-                                
-                            System.out.println( "La seccion " + j + " de la tienda " + k + " ha terminado, num de productos: " 
-                                   + productList.size() );
                             
-                            if ( shop.getSections().size() == ( j + 1 ) )
+                            finishedSections[ j ] = true;
+                            
+                            if ( hasEveryoneFinished( finishedSections ) )
                             {
-                                System.out.println( "La ultima seccion ( " + j + ") ha terminado! Num de productos: " 
-                                   + productList.size() );
+                                // Insertar en BD
                                 
+                                // Finalizamos el executor
                                 executorSections.shutdown();
                             }
                             
                             
                         } catch ( InterruptedException ex ) {
-                                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                                
-                        } catch (ExecutionException ex) {
                             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                            finishedSections[ j ] = true;
+                                
+                        } catch ( ExecutionException ex ) {
+                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                            finishedSections[ j ] = true;
+                            
                         }                        
-                    }
-                    
+                    }                    
                 }
             };
             
