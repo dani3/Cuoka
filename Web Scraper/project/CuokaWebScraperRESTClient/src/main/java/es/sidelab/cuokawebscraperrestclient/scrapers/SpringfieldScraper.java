@@ -52,8 +52,8 @@ public class SpringfieldScraper implements GenericScraper
                 Element price = document.select( "div.product-price-block strong" ).first();
                 Element image = document.select( "#image_preview img" ).first();
                 
-                System.out.println( name.ownText() );
-                System.out.println( price.ownText() );
+                //System.out.println( name.ownText() );
+                //System.out.println( price.ownText() );
                 //System.out.println( image.attr( "src" ) );
                 
                 // Creamos y añadimos el producto a la lista concurrente               

@@ -3,7 +3,6 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import es.sidelab.cuokawebscraperrestclient.main;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,6 +25,7 @@ public class MultithreadManager
     
     public static void parallelScrap( Shop[] shops )
     {
+        LOG.info( "Iniciando proceso de scraping concurrentemente..." );
         // Creamos un executor que creara un thread por cada tienda que haya.
         ExecutorService executorShops = Executors.newFixedThreadPool( shops.length );
         
@@ -36,7 +36,9 @@ public class MultithreadManager
             final Shop shop = shops[i];
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
+                LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );
                 GenericScraper scraper = ScraperManager.getScraper( shop );
+                LOG.info( "Scraper de " + shop.getName() + " obtenido" );
                  
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
                 ExecutorService executorSections = Executors.newFixedThreadPool( shop.getSections().size() );
@@ -54,27 +56,44 @@ public class MultithreadManager
                     Callable< List<Product> > taskSection = () -> scraper.scrap( shop.getURL(), section.getURL() );
                     
                     // Ejecucion de cada tarea
+                    LOG.info( "Se inicia el scraping de la seccion " 
+                            + section.getName() + " de la tienda " + shop.getName() );
                     completionSections.submit( taskSection );
                     
                 } // for
+                
+                LOG.info( "Se han iniciado todos los threads de la tienda " + shop.getName() );
                 
                 // Esperamos a que terminen los threads
                 for ( int j = 0; j < shop.getSections().size(); j++ )
                 {
                     try
                     {
+                        LOG.info( "A la espera de que acabe un thread..." );
                         Future< List<Product> > future = completionSections.take();
-                        List<Product> productList = future.get();                        
+                        List<Product> productList = future.get();  
+                        LOG.info( "Ha acabado un thread de " + shop.getName() 
+                                + "... Ha sacado " + productList.size() + " productos!" );
                         
                         // Ponemos nuestra posicion a true indicando que hemos terminado
                         finishedSections[ j ] = true;                        
+                        LOG.info( "Se marca el thread como finalizado... El estado de los threads de " 
+                                + shop.getName() + " es: " );
+                        
+                        String state = "";
+                        for ( int n = 0; n < finishedSections.length; n++ )
+                            state = state.concat( "| " + finishedSections[ n ] + " | " );
+                        
+                        LOG.info( state );
                         
                         // Comprobamos si somos el ultimo thread, en tal caso, inserto la lista en BD
                         if ( hasEveryoneFinished( finishedSections ) ) 
                         {
+                            LOG.info( "Todos los threads de " + shop.getName() + " han acabado" );
                             // Insertar en BD
                             
                             // Finalizamos el executor de secciones cuando el ultimo haya terminado
+                            LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
                             executorSections.shutdown();
                         }                        
                         
@@ -87,10 +106,11 @@ public class MultithreadManager
                 }
             };
             
+            LOG.info( "El thread " + i + " de " + shop.getName() + " ha empezado..." );
             executorShops.execute( task );
         } // for 
         
-        // Detenemos el executor al terminar todos los threads
+        // Detenemos el executor
         executorShops.shutdown();
     }
     

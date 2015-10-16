@@ -44,8 +44,8 @@ public class HyMScraper implements GenericScraper
                 Element price = document.select( "div.product-item-price span" ).first();
                 Element image = document.select( "div.product-detail-main-image-container img" ).first();
 
-                System.out.println( name.ownText() );
-                System.out.println( price.ownText() );
+                //System.out.println( name.ownText() );
+                //System.out.println( price.ownText() );
                 //System.out.println( image.attr( "src" ) );
                 
                 // Creamos y añadimos el producto a la lista concurrente               
