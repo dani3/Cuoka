@@ -25,19 +25,19 @@ public class mainTest {
     public static void main(String[] args) throws Exception {
         List<Product> productList = new ArrayList<Product>();
         
-        Document document = Jsoup.connect( "http://www2.hm.com/es_es/hombre/compra-por-producto/camisas/_jcr_content/main/productlisting.display.html?category=&sort=stock&sale=false&offset=0&page-size=1000" ).get();
+        Document document = Jsoup.connect( "http://www.suiteblanco.com/es/es_es/vestidos.html" ).get();
             
-        Elements elements = document.select( "h3.product-item-headline > a" );
+        Elements elements = document.select( "h2.product-name > a" );
         System.out.println( elements.size() );
         
         for ( Element element : elements )
         {
-            document = Jsoup.connect( "http://www2.hm.com/" 
-                            + element.attr( "href" ).toString() ).timeout( 20000 ).ignoreHttpErrors( true ).get();
+            document = Jsoup.connect( element.attr( "href" ).toString() )
+                    .timeout( 60000 ).ignoreHttpErrors( true ).get();
             
-            Element name = document.select( "h1.product-item-headline" ).first(); 
-            Element price = document.select( "div.product-item-price span" ).first();
-            Element image = document.select( "div.product-detail-main-image-container img" ).first();
+            Element name = document.select( "div.product-name span" ).first(); 
+            Element price = document.select( "span.regular-price span" ).first();
+            Element image = document.select( "div.product-image-gallery img" ).first();
             
             System.out.println( name.ownText() );
             System.out.println( price.ownText() );

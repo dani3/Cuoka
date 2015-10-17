@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import static es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper.TIMEOUT;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -11,11 +12,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @Class Scraper especifico para Springfield
+ * @class Scraper especifico para SuiteBlanco
  * @author Daniel Mancebo Aldea
  */
 
-public class SpringfieldScraper implements GenericScraper 
+public class BlancoScraper implements GenericScraper
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<Product>();
@@ -25,34 +26,22 @@ public class SpringfieldScraper implements GenericScraper
     {        
         // Obtener el HTML
         Document document = Jsoup.connect( urlSection.toString() ).timeout( TIMEOUT ).get();
-            
-        // Obtener el link de 'Ver todos'
-        Element seeAll = document.select( "div.pagination a" ).last();
-            
-        // Comprobar que existe el link de 'Ver todos'
-        if ( seeAll != null )
-            document = Jsoup.connect( urlShop.toString() 
-                           + seeAll.attr( "href" ) ).timeout( TIMEOUT ).get();            
-            
-        // Obtener el campo info de todos los productos
-        Elements products = document.select( "ul.product-listing li div div.content_product > a" );
-            
-        int i = 0;
-        for ( Element element : products )
-        {
-            // Obtener el HTML del producto
-            document = Jsoup.connect( urlShop.toString() 
-                            + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
         
-            // Obtener los atributos
-            Element name = document.select( "h1" ).first();
-            Element price = document.select( "div.product-price-block strong" ).first();
-            Element image = document.select( "#image_preview img" ).first();
-              
+        Elements elements = document.select( "h2.product-name > a" );
+            
+        for ( Element element : elements )
+        {
+            document = Jsoup.connect( element.attr( "href" ).toString() )
+                               .timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
+            
+            Element name = document.select( "div.product-name span" ).first(); 
+            Element price = document.select( "span.regular-price span" ).first();
+            Element image = document.select( "div.product-image-gallery img" ).first();
+            
             //System.out.println( name.ownText() );
             //System.out.println( price.ownText() );
             //System.out.println( image.attr( "src" ) );
-              
+            
             // Creamos y añadimos el producto a la lista concurrente               
             productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
                                     , name.ownText()
@@ -61,4 +50,5 @@ public class SpringfieldScraper implements GenericScraper
             
         return productList;
     }
+    
 }

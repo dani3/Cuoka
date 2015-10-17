@@ -26,6 +26,7 @@ public class MultithreadManager
     public static void parallelScrap( Shop[] shops )
     {
         LOG.info( "Iniciando proceso de scraping concurrentemente..." );
+        
         // Creamos un executor que creara un thread por cada tienda que haya.
         ExecutorService executorShops = Executors.newFixedThreadPool( shops.length );
         
