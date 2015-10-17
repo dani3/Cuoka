@@ -1,6 +1,8 @@
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -21,17 +23,17 @@ public class SpringfieldScraper implements GenericScraper
     private static List<Product> productList = new CopyOnWriteArrayList<Product>();
     
     @Override
-    public List<Product> scrap( URL urlShop, URL urlSection ) throws IOException
+    public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
         // Obtener el HTML
-        Document document = Jsoup.connect( urlSection.toString() ).timeout( TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() ).timeout( TIMEOUT ).get();
             
         // Obtener el link de 'Ver todos'
         Element seeAll = document.select( "div.pagination a" ).last();
             
         // Comprobar que existe el link de 'Ver todos'
         if ( seeAll != null )
-            document = Jsoup.connect( urlShop.toString() 
+            document = Jsoup.connect( shop.getURL().toString() 
                            + seeAll.attr( "href" ) ).timeout( TIMEOUT ).get();            
             
         // Obtener el campo info de todos los productos
@@ -41,7 +43,7 @@ public class SpringfieldScraper implements GenericScraper
         for ( Element element : products )
         {
             // Obtener el HTML del producto
-            document = Jsoup.connect( urlShop.toString() 
+            document = Jsoup.connect( shop.getURL().toString() 
                             + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
         
             // Obtener los atributos

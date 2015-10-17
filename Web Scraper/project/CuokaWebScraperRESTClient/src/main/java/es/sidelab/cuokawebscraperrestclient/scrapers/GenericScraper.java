@@ -1,8 +1,9 @@
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -14,5 +15,5 @@ public interface GenericScraper
 {
     final int TIMEOUT = 60000;
     
-    public List<Product> scrap( URL urlShop, URL urlSection ) throws IOException;
+    public List<Product> scrap( Shop shop, Section section ) throws IOException;
 }

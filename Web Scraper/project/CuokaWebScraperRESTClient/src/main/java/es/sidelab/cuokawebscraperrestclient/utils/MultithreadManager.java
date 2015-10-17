@@ -57,7 +57,7 @@ public class MultithreadManager
                     final Section section = shop.getSections().get( j );
                     
                     // Tarea de cada scraper
-                    Callable< List<Product> > taskSection = () -> scraper.scrap( shop.getURL(), section.getURL() );
+                    Callable< List<Product> > taskSection = () -> scraper.scrap( shop, section );
                     
                     // Ejecucion de cada tarea
                     LOG.info( "Se inicia el scraping de la seccion " 
@@ -98,8 +98,8 @@ public class MultithreadManager
                         }                        
                         
                     } catch ( InterruptedException | ExecutionException ex ) {
-                        LOG.info( "ERROR: Se ha producido un error en un thread" );
-                        LOG.info( ex.getMessage() );
+                        LOG.error( "ERROR: Se ha producido un error en un thread" );
+                        LOG.error( ex.getMessage() );
                         
                         finishedSections[ j ] = true;                        
                     }                    

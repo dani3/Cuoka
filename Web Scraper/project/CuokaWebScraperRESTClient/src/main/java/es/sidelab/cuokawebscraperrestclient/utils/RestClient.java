@@ -45,7 +45,7 @@ public class RestClient
         {
             if ( ! shop.isOffline() )
             {
-                LOG.info( "La tienda " + shop.getName() + " esta online" );
+                LOG.info( "La tienda " + shop.getName() + " esta ONLINE" );
                 aux[ j++ ] = shop;
                 
             } else {
