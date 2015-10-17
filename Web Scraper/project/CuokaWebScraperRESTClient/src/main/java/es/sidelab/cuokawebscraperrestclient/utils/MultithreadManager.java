@@ -23,6 +23,9 @@ public class MultithreadManager
 {
     private static final Logger LOG = Logger.getLogger( MultithreadManager.class );
     
+    /*
+     * Metodo que crea los threads necesarios para cada tienda
+     */
     public static void parallelScrap( Shop[] shops )
     {
         LOG.info( "Iniciando proceso de scraping concurrentemente..." );
@@ -80,12 +83,8 @@ public class MultithreadManager
                         finishedSections[ j ] = true;                        
                         LOG.info( "Se marca el thread como finalizado... El estado de los threads de " 
                                 + shop.getName() + " es: " );
-                        
-                        String state = "";
-                        for ( int n = 0; n < finishedSections.length; n++ )
-                            state = state.concat( "| " + finishedSections[ n ] + " | " );
-                        
-                        LOG.info( state );
+                                       
+                        LOG.info( threadStatus( finishedSections ) );
                         
                         // Comprobamos si somos el ultimo thread, en tal caso, inserto la lista en BD
                         if ( hasEveryoneFinished( finishedSections ) ) 
@@ -126,5 +125,17 @@ public class MultithreadManager
                 return false;
         
         return true;
+    }
+    
+    /*
+     * Metodo que devuelve el estado de los threads
+     */
+    private static String threadStatus( boolean[] finishedSections )
+    {
+        String state = "";
+        for ( int n = 0; n < finishedSections.length; n++ )
+            state = state.concat( "| " + finishedSections[ n ] + " | " );
+        
+        return state;
     }
 }
