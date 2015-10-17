@@ -29,7 +29,8 @@ public class BeanSection
     }
 
     public String getName() { return name; }
-    public URL getUrl() { return url; }  
+    public URL getUrl() { return url; } 
+    
     public void setName( String name ) { this.name = name; }
     public void setUrl( URL url ) { this.url = url; }    
 }

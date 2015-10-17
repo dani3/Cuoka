@@ -40,11 +40,12 @@ public class BeanShop
     }
 
     public String getName() { return name; }
-    public void setName( String name ) { this.name = name; }
     public URL getUrl() { return url; }
-    public void setUrl( URL url ) { this.url = url; }
     public List<BeanSection> getSections() { return this.sections; }
+    public boolean isOffline() { return this.offline; }
+    
+    public void setName( String name ) { this.name = name; }    
+    public void setUrl( URL url ) { this.url = url; }
     public void setSections( List<BeanSection> sections ) { this.sections = sections; } 
     public void setOffline( boolean offline ) { this.offline = offline; }
-    public boolean isOffline() { return this.offline; }
 }
