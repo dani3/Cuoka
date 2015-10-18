@@ -1,6 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.repositories;
 
-import es.sidelab.cuokawebscraperrestserver.beans.BeanSection;
+import es.sidelab.cuokawebscraperrestserver.beans.Section;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Daniel Mancebo Aldea
  */
 
-public interface SectionsRepository extends JpaRepository<BeanSection, Long>
+public interface SectionsRepository extends JpaRepository<Section, Long>
 {
     
 }

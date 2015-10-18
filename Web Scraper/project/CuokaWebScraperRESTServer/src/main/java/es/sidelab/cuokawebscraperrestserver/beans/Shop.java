@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
  */
 
 @Entity
-public class BeanShop 
+public class Shop 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
@@ -26,12 +26,12 @@ public class BeanShop
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
-    private List<BeanSection> sections;
+    private List<Section> sections;
     private boolean offline;
     
-    public BeanShop() {}
+    public Shop() {}
 
-    public BeanShop( String name, URL url, List<BeanSection> sections, boolean offline ) 
+    public Shop( String name, URL url, List<Section> sections, boolean offline ) 
     {
         this.name = name;
         this.url = url;
@@ -41,11 +41,11 @@ public class BeanShop
 
     public String getName() { return name; }
     public URL getUrl() { return url; }
-    public List<BeanSection> getSections() { return this.sections; }
+    public List<Section> getSections() { return this.sections; }
     public boolean isOffline() { return this.offline; }
     
     public void setName( String name ) { this.name = name; }    
     public void setUrl( URL url ) { this.url = url; }
-    public void setSections( List<BeanSection> sections ) { this.sections = sections; } 
+    public void setSections( List<Section> sections ) { this.sections = sections; } 
     public void setOffline( boolean offline ) { this.offline = offline; }
 }

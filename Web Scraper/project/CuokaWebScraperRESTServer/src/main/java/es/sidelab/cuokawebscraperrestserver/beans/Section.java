@@ -12,7 +12,7 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class BeanSection 
+public class Section 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
@@ -20,9 +20,9 @@ public class BeanSection
     private String name;
     private URL url;
     
-    public BeanSection() {}
+    public Section() {}
     
-    public BeanSection( String name, URL url )
+    public Section( String name, URL url )
     {
         this.name = name;
         this.url = url;

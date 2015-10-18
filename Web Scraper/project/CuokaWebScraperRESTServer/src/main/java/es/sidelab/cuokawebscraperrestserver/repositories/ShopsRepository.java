@@ -1,6 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.repositories;
 
-import es.sidelab.cuokawebscraperrestserver.beans.BeanShop;
+import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Daniel Mancebo Aldea
  */
 
-public interface ShopsRepository extends JpaRepository<BeanShop, Long>
+public interface ShopsRepository extends JpaRepository<Shop, Long>
 {
-    BeanShop findByName( String name );
+    Shop findByName( String name );
 }

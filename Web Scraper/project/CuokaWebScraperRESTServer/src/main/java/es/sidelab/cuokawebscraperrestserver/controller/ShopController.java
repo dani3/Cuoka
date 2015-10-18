@@ -1,7 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
-import es.sidelab.cuokawebscraperrestserver.beans.BeanProduct;
-import es.sidelab.cuokawebscraperrestserver.beans.BeanShop;
+import es.sidelab.cuokawebscraperrestserver.beans.Product;
+import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ShopController
      * Metodo que añade una nueva tienda, si ya existe se devuelve un error 400
      */
     @RequestMapping( value = "/addShop", method = RequestMethod.POST )
-    public ResponseEntity<Boolean> addShop( @RequestBody BeanShop shop )
+    public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
     {      
         LOG.info( "Peticion POST recibida para añadir una nueva tienda..." );
         
@@ -47,7 +47,7 @@ public class ShopController
         LOG.info( "Comprobando si existe la tienda..." );
         
         // Si existe ya la tienda, añadimos solo las URLs que no existan
-        BeanShop currentShop = shopsRepository.findByName( shop.getName() );
+        Shop currentShop = shopsRepository.findByName( shop.getName() );
         if ( currentShop != null ) 
         {
             LOG.info( "La tienda existe, se elimina de la BD..." );            
@@ -66,7 +66,7 @@ public class ShopController
      * Metodo que devuelve una tienda dado su nombre
      */
     @RequestMapping( value = "/getShop/{name}", method = RequestMethod.GET )
-    public BeanShop getShop( @PathVariable String name )
+    public Shop getShop( @PathVariable String name )
     {
         LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida"  );
         return shopsRepository.findByName( name );
@@ -76,7 +76,7 @@ public class ShopController
      * Metodo que devuelve una lista con todas las tiendas
      */
     @RequestMapping( value = "/getShops", method = RequestMethod.GET )
-    public List<BeanShop> getShops()
+    public List<Shop> getShops()
     {
         LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
         return shopsRepository.findAll();
@@ -86,7 +86,7 @@ public class ShopController
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
      */
     @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
-    public ResponseEntity<Boolean> addProducts( @RequestBody List<BeanProduct> products
+    public ResponseEntity<Boolean> addProducts( @RequestBody List<Product> products
                                         , @PathVariable String shop )
     {
         LOG.info( "Peticion POST para añadir productos recibida" );
@@ -95,7 +95,7 @@ public class ShopController
         LOG.info( "Productos eliminados!" );
         
         LOG.info( "Insertando nuevos productos" );
-        for ( BeanProduct product: products )
+        for ( Product product: products )
             productsRepository.save( product );
         LOG.info( "Productos insertados correctamente, saliendo del metodo addProducts" );
         
@@ -106,7 +106,7 @@ public class ShopController
      * Metodo que devuelve una lista de productos de una tienda
      */
     @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
-    public List<BeanProduct> getProducts( @PathVariable String shop )
+    public List<Product> getProducts( @PathVariable String shop )
     {
         LOG.info( "Peticion GET para obtener todos los productos de " + shop );
         return productsRepository.findByShop( shop );
@@ -116,7 +116,7 @@ public class ShopController
      * Metodo que devuelve una lista de todos los productos
      */
     @RequestMapping( value = "/getProducts", method = RequestMethod.GET )
-    public List<BeanProduct> getProducts()
+    public List<Product> getProducts()
     {
         LOG.info( "Peticion GET para obtener todos los productos" );
         return productsRepository.findAll();
@@ -125,7 +125,7 @@ public class ShopController
     /*
      * Metodo que devuelve true si hay algun atributo incorrecto
      */
-    private boolean checkShop( BeanShop shop )
+    private boolean checkShop( Shop shop )
     {
         LOG.info( "Comprobando campos del JSON recibido..." );
         

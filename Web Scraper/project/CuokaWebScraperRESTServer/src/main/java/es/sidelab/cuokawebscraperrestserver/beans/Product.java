@@ -11,7 +11,7 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class BeanProduct 
+public class Product 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
@@ -21,7 +21,7 @@ public class BeanProduct
     private String section;
     private double price;
     
-    public BeanProduct() {}
+    public Product() {}
     
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
