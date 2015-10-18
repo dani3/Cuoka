@@ -37,12 +37,10 @@ public class RestClient
     /*
      * Metodo que envia una lista de productos al servidor REST
      */
-    public void saveProducts( List<Product> products )
+    public void saveProducts( List<Product> products, Shop shop )
     {
-        String shop = products.get( 0 ).getShop();
-        
         LOG.info( "Enviando lista de productos al servidor..." );
-        restClient.postForObject( SERVER.toString() + "/add/" + shop, products.toArray(), Product[].class );
+        restClient.postForObject( SERVER.toString() + "/add/" + shop.getName(), products.toArray(), Product[].class );
         LOG.info( "Procuctos enviados correctamente" );
     }
     

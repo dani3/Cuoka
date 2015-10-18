@@ -97,7 +97,7 @@ public class MultithreadManager
                             LOG.info( "Llamando al servidor REST para almacenar los productos!" );
                             LOG.info( "URL del servidor REST: " + URL );
                             RestClient restClient = new RestClient( new URL( URL ) );
-                            restClient.saveProducts( productList );
+                            restClient.saveProducts( productList, shop );
                             
                             LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
                             executorSections.shutdown();

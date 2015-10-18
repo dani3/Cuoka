@@ -35,7 +35,7 @@ public class ShopController
     /*
      * Metodo que añade una nueva tienda, si ya existe se devuelve un error 400
      */
-    @RequestMapping( value = "/add", method = RequestMethod.POST )
+    @RequestMapping( value = "/addShop", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody BeanShop shop )
     {      
         LOG.info( "Peticion POST recibida para añadir una nueva tienda..." );
@@ -65,7 +65,7 @@ public class ShopController
     /*
      * Metodo que devuelve una tienda dado su nombre
      */
-    @RequestMapping( value = "/get/{name}", method = RequestMethod.GET )
+    @RequestMapping( value = "/getShop/{name}", method = RequestMethod.GET )
     public BeanShop getShop( @PathVariable String name )
     {
         LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida"  );
@@ -75,7 +75,7 @@ public class ShopController
     /*
      * Metodo que devuelve una lista con todas las tiendas
      */
-    @RequestMapping( value = "/get", method = RequestMethod.GET )
+    @RequestMapping( value = "/getShops", method = RequestMethod.GET )
     public List<BeanShop> getShops()
     {
         LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
@@ -85,7 +85,7 @@ public class ShopController
     /*
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
      */
-    @RequestMapping( value = "/add/{shop}", method = RequestMethod.POST )
+    @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addProducts( @RequestBody List<BeanProduct> products
                                         , @PathVariable String shop )
     {
