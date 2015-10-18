@@ -101,6 +101,16 @@ public class ShopController
     }
     
     /*
+     * Metodo que devuelve una lista de productos de una tienda
+     */
+    @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
+    public List<BeanProduct> getProducts( @PathVariable String shop )
+    {
+        LOG.info( "Peticion GET para obtener todas los productos de la tienda " + shop );
+        return productsRepository.findAll();
+    }
+    
+    /*
      * Metodo que devuelve true si hay algun atributo incorrecto
      */
     private boolean checkShop( BeanShop shop )

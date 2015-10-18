@@ -1,7 +1,9 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
+import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.net.URL;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 public class RestClient 
 {
     private static final Logger LOG = Logger.getLogger( RestClient.class );
+    
     private RestTemplate restClient;
     private final URL SERVER;
     
@@ -30,6 +33,18 @@ public class RestClient
         LOG.info( "Obteniendo lista de tiendas del servidor..." );
         return deleteShopsOffline( restClient.getForObject( SERVER.toString() + "/get" , Shop[].class ) );
     } 
+    
+    /*
+     * Metodo que envia una lista de productos al servidor REST
+     */
+    public void saveProducts( List<Product> products )
+    {
+        String shop = products.get( 0 ).getShop();
+        
+        LOG.info( "Enviando lista de productos al servidor..." );
+        restClient.postForObject( SERVER.toString() + "/add/" + shop, products.toArray(), Product[].class );
+        LOG.info( "Procuctos enviados correctamente" );
+    }
     
     /*
      * Metodo que elimina del vector todas las tiendas que no esten online

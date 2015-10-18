@@ -4,6 +4,8 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -12,6 +14,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -21,10 +24,11 @@ import org.apache.log4j.Logger;
 
 public class MultithreadManager 
 {
-    private static final Logger LOG = Logger.getLogger( MultithreadManager.class );
+    private static final Logger LOG = Logger.getLogger( MultithreadManager.class );  
+    private static final String URL = "http://192.168.33.10:8080";
     
     /*
-     * Metodo que crea los threads necesarios para cada tienda
+     * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor
      */
     public static void parallelScrap( Shop[] shops )
     {
@@ -90,9 +94,11 @@ public class MultithreadManager
                         if ( hasEveryoneFinished( finishedSections ) ) 
                         {
                             LOG.info( "Todos los threads de " + shop.getName() + " han acabado" );
-                            // Insertar en BD
+                            LOG.info( "Llamando al servidor REST para almacenar los productos!" );
+                            LOG.info( "URL del servidor REST: " + URL );
+                            RestClient restClient = new RestClient( new URL( URL ) );
+                            restClient.saveProducts( productList );
                             
-                            // Finalizamos el executor de secciones cuando el ultimo haya terminado
                             LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
                             executorSections.shutdown();
                         }                        
@@ -102,6 +108,9 @@ public class MultithreadManager
                         LOG.error( ex.getMessage() );
                         
                         finishedSections[ j ] = true;                        
+                    } catch ( MalformedURLException ex ) {
+                        LOG.error( "ERROR: Error al formar la URL para contactar con el servidor REST" );
+                        LOG.error( ex.getMessage() );
                     }                    
                 }
             };
