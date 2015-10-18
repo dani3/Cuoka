@@ -97,7 +97,7 @@ public class ShopController
         LOG.info( "Insertando nuevos productos" );
         for ( BeanProduct product: products )
             productsRepository.save( product );
-        LOG.info( "Productos insertados correctamente!" );
+        LOG.info( "Productos insertados correctamente, saliendo del metodo addProducts" );
         
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
