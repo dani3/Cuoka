@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
+import es.sidelab.cuokawebscraperrestserver.beans.BeanProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.BeanShop;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
@@ -67,7 +68,7 @@ public class ShopController
     @RequestMapping( value = "/get/{name}", method = RequestMethod.GET )
     public BeanShop getShop( @PathVariable String name )
     {
-        LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida..."  );
+        LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida"  );
         return shopsRepository.findByName( name );
     }
     
@@ -77,8 +78,26 @@ public class ShopController
     @RequestMapping( value = "/get", method = RequestMethod.GET )
     public List<BeanShop> getShops()
     {
-        LOG.info( "Peticion GET para obtener todas las tiendas recibida..." );
+        LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
         return shopsRepository.findAll();
+    }
+    
+    /*
+     * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
+     */
+    @RequestMapping( value = "/add/{shop}", method = RequestMethod.POST )
+    public ResponseEntity<Boolean> addProducts( @RequestBody List<BeanProduct> products
+                                        , @PathVariable String shop )
+    {
+        LOG.info( "Peticion POST para añadir productos recibida" );
+        LOG.info( "Eliminando los productos existentes de la tienda " + shop );
+        productsRepository.deleteByShop( shop );
+        LOG.info( "Productos eliminados!" );
+        
+        for ( BeanProduct product: products )
+            productsRepository.save( product );
+        
+        return new ResponseEntity<>( HttpStatus.CREATED );
     }
     
     /*
