@@ -1,6 +1,5 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
-import es.sidelab.cuokawebscraperrestserver.beans.BeanSection;
 import es.sidelab.cuokawebscraperrestserver.beans.BeanShop;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.List;
