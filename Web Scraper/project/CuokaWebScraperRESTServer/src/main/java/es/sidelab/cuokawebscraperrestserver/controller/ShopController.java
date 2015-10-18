@@ -94,8 +94,10 @@ public class ShopController
         productsRepository.deleteByShop( shop );
         LOG.info( "Productos eliminados!" );
         
+        LOG.info( "Insertando nuevos productos" );
         for ( BeanProduct product: products )
             productsRepository.save( product );
+        LOG.info( "Productos insertados correctamente!" );
         
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
