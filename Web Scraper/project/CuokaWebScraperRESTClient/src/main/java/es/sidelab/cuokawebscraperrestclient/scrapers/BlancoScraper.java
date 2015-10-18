@@ -47,7 +47,8 @@ public class BlancoScraper implements GenericScraper
             // Creamos y añadimos el producto a la lista concurrente               
             productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
                                     , name.ownText()
-                                    , image.attr( "src" ) ) );
+                                    , shop.getName()
+                                    , section.getName() ) );
         }
             
         return productList;

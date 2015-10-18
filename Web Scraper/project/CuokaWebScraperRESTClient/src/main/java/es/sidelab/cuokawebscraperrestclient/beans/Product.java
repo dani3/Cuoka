@@ -9,22 +9,26 @@ public class Product
 {
     private double price;
     private String name;
-    private String path;
+    private String shop;
+    private String section;
     
     public Product() {}
 
-    public Product( double price, String name, String path ) 
+    public Product( double price, String name, String shop, String section ) 
     {
         this.price = price;
         this.name = name;
-        this.path = path;
+        this.shop = shop;
+        this.section = section;
     }  
     
     public void setPrice( double price ) { this.price = price; }
     public void setName( String name ) { this.name = name; }
-    public void setPath( String path ) { this.path = path; }
+    public void setShop( String shop ) { this.shop = shop; }
+    public void setSection( String section ) { this.section = section; }
     
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
-    public String getPath() { return this.path; }
+    public String getShop() { return this.shop; }
+    public String getSection() { return this.section; }
 }

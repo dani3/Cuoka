@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.BeanShop;
+import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -26,6 +27,9 @@ public class ShopController
     
     @Autowired
     ShopsRepository shopsRepository;
+    
+    @Autowired
+    ProductsRepository productsRepository;
     
     /*
      * Metodo que añade una nueva tienda, si ya existe se devuelve un error 400
