@@ -108,7 +108,17 @@ public class ShopController
     @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
     public List<BeanProduct> getProducts( @PathVariable String shop )
     {
-        LOG.info( "Peticion GET para obtener todas los productos de la tienda " + shop );
+        LOG.info( "Peticion GET para obtener todos los productos de " + shop );
+        return productsRepository.findByShop( shop );
+    }
+    
+    /*
+     * Metodo que devuelve una lista de todos los productos
+     */
+    @RequestMapping( value = "/getProducts", method = RequestMethod.GET )
+    public List<BeanProduct> getProducts()
+    {
+        LOG.info( "Peticion GET para obtener todos los productos" );
         return productsRepository.findAll();
     }
     

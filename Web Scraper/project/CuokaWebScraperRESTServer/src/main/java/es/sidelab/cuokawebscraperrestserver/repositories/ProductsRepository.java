@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.repositories;
 
 import es.sidelab.cuokawebscraperrestserver.beans.BeanProduct;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface ProductsRepository extends JpaRepository<BeanProduct, Long>
     @Transactional
     @Query( "DELETE FROM BeanProduct WHERE shop = ?1" )
     void deleteByShop( String shop );
+    
+    List<BeanProduct> findByShop( String shop );
 }
