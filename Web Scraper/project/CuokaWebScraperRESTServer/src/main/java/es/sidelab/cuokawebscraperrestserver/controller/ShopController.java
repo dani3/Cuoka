@@ -55,7 +55,7 @@ public class ShopController
             LOG.info( "Tienda eliminada correctamente" );
         }
         
-        LOG.info( "Se añade la nueva tienda a la BD: \n" );  
+        LOG.info( "Se añade la nueva tienda a la BD:\n" );  
         LOG.info( shop.toString() );
         shopsRepository.save( shop );          
         LOG.info( "Tienda insertada correctamente, saliendo del metodo addShop" );
@@ -70,7 +70,14 @@ public class ShopController
     public Shop getShop( @PathVariable String name )
     {
         LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida"  );
-        return shopsRepository.findByName( name );
+        Shop shop = shopsRepository.findByName( name );
+        
+        if ( shop != null )
+            LOG.info( "Tienda encontrada:\n" + shop.toString() );
+        else 
+            LOG.info( "No se ha encontrado la tienda " + name );
+        
+        return shop;
     }
     
     /*
@@ -80,7 +87,19 @@ public class ShopController
     public List<Shop> getShops()
     {
         LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
-        return shopsRepository.findAll();
+        List<Shop> shops = shopsRepository.findAll();
+        
+        if ( shops.size() > 0 )
+        {
+            LOG.info( "Lista de tiendas encontradas:\n" );
+            for ( Shop shop : shops )
+                LOG.info( shop.toString() );
+            
+        } else {
+            LOG.info( "No se ha encontrado ninguna tienda" );
+        }
+        
+        return shops;
     }
     
     /*
