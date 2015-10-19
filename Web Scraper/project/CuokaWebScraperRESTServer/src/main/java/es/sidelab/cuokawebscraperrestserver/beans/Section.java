@@ -27,6 +27,12 @@ public class Section
         this.name = name;
         this.url = url;
     }
+    
+    @Override
+    public String toString()
+    {
+        return ( "Name: " + this.name + " | URL: " + this.url.toString() + "\n" );
+    }
 
     public String getName() { return name; }
     public URL getUrl() { return url; } 

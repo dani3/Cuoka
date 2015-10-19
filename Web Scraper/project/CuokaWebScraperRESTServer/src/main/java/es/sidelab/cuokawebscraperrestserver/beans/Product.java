@@ -23,6 +23,15 @@ public class Product
     
     public Product() {}
     
+    @Override
+    public String toString() 
+    {
+        return ( "Name: " + this.name
+             + "\nShop: " + this.shop
+             + "\nSection: " + this.shop
+             + "\nPrice: " + this.price );
+    }
+    
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
     public String getSection() { return this.section; }

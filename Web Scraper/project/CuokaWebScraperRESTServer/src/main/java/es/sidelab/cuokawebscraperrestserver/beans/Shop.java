@@ -38,6 +38,20 @@ public class Shop
         this.sections = sections;
         this.offline = offline;
     }
+    
+    @Override
+    public String toString()
+    {
+        String aux = "";
+        for ( Section section : this.sections )
+            aux = aux.concat( "  - " + section.toString() + "\n" );
+        
+        
+        return ( "Name: " + this.name 
+             + "\nURL: " + this.url.toString()
+             + "\nOnline: " + !this.offline
+             + "\nSections:\n" + aux );
+    }
 
     public String getName() { return name; }
     public URL getUrl() { return url; }

@@ -55,7 +55,8 @@ public class ShopController
             LOG.info( "Tienda eliminada correctamente" );
         }
         
-        LOG.info( "Se añade la nueva tienda a la BD..." );        
+        LOG.info( "Se añade la nueva tienda a la BD: \n" );  
+        LOG.info( shop.toString() );
         shopsRepository.save( shop );          
         LOG.info( "Tienda insertada correctamente, saliendo del metodo addShop" );
         

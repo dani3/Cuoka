@@ -18,7 +18,7 @@ public class main
         // Creamos un cliente REST y configuramos la URL del servidor
         RestClient restClient = new RestClient( new URL( URL ) );
         
-        // Sacamos la lista de tiendas de la BD (tiene que ser final para poder usarlo en los Runnable)
+        // Sacamos la lista de tiendas utilizando un cliente REST
         Shop[] shops = restClient.getArrayOfShops();        
         
         LOG.info( "Lista de tiendas recibida y creada correctamente" );
