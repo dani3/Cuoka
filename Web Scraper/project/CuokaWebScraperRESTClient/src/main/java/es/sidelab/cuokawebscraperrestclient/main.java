@@ -9,15 +9,14 @@ import org.apache.log4j.Logger;
 
 public class main 
 {
-    private static final Logger LOG = Logger.getLogger( main.class );    
-    private static final String URL = Properties.SERVER;
+    private static final Logger LOG = Logger.getLogger( main.class );   
     
     public static void main( String[] args ) throws Exception
     {   
-        LOG.info( "Conectando al servidor REST a la URL: " + URL );
+        LOG.info( "Conectando al servidor REST a la URL: " + Properties.SERVER );
         
         // Creamos un cliente REST y configuramos la URL del servidor
-        RestClient restClient = new RestClient( new URL( URL ) );
+        RestClient restClient = new RestClient( new URL( Properties.SERVER ) );
         
         // Sacamos la lista de tiendas utilizando un cliente REST
         Shop[] shops = restClient.getArrayOfShops();        
