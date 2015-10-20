@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-public class ShopController 
+public class Controller 
 {
-    private static final Log LOG = LogFactory.getLog( ShopController.class );
+    private static final Log LOG = LogFactory.getLog(Controller.class );
     
     @Autowired
     ShopsRepository shopsRepository;
@@ -89,7 +89,7 @@ public class ShopController
         LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
         List<Shop> shops = shopsRepository.findAll();
         
-        if ( shops.size() > 0 )
+        if ( ! shops.isEmpty() )
         {
             LOG.info( "Lista de tiendas encontradas:\n" );
             for ( Shop shop : shops )

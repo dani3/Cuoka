@@ -51,7 +51,8 @@ public class HyMScraper implements GenericScraper
             productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
                                     , name.ownText()
                                     , shop.getName()
-                                    , section.getName() ) );
+                                    , section.getName()
+                                    , image.attr( "src" ) ) );
         }
             
         return productList;

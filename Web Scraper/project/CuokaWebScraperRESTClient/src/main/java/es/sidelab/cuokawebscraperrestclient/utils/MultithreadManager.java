@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,7 +15,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,8 +24,7 @@ import org.apache.log4j.Logger;
 
 public class MultithreadManager 
 {
-    private static final Logger LOG = Logger.getLogger( MultithreadManager.class );  
-    private static final String URL = "http://192.168.33.10:8080";
+    private static final Logger LOG = Logger.getLogger( MultithreadManager.class ); 
     
     /*
      * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor
@@ -95,8 +94,8 @@ public class MultithreadManager
                         {
                             LOG.info( "Todos los threads de " + shop.getName() + " han acabado" );
                             LOG.info( "Llamando al servidor REST para almacenar los productos!" );
-                            LOG.info( "URL del servidor REST: " + URL );
-                            RestClient restClient = new RestClient( new URL( URL ) );
+                            LOG.info( "URL del servidor REST: " + Properties.SERVER );
+                            RestClient restClient = new RestClient( new URL( Properties.SERVER ) );
                             restClient.saveProducts( productList, shop );
                             
                             LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
