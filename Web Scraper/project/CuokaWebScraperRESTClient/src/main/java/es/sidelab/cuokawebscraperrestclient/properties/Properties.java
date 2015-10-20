@@ -7,6 +7,6 @@ package es.sidelab.cuokawebscraperrestclient.properties;
 
 public class Properties 
 {    
-    public static String SERVER = "http://192.168.33.10:8080";
-    public static int TIMEOUT = 60000;    
+    public static final String SERVER = "http://192.168.33.10:8080";
+    public static final int TIMEOUT = 60000;    
 }
