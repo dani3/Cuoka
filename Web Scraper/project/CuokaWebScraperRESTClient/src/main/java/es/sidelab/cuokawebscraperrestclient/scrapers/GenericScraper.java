@@ -13,7 +13,5 @@ import java.util.List;
 
 public interface GenericScraper 
 {
-    final int TIMEOUT = 60000;
-    
     public List<Product> scrap( Shop shop, Section section ) throws IOException;
 }

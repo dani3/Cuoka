@@ -3,8 +3,8 @@ package es.sidelab.cuokawebscraperrestclient.scrapers;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
@@ -26,7 +26,7 @@ public class HyMScraper implements GenericScraper
     public List<Product> scrap( Shop shop, Section section ) throws IOException 
     {      
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() ).timeout( TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() ).timeout( Properties.TIMEOUT ).get();
           
         // Obtener los links a todos los productos
         Elements elements = document.select( "h3.product-item-headline > a" );
@@ -36,7 +36,7 @@ public class HyMScraper implements GenericScraper
         {
             // Obtener el HTML del producto
             document = Jsoup.connect( shop.getURL().toString()
-                            + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
+                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
 
             // Obtener los atributos del producto
             Element name = document.select( "h1.product-item-headline" ).first(); 

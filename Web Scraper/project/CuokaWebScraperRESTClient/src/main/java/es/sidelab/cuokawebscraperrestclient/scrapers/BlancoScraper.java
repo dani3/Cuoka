@@ -3,9 +3,8 @@ package es.sidelab.cuokawebscraperrestclient.scrapers;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import static es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper.TIMEOUT;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
@@ -27,14 +26,14 @@ public class BlancoScraper implements GenericScraper
     public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() ).timeout( TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() ).timeout( Properties.TIMEOUT ).get();
         
         Elements elements = document.select( "h2.product-name > a" );
             
         for ( Element element : elements )
         {
             document = Jsoup.connect( element.attr( "href" ).toString() )
-                               .timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
+                               .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
             Element name = document.select( "div.product-name span" ).first(); 
             Element price = document.select( "span.regular-price span" ).first();

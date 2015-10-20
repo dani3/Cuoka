@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.MultithreadManager;
 import es.sidelab.cuokawebscraperrestclient.utils.RestClient;
 import java.net.URL;
@@ -9,7 +10,7 @@ import org.apache.log4j.Logger;
 public class main 
 {
     private static final Logger LOG = Logger.getLogger( main.class );    
-    private static final String URL = "http://192.168.33.10:8080";
+    private static final String URL = Properties.SERVER;
     
     public static void main( String[] args ) throws Exception
     {   

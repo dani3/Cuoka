@@ -3,8 +3,8 @@ package es.sidelab.cuokawebscraperrestclient.scrapers;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
@@ -26,7 +26,7 @@ public class SpringfieldScraper implements GenericScraper
     public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() ).timeout( TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() ).timeout( Properties.TIMEOUT ).get();
             
         // Obtener el link de 'Ver todos'
         Element seeAll = document.select( "div.pagination a" ).last();
@@ -34,7 +34,7 @@ public class SpringfieldScraper implements GenericScraper
         // Comprobar que existe el link de 'Ver todos'
         if ( seeAll != null )
             document = Jsoup.connect( shop.getURL().toString() 
-                           + seeAll.attr( "href" ) ).timeout( TIMEOUT ).get();            
+                           + seeAll.attr( "href" ) ).timeout( Properties.TIMEOUT ).get();            
             
         // Obtener el campo info de todos los productos
         Elements products = document.select( "ul.product-listing li div div.content_product > a" );
@@ -44,7 +44,7 @@ public class SpringfieldScraper implements GenericScraper
         {
             // Obtener el HTML del producto
             document = Jsoup.connect( shop.getURL().toString() 
-                            + element.attr( "href" ) ).timeout( TIMEOUT ).ignoreHttpErrors( true ).get();
+                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
         
             // Obtener los atributos
             Element name = document.select( "h1" ).first();
