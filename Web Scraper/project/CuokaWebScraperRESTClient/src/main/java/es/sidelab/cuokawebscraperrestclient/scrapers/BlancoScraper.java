@@ -48,10 +48,18 @@ public class BlancoScraper implements GenericScraper
                                     , name.ownText()
                                     , shop.getName()
                                     , section.getName()
-                                    , image.attr( "src" ) ) );
+                                    , fixURL( image.attr( "src" ) ) ) );
         }
             
         return productList;
     }
     
+    @Override
+    public String fixURL( String url )
+    {
+        if ( url.startsWith( "//" ) )
+            return "http:".concat( url ).replace( " " , "%20" );
+        
+        return url;
+    } 
 }

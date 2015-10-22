@@ -4,6 +4,7 @@ import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
+import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller 
 {
-    private static final Log LOG = LogFactory.getLog(Controller.class );
+    private static final Log LOG = LogFactory.getLog( Controller.class );
     
     @Autowired
     ShopsRepository shopsRepository;
@@ -112,11 +113,18 @@ public class Controller
         LOG.info( "Peticion POST para añadir productos recibida" );
         LOG.info( "Eliminando los productos existentes de la tienda " + shop );
         productsRepository.deleteByShop( shop );
+        ImageManager.deleteProducts( shop );
         LOG.info( "Productos eliminados!" );
         
         LOG.info( "Insertando nuevos productos" );
         for ( Product product: products )
-            productsRepository.save( product );
+        {   
+            // Guardamos el producto sin el path de la imagen, ya que no se ha descargado
+            productsRepository.save( product );                        
+            String path = ImageManager.downloadImageFromURL( product );
+            product.setImagePath( path );
+            productsRepository.updateImagePath( product.getId(), path );           
+        }
         LOG.info( "Productos insertados correctamente, saliendo del metodo addProducts" );
         
         return new ResponseEntity<>( HttpStatus.CREATED );

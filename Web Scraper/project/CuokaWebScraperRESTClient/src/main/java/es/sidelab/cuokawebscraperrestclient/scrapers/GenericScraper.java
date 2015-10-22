@@ -13,5 +13,6 @@ import java.util.List;
 
 public interface GenericScraper 
 {
-    public List<Product> scrap( Shop shop, Section section ) throws IOException;
+    public List<Product> scrap( Shop shop, Section section ) throws IOException;    
+    public String fixURL( String url );
 }

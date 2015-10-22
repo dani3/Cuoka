@@ -12,6 +12,7 @@ public class Product
     private String shop;
     private String section;
     private String imageURL;
+    private String imagePath;
     
     public Product() {}
 
@@ -29,10 +30,12 @@ public class Product
     public void setShop( String shop ) { this.shop = shop; }
     public void setSection( String section ) { this.section = section; }
     public void setImageURL( String imageURL ) { this.imageURL = imageURL; }
+    public void setImagePath( String imagePath ) { this.imagePath = imagePath; }
     
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
     public String getSection() { return this.section; }
     public String getImageURL() { return this.imageURL; }
+    public String getImagePath() { return this.imagePath; }
 }
