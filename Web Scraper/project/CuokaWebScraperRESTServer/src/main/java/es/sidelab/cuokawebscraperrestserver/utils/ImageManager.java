@@ -29,6 +29,9 @@ public class ImageManager
 {
     private static final Log LOG = LogFactory.getLog( ImageManager.class );
     
+    /*
+     * Metodo que descarga la imagen del producto y le baja la resolucion a 350x500
+     */
     public static String downloadImageFromURL( Product product )
     {
         InputStream in = null;
@@ -62,14 +65,14 @@ public class ImageManager
                     + product.getShop() + "/" + imageName.getName() + ".jpg" );
                         
         } catch ( MalformedURLException ex ) {
-            LOG.info( "ERROR: Error al formar la URL de la imagen" );
-            LOG.info( ex.getMessage() );
+            LOG.error( "ERROR: Error al formar la URL de la imagen" );
+            LOG.error( ex.getMessage() );
             
             return null;
             
         } catch ( IOException ex ) {
-            LOG.info( "ERROR: Error en la conexion" );
-            LOG.info( ex.getMessage() );
+            LOG.error( "ERROR: Error en la conexion" );
+            LOG.error( ex.getMessage() );
             
             return null;
         }
@@ -77,6 +80,9 @@ public class ImageManager
         return ( folder.getName() + "/" + imageName.getName() );
     }
     
+    /*
+     * Metodo que borra todas las imagenes guardadas de una tienda
+     */
     public static void deleteProducts( String shop )
     {
         try 
@@ -91,24 +97,33 @@ public class ImageManager
             FileUtils.cleanDirectory( folder );
             
         } catch ( IOException ex ) {
-            
+            LOG.error( "ERROR: Error la eliminas las imagenes" );
+            LOG.error( ex.getMessage() );
         }        
     }
     
+    /*
+     * Metodo que cambia la resolucion de la imagen a 350x500
+     */
     private static void resizeImage( String imagePath ) throws IOException
-    {        
+    {     
+        // Creamos una BufferedImage donde guardamos la imagen original
         BufferedImage original = ImageIO.read( new FileInputStream( imagePath ) );
         
-        int newWidth = 350;
-        int newHeight = 500;
+        // Creamos una Image reescalando la original y una BufferedImage
+        Image resized = original.getScaledInstance( Properties.IMAGE_WIDTH
+                                        , Properties.IMAGE_HEIGHT
+                                        , Image.SCALE_FAST );       
+        BufferedImage bImgResized = new BufferedImage( Properties.IMAGE_WIDTH
+                                            , Properties.IMAGE_HEIGHT
+                                            , original.getType() );       
         
-        Image resized = original.getScaledInstance( newWidth, newHeight, Image.SCALE_FAST );       
-        BufferedImage bImgResized = new BufferedImage( newWidth, newHeight, original.getType() );       
-        
+        // Utilizamos Graphics2D para guardar la imagen reescalada (Image) en un BufferedImage
         Graphics2D bGr = bImgResized.createGraphics();
         bGr.drawImage( resized, 0 , 0, null );
         bGr.dispose();
         
+        // Guardamos en fichero la imagen reescalada con el mismo nombre
         ImageIO.write( bImgResized, "jpg", new FileOutputStream( imagePath ) );
     }
 }

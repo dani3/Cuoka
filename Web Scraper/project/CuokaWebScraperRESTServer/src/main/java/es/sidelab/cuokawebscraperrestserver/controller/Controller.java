@@ -120,16 +120,21 @@ public class Controller
         for ( Product product: products )
         {   
             // Guardamos el producto sin el path de la imagen, ya que no se ha descargado
+            LOG.info( "Guardando el producto en BD" );
             productsRepository.save( product );  
             
             // Descargamos la imagen y obtenemos el path en el HDD
+            LOG.info( "Llamando a ImageManager para descargar la imagen" );
             String path = ImageManager.downloadImageFromURL( product );
+            LOG.info( "Imagen descargada en la ruta: " + path );
             product.setImagePath( path );
             
             // Actualizamos el path en BD
-            productsRepository.updateImagePath( product.getId(), path );           
+            LOG.info( "Guardando el path en BD" );
+            productsRepository.updateImagePath( product.getId(), path );
+            LOG.info( "Producto guardado correctamente" );
         }
-        LOG.info( "Productos insertados correctamente, saliendo del metodo addProducts" );
+        LOG.info( "Productos de " + shop + " insertados correctamente, saliendo del metodo addProducts" );
         
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
