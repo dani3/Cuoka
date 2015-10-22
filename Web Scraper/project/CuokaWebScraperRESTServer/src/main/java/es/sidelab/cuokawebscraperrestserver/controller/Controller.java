@@ -120,9 +120,13 @@ public class Controller
         for ( Product product: products )
         {   
             // Guardamos el producto sin el path de la imagen, ya que no se ha descargado
-            productsRepository.save( product );                        
+            productsRepository.save( product );  
+            
+            // Descargamos la imagen y obtenemos el path en el HDD
             String path = ImageManager.downloadImageFromURL( product );
             product.setImagePath( path );
+            
+            // Actualizamos el path en BD
             productsRepository.updateImagePath( product.getId(), path );           
         }
         LOG.info( "Productos insertados correctamente, saliendo del metodo addProducts" );

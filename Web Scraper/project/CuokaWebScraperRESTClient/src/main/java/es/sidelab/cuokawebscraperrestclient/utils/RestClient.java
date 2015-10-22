@@ -52,7 +52,12 @@ public class RestClient
     {
         LOG.info( "Filtramos las tiendas que no estan disponibles" );
         
-        Shop[] aux = new Shop[ shops.length ];
+        int cont = 0;
+        for ( Shop shop : shops )
+            if ( ! shop.isOffline() )
+                cont++;
+        
+        Shop[] aux = new Shop[ cont ];
         
         int j = 0;
         for ( Shop shop : shops )

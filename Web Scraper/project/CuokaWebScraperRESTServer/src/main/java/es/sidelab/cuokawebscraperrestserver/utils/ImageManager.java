@@ -2,14 +2,20 @@ package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.imageio.ImageIO;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -29,8 +35,7 @@ public class ImageManager
         ByteArrayOutputStream out = null;
         FileOutputStream fos = null;
         
-        File folder = new File( System.getProperty( "user.dir" ) 
-                + "/" + Properties.IMAGE_PATH + product.getShop() );
+        File folder = new File( Properties.IMAGE_PATH + product.getShop() );
         File imageName = new File( product.getShop()
                             + "_" + product.getSection()
                             + "_" + product.getId() );        
@@ -45,13 +50,16 @@ public class ImageManager
             while( ( i = in.read( buffer ) ) != -1 )
                 out.write( buffer, 0, i );
             
-            fos = new FileOutputStream( System.getProperty( "user.dir" ) + "/" 
-                    + Properties.IMAGE_PATH + product.getShop() + "/" + imageName.getName() + ".png" );
+            fos = new FileOutputStream( Properties.IMAGE_PATH 
+                    + product.getShop() + "/" + imageName.getName() + ".jpg" );
             fos.write( out.toByteArray() ); 
             
             fos.close();
             out.close();
             in.close();
+            
+            resizeImage( Properties.IMAGE_PATH 
+                    + product.getShop() + "/" + imageName.getName() + ".jpg" );
                         
         } catch ( MalformedURLException ex ) {
             LOG.info( "ERROR: Error al formar la URL de la imagen" );
@@ -65,8 +73,7 @@ public class ImageManager
             
             return null;
         }
-        
-        // No deberia llegar aqui                
+                        
         return ( folder.getName() + "/" + imageName.getName() );
     }
     
@@ -74,7 +81,7 @@ public class ImageManager
     {
         try 
         {
-            File folder = new File( System.getProperty( "user.dir" ) + "/" + Properties.IMAGE_PATH + shop );
+            File folder = new File( Properties.IMAGE_PATH + shop );
             
             // Comprobamos si existe el directorio, si no, se crea
             if ( ! folder.exists())
@@ -86,5 +93,22 @@ public class ImageManager
         } catch ( IOException ex ) {
             
         }        
+    }
+    
+    private static void resizeImage( String imagePath ) throws IOException
+    {        
+        BufferedImage original = ImageIO.read( new FileInputStream( imagePath ) );
+        
+        int newWidth = 350;
+        int newHeight = 500;
+        
+        Image resized = original.getScaledInstance( newWidth, newHeight, Image.SCALE_FAST );       
+        BufferedImage bImgResized = new BufferedImage( newWidth, newHeight, original.getType() );       
+        
+        Graphics2D bGr = bImgResized.createGraphics();
+        bGr.drawImage( resized, 0 , 0, null );
+        bGr.dispose();
+        
+        ImageIO.write( bImgResized, "jpg", new FileOutputStream( imagePath ) );
     }
 }
