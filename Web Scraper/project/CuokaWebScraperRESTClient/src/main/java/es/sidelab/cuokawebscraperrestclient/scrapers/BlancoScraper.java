@@ -34,7 +34,7 @@ public class BlancoScraper implements GenericScraper
             
         for ( Element element : elements )
         {
-            document = Jsoup.connect( element.attr( "href" ).toString() )
+            document = Jsoup.connect( element.attr( "href" ) )
                                .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos del producto

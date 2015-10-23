@@ -22,6 +22,7 @@ public class Product
     private double price;
     private String imageURL;
     private String imagePath;
+    private String link;
     
     public Product() {}
     
@@ -41,6 +42,7 @@ public class Product
     public String getImageURL() { return this.imageURL; }
     public String getImagePath() { return this.imagePath; }
     public long getId() { return this.id; }
+    public String getLink() { return this.link; }
     
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }
@@ -48,4 +50,5 @@ public class Product
     public void setPrice( double price ) { this.price = price; }
     public void setImageURL( String imageURL ) { this.imageURL = imageURL; }
     public void setImagePath( String imagePath ) { this.imagePath = imagePath; }
+    public void setLink( String link ) { this.link = link; }  
 }

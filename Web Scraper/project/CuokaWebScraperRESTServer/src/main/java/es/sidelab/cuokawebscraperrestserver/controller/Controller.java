@@ -121,7 +121,7 @@ public class Controller
         {   
             // Guardamos el producto sin el path de la imagen, ya que no se ha descargado
             LOG.info( "Guardando el producto en BD" );
-            productsRepository.save( product );  
+            productsRepository.save( product );
             
             // Descargamos la imagen y obtenemos el path en el HDD
             LOG.info( "Llamando a ImageManager para descargar la imagen" );

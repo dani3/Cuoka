@@ -6,6 +6,7 @@
 package es.sidelab.cuokawebscraperrestclient.test;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -32,16 +33,17 @@ public class mainTest {
         
         for ( Element element : elements )
         {
-            document = Jsoup.connect( element.attr( "href" ).toString() )
-                    .timeout( 60000 ).ignoreHttpErrors( true ).get();
+            document = Jsoup.connect( element.attr( "href" ) )
+                    .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
             Element name = document.select( "div.product-name span" ).first(); 
             Element price = document.select( "span.regular-price span" ).first();
             Element image = document.select( "div.product-image-gallery img" ).first();
             
+            System.out.println( element.attr( "href" ) );
             System.out.println( name.ownText() );
             System.out.println( price.ownText() );
-            System.out.println( image.attr( "src" ) );
+            //System.out.println( image.attr( "src" ) );
         }
         
     }
