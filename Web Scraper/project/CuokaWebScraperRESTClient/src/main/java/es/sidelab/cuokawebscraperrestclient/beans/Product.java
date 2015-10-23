@@ -13,10 +13,16 @@ public class Product
     private String section;
     private String imageURL;
     private String imagePath;
+    private String link;
     
     public Product() {}
 
-    public Product( double price, String name, String shop, String section, String imageURL ) 
+    public Product( double price
+            , String name
+            , String shop
+            , String section
+            , String imageURL
+            , String link ) 
     {
         this.price = price;
         this.name = name;

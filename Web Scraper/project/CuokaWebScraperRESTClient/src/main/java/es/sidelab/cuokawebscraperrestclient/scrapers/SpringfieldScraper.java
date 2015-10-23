@@ -20,13 +20,14 @@ import org.jsoup.select.Elements;
 public class SpringfieldScraper implements GenericScraper 
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
-    private static List<Product> productList = new CopyOnWriteArrayList<Product>();
+    private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
     public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() ).timeout( Properties.TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() )
+                                    .timeout( Properties.TIMEOUT ).get();
             
         // Obtener el link de 'Ver todos'
         Element seeAll = document.select( "div.pagination a" ).last();
@@ -46,7 +47,8 @@ public class SpringfieldScraper implements GenericScraper
             document = Jsoup.connect( shop.getURL().toString() 
                             + element.attr( "href" ) ).timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
         
-            // Obtener los atributos
+            // Obtener los atributos del producto
+            String link = shop.getURL().toString() + element.attr( "href" );
             Element name = document.select( "h1" ).first();
             Element price = document.select( "div.product-price-block strong" ).first();
             Element image = document.select( "#image_preview img" ).first();
@@ -60,12 +62,16 @@ public class SpringfieldScraper implements GenericScraper
                                     , name.ownText()
                                     , shop.getName()
                                     , section.getName()
-                                    , fixURL( image.attr( "src" ) ) ) );
+                                    , fixURL( image.attr( "src" ) )
+                                    , link ) );
         }
             
         return productList;
     }
     
+    /*
+     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios
+     */
     @Override
     public String fixURL( String url )
     {

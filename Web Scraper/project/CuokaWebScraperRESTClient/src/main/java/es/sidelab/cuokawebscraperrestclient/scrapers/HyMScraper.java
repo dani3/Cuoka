@@ -20,13 +20,14 @@ import org.jsoup.select.Elements;
 public class HyMScraper implements GenericScraper
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
-    private static List<Product> productList = new CopyOnWriteArrayList<Product>();
+    private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
     public List<Product> scrap( Shop shop, Section section ) throws IOException 
     {      
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() ).timeout( Properties.TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() )
+                                    .timeout( Properties.TIMEOUT ).get();
           
         // Obtener los links a todos los productos
         Elements elements = document.select( "h3.product-item-headline > a" );
@@ -36,9 +37,11 @@ public class HyMScraper implements GenericScraper
         {
             // Obtener el HTML del producto
             document = Jsoup.connect( shop.getURL().toString()
-                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
+                                                      .ignoreHttpErrors( true ).get();
 
             // Obtener los atributos del producto
+            String link = shop.getURL().toString() + element.attr( "href" );
             Element name = document.select( "h1.product-item-headline" ).first(); 
             Element price = document.select( "div.product-item-price span" ).first();
             Element image = document.select( "div.product-detail-main-image-container img" ).first();
@@ -52,7 +55,8 @@ public class HyMScraper implements GenericScraper
                                     , name.ownText()
                                     , shop.getName()
                                     , section.getName()
-                                    , fixURL( image.attr( "src" ) ) ) );
+                                    , fixURL( image.attr( "src" ) )
+                                    , link ) );
         }
             
         return productList;

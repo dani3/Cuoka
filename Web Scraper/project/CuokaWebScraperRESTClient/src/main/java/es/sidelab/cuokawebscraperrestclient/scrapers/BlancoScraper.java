@@ -20,14 +20,16 @@ import org.jsoup.select.Elements;
 public class BlancoScraper implements GenericScraper
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
-    private static List<Product> productList = new CopyOnWriteArrayList<Product>();
+    private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
     public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() ).timeout( Properties.TIMEOUT ).get();
+        Document document = Jsoup.connect( section.getURL().toString() )
+                                    .timeout( Properties.TIMEOUT ).get();
         
+        // Guardamos los links de los productos
         Elements elements = document.select( "h2.product-name > a" );
             
         for ( Element element : elements )
@@ -35,6 +37,8 @@ public class BlancoScraper implements GenericScraper
             document = Jsoup.connect( element.attr( "href" ).toString() )
                                .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
+            // Obtener todos los atributos del producto
+            String link = element.attr( "href" );
             Element name = document.select( "div.product-name span" ).first(); 
             Element price = document.select( "span.regular-price span" ).first();
             Element image = document.select( "div.product-image-gallery img" ).first();
@@ -48,7 +52,8 @@ public class BlancoScraper implements GenericScraper
                                     , name.ownText()
                                     , shop.getName()
                                     , section.getName()
-                                    , fixURL( image.attr( "src" ) ) ) );
+                                    , fixURL( image.attr( "src" ) )
+                                    , link ) );
         }
             
         return productList;
