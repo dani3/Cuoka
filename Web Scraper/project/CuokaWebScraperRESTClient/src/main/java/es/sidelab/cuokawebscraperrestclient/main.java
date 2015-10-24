@@ -26,6 +26,5 @@ public class main
         
         // Ejecutamos concurrentemente los scrapers
         MultithreadManager.parallelScrap( shops );
-        
     } // main    
 }

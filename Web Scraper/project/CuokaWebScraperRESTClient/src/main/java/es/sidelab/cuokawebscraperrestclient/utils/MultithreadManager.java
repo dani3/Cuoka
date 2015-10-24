@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -35,6 +36,9 @@ public class MultithreadManager
         
         // Creamos un executor que creara un thread por cada tienda que haya.
         ExecutorService executorShops = Executors.newFixedThreadPool( shops.length );
+        
+        // Vector de booleans en el que cada tienda actualiza su posicion cuando haya terminado
+        boolean[] finishedShops = new boolean[ shops.length ];
         
         for ( int i = 0; i < shops.length; i++ )
         {
@@ -96,7 +100,9 @@ public class MultithreadManager
                             LOG.info( "Llamando al servidor REST para almacenar los productos!" );
                             LOG.info( "URL del servidor REST: " + Properties.SERVER );
                             RestClient restClient = new RestClient( new URL( Properties.SERVER ) );
-                            restClient.saveProducts( productList, shop );
+                            
+                            boolean last =  hasEveryShopFinished( finishedShops );
+                            restClient.saveProducts( productList, shop, last );
                             
                             LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
                             executorSections.shutdown();
@@ -130,6 +136,19 @@ public class MultithreadManager
         int i = 0;
         while( i < finishedSections.length )
             if ( ! finishedSections[ i++ ] )
+                return false;
+        
+        return true;
+    }
+    
+    /*
+     * Metodo que comprueba si todos las tiendas han acabado
+     */
+    private static boolean hasEveryShopFinished( boolean[] finishedShop )
+    {
+        int i = 0;
+        while( i < finishedShop.length )
+            if ( ! finishedShop[ i++ ] )
                 return false;
         
         return true;

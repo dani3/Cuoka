@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
@@ -61,8 +63,8 @@ public class ImageManager
             out.close();
             in.close();
             
-            resizeImage( Properties.IMAGE_PATH 
-                    + product.getShop() + "/" + imageName.getName() + ".jpg" );
+            //resizeImage( Properties.IMAGE_PATH 
+                 //   + product.getShop() + "/" + imageName.getName() + ".jpg" );
                         
         } catch ( MalformedURLException ex ) {
             LOG.error( "ERROR: Error al formar la URL de la imagen" );
@@ -100,6 +102,16 @@ public class ImageManager
             LOG.error( "ERROR: Error la eliminas las imagenes" );
             LOG.error( ex.getMessage() );
         }        
+    }
+    
+    public static void resizeImages()
+    {
+        try {
+            Runtime.getRuntime().exec( new String[]{ "/usr/bin/python", "resize.py" } );
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /*

@@ -24,7 +24,11 @@ public class mainTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        List<Product> productList = new ArrayList<Product>();
+        
+        Runtime.getRuntime().exec( "pwd" );
+        
+        
+        /*List<Product> productList = new ArrayList<Product>();
         
         Document document = Jsoup.connect( "http://www.suiteblanco.com/es/es_es/vestidos.html" ).get();
             
@@ -44,7 +48,7 @@ public class mainTest {
             System.out.println( name.ownText() );
             System.out.println( price.ownText() );
             //System.out.println( image.attr( "src" ) );
-        }
+        }*/
         
     }
     
