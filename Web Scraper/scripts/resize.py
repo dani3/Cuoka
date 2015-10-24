@@ -2,11 +2,15 @@
 
 import PIL
 import os
+import sys
 from PIL import Image
 
-for root, dirs, files in os.walk('images/'):
-	for folder in dirs:
-		for fname in os.listdir('images/' + folder):
-			img = Image.open('images/' + folder + '/' + fname)
-			img = img.resize((350,500), PIL.Image.NEAREST)
-			img.save('/var/www/html/images/' + folder + '/' + fname)
+shops = sys.argv
+
+for shop in shops:
+        for fname in os.listdir('images/' + shop):
+		img = Image.open('images/' + shop + '/' + fname)
+		img = img.resize((350,500), PIL.Image.NEAREST)
+		img.save('/var/www/html/images/' + shop + '/' + fname)
+
+		

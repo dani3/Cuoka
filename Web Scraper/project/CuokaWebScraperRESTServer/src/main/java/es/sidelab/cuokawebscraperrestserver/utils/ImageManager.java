@@ -4,7 +4,6 @@ import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -107,10 +106,10 @@ public class ImageManager
     /*
      * Metodo que ejecuta un script hecho en python que reescala todas las imagenes
      */
-    public static void resizeImages()
+    public static void resizeImages( String shop )
     {
         try {
-            Runtime.getRuntime().exec( Properties.RESIZE_SCRIPT );
+            Runtime.getRuntime().exec( Properties.RESIZE_SCRIPT + "shop" );
             
         } catch ( IOException ex ) {
             Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
