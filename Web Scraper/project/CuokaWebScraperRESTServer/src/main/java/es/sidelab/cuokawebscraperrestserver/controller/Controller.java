@@ -106,10 +106,9 @@ public class Controller
     /*
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
      */
-    @RequestMapping( value = "/addProducts/{shop}/{last}", method = RequestMethod.POST )
+    @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addProducts( @RequestBody List<Product> products
-                                        , @PathVariable String shop
-                                        , @PathVariable boolean last )
+                                        , @PathVariable String shop )
     {
         LOG.info( "Peticion POST para añadir productos recibida" );
         LOG.info( "Eliminando los productos existentes de la tienda " + shop );
@@ -135,16 +134,7 @@ public class Controller
             productsRepository.updateImagePath( product.getId(), path );
             LOG.info( "Producto guardado correctamente" );
         }
-        LOG.info( "Productos de " + shop + " insertados correctamente" );
-        
-        LOG.info( "Comprobando el flag ultimo" );
-        if ( last )
-        {
-            LOG.info( "Todos los productos recibidos, se llama a ImageManager para reescalar las imagenes" );
-            ImageManager.resizeImages();
-            LOG.info( "Todas las imagenes han sido reescaladas" );
-        }
-        
+        LOG.info( "Productos de " + shop + " insertados correctamente" );        
         LOG.info( "Saliendo del metodo addShop" );
                 
         return new ResponseEntity<>( HttpStatus.CREATED );

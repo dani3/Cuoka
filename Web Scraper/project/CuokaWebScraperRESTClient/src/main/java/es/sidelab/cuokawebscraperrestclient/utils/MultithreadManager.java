@@ -37,9 +37,6 @@ public class MultithreadManager
         // Creamos un executor que creara un thread por cada tienda que haya.
         ExecutorService executorShops = Executors.newFixedThreadPool( shops.length );
         
-        // Vector de booleans en el que cada tienda actualiza su posicion cuando haya terminado
-        boolean[] finishedShops = new boolean[ shops.length ];
-        
         for ( int i = 0; i < shops.length; i++ )
         {
             final int k = i;
@@ -101,8 +98,7 @@ public class MultithreadManager
                             LOG.info( "URL del servidor REST: " + Properties.SERVER );
                             RestClient restClient = new RestClient( new URL( Properties.SERVER ) );
                             
-                            boolean last =  hasEveryShopFinished( finishedShops );
-                            restClient.saveProducts( productList, shop, last );
+                            restClient.saveProducts( productList, shop );
                             
                             LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
                             executorSections.shutdown();
@@ -136,19 +132,6 @@ public class MultithreadManager
         int i = 0;
         while( i < finishedSections.length )
             if ( ! finishedSections[ i++ ] )
-                return false;
-        
-        return true;
-    }
-    
-    /*
-     * Metodo que comprueba si todos las tiendas han acabado
-     */
-    private static boolean hasEveryShopFinished( boolean[] finishedShop )
-    {
-        int i = 0;
-        while( i < finishedShop.length )
-            if ( ! finishedShop[ i++ ] )
                 return false;
         
         return true;
