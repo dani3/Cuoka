@@ -104,12 +104,15 @@ public class ImageManager
         }        
     }
     
+    /*
+     * Metodo que ejecuta un script hecho en python que reescala todas las imagenes
+     */
     public static void resizeImages()
     {
         try {
-            Runtime.getRuntime().exec( new String[]{ "/usr/bin/python", "resize.py" } );
+            Runtime.getRuntime().exec( Properties.RESIZE_SCRIPT );
             
-        } catch (IOException ex) {
+        } catch ( IOException ex ) {
             Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

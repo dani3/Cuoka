@@ -25,7 +25,7 @@ public class mainTest {
      */
     public static void main(String[] args) throws Exception {
         
-        Runtime.getRuntime().exec( "pwd" );
+        Runtime.getRuntime().exec( "sudo /usr/bin/python resize.py" );
         
         
         /*List<Product> productList = new ArrayList<Product>();
