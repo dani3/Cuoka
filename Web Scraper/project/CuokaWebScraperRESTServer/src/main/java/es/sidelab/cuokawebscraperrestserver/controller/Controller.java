@@ -2,12 +2,15 @@ package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
+import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
+import java.io.File;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

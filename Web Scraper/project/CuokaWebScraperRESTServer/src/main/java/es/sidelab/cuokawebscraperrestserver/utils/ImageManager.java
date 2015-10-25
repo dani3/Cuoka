@@ -61,9 +61,6 @@ public class ImageManager
             fos.close();
             out.close();
             in.close();
-            
-            //resizeImage( Properties.IMAGE_PATH 
-                 //   + product.getShop() + "/" + imageName.getName() + ".jpg" );
                         
         } catch ( MalformedURLException ex ) {
             LOG.error( "ERROR: Error al formar la URL de la imagen" );
@@ -78,24 +75,47 @@ public class ImageManager
             return null;
         }
                         
-        return ( folder.getName() + "/" + imageName.getName() );
+        return ( "/images/" + product.getShop() + "/" + imageName.getName() );
     }
     
     /*
-     * Metodo que borra todas las imagenes guardadas de una tienda
+     * Metodo que elimina las imagenes originales de una tienda para que no ocupen espacio
+     */
+    public static void deleteOriginalImages( String shop )
+    {
+        try 
+        {
+            File folder = new File( Properties.IMAGE_PATH + shop );
+            
+            // Eliminamos las imagenes antiguas
+            FileUtils.cleanDirectory( folder );
+            
+        } catch ( IOException ex ) {
+            LOG.error( "ERROR: Error la eliminas las imagenes" );
+            LOG.error( ex.getMessage() );
+        }    
+    }
+    
+    /*
+     * Metodo que borra todas las imagenes guardadas de una tienda.
      */
     public static void deleteProducts( String shop )
     {
         try 
         {
             File folder = new File( Properties.IMAGE_PATH + shop );
+            File folderResized = new File( Properties.RESIZED_IMAGE_PATH + shop );
             
             // Comprobamos si existe el directorio, si no, se crea
             if ( ! folder.exists())
                 folder.mkdirs();
             
+            if ( ! folderResized.exists())
+                folderResized.mkdirs();
+            
             // Eliminamos las imagenes antiguas
             FileUtils.cleanDirectory( folder );
+            FileUtils.cleanDirectory( folderResized );
             
         } catch ( IOException ex ) {
             LOG.error( "ERROR: Error la eliminas las imagenes" );
@@ -109,7 +129,7 @@ public class ImageManager
     public static void resizeImages( String shop )
     {
         try {
-            Runtime.getRuntime().exec( Properties.RESIZE_SCRIPT + "shop" );
+            Runtime.getRuntime().exec( new String[]{"sudo", "/usr/bin/python", "resize.py", shop} );
             
         } catch ( IOException ex ) {
             Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
