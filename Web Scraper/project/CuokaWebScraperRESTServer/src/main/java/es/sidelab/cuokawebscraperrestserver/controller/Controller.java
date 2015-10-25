@@ -34,7 +34,7 @@ public class Controller
     ProductsRepository productsRepository;
     
     /*
-     * Metodo que aÃ±ade una nueva tienda, si ya existe se devuelve un error 400
+     * Metodo que añade una nueva tienda, si ya existe se devuelve un error 400
      */
     @RequestMapping( value = "/addShop", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
@@ -47,7 +47,7 @@ public class Controller
         
         LOG.info( "Comprobando si existe la tienda..." );
         
-        // Si existe ya la tienda, aÃ±adimos solo las URLs que no existan
+        // Si existe ya la tienda, añadimos solo las URLs que no existan
         Shop currentShop = shopsRepository.findByName( shop.getName() );
         if ( currentShop != null ) 
         {
@@ -56,7 +56,7 @@ public class Controller
             LOG.info( "Tienda eliminada correctamente" );
         }
         
-        LOG.info( "Se aÃ±ade la nueva tienda a la BD:\n" );  
+        LOG.info( "Se añade la nueva tienda a la BD:\n" );  
         LOG.info( shop.toString() );
         shopsRepository.save( shop );          
         LOG.info( "Tienda insertada correctamente, saliendo del metodo addShop" );
@@ -134,6 +134,7 @@ public class Controller
             productsRepository.updateImagePath( product.getId(), path );
             LOG.info( "Producto guardado correctamente" );
         }
+        
         LOG.info( "Productos de " + shop + " insertados correctamente" );
         LOG.info( "Llamando a ImageManager para reescalar las imagenes de " + shop );
         ImageManager.resizeImages( shop );
@@ -166,6 +167,27 @@ public class Controller
     /*
      * Metodo que devuelve true si hay algun atributo incorrecto
      */
+    private boolean checkProduct( Product product )
+    {
+        LOG.info( "Comprobando campos del JSON del producto" );
+        
+        if( ( product.getName() == null ) || ( product.getName().isEmpty() ) ||
+            ( product.getShop() == null ) || ( product.getShop().isEmpty() ) ||
+            ( product.getSection() == null ) || ( product.getSection().isEmpty() ) ||
+            ( product.getLink() == null ) || ( product.getLink().isEmpty() ) || 
+            ( product.getImageURL() == null ) || ( product.getImageURL().isEmpty() ) )
+        {
+            LOG.error( "ERROR: Uno de los campos del producto esta vacio" );            
+            return true;
+        }
+        
+        LOG.info( "El JSON del producto es correcto" );        
+        return false;
+    }
+    
+    /*
+     * Metodo que devuelve true si hay algun atributo incorrecto
+     */
     private boolean checkShop( Shop shop )
     {
         LOG.info( "Comprobando campos del JSON recibido..." );
@@ -174,7 +196,7 @@ public class Controller
              ( shop.getUrl() == null ) ||
              ( shop.getName().equals( "" ) ) )
         {
-            LOG.error( "ERROR: Uno de los campos estÃ¡ vacÃ­o" );            
+            LOG.error( "ERROR: Uno de los campos esta vacio" );            
             return true;
         }
         
