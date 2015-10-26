@@ -124,7 +124,7 @@ public class ImageManager
     }
     
     /*
-     * Metodo que ejecuta un script hecho en python que reescala todas las imagenes
+     * Metodo que ejecuta un script hecho en python que reescala todas las imagenes de una tienda
      */
     public static void resizeImages( String shop )
     {
