@@ -115,7 +115,6 @@ public class ImageManager
             
             // Eliminamos las imagenes antiguas
             FileUtils.cleanDirectory( folder );
-            FileUtils.cleanDirectory( folderResized );
             
         } catch ( IOException ex ) {
             LOG.error( "ERROR: Error la eliminas las imagenes" );
