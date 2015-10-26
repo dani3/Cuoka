@@ -56,7 +56,8 @@ public class HyMScraper implements GenericScraper
                                     , shop.getName()
                                     , section.getName()
                                     , fixURL( image.attr( "src" ) )
-                                    , link ) );
+                                    , link
+                                    , section.isMan() ) );
         }
             
         return productList;

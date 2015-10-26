@@ -8,22 +8,20 @@ import java.net.URL;
  * 
  * @author Daniel Mancebo Aldea
  */
+
 public class Section 
 {
     private String name;
     private URL url;
+    private boolean man;
     
     public Section() {}
 
-    public Section( String name, URL url ) 
-    {
-        this.name = name;
-        this.url = url;
-    }
-
     public void setName( String name ) { this.name = name; }
     public void setUrl( URL url ) { this.url = url; }
+    public void setMan( boolean man ) { this.man = man; }
     
-    public String getName() { return name; }
-    public URL getURL() { return url; }
+    public String getName() { return this.name; }
+    public URL getURL() { return this.url; }
+    public boolean isMan() { return this.man; }
 }

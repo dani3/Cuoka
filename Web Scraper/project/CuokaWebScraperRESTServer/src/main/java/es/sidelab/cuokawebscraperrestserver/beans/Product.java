@@ -23,6 +23,7 @@ public class Product
     private String imageURL;
     private String imagePath;
     private String link;
+    private boolean man;
     
     public Product() {}
     
@@ -43,6 +44,7 @@ public class Product
     public String getImagePath() { return this.imagePath; }
     public long getId() { return this.id; }
     public String getLink() { return this.link; }
+    public boolean isMan() { return this.man; }
     
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }
@@ -51,4 +53,5 @@ public class Product
     public void setImageURL( String imageURL ) { this.imageURL = imageURL; }
     public void setImagePath( String imagePath ) { this.imagePath = imagePath; }
     public void setLink( String link ) { this.link = link; }  
+    public void setMan( boolean man ) { this.man = man; }
 }

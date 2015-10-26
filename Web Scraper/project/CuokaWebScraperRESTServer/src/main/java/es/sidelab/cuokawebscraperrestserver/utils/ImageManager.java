@@ -75,7 +75,7 @@ public class ImageManager
             return null;
         }
                         
-        return ( "/images/" + product.getShop() + "/" + imageName.getName() );
+        return ( "/images/" + product.getShop() + "/" + imageName.getName() + ".jpg" );
     }
     
     /*
