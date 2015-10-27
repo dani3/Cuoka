@@ -5,6 +5,8 @@
  */
 package es.sidelab.cuokawebscraperrestclient.test;
 
+import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
@@ -16,7 +18,18 @@ import org.jsoup.select.Elements;
 
 public class mainTest {
 
+    private static boolean containsProduct( List<Product> productList, String reference )
+    {
+        for ( Product p : productList )
+            if ( p.getReference().equals( reference ) )
+                return true;
+        
+        return false;
+    }
+    
     public static void main(String[] args) throws Exception {
+        
+        List<Product> productList = new ArrayList<>();
         
         // Obtener el HTML
         Document document = Jsoup.connect( "http://spf.com/es/tienda/man/abrigos" )
@@ -33,7 +46,6 @@ public class mainTest {
         // Obtener el campo info de todos los productos
         Elements products = document.select( "ul.product-listing li div div.content_product > a" );
             
-        int i = 0;
         for ( Element element : products )
         {
             // Obtener el HTML del producto
@@ -42,33 +54,63 @@ public class mainTest {
         
             // Obtener los atributos del producto
             String link = "http://spf.com" + element.attr( "href" );
-            Element name = document.select( "h1" ).first();
-            Element price = document.select( "div.product-price-block strong" ).first();
-            Element image = document.select( "#image_preview img" ).first();
-            Element ref = document.select( "span.patron" ).first();
-            
-            
-            // Obtener todas las imagenes
-            Elements images = document.select( "#product_image_list a" );
-            List<String> imagesURL = new ArrayList<>();
-            for ( Element img : images )
-            {
-               imagesURL.add( fixURL( img.attr( "href" ) ) );
-               System.out.println( fixURL( img.attr( "href" ) ) );
-            }
-              
-            
+            String name = document.select( "h1" ).first().ownText();
+            String price = document.select( "div.product-price-block strong" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String reference = document.select( "span.patron" ).first().ownText().replaceAll( "Ref: " , "" );
             
             //System.out.println( link );
-            //System.out.println( name.ownText() );
-            //System.out.println( price.ownText() );
-            //System.out.println( image.attr( "src" ) );
+            System.out.println( name );
+            //System.out.println( price );
+            System.out.println( "Referencia: " + reference );
             
-            
-            // Referencia
-            System.out.println( ref.ownText().replaceAll( "Ref: " , "" ) );
-        }
-        
+            if ( ! containsProduct( productList, reference ) )
+            {
+                // Obtener los colores disponibles
+                List<ColorVariant> colorList = new ArrayList<>();
+                Elements colors = document.select( "ul.product_colors > li a" );
+                for ( Element color : colors )
+                {                    
+                    // Nos conectamos de nuevo usando el color y sacamos el identificador del color '?color=XXXXX'
+                    String idColor = color.attr( "href" )
+                                        .substring( color.attr( "href" ).indexOf( "=" ) + 1 
+                                            , color.attr( "href" ).length() );
+                    
+                    String colorName = color.select( "img" ).attr( "alt" );
+                    String colorURL = fixURL( color.select( "img" ).attr( "src" ) );  
+                    
+                    System.out.println( "Color: " + colorName );
+                    System.out.println( "ColorURL: " + colorURL );            
+                    
+                    Elements images;
+                    if ( colors.size() > 1 )
+                        images = document.select( "#product_image_list li.color_" + idColor + " a" );
+                    else
+                        images = document.select( "#product_image_list a" );
+                   
+                    
+                    List<Image> imagesURL = new ArrayList<>();
+                    for ( Element img : images )
+                    {
+                        imagesURL.add( new Image( fixURL( img.attr( "href" ) ) ) );
+                        System.out.println( fixURL( img.attr( "href" ) ) );
+                    }
+                    
+                    colorList.add( new ColorVariant( colorName, colorURL, imagesURL ) );
+                }
+                
+                Product p = new Product( reference
+                                    , Double.parseDouble( price )
+                                    , name
+                                    , "Springfield"
+                                    , "Abrigos" 
+                                    , link 
+                                    , true 
+                                    , colorList );
+                    
+                productList.add( p );
+
+            } // for colors
+        } // for products
     }
     
     public static String fixURL( String url )
