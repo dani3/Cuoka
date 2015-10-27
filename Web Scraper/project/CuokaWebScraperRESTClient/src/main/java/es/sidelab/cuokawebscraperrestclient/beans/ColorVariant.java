@@ -3,22 +3,20 @@ package es.sidelab.cuokawebscraperrestclient.beans;
 import java.util.List;
 
 /**
- * @class Clase que representa las disintas versiones de un producto.
- *  En un producto que contenga solo un color, la lista de imagenes sera NULL, ya que 
- *  estaran guardadas en la list de Product
+ * @class Clase que representa las disintas versiones de color de un producto.
  * @author Daniel Mancebo Aldea
  */
 
-public class Color 
+public class ColorVariant 
 {
     private String colorName;
     private String colorURL;
     private String colorPath;
     private List<Image> images;
     
-    public Color() {}
+    public ColorVariant() {}
     
-    public Color( String colorName, String colorURL, List<Image> images )
+    public ColorVariant( String colorName, String colorURL, List<Image> images )
     {
         this.colorName = colorName;
         this.colorURL = colorURL;
