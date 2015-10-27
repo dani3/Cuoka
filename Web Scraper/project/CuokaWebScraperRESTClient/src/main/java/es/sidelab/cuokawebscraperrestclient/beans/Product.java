@@ -3,7 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.beans;
 import java.util.List;
 
 /**
- * @class Clase que representa un producto.
+ * @class Clase que representa un producto. Si este tiene un solo color, la lista colors contendra solo un objeto Color
  * @author Daniel Mancebo Aldea
  */
 

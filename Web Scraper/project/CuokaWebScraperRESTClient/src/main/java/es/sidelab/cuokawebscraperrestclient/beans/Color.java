@@ -3,7 +3,9 @@ package es.sidelab.cuokawebscraperrestclient.beans;
 import java.util.List;
 
 /**
- * @class Clase que representa las disintas versiones de un producto
+ * @class Clase que representa las disintas versiones de un producto.
+ *  En un producto que contenga solo un color, la lista de imagenes sera NULL, ya que 
+ *  estaran guardadas en la list de Product
  * @author Daniel Mancebo Aldea
  */
 

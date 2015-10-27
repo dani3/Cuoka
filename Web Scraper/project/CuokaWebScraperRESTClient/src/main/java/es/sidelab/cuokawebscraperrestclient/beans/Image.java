@@ -1,7 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
 /**
- * @class Clase que representa una imagen de un producto
+ * @class Clase que representa una imagen de un producto, contendra la url y el path en nuestro servidor
  * @author Daniel Mancebo Aldea
  */
 
