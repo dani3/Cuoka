@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @Class Scraper especifico para Springfield
+ * @class Scraper especifico para Springfield
  * @author Daniel Mancebo Aldea
  */
 

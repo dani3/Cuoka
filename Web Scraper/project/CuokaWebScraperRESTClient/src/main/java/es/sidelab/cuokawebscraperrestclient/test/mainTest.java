@@ -14,42 +14,68 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-/**
- *
- * @author Dani
- */
 public class mainTest {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) throws Exception {
         
-        Runtime.getRuntime().exec( "sudo /usr/bin/python resize.py" );
-        
-        
-        /*List<Product> productList = new ArrayList<Product>();
-        
-        Document document = Jsoup.connect( "http://www.suiteblanco.com/es/es_es/vestidos.html" ).get();
+        // Obtener el HTML
+        Document document = Jsoup.connect( "http://spf.com/es/tienda/man/abrigos" )
+                                    .timeout( Properties.TIMEOUT ).get();
             
-        Elements elements = document.select( "h2.product-name > a" );
-        System.out.println( elements.size() );
-        
-        for ( Element element : elements )
+        // Obtener el link de 'Ver todos'
+        Element seeAll = document.select( "div.pagination a" ).last();
+            
+        // Comprobar que existe el link de 'Ver todos'
+        if ( seeAll != null )
+            document = Jsoup.connect( "http://spf.com" 
+                           + seeAll.attr( "href" ) ).timeout( Properties.TIMEOUT ).get();            
+            
+        // Obtener el campo info de todos los productos
+        Elements products = document.select( "ul.product-listing li div div.content_product > a" );
+            
+        int i = 0;
+        for ( Element element : products )
         {
-            document = Jsoup.connect( element.attr( "href" ) )
-                    .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+            // Obtener el HTML del producto
+            document = Jsoup.connect( "http://spf.com"
+                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+        
+            // Obtener los atributos del producto
+            String link = "http://spf.com" + element.attr( "href" );
+            Element name = document.select( "h1" ).first();
+            Element price = document.select( "div.product-price-block strong" ).first();
+            Element image = document.select( "#image_preview img" ).first();
+            Element ref = document.select( "span.patron" ).first();
             
-            Element name = document.select( "div.product-name span" ).first(); 
-            Element price = document.select( "span.regular-price span" ).first();
-            Element image = document.select( "div.product-image-gallery img" ).first();
             
-            System.out.println( element.attr( "href" ) );
-            System.out.println( name.ownText() );
-            System.out.println( price.ownText() );
+            // Obtener todas las imagenes
+            Elements images = document.select( "#product_image_list a" );
+            List<String> imagesURL = new ArrayList<>();
+            for ( Element img : images )
+            {
+               imagesURL.add( fixURL( img.attr( "href" ) ) );
+               System.out.println( fixURL( img.attr( "href" ) ) );
+            }
+              
+            
+            
+            //System.out.println( link );
+            //System.out.println( name.ownText() );
+            //System.out.println( price.ownText() );
             //System.out.println( image.attr( "src" ) );
-        }*/
+            
+            
+            // Referencia
+            System.out.println( ref.ownText().replaceAll( "Ref: " , "" ) );
+        }
         
     }
     
+    public static String fixURL( String url )
+    {
+        if ( url.startsWith( "//" ) )
+            return "http:".concat( url ).replace( " " , "%20" );
+        
+        return url;
+    }     
 }

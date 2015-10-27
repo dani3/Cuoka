@@ -1,5 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
+import java.util.List;
+
 /**
  * @class Clase que representa un producto.
  * @author Daniel Mancebo Aldea
@@ -7,49 +9,56 @@ package es.sidelab.cuokawebscraperrestclient.beans;
 
 public class Product 
 {
+    private String reference;
     private double price;
     private String name;
     private String shop;
     private String section;
-    private String imageURL;
-    private String imagePath;
     private String link;
     private boolean man;
+    private List<Color> colors;
+    private List<Image> images;
     
     public Product() {}
 
-    public Product( double price
+    public Product( String reference
+            , double price
             , String name
             , String shop
             , String section
-            , String imageURL
             , String link
-            , boolean man ) 
+            , boolean man
+            , List<Color> colors
+            , List<Image> images ) 
     {
         this.price = price;
         this.name = name;
         this.shop = shop;
         this.section = section;
-        this.imageURL = imageURL;
         this.link = link;
         this.man = man;
+        this.colors = colors;
+        this.images = images;
+        this.reference = reference;
     }  
     
+    public void setReference( String reference ) { this.reference = reference; }
     public void setPrice( double price ) { this.price = price; }
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }
     public void setSection( String section ) { this.section = section; }
-    public void setImageURL( String imageURL ) { this.imageURL = imageURL; }
-    public void setImagePath( String imagePath ) { this.imagePath = imagePath; }
     public void setLink( String link ) { this.link = link; }
     public void setMan( boolean man ) { this.man = man; }
+    public void setImages( List<Image> images ) { this.images = images; }
+    public void setColors( List<Color> colors ) { this.colors = colors; }
     
+    public String getReference() { return this.reference; }
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
     public String getSection() { return this.section; }
-    public String getImageURL() { return this.imageURL; }
-    public String getImagePath() { return this.imagePath; }
     public String getLink() { return this.link; }
     public boolean isMan() { return this.man; }
+    public List<Color> getColors() { return this.colors; }
+    public List<Image> getImages() { return this.images; }
 }
