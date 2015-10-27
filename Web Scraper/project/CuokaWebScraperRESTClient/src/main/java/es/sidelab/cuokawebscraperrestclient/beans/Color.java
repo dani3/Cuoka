@@ -12,24 +12,24 @@ public class Color
     private String colorName;
     private String colorURL;
     private String colorPath;
-    private List<String> imagesURL;
+    private List<Image> images;
     
     public Color() {}
     
-    public Color( String colorName, String colorURL, List<String> imagesURL )
+    public Color( String colorName, String colorURL, List<Image> images )
     {
         this.colorName = colorName;
         this.colorURL = colorURL;
-        this.imagesURL = imagesURL;
+        this.images = images;
     }
     
     public String getColorName() { return this.colorName; }
     public String getColorURL() { return this.colorURL; }
     public String getColorPath() { return this.colorPath; }
-    public List<String> getImagesURL() { return this.imagesURL; }
+    public List<Image> getImages() { return this.images; }
     
     public void setColorName( String colorName ) { this.colorName = colorName; }
     public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
     public void setColorPath( String colorPath ) { this.colorPath = colorPath; }
-    public void setImagesURL( List<String> imagesURL ) { this.imagesURL = imagesURL; }
+    public void setImages( List<Image> images ) { this.images = images; }
 }
