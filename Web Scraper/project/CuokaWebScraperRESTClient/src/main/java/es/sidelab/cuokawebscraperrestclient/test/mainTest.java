@@ -32,7 +32,7 @@ public class mainTest {
         List<Product> productList = new ArrayList<>();
         
         // Obtener el HTML
-        Document document = Jsoup.connect( "http://spf.com/es/tienda/man/abrigos" )
+        Document document = Jsoup.connect( "http://spf.com/es/tienda/man/cazadoras" )
                                     .timeout( Properties.TIMEOUT ).get();
             
         // Obtener el link de 'Ver todos'
@@ -75,7 +75,7 @@ public class mainTest {
                                         .substring( color.attr( "href" ).indexOf( "=" ) + 1 
                                             , color.attr( "href" ).length() );
                     
-                    String colorName = color.select( "img" ).attr( "alt" );
+                    String colorName = document.select( "ul.product_colors > li" ).attr( "title" );
                     String colorURL = fixURL( color.select( "img" ).attr( "src" ) );  
                     
                     System.out.println( "Color: " + colorName );

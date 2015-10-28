@@ -6,7 +6,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import static es.sidelab.cuokawebscraperrestclient.test.mainTest.fixURL;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,7 @@ public class SpringfieldScraper implements GenericScraper
                                             , color.attr( "href" ).length() );
                     
                     // Obtenemos el nombre del color y la URL del icono
-                    String colorName = color.select( "img" ).attr( "alt" ).toUpperCase();
+                    String colorName = document.select( "ul.product_colors > li" ).attr( "title" ).toUpperCase();
                     String colorURL = fixURL( color.select( "img" ).attr( "src" ) );     
                     
                     // Si hay varios colores, nos quedamos solo con las imagenes del color actual
