@@ -51,14 +51,14 @@ public class SpringfieldScraper implements GenericScraper
         
             // Obtener los atributos del producto
             String link = shop.getURL().toString() + element.attr( "href" );
-            String name = document.select( "h1" ).first().ownText();
+            String name = document.select( "h1" ).first().ownText().toUpperCase();
             String price = document.select( "div.product-price-block strong" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "span.patron" ).first().ownText().replaceAll( "Ref: " , "" );
             
             // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
             if ( ! containsProduct( productList, reference ) )
             {
-                List<ColorVariant> colorList = new ArrayList<>();
+                List<ColorVariant> variants = new ArrayList<>();
                 
                 // Obtener los colores disponibles
                 Elements colors = document.select( "ul.product_colors > li a" );
@@ -86,20 +86,17 @@ public class SpringfieldScraper implements GenericScraper
                         imagesURL.add( new Image( fixURL( img.attr( "href" ) ) ) );
                     
                     // Añadimos un nuevo ColorVariant a la lista 
-                    colorList.add( new ColorVariant( colorName, colorURL, imagesURL ) );
+                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                 }
-                
-                Product p = new Product( reference
+                    
+                productList.add( new Product( reference
                                     , Double.parseDouble( price )
                                     , name
                                     , shop.getName()
                                     , section.getName()
                                     , link 
                                     , section.isMan()
-                                    , colorList );
-                    
-                productList.add( p );
-
+                                    , variants ) );
             }
             
         } // for products

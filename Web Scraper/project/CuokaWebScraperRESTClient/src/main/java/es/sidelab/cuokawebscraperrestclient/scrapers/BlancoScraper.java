@@ -6,7 +6,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import static es.sidelab.cuokawebscraperrestclient.test.mainTest.fixURL;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +42,8 @@ public class BlancoScraper implements GenericScraper
             
             // Obtener todos los atributos propios del producto
             String link = element.attr( "href" );
-            String name = document.select( "div.product-name span" ).first().ownText(); 
-            String price = document.select( "span.regular-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String name = document.select( "div.product-name span" ).first().ownText().toUpperCase(); 
+            String price = document.select( "span.regular-price span" ).first().ownText().replaceAll( "â‚¬", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "#reference span" ).first().ownText();
             
             // Obtenemos los colores del producto
@@ -69,10 +68,10 @@ public class BlancoScraper implements GenericScraper
                     first = false;
                 }
                 
-                variants.add( new ColorVariant( colorName, colorURL, imagesURL ) );
+                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
             }
             
-            // Creamos y añadimos el producto a la lista concurrente               
+            // Creamos y aÃ±adimos el producto a la lista concurrente               
             productList.add( new Product( reference
                                     , Double.parseDouble( price )
                                     , name
