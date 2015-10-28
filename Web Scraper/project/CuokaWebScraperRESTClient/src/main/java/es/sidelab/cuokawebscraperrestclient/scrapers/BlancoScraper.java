@@ -1,10 +1,14 @@
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
+import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import static es.sidelab.cuokawebscraperrestclient.test.mainTest.fixURL;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
@@ -37,24 +41,46 @@ public class BlancoScraper implements GenericScraper
             document = Jsoup.connect( element.attr( "href" ) )
                                .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
-            // Obtener todos los atributos del producto
+            // Obtener todos los atributos propios del producto
             String link = element.attr( "href" );
-            Element name = document.select( "div.product-name span" ).first(); 
-            Element price = document.select( "span.regular-price span" ).first();
-            Element image = document.select( "div.product-image-gallery img" ).first();
+            String name = document.select( "div.product-name span" ).first().ownText(); 
+            String price = document.select( "span.regular-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String reference = document.select( "#reference span" ).first().ownText();
             
-            //System.out.println( name.ownText() );
-            //System.out.println( price.ownText() );
-            //System.out.println( image.attr( "src" ) );
+            // Obtenemos los colores del producto
+            boolean first = true;
+            List<ColorVariant> variants = new ArrayList<>();
+            Elements colors = document.select( "ul.super-attribute-select-custom li span img" );
+            for ( Element color : colors )
+            {
+                List<Image> imagesURL = null;
+                
+                String colorName = color.attr( "title" ).toUpperCase();
+                String colorURL = fixURL( color.attr( "src" ) );
+                
+                // De Blanco no podemos acceder a las imagenes de los colores alternativos, solo las del color principal
+                if ( first )
+                {
+                    Elements images = document.select( "div.product-image-gallery img" );
+                    imagesURL = new ArrayList<>();
+                    for ( Element img : images )
+                        imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
+                    
+                    first = false;
+                }
+                
+                variants.add( new ColorVariant( colorName, colorURL, imagesURL ) );
+            }
             
             // Creamos y añadimos el producto a la lista concurrente               
-            productList.add( new Product( Double.parseDouble( price.ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim() )
-                                    , name.ownText()
+            productList.add( new Product( reference
+                                    , Double.parseDouble( price )
+                                    , name
                                     , shop.getName()
                                     , section.getName()
-                                    , fixURL( image.attr( "src" ) )
                                     , link
-                                    , section.isMan() ) );
+                                    , section.isMan()
+                                    , variants ) );
         }
             
         return productList;
