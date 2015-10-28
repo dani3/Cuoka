@@ -55,7 +55,7 @@ public class SpringfieldScraper implements GenericScraper
             String price = document.select( "div.product-price-block strong" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "span.patron" ).first().ownText().replaceAll( "Ref: " , "" );
             
-            // Los productos con la misma referencia se ignoran ya que ya se han insertado
+            // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
             if ( ! containsProduct( productList, reference ) )
             {
                 List<ColorVariant> colorList = new ArrayList<>();
@@ -100,7 +100,8 @@ public class SpringfieldScraper implements GenericScraper
                     
                 productList.add( p );
 
-            } // for colors
+            }
+            
         } // for products
             
         return productList;
