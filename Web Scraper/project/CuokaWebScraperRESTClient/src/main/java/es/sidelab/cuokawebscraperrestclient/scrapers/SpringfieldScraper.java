@@ -92,10 +92,10 @@ public class SpringfieldScraper implements GenericScraper
                 Product p = new Product( reference
                                     , Double.parseDouble( price )
                                     , name
-                                    , "Springfield"
-                                    , "Abrigos" 
+                                    , shop.getName()
+                                    , section.getName()
                                     , link 
-                                    , true 
+                                    , section.isMan()
                                     , colorList );
                     
                 productList.add( p );
