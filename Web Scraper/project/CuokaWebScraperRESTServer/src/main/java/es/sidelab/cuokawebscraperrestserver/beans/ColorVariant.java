@@ -1,27 +1,34 @@
-package es.sidelab.cuokawebscraperrestclient.beans;
+package es.sidelab.cuokawebscraperrestserver.beans;
 
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * @class Clase que representa las distintas versiones de color de un producto.
  * @author Daniel Mancebo Aldea
  */
 
+@Entity
 public class ColorVariant 
 {
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )
+    private long id;
     private String colorName;
     private String colorURL;
     private String colorPath;
+    
+    @ElementCollection
+    @OneToMany( cascade = CascadeType.ALL )
     private List<Image> images;
     
     public ColorVariant() {}
-    
-    public ColorVariant( String colorName, String colorURL, List<Image> images )
-    {
-        this.colorName = colorName;
-        this.colorURL = colorURL;
-        this.images = images;
-    }
     
     public String getColorName() { return this.colorName; }
     public String getColorURL() { return this.colorURL; }

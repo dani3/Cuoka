@@ -1,9 +1,13 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * @class Bean que representa un producto
@@ -16,14 +20,17 @@ public class Product
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
+    private String reference;
+    private double price;
     private String name;
     private String shop;
     private String section;
-    private double price;
-    private String imageURL;
-    private String imagePath;
     private String link;
     private boolean man;
+    
+    @ElementCollection
+    @OneToMany( cascade = CascadeType.ALL )
+    private List<ColorVariant> colors;
     
     public Product() {}
     
@@ -36,22 +43,21 @@ public class Product
              + "\nPrice: " + this.price );
     }
     
-    public String getName() { return this.name; }
-    public String getShop() { return this.shop; }
-    public String getSection() { return this.section; }
-    public double getPrice() { return this.price; }
-    public String getImageURL() { return this.imageURL; }
-    public String getImagePath() { return this.imagePath; }
-    public long getId() { return this.id; }
-    public String getLink() { return this.link; }
-    public boolean isMan() { return this.man; }
-    
+    public void setReference( String reference ) { this.reference = reference; }
+    public void setPrice( double price ) { this.price = price; }
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }
     public void setSection( String section ) { this.section = section; }
-    public void setPrice( double price ) { this.price = price; }
-    public void setImageURL( String imageURL ) { this.imageURL = imageURL; }
-    public void setImagePath( String imagePath ) { this.imagePath = imagePath; }
-    public void setLink( String link ) { this.link = link; }  
+    public void setLink( String link ) { this.link = link; }
     public void setMan( boolean man ) { this.man = man; }
+    public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
+    
+    public String getReference() { return this.reference; }
+    public double getPrice() { return this.price; }
+    public String getName() { return this.name; }
+    public String getShop() { return this.shop; }
+    public String getSection() { return this.section; }
+    public String getLink() { return this.link; }
+    public boolean isMan() { return this.man; }
+    public List<ColorVariant> getColors() { return this.colors; }
 }
