@@ -20,7 +20,6 @@ public class Product
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
-    private String reference;
     private double price;
     private String name;
     private String shop;
@@ -40,10 +39,10 @@ public class Product
         return ( "Name: " + this.name
              + "\nShop: " + this.shop
              + "\nSection: " + this.shop
-             + "\nPrice: " + this.price );
+             + "\nPrice: " + this.price
+             + "\nNumero de colores: " + this.colors.size() );
     }
     
-    public void setReference( String reference ) { this.reference = reference; }
     public void setPrice( double price ) { this.price = price; }
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }
@@ -52,7 +51,6 @@ public class Product
     public void setMan( boolean man ) { this.man = man; }
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
     
-    public String getReference() { return this.reference; }
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
