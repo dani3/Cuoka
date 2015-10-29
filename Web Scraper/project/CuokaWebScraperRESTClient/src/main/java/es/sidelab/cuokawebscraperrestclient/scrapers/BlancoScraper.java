@@ -72,8 +72,7 @@ public class BlancoScraper implements GenericScraper
             }
             
             // Creamos y aÃ±adimos el producto a la lista concurrente               
-            productList.add( new Product( reference
-                                    , Double.parseDouble( price )
+            productList.add( new Product( Double.parseDouble( price )
                                     , name
                                     , shop.getName()
                                     , section.getName()

@@ -78,8 +78,7 @@ public class mainTest {
                     variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                 }
                                 
-                productList.add( new Product( reference
-                                    , Double.parseDouble( price )
+                productList.add( new Product( Double.parseDouble( price )
                                     , name
                                     , ""
                                     , ""

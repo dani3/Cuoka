@@ -89,8 +89,7 @@ public class SpringfieldScraper implements GenericScraper
                     variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                 }
                     
-                productList.add( new Product( reference
-                                    , Double.parseDouble( price )
+                productList.add( new Product( Double.parseDouble( price )
                                     , name
                                     , shop.getName()
                                     , section.getName()
@@ -122,8 +121,9 @@ public class SpringfieldScraper implements GenericScraper
     private boolean containsProduct( List<Product> productList, String reference )
     {
         for ( Product p : productList )
-            if ( p.getReference().equals( reference ) )
-                return true;
+            for ( ColorVariant cv : p.getColors() )
+                if ( cv.getReference().equals( reference ) )
+                    return true;
         
         return false;
     }

@@ -10,7 +10,6 @@ import java.util.List;
 
 public class Product 
 {
-    private String reference;
     private double price;
     private String name;
     private String shop;
@@ -21,8 +20,7 @@ public class Product
     
     public Product() {}
 
-    public Product( String reference
-            , double price
+    public Product( double price
             , String name
             , String shop
             , String section
@@ -37,10 +35,8 @@ public class Product
         this.link = link;
         this.man = man;
         this.colors = colors;
-        this.reference = reference;
     }  
     
-    public void setReference( String reference ) { this.reference = reference; }
     public void setPrice( double price ) { this.price = price; }
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }
@@ -49,7 +45,6 @@ public class Product
     public void setMan( boolean man ) { this.man = man; }
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
     
-    public String getReference() { return this.reference; }
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
