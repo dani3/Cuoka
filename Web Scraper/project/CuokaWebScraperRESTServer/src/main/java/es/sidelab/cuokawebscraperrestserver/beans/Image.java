@@ -17,13 +17,16 @@ public class Image
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
     private String url;
-    private String path;
+    private String pathSmallSize;
+    private String pathLargeSize;
     
     public Image() {}
 
     public String getUrl() { return url; }
-    public String getPath() { return path; }
+    public String getPathSmallSize() { return pathSmallSize; }
+    public String getPathLargeSize() { return pathLargeSize; }
 
     public void setUrl( String url ) { this.url = url; }
-    public void setPath( String path ) { this.path = path; }
+    public void setPathSmallSize( String path ) { this.pathSmallSize = path; }
+    public void setPathLargeSize( String path ) { this.pathLargeSize = path; }  
 }
