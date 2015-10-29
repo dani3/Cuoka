@@ -34,80 +34,76 @@ public class mainTest {
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML
-        Document document = Jsoup.connect( "http://www2.hm.com/es_es/hombre/compra-por-producto/camisas.html" )
+        Document document = Jsoup.connect( "http://www.suiteblanco.com/es/es_es/vestidos.html" )
                                     .timeout( Properties.TIMEOUT ).get();
         
-        // Obtener los links a todos los productos
-        Elements elements = document.select( "h3.product-item-headline > a" );
-          
-        // Recorremos todos los productos y sacamos sus atributos
+        // Guardamos los links de los productos
+        Elements elements = document.select( "h2.product-name > a" );
+            
         for ( Element element : elements )
         {
-            // Obtener el HTML del producto
-            document = Jsoup.connect( "http://www2.hm.com/"
-                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                      .ignoreHttpErrors( true ).get();
-
-            // Obtener los atributos propios del producto
-            String link = "http://www2.hm.com/" + element.attr( "href" );
-            String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
+            document = Jsoup.connect( element.attr( "href" ) )
+                               .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
-            //System.out.println( name.ownText() );
-            //System.out.println( price.ownText() );
-            //System.out.println( image.attr( "src" ) );
-            System.out.println( reference );
+            // Obtener todos los atributos propios del producto
+            String link = element.attr( "href" );
+            String name = document.select( "div.product-name span" ).first().ownText().toUpperCase(); 
+            String price = document.select( "span.regular-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String reference = document.select( "#reference span" ).first().ownText();
             
-            if ( ! containsProduct( productList, reference ) )
+            // Obtenemos los colores del producto
+            boolean first = true;
+            List<ColorVariant> variants = new ArrayList<>();
+            Elements colors = document.select( "ul.super-attribute-select-custom li span img" );
+            for ( Element color : colors )
             {
-                // Obtener los colores
-                List<ColorVariant> variants = new ArrayList<>();
-                Elements colors = document.select( "div.product-colors ul.inputlist li > label" );
-                for ( Element color : colors )
+                List<Image> imagesURL = null;
+                
+                String colorName = color.attr( "title" ).toUpperCase();
+                String colorURL = fixURL( color.attr( "src" ) );
+                
+                // De Blanco no podemos acceder a las imagenes de los colores alternativos, solo las del color principal
+                if ( first )
                 {
-                    // Nos conectamos al producto de cada color
-                    String colorLink = "http://www2.hm.com/" + "es_es/productpage." + color.select( "input" ).attr( "data-articlecode" ) + ".html";
-                    document = Jsoup.connect( colorLink ).timeout( Properties.TIMEOUT )
-                                                          .ignoreHttpErrors( true ).get();
-
-                    String colorReference = color.select( "input" ).attr( "data-articlecode" );
-                    String colorName = color.attr( "title" ).toUpperCase();
-                    String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
-
-                    System.out.println( "ColorReference: " + colorReference );
-                    System.out.println( "Color name: " + colorName );
-                    System.out.println( "ColorURL: " + colorURL );
-
-                    List<Image> imagesURL = new ArrayList<>();
-                    Elements images = document.select( "div.product-detail-thumbnails li img" );
+                    Elements images = document.select( "div.product-image-gallery img" );
+                    imagesURL = new ArrayList<>();
                     for ( Element img : images )
-                    {
-                        imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
-                        System.out.println( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) );
-                    }
-
-                    variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
+                        imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
+                    
+                    first = false;
                 }
                 
-                // Creamos y añadimos el producto a la lista concurrente               
+                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
+                                
                 productList.add( new Product( reference
                                     , Double.parseDouble( price )
                                     , name
-                                    , "Blanco"
-                                    , "Vestidos"
-                                    , link
-                                    , false
+                                    , ""
+                                    , ""
+                                    , link 
+                                    , true
                                     , variants ) );
-            } // if contains           
+            }
+            
+        } // for products
+        
+        Product p = productList.get( 1 );
+        
+        System.out.println( "-------------------------------------" );
+        System.out.println( p.getName() );
+        System.out.println( p.getLink() );
+        System.out.println( p.getReference() );
+        for ( ColorVariant cv : p.getColors() )
+        {
+            System.out.println( cv.getColorName() );
+            System.out.println( cv.getColorURL() );
+            System.out.println( cv.getReference() );
+            for ( Image image : cv.getImages() )
+                System.out.println( image.getUrl() );
+            
+            System.out.println( "" );            
         }
         
-        for ( Product p : productList ) 
-        {
-            System.out.println( p.getName() + ": " + p.getColors().size() );
-            for ( ColorVariant cv : p.getColors() )
-                System.out.println( cv.getImages().size() );
-        }
     }
     
     public static String fixURL( String url )

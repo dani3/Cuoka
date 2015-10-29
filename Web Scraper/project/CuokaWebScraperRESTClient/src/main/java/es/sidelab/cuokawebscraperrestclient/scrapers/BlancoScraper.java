@@ -43,7 +43,7 @@ public class BlancoScraper implements GenericScraper
             // Obtener todos los atributos propios del producto
             String link = element.attr( "href" );
             String name = document.select( "div.product-name span" ).first().ownText().toUpperCase(); 
-            String price = document.select( "span.regular-price span" ).first().ownText().replaceAll( "â‚¬", "" ).replaceAll( ",", "." ).trim();
+            String price = document.select( "span.regular-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "#reference span" ).first().ownText();
             
             // Obtenemos los colores del producto

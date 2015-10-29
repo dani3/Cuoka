@@ -61,16 +61,16 @@ public class SpringfieldScraper implements GenericScraper
                 List<ColorVariant> variants = new ArrayList<>();
                 
                 // Obtener los colores disponibles
-                Elements colors = document.select( "ul.product_colors > li a" );
+                Elements colors = document.select( "ul.product_colors > li" );
                 for ( Element color : colors )
                 {                    
                     // Sacamos el identificador del color de la URL ('?color=XXXXX'); hara falta mas adelante para filtrar las imagenes
-                    String idColor = color.attr( "href" )
-                                        .substring( color.attr( "href" ).indexOf( "=" ) + 1 
-                                            , color.attr( "href" ).length() );
+                    String idColor = color.select( "a" ).attr( "href" )
+                                        .substring( color.select( "a" ).attr( "href" ).indexOf( "=" ) + 1 
+                                            , color.select( "a" ).attr( "href" ).length() );
                     
                     // Obtenemos el nombre del color y la URL del icono
-                    String colorName = document.select( "ul.product_colors > li" ).attr( "title" ).toUpperCase();
+                    String colorName = color.attr( "title" ).toUpperCase();
                     String colorURL = fixURL( color.select( "img" ).attr( "src" ) );     
                     
                     // Si hay varios colores, nos quedamos solo con las imagenes del color actual

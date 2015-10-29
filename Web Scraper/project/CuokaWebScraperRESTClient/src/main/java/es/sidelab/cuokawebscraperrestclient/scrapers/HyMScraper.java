@@ -46,7 +46,7 @@ public class HyMScraper implements GenericScraper
             // Obtener los atributos propios del producto
             String link = shop.getURL().toString() + element.attr( "href" );
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "â‚¬", "" ).replaceAll( ",", "." ).trim();
             String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
             
             if ( ! containsProduct( productList, reference ) )
@@ -59,7 +59,7 @@ public class HyMScraper implements GenericScraper
                     // Nos conectamos al producto de cada color
                     String colorLink = shop.getURL().toString() + "es_es/productpage." + color.select( "input" ).attr( "data-articlecode" ) + ".html";
                     document = Jsoup.connect( colorLink ).timeout( Properties.TIMEOUT )
-                                                          .ignoreHttpErrors( true ).get();
+                                                         .ignoreHttpErrors( true ).get();
 
                     String colorReference = color.select( "input" ).attr( "data-articlecode" );
                     String colorName = color.attr( "title" ).toUpperCase();
@@ -88,7 +88,7 @@ public class HyMScraper implements GenericScraper
     }
     
     /*
-     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios
+     * Metodo que arregla la URL, aÃ±ade el protocolo si no esta presente, y codifica los espacios
      */
     @Override
     public String fixURL( String url )
