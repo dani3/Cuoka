@@ -113,7 +113,7 @@ public class Controller
         LOG.info( "Peticion POST para añadir productos recibida" );
         LOG.info( "Eliminando los productos existentes de la tienda " + shop );
         productsRepository.deleteByShop( shop );
-        ImageManager.deleteProducts( shop );
+        //ImageManager.deleteProducts( shop );
         LOG.info( "Productos eliminados!" );
         
         LOG.info( "Insertando nuevos productos" );
@@ -126,22 +126,22 @@ public class Controller
                 productsRepository.save( product );
 
                 // Descargamos la imagen y obtenemos el path en el HDD
-                LOG.info( "Llamando a ImageManager para descargar la imagen" );
-                String path = ImageManager.downloadImageFromURL( product );
-                LOG.info( "Imagen descargada en la ruta: " + path );
-                product.setImagePath( path );
+                //LOG.info( "Llamando a ImageManager para descargar la imagen" );
+                //String path = ImageManager.downloadImageFromURL( product );
+                //LOG.info( "Imagen descargada en la ruta: " + path );
+                //product.setImagePath( path );
 
                 // Actualizamos el path en BD
-                LOG.info( "Guardando el path en BD" );
-                productsRepository.updateImagePath( product.getId(), path );
-                LOG.info( "Producto guardado correctamente" );
+                //LOG.info( "Guardando el path en BD" );
+                //productsRepository.updateImagePath( product.getId(), path );
+                //LOG.info( "Producto guardado correctamente" );
             }
         }
         
         LOG.info( "Productos de " + shop + " insertados correctamente" );
-        LOG.info( "Llamando a ImageManager para reescalar las imagenes de " + shop );
-        ImageManager.resizeImages( shop );
-        LOG.info( "Imagenes de " + shop + " reescaladas correctamente" );
+        //LOG.info( "Llamando a ImageManager para reescalar las imagenes de " + shop );
+        //ImageManager.resizeImages( shop );
+        //LOG.info( "Imagenes de " + shop + " reescaladas correctamente" );
         LOG.info( "Saliendo del metodo addShop" );
                 
         return new ResponseEntity<>( HttpStatus.CREATED );
@@ -177,8 +177,7 @@ public class Controller
         if( ( product.getName()     == null ) || ( product.getName().isEmpty() ) ||
             ( product.getShop()     == null ) || ( product.getShop().isEmpty() ) ||
             ( product.getSection()  == null ) || ( product.getSection().isEmpty() ) ||
-            ( product.getLink()     == null ) || ( product.getLink().isEmpty() ) || 
-            ( product.getImageURL() == null ) || ( product.getImageURL().isEmpty() ) )
+            ( product.getLink()     == null ) || ( product.getLink().isEmpty() ) )
         {
             LOG.error( "ERROR: Uno de los campos del producto esta vacio" );            
             return true;

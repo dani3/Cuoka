@@ -33,7 +33,7 @@ public class ImageManager
     /*
      * Metodo que descarga la imagen del producto y le baja la resolucion a 350x500
      */
-    public static String downloadImageFromURL( Product product )
+    /*public static String downloadImageFromURL( Product product )
     {
         InputStream in = null;
         ByteArrayOutputStream out = null;
@@ -76,7 +76,7 @@ public class ImageManager
         }
                         
         return ( "/images/" + product.getShop() + "/" + imageName.getName() + ".jpg" );
-    }
+    }*/
     
     /*
      * Metodo que elimina las imagenes originales de una tienda para que no ocupen espacio
