@@ -44,15 +44,10 @@ public class HyMScraper implements GenericScraper
                                                       .ignoreHttpErrors( true ).get();
 
             // Obtener los atributos propios del producto
-            String link = "http://www2.hm.com/" + element.attr( "href" );
+            String link = shop.getURL().toString() + element.attr( "href" );
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
             String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
-            
-            //System.out.println( name.ownText() );
-            //System.out.println( price.ownText() );
-            //System.out.println( image.attr( "src" ) );
-            System.out.println( reference );
             
             if ( ! containsProduct( productList, reference ) )
             {
@@ -62,7 +57,7 @@ public class HyMScraper implements GenericScraper
                 for ( Element color : colors )
                 {
                     // Nos conectamos al producto de cada color
-                    String colorLink = "http://www2.hm.com/" + "es_es/productpage." + color.select( "input" ).attr( "data-articlecode" ) + ".html";
+                    String colorLink = shop.getURL().toString() + "es_es/productpage." + color.select( "input" ).attr( "data-articlecode" ) + ".html";
                     document = Jsoup.connect( colorLink ).timeout( Properties.TIMEOUT )
                                                           .ignoreHttpErrors( true ).get();
 
@@ -70,17 +65,10 @@ public class HyMScraper implements GenericScraper
                     String colorName = color.attr( "title" ).toUpperCase();
                     String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
 
-                    System.out.println( "ColorReference: " + colorReference );
-                    System.out.println( "Color name: " + colorName );
-                    System.out.println( "ColorURL: " + colorURL );
-
                     List<Image> imagesURL = new ArrayList<>();
                     Elements images = document.select( "div.product-detail-thumbnails li img" );
                     for ( Element img : images )
-                    {
                         imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
-                        System.out.println( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) );
-                    }
 
                     variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                 }
