@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.Image;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.io.BufferedInputStream;
@@ -12,7 +13,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
@@ -55,19 +59,24 @@ public class ImageManager
                                 + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Small.jpg";
                         String pathLarge = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Large.jpg";
+                        LOG.info( "Comprobando la imagen: " + path );
 
                         if ( ! FileManager.existsFile( pathSmall ) )
                         {
+                            LOG.info( "La imagen no existe, descargando" );
                             boolean ok = downloadImage( cv.getImages().get( k ).getUrl(), path );
 
                             if ( ok )
                             {
+                                LOG.info( "Imagen descargada correctamente" );
                                 product.getColors().get( j )
                                         .getImages().get( k ).setPathLargeSize( pathLarge );
                                 product.getColors().get( j )
                                         .getImages().get( k ).setPathSmallSize( pathSmall );
                             } 
+                            
                         } else {
+                            LOG.info( "La imagen ya existe" );
                             product.getColors().get( j )
                                         .getImages().get( k ).setPathLargeSize( pathLarge );
                             product.getColors().get( j )
@@ -93,13 +102,17 @@ public class ImageManager
             
         } // for products
         
+        LOG.info( "Todas las imagenes se han descargado correctamente, se reescalan" );
+        resizeImages( shop );
+        LOG.info( "Todas las imagenes han sido reescaladas correctamente" );
+        
         return productsUpdated;
     }
     
     /*
      * Metodo que descarga la imagen del producto y le baja la resolucion a 350x500
      */
-    public static boolean downloadImage( String imageURL, String path )
+    private static boolean downloadImage( String imageURL, String path )
     {
         InputStream in = null;
         ByteArrayOutputStream out = null;
@@ -141,9 +154,25 @@ public class ImageManager
         return true;
     }
     
-    private static void deleteOriginalImages()
+    /*
+     * Metodo que ejecuta un script en python para reescalar las imagenes de una tienda
+     */
+    private static void resizeImages( String shop )
     {
-        
+        try {            
+            Runtime.getRuntime().exec( new String[]{ "sudo"
+                        , "/usr/bin/python"
+                        , "./resize.py"
+                        , Properties.IMAGE_PATH + shop
+                        , Integer.toString( Properties.IMAGE_WIDTH_L )
+                        , Integer.toString( Properties.IMAGE_HEIGHT_L )
+                        , Integer.toString( Properties.IMAGE_WIDTH_S )
+                        , Integer.toString( Properties.IMAGE_HEIGHT_S ) } );
+            
+        } catch ( IOException ex ) {
+            LOG.error( "ERROR: Error al ejecutar el script 'resize.py'" );
+            
+        }
     }
     
     private static boolean checkConnectivity( URL url )

@@ -2,6 +2,7 @@ package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.io.File;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -49,10 +50,18 @@ public class FileManager
     }
     
     /*
-     * Metodo que comprueba si existe un fichero (NO FUNCIONA)
+     * Metodo que comprueba si existe un fichero
      */
     public static boolean existsFile( String file )
     {
         return ( new File( file ).exists() );
+    }
+    
+    /*
+     * Metodo que elimina un fichero 
+     */
+    public static boolean deleteFile( String file )
+    {
+        return ( new File( file ).delete() );
     }
 }
