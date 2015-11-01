@@ -50,11 +50,11 @@ public class ImageManager
                     for ( int k = 0; k < cv.getImages().size(); k++ )
                     {
                         String path = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + ".jpg";
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + ".jpg";
                         String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + "Small.jpg";
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Small.jpg";
                         String pathLarge = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + "Large.jpg";
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Large.jpg";
 
                         if ( ! FileManager.existsFile( pathSmall ) )
                         {
@@ -139,6 +139,11 @@ public class ImageManager
         }
                         
         return true;
+    }
+    
+    private static void deleteOriginalImages()
+    {
+        
     }
     
     private static boolean checkConnectivity( URL url )
