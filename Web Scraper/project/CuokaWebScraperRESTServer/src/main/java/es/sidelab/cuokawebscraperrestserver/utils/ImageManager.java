@@ -1,15 +1,10 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
-import es.sidelab.cuokawebscraperrestserver.beans.Image;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,12 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 /**
  * @class Clase que gestionara todo lo relacionado con las imagenes de los productos
@@ -35,7 +26,7 @@ public class ImageManager
     private static final Log LOG = LogFactory.getLog( ImageManager.class );
     
     /*
-     * Metodo que descarga si es necesario las imagenes del producto y los iconos de los colors
+     * Metodo que descarga si es necesario las imagenes del producto y los iconos de los colores
      */
     public static List<Product> downloadImages( List<Product> products, String shop )
     {
@@ -76,14 +67,24 @@ public class ImageManager
                                 product.getColors().get( j )
                                         .getImages().get( k ).setPathSmallSize( pathSmall );
                             } 
-                        }                  
+                        } else {
+                            product.getColors().get( j )
+                                        .getImages().get( k ).setPathLargeSize( pathLarge );
+                            product.getColors().get( j )
+                                        .getImages().get( k ).setPathSmallSize( pathSmall );                            
+                        }   
+                        
                     } // for images
-                } // if images != 
+                } // if images != null
                 
                 // Descargar los iconos si es necesario
                 String path = Properties.COLOR_PATH + cv.getColorName() + ".jpg";
-                boolean ok = downloadImage( cv.getColorURL(), path );
-                if ( ok )
+                if ( ! FileManager.existsFile( path ) )
+                {
+                    boolean ok = downloadImage( cv.getColorURL(), path );
+                    if ( ok )
+                        product.getColors().get( j ).setColorPath( path );
+                } else
                     product.getColors().get( j ).setColorPath( path );
                 
             } // for colors      

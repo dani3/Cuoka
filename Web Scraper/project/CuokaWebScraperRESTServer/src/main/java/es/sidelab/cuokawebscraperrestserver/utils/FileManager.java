@@ -45,7 +45,7 @@ public class FileManager
             folder.mkdirs();
             
         } else        
-            LOG.info( "El directorio '" + Properties.IMAGE_PATH + "' ya existe" );
+            LOG.info( "El directorio '" + Properties.COLOR_PATH + "' ya existe" );
     }
     
     /*
