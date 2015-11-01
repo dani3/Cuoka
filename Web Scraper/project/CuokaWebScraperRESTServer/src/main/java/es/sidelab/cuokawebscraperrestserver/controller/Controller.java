@@ -42,7 +42,7 @@ public class Controller
         LOG.info( "Peticion POST recibida para aÃ±adir una nueva tienda..." );
         
         // Se devuelve error 400 si hay algun atributo incorrecto
-        if ( checkShop( shop ) )
+        if ( ! shop.isOkay() )
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
         
         LOG.info( "Comprobando si existe la tienda..." );
@@ -113,35 +113,19 @@ public class Controller
         LOG.info( "Peticion POST para añadir productos recibida" );
         LOG.info( "Eliminando los productos existentes de la tienda " + shop );
         productsRepository.deleteByShop( shop );
-        //ImageManager.deleteProducts( shop );
         LOG.info( "Productos eliminados!" );
         
         LOG.info( "Insertando nuevos productos" );
-        for ( Product product: products )
-        {   
-            if ( ! checkProduct( product ) )
-            {
-                // Guardamos el producto sin el path de la imagen, ya que no se ha descargado
-                LOG.info( "Guardando el producto en BD" );
-                productsRepository.save( product );
-
-                // Descargamos la imagen y obtenemos el path en el HDD
-                //LOG.info( "Llamando a ImageManager para descargar la imagen" );
-                //String path = ImageManager.downloadImageFromURL( product );
-                //LOG.info( "Imagen descargada en la ruta: " + path );
-                //product.setImagePath( path );
-
-                // Actualizamos el path en BD
-                //LOG.info( "Guardando el path en BD" );
-                //productsRepository.updateImagePath( product.getId(), path );
-                //LOG.info( "Producto guardado correctamente" );
-            }
-        }
+        LOG.info( "Llamando a ImageManager para descargar las imagenes que no existan " );
+        List<Product> productsUpdated = ImageManager.downloadImages( products, shop );
+        for ( Product product : productsUpdated )
+            productsRepository.save( product );
         
         LOG.info( "Productos de " + shop + " insertados correctamente" );
-        //LOG.info( "Llamando a ImageManager para reescalar las imagenes de " + shop );
+        //LOG.info( "Llamando a ImageManager para reescalar las imagenes" );
         //ImageManager.resizeImages( shop );
-        //LOG.info( "Imagenes de " + shop + " reescaladas correctamente" );
+        //LOG.info( "Imagenes reescaladas correctamente" );
+        
         LOG.info( "Saliendo del metodo addShop" );
                 
         return new ResponseEntity<>( HttpStatus.CREATED );
@@ -165,50 +149,5 @@ public class Controller
     {
         LOG.info( "Peticion GET para obtener todos los productos" );
         return productsRepository.findAll();
-    }
-    
-    /*
-     * Metodo que devuelve true si hay algun atributo incorrecto
-     */
-    private boolean checkProduct( Product product )
-    {
-        LOG.info( "Comprobando campos del JSON del producto" );
-        
-        if( ( product.getName()     == null ) || ( product.getName().isEmpty() ) ||
-            ( product.getShop()     == null ) || ( product.getShop().isEmpty() ) ||
-            ( product.getSection()  == null ) || ( product.getSection().isEmpty() ) ||
-            ( product.getLink()     == null ) || ( product.getLink().isEmpty() ) )
-        {
-            LOG.error( "ERROR: Uno de los campos del producto esta vacio" );            
-            return true;
-        }
-        
-        LOG.info( "El JSON del producto es correcto" );        
-        return false;
-    }
-    
-    /*
-     * Metodo que devuelve true si hay algun atributo incorrecto
-     */
-    private boolean checkShop( Shop shop )
-    {
-        LOG.info( "Comprobando campos del JSON recibido..." );
-        
-        if ( ( shop.getName() == null ) ||
-             ( shop.getUrl() == null ) ||
-             ( shop.getName().equals( "" ) ) )
-        {
-            LOG.error( "ERROR: Uno de los campos esta vacio" );            
-            return true;
-        }
-        
-        if ( shop.getSections().isEmpty() )
-        {
-            LOG.error( "ERROR: Tienda recibida sin secciones" );            
-            return true;
-        }
-        
-        LOG.info( "El JSON es correcto" );        
-        return false;
     }
 }

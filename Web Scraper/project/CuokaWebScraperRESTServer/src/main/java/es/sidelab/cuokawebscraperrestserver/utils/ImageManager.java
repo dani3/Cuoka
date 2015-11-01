@@ -1,9 +1,10 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
+import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.Image;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,8 +13,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -31,33 +35,91 @@ public class ImageManager
     private static final Log LOG = LogFactory.getLog( ImageManager.class );
     
     /*
+     * Metodo que descarga si es necesario las imagenes del producto y los iconos de los colors
+     */
+    public static List<Product> downloadImages( List<Product> products, String shop )
+    {
+        List<Product> productsUpdated = new ArrayList<>();
+        
+        // Creamos los directorios si es necesario
+        FileManager.createProductsDirectory( shop );
+        FileManager.createColorsDirectory();
+        
+        for ( int i = 0; i < products.size(); i++ ) 
+        {
+            Product product = products.get( i );
+            
+            for ( int j = 0; j < product.getColors().size(); j++ )
+            {
+                ColorVariant cv = product.getColors().get( j );
+                
+                // Descargar las imagenes si es necesario
+                if ( cv.getImages() != null )
+                {
+                    for ( int k = 0; k < cv.getImages().size(); k++ )
+                    {
+                        String path = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + ".jpg";
+                        String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + "Small.jpg";
+                        String pathLarge = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + "Large.jpg";
+
+                        if ( ! FileManager.existsFile( pathSmall ) )
+                        {
+                            boolean ok = downloadImage( cv.getImages().get( k ).getUrl(), path );
+
+                            if ( ok )
+                            {
+                                product.getColors().get( j )
+                                        .getImages().get( k ).setPathLargeSize( pathLarge );
+                                product.getColors().get( j )
+                                        .getImages().get( k ).setPathSmallSize( pathSmall );
+                            } 
+                        }                  
+                    } // for images
+                } // if images != 
+                
+                // Descargar los iconos si es necesario
+                String path = Properties.COLOR_PATH + cv.getColorName() + ".jpg";
+                boolean ok = downloadImage( cv.getColorURL(), path );
+                if ( ok )
+                    product.getColors().get( j ).setColorPath( path );
+                
+            } // for colors      
+            
+            productsUpdated.add( product );
+            
+        } // for products
+        
+        return productsUpdated;
+    }
+    
+    /*
      * Metodo que descarga la imagen del producto y le baja la resolucion a 350x500
      */
-    /*public static String downloadImageFromURL( Product product )
+    public static boolean downloadImage( String imageURL, String path )
     {
         InputStream in = null;
         ByteArrayOutputStream out = null;
         FileOutputStream fos = null;
-        
-        File folder = new File( Properties.IMAGE_PATH + product.getShop() );
-        File imageName = new File( product.getShop()
-                            + "_" + product.getSection()
-                            + "_" + product.getId() );        
+                
         try 
         {            
-            URL url = new URL( product.getImageURL() );
+            URL url = new URL( imageURL );
+            
             in = new BufferedInputStream( url.openStream() );
+            
             out = new ByteArrayOutputStream();
             byte[] buffer = new byte[ 1024 ];
-            
+
             int i = 0;
             while( ( i = in.read( buffer ) ) != -1 )
                 out.write( buffer, 0, i );
-            
-            fos = new FileOutputStream( Properties.IMAGE_PATH 
-                    + product.getShop() + "/" + imageName.getName() + ".jpg" );
+
+            fos = new FileOutputStream( path );
             fos.write( out.toByteArray() ); 
-            
+
             fos.close();
             out.close();
             in.close();
@@ -66,89 +128,53 @@ public class ImageManager
             LOG.error( "ERROR: Error al formar la URL de la imagen" );
             LOG.error( ex.getMessage() );
             
-            return null;
+            return false;
             
         } catch ( IOException ex ) {
             LOG.error( "ERROR: Error en la conexion" );
             LOG.error( ex.getMessage() );
             
-            return null;
+            return false;
         }
                         
-        return ( "/images/" + product.getShop() + "/" + imageName.getName() + ".jpg" );
-    }*/
-    
-    /*
-     * Metodo que elimina las imagenes originales de una tienda para que no ocupen espacio
-     */
-    public static void deleteOriginalImages( String shop )
-    {
-        try 
-        {
-            File folder = new File( Properties.IMAGE_PATH + shop );
-            
-            // Eliminamos las imagenes antiguas
-            FileUtils.cleanDirectory( folder );
-            
-        } catch ( IOException ex ) {
-            LOG.error( "ERROR: Error la eliminas las imagenes" );
-            LOG.error( ex.getMessage() );
-        }    
+        return true;
     }
     
-    /*
-     * Metodo que borra todas las imagenes guardadas de una tienda.
-     */
-    public static void deleteProducts( String shop )
-    {
-        try 
-        {
-            File folder = new File( Properties.IMAGE_PATH + shop );
-            File folderResized = new File( Properties.RESIZED_IMAGE_PATH + shop );
-            
-            // Comprobamos si existe el directorio, si no, se crea
-            if ( ! folder.exists())
-                folder.mkdirs();
-            
-            if ( ! folderResized.exists())
-                folderResized.mkdirs();
-            
-            // Eliminamos las imagenes antiguas
-            FileUtils.cleanDirectory( folder );
-            
-        } catch ( IOException ex ) {
-            LOG.error( "ERROR: Error la eliminas las imagenes" );
-            LOG.error( ex.getMessage() );
-        }        
-    }
-    
-    /*
-     * Metodo que ejecuta un script hecho en python que reescala todas las imagenes de una tienda
-     */
-    public static void resizeImages( String shop )
+    private static boolean checkConnectivity( URL url )
     {
         try {
-            Runtime.getRuntime().exec( new String[]{"sudo", "/usr/bin/python", "resize.py", shop} );
+            HttpURLConnection urlConn = ( HttpURLConnection ) url.openConnection();
             
-        } catch ( IOException ex ) {
-            Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            int i = 0;
+            while ( i++ < 5 )
+            {
+                urlConn.connect();
+                
+                if ( ( HttpURLConnection.HTTP_OK == urlConn.getResponseCode() ) )
+                    return true;
+            }
+            
+        } catch ( IOException e ) {
+            LOG.info( e.getMessage() );
+        }  
+        
+        return false;
     }
     
     /*
      * Metodo que cambia la resolucion de la imagen a 350x500
      */
-    private static void resizeImage( String imagePath ) throws IOException
+    /*private static void resizeImage( String imagePath ) throws IOException
     {     
         // Creamos una BufferedImage donde guardamos la imagen original
         BufferedImage original = ImageIO.read( new FileInputStream( imagePath ) );
         
         // Creamos una Image reescalando la original y una BufferedImage
-        Image resized = original.getScaledInstance( Properties.IMAGE_WIDTH
-                                        , Properties.IMAGE_HEIGHT
+        Image resized = original.getScaledInstance( Properties.IMAGE_WIDTH_S
+                                        , Properties.IMAGE_HEIGHT_S
                                         , Image.SCALE_FAST );       
-        BufferedImage bImgResized = new BufferedImage( Properties.IMAGE_WIDTH
-                                            , Properties.IMAGE_HEIGHT
+        BufferedImage bImgResized = new BufferedImage( Properties.IMAGE_WIDTH_S
+                                            , Properties.IMAGE_HEIGHT_S
                                             , original.getType() );       
         
         // Utilizamos Graphics2D para guardar la imagen reescalada (Image) en un BufferedImage
@@ -158,5 +184,5 @@ public class ImageManager
         
         // Guardamos en fichero la imagen reescalada con el mismo nombre
         ImageIO.write( bImgResized, "jpg", new FileOutputStream( imagePath ) );
-    }
+    }*/
 }

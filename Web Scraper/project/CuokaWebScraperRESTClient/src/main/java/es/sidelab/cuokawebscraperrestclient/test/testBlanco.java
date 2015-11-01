@@ -1,35 +1,26 @@
-package es.sidelab.cuokawebscraperrestclient.scrapers;
+
+package es.sidelab.cuokawebscraperrestclient.test;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
-import es.sidelab.cuokawebscraperrestclient.beans.Section;
-import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-/**
- * @class Scraper especifico para SuiteBlanco
- * @author Daniel Mancebo Aldea
- */
+public class testBlanco {
 
-public class BlancoScraper implements GenericScraper
-{
-    // Lista preparada para la concurrencia donde escribiran todos los scrapers
-    private static List<Product> productList = new CopyOnWriteArrayList<>();
-    
-    @Override
-    public List<Product> scrap( Shop shop, Section section ) throws IOException
-    {        
+    public static void main(String[] args) throws Exception {
+        
+        // Lista preparada para la concurrencia donde escribiran todos los scrapers
+        List<Product> productList = new ArrayList<>();
+        
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() )
+        Document document = Jsoup.connect( "http://www.suiteblanco.com/es/es_es/partes-de-abajo/faldas.html" )
                                     .timeout( Properties.TIMEOUT ).get();
         
         // Guardamos los links de los productos
@@ -71,25 +62,42 @@ public class BlancoScraper implements GenericScraper
                 variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
             }
             
-            // Creamos y añadimos el producto a la lista concurrente               
             productList.add( new Product( Double.parseDouble( price )
                                     , name
-                                    , shop.getName()
-                                    , section.getName()
-                                    , link
-                                    , section.isMan()
+                                    , ""
+                                    , ""
+                                    , link 
+                                    , true
                                     , variants ) );
-        }
             
-        return productList;
+            
+        } // for products
+        
+        Product p = productList.get( 1 );
+        
+        System.out.println( "-------- INFO PRODUCTO ----------" );
+        System.out.println( "Nombre: " + p.getName() );
+        System.out.println( "Link: " + p.getLink() );
+        System.out.println( "Precio: " + p.getPrice() + " €" );
+        System.out.println( "-------- INFO COLORES -----------" );
+        for ( ColorVariant cv : p.getColors() )
+        {
+            System.out.println( " - Color: " + cv.getColorName() );
+            System.out.println( " - Icono: " + cv.getColorURL() );
+            System.out.println( " - Referencia: " + cv.getReference() );
+            for ( Image image : cv.getImages() )
+                System.out.println( " - " + image.getUrl() );
+            
+            System.out.println( "" );            
+        }
     }
     
-    @Override
-    public String fixURL( String url )
+    public static String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
-    } 
+    }   
+    
 }

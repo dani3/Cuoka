@@ -62,7 +62,7 @@ public class HyMScraper implements GenericScraper
                                                          .ignoreHttpErrors( true ).get();
 
                     String colorReference = color.select( "input" ).attr( "data-articlecode" );
-                    String colorName = color.attr( "title" ).toUpperCase();
+                    String colorName = color.attr( "title" ).toUpperCase().replaceAll( "/" , " " );
                     String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
 
                     List<Image> imagesURL = new ArrayList<>();

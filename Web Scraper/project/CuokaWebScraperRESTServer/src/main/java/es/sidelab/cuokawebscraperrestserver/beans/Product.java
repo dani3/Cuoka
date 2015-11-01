@@ -43,6 +43,28 @@ public class Product
              + "\nNumero de colores: " + this.colors.size() );
     }
     
+    public boolean isOkay()
+    {
+        if ( ( price <= 0.0f ) || ( this.name == null ) || ( this.name.isEmpty() ) || ( this.shop == null ) ||
+             ( this.shop.isEmpty() ) || ( this.section == null ) || ( this.section.isEmpty() ) || ( this.link == null ) ||
+             ( this.link.isEmpty() ) || ( this.colors == null ) || ( this.colors.isEmpty() ) )
+        {
+            return false;
+        } 
+        
+        for ( ColorVariant color : this.colors )
+        {
+            if ( ( color.getColorName() == null ) || ( color.getColorName().isEmpty() ) ||
+                 ( color.getColorURL() == null ) || ( color.getColorURL().isEmpty() ) ||
+                 ( color.getReference() == null ) || ( color.getReference().isEmpty() ) )
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     public void setPrice( double price ) { this.price = price; }
     public void setName( String name ) { this.name = name; }
     public void setShop( String shop ) { this.shop = shop; }

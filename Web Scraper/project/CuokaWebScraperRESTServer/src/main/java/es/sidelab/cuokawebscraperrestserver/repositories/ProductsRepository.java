@@ -20,9 +20,4 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     void deleteByShop( String shop );
     
     List<Product> findByShop( String shop );
-    
-    @Modifying
-    @Transactional
-    @Query("UPDATE Product SET image_path = ?2 WHERE id = ?1")
-    void updateImagePath( long id, String path );
 }

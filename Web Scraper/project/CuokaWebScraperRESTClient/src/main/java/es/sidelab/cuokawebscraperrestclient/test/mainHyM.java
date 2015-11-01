@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.sidelab.cuokawebscraperrestclient.test;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
@@ -16,7 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class mainTest {
+public class mainHyM {
 
     private static boolean containsProduct( List<Product> productList, String reference )
     {

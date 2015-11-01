@@ -106,6 +106,7 @@ public class MultithreadManager
                     } catch ( InterruptedException | ExecutionException ex ) {
                         LOG.error( "ERROR: Se ha producido un error en un thread" );
                         LOG.error( ex.getMessage() );
+                        ex.printStackTrace();
                         
                         finishedSections[ j ] = true;                        
                     } catch ( MalformedURLException ex ) {

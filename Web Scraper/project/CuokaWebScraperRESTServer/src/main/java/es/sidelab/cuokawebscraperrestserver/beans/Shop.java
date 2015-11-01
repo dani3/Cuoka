@@ -52,6 +52,19 @@ public class Shop
              + "\nOnline: " + !this.offline
              + "\nSections:\n" + aux );
     }
+    
+    public boolean isOkay()
+    {
+        if ( ( this.name == null ) ||
+             ( this.url == null ) ||
+             ( this.name.equals( "" ) ) )          
+            return false;
+        
+        if ( this.sections.isEmpty() )          
+            return false;
+            
+        return true;
+    }
 
     public String getName() { return name; }
     public URL getUrl() { return url; }

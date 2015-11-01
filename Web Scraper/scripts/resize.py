@@ -13,6 +13,4 @@ for fname in os.listdir('/var/www/html/images/' + shop):
 for fname in os.listdir('resources/images/' + shop):
 	img = Image.open('resources/images/' + shop + '/' + fname)
 	img = img.resize((350,500), PIL.Image.NEAREST)
-	img.save('/var/www/html/images/' + shop + '/' + fname)
-
-		
+	img.save('/var/www/html/images/' + shop + '/' + fname)	

@@ -16,8 +16,8 @@ public class RestClient
 {
     private static final Logger LOG = Logger.getLogger( RestClient.class );
     
-    private RestTemplate restClient;
-    private final URL SERVER;
+    private static RestTemplate restClient;
+    private static URL SERVER;
     
     public RestClient( URL server ) 
     {
@@ -37,7 +37,7 @@ public class RestClient
     /*
      * Metodo que envia una lista de productos al servidor REST
      */
-    public void saveProducts( List<Product> products, Shop shop )
+    public static synchronized void saveProducts( List<Product> products, Shop shop )
     {
         LOG.info( "Enviando lista de productos al servidor..." );
         restClient.postForObject( SERVER.toString() 
