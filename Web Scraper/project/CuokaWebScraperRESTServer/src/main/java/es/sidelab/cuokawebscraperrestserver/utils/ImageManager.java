@@ -1,7 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
-import es.sidelab.cuokawebscraperrestserver.beans.Image;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.io.BufferedInputStream;
@@ -13,10 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
@@ -106,6 +102,10 @@ public class ImageManager
         resizeImages( shop );
         LOG.info( "Todas las imagenes han sido reescaladas correctamente" );
         
+        LOG.info( "Se reescalan los iconos de los colores" );
+        resizeColors();
+        LOG.info( "Todos los iconos han sido reescalados correctamente" );
+        
         return productsUpdated;
     }
     
@@ -159,10 +159,11 @@ public class ImageManager
      */
     private static void resizeImages( String shop )
     {
-        try {            
+        try 
+        {            
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
-                        , "./resize.py"
+                        , "./resizeProducts.py"
                         , Properties.IMAGE_PATH + shop
                         , Integer.toString( Properties.IMAGE_WIDTH_L )
                         , Integer.toString( Properties.IMAGE_HEIGHT_L )
@@ -170,7 +171,29 @@ public class ImageManager
                         , Integer.toString( Properties.IMAGE_HEIGHT_S ) } );
             
         } catch ( IOException ex ) {
-            LOG.error( "ERROR: Error al ejecutar el script 'resize.py'" );
+            LOG.error( "ERROR: Error al ejecutar el script 'resizeProducts.py'" );
+            LOG.error( ex.getMessage() );
+            
+        }
+    }
+    
+    /*
+     * Metodo que ejecuta un script en python que reescala todos los iconos de los colores
+     */
+    private static void resizeColors()
+    {
+        try 
+        {            
+            Runtime.getRuntime().exec( new String[]{ "sudo"
+                        , "/usr/bin/python"
+                        , "./resizeColors.py"
+                        , Properties.COLOR_PATH
+                        , Integer.toString( Properties.ICON_WIDTH )
+                        , Integer.toString( Properties.ICON_HEIGHT ) } );
+            
+        } catch ( IOException ex ) {
+            LOG.error( "ERROR: Error al ejecutar el script 'resizeColors.py'" );
+            LOG.error( ex.getMessage() );
             
         }
     }

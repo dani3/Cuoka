@@ -15,6 +15,6 @@ public class Properties
     public static final int IMAGE_HEIGHT_S = 500;
     public static final int IMAGE_WIDTH_L = 500;
     public static final int IMAGE_HEIGHT_L = 750;
-    public static final int ICON_WIDTH = 50;
-    public static final int ICON_HEIGHT = 50;
+    public static final int ICON_WIDTH = 30;
+    public static final int ICON_HEIGHT = 30;
 }
