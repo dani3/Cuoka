@@ -121,11 +121,7 @@ public class Controller
         for ( Product product : productsUpdated )
             productsRepository.save( product );
         
-        LOG.info( "Productos de " + shop + " insertados correctamente" );
-        //LOG.info( "Llamando a ImageManager para reescalar las imagenes" );
-        //ImageManager.resizeImages( shop );
-        //LOG.info( "Imagenes reescaladas correctamente" );
-        
+        LOG.info( "Productos de " + shop + " insertados correctamente" );        
         LOG.info( "Saliendo del metodo addShop" );
                 
         return new ResponseEntity<>( HttpStatus.CREATED );

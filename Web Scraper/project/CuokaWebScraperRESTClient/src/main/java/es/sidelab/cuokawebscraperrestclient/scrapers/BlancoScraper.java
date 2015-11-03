@@ -63,7 +63,8 @@ public class BlancoScraper implements GenericScraper
                     Elements images = document.select( "div.product-image-gallery img" );
                     imagesURL = new ArrayList<>();
                     for ( Element img : images )
-                        imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
+                        if ( ! img.attr( "id" ).equals( "image-main" ) )
+                            imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
                     
                     first = false;
                 }
