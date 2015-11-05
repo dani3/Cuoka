@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,8 +86,14 @@ public class SpringfieldScraper implements GenericScraper
                     for ( Element img : images )
                         imagesURL.add( new Image( fixURL( img.attr( "href" ) ) ) );
                     
+                    // Sacamos los tamaños disponibles, en Springfield las tallas no disponibles no vienen en el HTML
+                    Elements elements = document.select( "ul.product_sizes.color_" + idColor + " li");
+                    List<Size> sizes = new ArrayList<>();
+                    for( Element size : elements )
+                        sizes.add( new Size( size.select( "label" ).text(), true ) );
+                    
                     // Añadimos un nuevo ColorVariant a la lista 
-                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
+                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
                 }
                     
                 productList.add( new Product( Double.parseDouble( price )

@@ -4,6 +4,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,9 @@ public class testBlanco {
                                     .timeout( Properties.TIMEOUT ).get();
         
         // Guardamos los links de los productos
-        Elements elements = document.select( "h2.product-name > a" );
+        Elements products = document.select( "h2.product-name > a" );
             
-        for ( Element element : elements )
+        for ( Element element : products )
         {
             document = Jsoup.connect( element.attr( "href" ) )
                                .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
@@ -60,7 +61,22 @@ public class testBlanco {
                     first = false;
                 }
                 
-                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
+                Elements elements = document.select( "#custom-size ul.super-attribute-select-custom > li > span" );
+                List<Size> sizes = new ArrayList<>();
+                for ( Element e : elements )
+                {
+                    String size = e.text();       
+                    
+                    boolean stock = ! size.contains( "agotado" );               
+                    
+                    if ( ! size.equals( "" ) || ( size != null ) )
+                    {
+                        sizes.add( new Size( size.replace( "(agotado)" , "" ).trim().toUpperCase(), stock ) );
+                        System.out.println( size + " " + stock );
+                    }           
+                }
+                
+                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
             }
             
             productList.add( new Product( Double.parseDouble( price )
@@ -89,7 +105,12 @@ public class testBlanco {
             for ( Image image : cv.getImages() )
                 System.out.println( " - " + image.getUrl() );
             
-            System.out.println( "" );            
+            System.out.print( " - Available sizes: " );
+            for( Size size : cv.getSizes() )
+                if ( size.hasStock() )
+                    System.out.print( size.getSize() + " | " );
+            
+            System.out.println( "\n" );            
         }
     }
     

@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +34,10 @@ public class mainHyM {
                                     .timeout( Properties.TIMEOUT ).get();
           
         // Obtener los links a todos los productos
-        Elements elements = document.select( "h3.product-item-headline > a" );
+        Elements products = document.select( "h3.product-item-headline > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
-        for ( Element element : elements )
+        for ( Element element : products )
         {
             // Obtener el HTML del producto
             document = Jsoup.connect( "http://www2.hm.com/"
@@ -69,8 +70,19 @@ public class mainHyM {
                     Elements images = document.select( "div.product-detail-thumbnails li img" );
                     for ( Element img : images )
                         imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
-
-                    variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
+                    
+                    Elements elements = document.select( "ul.inputlist.clearfix" );
+                    List<Size> sizes = new ArrayList<>();
+                    for ( Element sizeUl : elements )
+                        if ( sizeUl.attr( "data-sizelist" ).equals( colorReference ) )
+                            for ( Element size : sizeUl.select( "li" ) )
+                            {
+                                String value = size.select( "input" ).attr( "value" );
+                                
+                                sizes.add( new Size( value, true ) );
+                            }
+                    
+                    variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL, sizes ) );
                 }
                                 
                 productList.add( new Product( Double.parseDouble( price )
@@ -84,7 +96,7 @@ public class mainHyM {
             
         } // for products
         
-        Product p = productList.get( 1 );
+        Product p = productList.get( 2 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
@@ -99,7 +111,12 @@ public class mainHyM {
             for ( Image image : cv.getImages() )
                 System.out.println( " - " + image.getUrl() );
             
-            System.out.println( "" );            
+            System.out.print( " - Available sizes: " );
+            for( Size size : cv.getSizes() )
+                if ( size.hasStock() )
+                    System.out.print( size.getSize() + " | " );
+            
+            System.out.println( "\n" );            
         }
         
     }

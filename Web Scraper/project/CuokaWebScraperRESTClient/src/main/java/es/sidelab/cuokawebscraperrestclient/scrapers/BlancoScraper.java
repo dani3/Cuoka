@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ public class BlancoScraper implements GenericScraper
                                     .timeout( Properties.TIMEOUT ).get();
         
         // Guardamos los links de los productos
-        Elements elements = document.select( "h2.product-name > a" );
+        Elements products = document.select( "h2.product-name > a" );
             
-        for ( Element element : elements )
+        for ( Element element : products )
         {
             document = Jsoup.connect( element.attr( "href" ) )
                                .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
@@ -69,7 +70,18 @@ public class BlancoScraper implements GenericScraper
                     first = false;
                 }
                 
-                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
+                // Sacamos las tallas de cada color.
+                Elements elements = document.select( "#custom-size ul.super-attribute-select-custom li span" );
+                List<Size> sizes = new ArrayList<>();
+                for ( Element e : elements )
+                {
+                    String size = e.text();                    
+                    boolean stock = ! size.contains( "agotado" );               
+                    
+                    sizes.add( new Size( size.replace( "(agotado)" , "" ).trim().toUpperCase(), stock ) );
+                }
+                
+                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
             }
             
             // Creamos y añadimos el producto a la lista concurrente               

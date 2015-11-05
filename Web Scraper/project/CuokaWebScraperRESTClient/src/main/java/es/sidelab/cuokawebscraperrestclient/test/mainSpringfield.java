@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class mainSpringfield {
         List<Product> productList = new ArrayList<>();
         
         // Obtener el HTML
-        Document document = Jsoup.connect( "http://spf.com/es/tienda/man/abrigos" )
+        Document document = Jsoup.connect( "http://myspringfield.com/es/es/man/camisas" )
                                     .timeout( Properties.TIMEOUT ).get();
             
         // Obtener el link de 'Ver todos'
@@ -94,8 +95,14 @@ public class mainSpringfield {
                     for ( Element img : images )
                         imagesURL.add( new Image( fixURL( img.attr( "href" ) ) ) );
                     
+                    // Sacamos los tamaños disponibles, en Springfield las tallas no disponibles no vienen en el HTML
+                    Elements elements = document.select( "ul.product_sizes.color_" + idColor + " li");
+                    List<Size> sizes = new ArrayList<>();
+                    for( Element size : elements )
+                        sizes.add( new Size( size.select( "label" ).text(), true ) );
+                    
                     // Añadimos un nuevo ColorVariant a la lista 
-                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
+                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
                 }
                     
                 productList.add( new Product( Double.parseDouble( price )
@@ -109,7 +116,7 @@ public class mainSpringfield {
             
         } // for products
         
-        Product p = productList.get( 2 );
+        Product p = productList.get( 10 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
@@ -124,7 +131,11 @@ public class mainSpringfield {
             for ( Image image : cv.getImages() )
                 System.out.println( " - " + image.getUrl() );
             
-            System.out.println( "" );            
+            System.out.print( " - Available sizes: " );
+            for( Size size : cv.getSizes() )
+                System.out.print( size.getSize() + " | " );
+            
+            System.out.println( "\n" );            
         }
         
     }
