@@ -12,7 +12,7 @@ width_s = int(sys.argv[4])
 height_s = int(sys.argv[5])
 
 for fname in os.listdir(path):
-    if 'Small' not in fname and 'Large' not in fname:
+    if 'Small' not in fname and 'ICON' not in fname and 'Large' not in fname:
         img = Image.open(path + '/' + fname)
         img_s = img.resize((width_s,height_s), PIL.Image.NEAREST)
         img_s.save(path + '/' + fname.replace(".jpg", "_Small.jpg"))

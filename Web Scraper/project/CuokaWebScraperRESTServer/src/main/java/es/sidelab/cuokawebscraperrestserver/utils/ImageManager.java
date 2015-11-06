@@ -83,7 +83,8 @@ public class ImageManager
                 } // if images != null
                 
                 // Descargar los iconos si es necesario
-                String path = Properties.COLOR_PATH + cv.getColorName() + ".jpg";
+                String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
+                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_ICON.jpg";
                 if ( ! FileManager.existsFile( path ) )
                 {
                     boolean ok = downloadImage( cv.getColorURL(), path );
@@ -103,7 +104,7 @@ public class ImageManager
         LOG.info( "Todas las imagenes han sido reescaladas correctamente" );
         
         LOG.info( "Se reescalan los iconos de los colores" );
-        resizeColors();
+        resizeColors( shop );
         LOG.info( "Todos los iconos han sido reescalados correctamente" );
         
         return productsUpdated;
@@ -180,14 +181,14 @@ public class ImageManager
     /*
      * Metodo que ejecuta un script en python que reescala todos los iconos de los colores
      */
-    private static void resizeColors()
+    private static void resizeColors( String shop )
     {
         try 
         {            
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "./resizeColors.py"
-                        , Properties.COLOR_PATH
+                        , Properties.COLOR_PATH + shop
                         , Integer.toString( Properties.ICON_WIDTH )
                         , Integer.toString( Properties.ICON_HEIGHT ) } );
             
