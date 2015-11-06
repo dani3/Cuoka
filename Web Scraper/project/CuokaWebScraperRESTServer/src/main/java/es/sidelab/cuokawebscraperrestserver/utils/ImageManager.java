@@ -34,7 +34,6 @@ public class ImageManager
         
         // Creamos los directorios si es necesario
         FileManager.createProductsDirectory( shop );
-        FileManager.createColorsDirectory();
         
         for ( int i = 0; i < products.size(); i++ ) 
         {

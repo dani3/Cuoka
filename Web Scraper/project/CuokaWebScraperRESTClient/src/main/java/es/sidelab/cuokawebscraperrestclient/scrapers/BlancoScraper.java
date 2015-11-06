@@ -71,7 +71,7 @@ public class BlancoScraper implements GenericScraper
                 }
                 
                 // Sacamos las tallas de cada color.
-                Elements elements = document.select( "#custom-size ul.super-attribute-select-custom li span" );
+                Elements elements = document.select( "#custom-size ul.super-attribute-select-custom > li > span" );
                 List<Size> sizes = new ArrayList<>();
                 for ( Element e : elements )
                 {

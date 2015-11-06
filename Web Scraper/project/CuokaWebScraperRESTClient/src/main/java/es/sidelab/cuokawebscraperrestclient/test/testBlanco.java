@@ -65,15 +65,11 @@ public class testBlanco {
                 List<Size> sizes = new ArrayList<>();
                 for ( Element e : elements )
                 {
-                    String size = e.text();       
-                    
+                    String size = e.text();               
                     boolean stock = ! size.contains( "agotado" );               
-                    
-                    if ( ! size.equals( "" ) || ( size != null ) )
-                    {
-                        sizes.add( new Size( size.replace( "(agotado)" , "" ).trim().toUpperCase(), stock ) );
-                        System.out.println( size + " " + stock );
-                    }           
+                   
+                    sizes.add( new Size( size.replace( "(agotado)" , "" ).trim().toUpperCase(), stock ) );
+                    System.out.println( size + " " + stock );
                 }
                 
                 variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );

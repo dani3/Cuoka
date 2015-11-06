@@ -19,7 +19,7 @@ public class Size
     }
     
     public String getSize() { return this.size; }
-    public boolean hasStock() { return this.stock; }
+    public boolean isStock() { return this.stock; }
     
     public void setSize( String size ) { this.size = size; }
     public void setStock( boolean stock ) { this.stock = stock; }
