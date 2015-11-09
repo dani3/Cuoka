@@ -34,12 +34,12 @@ public class Controller
     ProductsRepository productsRepository;
     
     /*
-     * Metodo que añade una nueva tienda, si ya existe se devuelve un error 400
+     * Metodo que aÃ±ade una nueva tienda, si ya existe se devuelve un error 400
      */
     @RequestMapping( value = "/addShop", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
     {      
-        LOG.info( "Peticion POST recibida para aÃ±adir una nueva tienda..." );
+        LOG.info( "Peticion POST recibida para aÃƒÂ±adir una nueva tienda..." );
         
         // Se devuelve error 400 si hay algun atributo incorrecto
         if ( ! shop.isOkay() )
@@ -47,7 +47,7 @@ public class Controller
         
         LOG.info( "Comprobando si existe la tienda..." );
         
-        // Si existe ya la tienda, añadimos solo las URLs que no existan
+        // Si existe ya la tienda, aÃ±adimos solo las URLs que no existan
         Shop currentShop = shopsRepository.findByName( shop.getName() );
         if ( currentShop != null ) 
         {
@@ -56,7 +56,7 @@ public class Controller
             LOG.info( "Tienda eliminada correctamente" );
         }
         
-        LOG.info( "Se añade la nueva tienda a la BD:\n" );  
+        LOG.info( "Se aÃ±ade la nueva tienda a la BD:\n" );  
         LOG.info( shop.toString() );
         shopsRepository.save( shop );          
         LOG.info( "Tienda insertada correctamente, saliendo del metodo addShop" );
@@ -110,9 +110,12 @@ public class Controller
     public ResponseEntity<Boolean> addProducts( @RequestBody List<Product> products
                                         , @PathVariable String shop )
     {
-        LOG.info( "Peticion POST para añadir productos recibida" );
+        LOG.info( "Peticion POST para anadir productos recibida" );
         LOG.info( "Eliminando los productos existentes de la tienda " + shop );
-        productsRepository.deleteByShop( shop );
+        List<Product> productsToBeRemoved = productsRepository.findByShop( shop );
+        for ( Product product : productsToBeRemoved )
+            productsRepository.delete( product.getId() );
+        
         LOG.info( "Productos eliminados!" );
         
         LOG.info( "Insertando nuevos productos" );

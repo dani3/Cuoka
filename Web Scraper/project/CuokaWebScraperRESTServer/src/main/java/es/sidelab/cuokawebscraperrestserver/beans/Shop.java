@@ -3,12 +3,14 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 import java.net.URL;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * @class Clase que representa una tienda, contiene el nombre, la URL y la lista de categorias
@@ -16,17 +18,26 @@ import javax.persistence.OneToMany;
  */
 
 @Entity
+@Table( name = "SHOP" )
 public class Shop 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "ID" )
     private long id;
+    
+    @Column( name = "NAME" )
     private String name;
+    
+    @Column( name = "URL" )
     private URL url;
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
+    @Column( name = "SECTIONS" )
     private List<Section> sections;
+    
+    @Column( name = "OFFLINE" )
     private boolean offline;
     
     public Shop() {}

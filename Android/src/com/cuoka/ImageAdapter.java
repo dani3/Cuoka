@@ -26,35 +26,32 @@ public class ImageAdapter extends BaseAdapter
 {
 	private Context mContext;
 	private static LayoutInflater inflater;
-	
-	// references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3
-    };
     
     private String[] productNameList;    
     private String[] productURLList;
 
-	public ImageAdapter( Context c, List<Product> productList ) 
+	public ImageAdapter( Context c, List<Product> products ) 
 	{
 	    mContext = c;
 	    inflater = ( LayoutInflater )mContext.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 	    
-	    productNameList = new String[ productList.size() ];
-	    productURLList = new String[ productList.size() ];
-	    for ( int i = 0; i < productList.size(); i++ )
+	    productNameList = new String[ products.size() ];
+	    productURLList = new String[ products.size() ];
+	    for ( int i = 0; i < products.size(); i++ )
 	    {
-	    	productNameList[i] = productList.get(i).getSection();
-	    	productURLList[i] = productList.get(i).getImageURL();
+	    	productNameList[i] = products.get(i).getSection();
+	    	productURLList[i] = "http://192.168.1.134/images/products/" 
+	    												+ products.get( i ).getShop() + "/"
+	    												+ products.get(i).getColors().get( 0 ).getImages().get( 0 ).getPathSmallSize().replace( "/var/www/html/" , "" );
+	    	
+	    	Log.v( "CUOKA" , "http://192.168.1.134/images/products/" 
+					+ products.get( i ).getShop() + "/"
+					+ products.get(i).getColors().get( 0 ).getImages().get( 0 ).getPathSmallSize().replace( "/var/www/html/" , "" ) );
 	    }
 	}
 	
-	public int getCount() { return mThumbIds.length; }
+	public int getCount() { return productNameList.length; }
 	
 	public Object getItem( int position ) { return null; }
 	
@@ -63,7 +60,7 @@ public class ImageAdapter extends BaseAdapter
 	private class Holder
 	{
 		TextView name;
-		Image imageView;
+		ImageUI imageView;
 	}
 	
 	// create a new ImageView for each item referenced by the Adapter
@@ -76,10 +73,10 @@ public class ImageAdapter extends BaseAdapter
 	    	Holder holder = new Holder();
 	    	
 	        holder.name=(TextView) view.findViewById(R.id.grid_text);
-	        holder.imageView=(Image) view.findViewById(R.id.grid_image);
+	        holder.imageView=(ImageUI) view.findViewById(R.id.grid_image);
 	        
 	        holder.name.setText( productNameList[position] );
-        
+	        
 			holder.imageView.setImageBitmap( BitmapFactory
 														.decodeStream( ( InputStream ) new URL( productURLList[ position ] ).getContent() ) );
 		
@@ -87,6 +84,7 @@ public class ImageAdapter extends BaseAdapter
 			
     	} catch (MalformedURLException e) {
 			e.printStackTrace();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

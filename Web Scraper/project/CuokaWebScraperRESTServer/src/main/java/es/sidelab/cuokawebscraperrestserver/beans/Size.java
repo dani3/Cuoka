@@ -1,9 +1,11 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @class Clase que representa una talla
@@ -11,12 +13,18 @@ import javax.persistence.Id;
  */
 
 @Entity
+@Table( name = "SIZE" )
 public class Size 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "ID" )
     private long id;
+    
+    @Column( name = "SIZE" )
     private String size;
+    
+    @Column( name = "STOCK" )
     private boolean stock;
     
     public Size() {}

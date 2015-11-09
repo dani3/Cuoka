@@ -2,12 +2,14 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * @class Clase que representa las distintas versiones de color de un producto.
@@ -15,22 +17,34 @@ import javax.persistence.OneToMany;
  */
 
 @Entity
+@Table( name = "COLOR_VARIANT" )
 public class ColorVariant 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "ID" )
     private long id;
+    
+    @Column( name = "REFERENCE" )
     private String reference;
+    
+    @Column( name = "NAME" )
     private String colorName;
+    
+    @Column( name = "URL" )
     private String colorURL;
+    
+    @Column( name = "PATH" )
     private String colorPath;
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
+    @Column( name = "IMAGES" )
     private List<Image> images;
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
+    @Column( name = "SIZES" )
     private List<Size> sizes;
     
     public ColorVariant() {}

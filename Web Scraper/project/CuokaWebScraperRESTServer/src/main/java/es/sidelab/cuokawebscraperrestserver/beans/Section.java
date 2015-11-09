@@ -1,10 +1,12 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
 import java.net.URL;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @class Bean que representa una categoria de una tienda
@@ -12,13 +14,21 @@ import javax.persistence.Id;
  */
 
 @Entity
+@Table( name = "SECTION" )
 public class Section 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "ID" )
     private long id;
+    
+    @Column( name = "NAME" )
     private String name;
+    
+    @Column( name = "URL" )
     private URL url;
+    
+    @Column( name = "MAN" )
     private boolean man;
     
     public Section() {}

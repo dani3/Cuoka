@@ -2,12 +2,14 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * @class Bean que representa un producto
@@ -15,20 +17,35 @@ import javax.persistence.OneToMany;
  */
 
 @Entity
+@Table( name = "PRODUCT" )
 public class Product 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "" )
     private long id;
+    
+    @Column( name = "PRICE" )
     private double price;
+    
+    @Column( name = "NAME" )
     private String name;
+    
+    @Column( name = "SHOP" )
     private String shop;
+    
+    @Column( name = "SECTION" )
     private String section;
+    
+    @Column( name = "LINK" )
     private String link;
+    
+    @Column( name = "MAN" )
     private boolean man;
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
+    @Column( name = "COLORS" )
     private List<ColorVariant> colors;
     
     public Product() {}
@@ -80,4 +97,5 @@ public class Product
     public String getLink() { return this.link; }
     public boolean isMan() { return this.man; }
     public List<ColorVariant> getColors() { return this.colors; }
+    public long getId() { return this.id; }
 }

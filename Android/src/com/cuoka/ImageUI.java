@@ -4,19 +4,19 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class Image extends ImageView
+public class ImageUI extends ImageView
 {
-    public Image( Context context )
+    public ImageUI( Context context )
     {
         super( context );
     }
 
-    public Image( Context context, AttributeSet attrs )
+    public ImageUI( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    public Image( Context context, AttributeSet attrs, int defStyle )
+    public ImageUI( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }

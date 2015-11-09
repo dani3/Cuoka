@@ -1,9 +1,11 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @class Clase que representa una imagen de un producto, contendra la url y el path en nuestro servidor
@@ -11,13 +13,21 @@ import javax.persistence.Id;
  */
 
 @Entity
+@Table( name = "IMAGE" )
 public class Image 
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "ID" )
     private long id;
+    
+    @Column( name = "URL" )
     private String url;
+    
+    @Column( name = "PATH_SMALL_SIZE" )
     private String pathSmallSize;
+    
+    @Column( name = "PATH_LARGE_SIZE" )
     private String pathLargeSize;
     
     public Image() {}
