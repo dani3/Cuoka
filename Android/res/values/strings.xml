@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">Cuoka</string>
-    <string name="products_list">Inicializando lista...</string>
-    <string name="action_settings">Settings</string>
-
-</resources>
