@@ -19,8 +19,15 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url 'https://dl.bintray.com/greenfrvr/maven/'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.github.greenfrvr:rubber-loader:1.1.1@aar'
 }
