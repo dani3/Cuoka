@@ -15,12 +15,12 @@ public class Product
 	public Product() {}
 	
 	public Product( String name
-					, String shop
-					, String section
-					, double price
-					, boolean man
-					, String link
-					, List<ColorVariant> colors )
+			 , String shop
+			 , String section
+			 , double price
+			 , boolean man
+			 , String link
+			 , List<ColorVariant> colors )
 	{
 		this.name = name;
 		this.shop = shop;
@@ -31,13 +31,13 @@ public class Product
 		this.colors = colors;
 	}
 
-	public String getName() { return name; }
-	public String getShop() { return shop; 	}
-	public String getSection() { return section; }
-	public double getPrice() { return price; }
-	public List<ColorVariant> getColors() { return colors; }
-	public boolean isMan() { return man; }
-	public String getLink() { return link; }
+	public String getName() { return this.name; }
+	public String getShop() { return this.shop; 	}
+	public String getSection() { return this.section; }
+	public double getPrice() { return this.price; }
+	public List<ColorVariant> getColors() { return this.colors; }
+	public boolean isMan() { return this.man; }
+	public String getLink() { return this.link; }
 
 	public void setName( String name ) { this.name = name; }
 	public void setShop( String shop ) {	this.shop = shop; 	}

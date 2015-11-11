@@ -8,19 +8,26 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".IntroUI">
-
-    <TextView android:text="Hello World!" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+    tools:context=".IntroUI"
+    android:background="#C0DDFF">
 
     <com.greenfrvr.rubberloader.RubberLoaderView
-        android:id="@+id/loader"
+        android:id="@+id/rubber_loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:loaderExtraColor="#FFFF"
-        app:loaderPrimeColor="#FFF"
+        app:loaderExtraColor="#FF3391FF"
+        app:loaderPrimeColor="#FF3391FF"
+        app:loaderSize="medium"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="75dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entrar"
+        android:id="@+id/enter"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

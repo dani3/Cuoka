@@ -16,10 +16,10 @@ public class LoginUI extends AppCompatActivity
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
-        super.onCreate( savedInstanceState );
-
-        // Ocultamos el titulo de la app (antes de especificar el layout)
+        // Ocultamos el titulo de la app (debe ejecutarse antes del super.onCreate y de cargar el layout)
         this.requestWindowFeature( Window.FEATURE_NO_TITLE );
+
+        super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'login.xml'
         setContentView( R.layout.login );
