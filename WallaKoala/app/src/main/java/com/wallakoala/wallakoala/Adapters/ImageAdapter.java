@@ -50,7 +50,7 @@ public class ImageAdapter extends BaseAdapter
 
     public View getView( int position, View convertView, ViewGroup parent )
     {
-        View view  = inflater.inflate( R.layout.product, null );
+        View view  = inflater.inflate( R.layout.grid_single, null );
 
         Holder holder = new Holder();
 
