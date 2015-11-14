@@ -5,16 +5,15 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.LinearLayout;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableGridView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.wallakoala.wallakoala.Adapters.ImageAdapter;
+import com.wallakoala.wallakoala.Adapters.ProductAdapter;
+import com.wallakoala.wallakoala.Decorators.ProductDecorator;
 import com.wallakoala.wallakoala.R;
 
 /**
@@ -22,27 +21,30 @@ import com.wallakoala.wallakoala.R;
  * Created by Daniel Mancebo on 09/11/2015.
  */
 
-public class ProductsUI extends AppCompatActivity implements ObservableScrollViewCallbacks, SearchView.OnQueryTextListener
+public class ProductsUI extends AppCompatActivity implements  SearchView.OnQueryTextListener
 {
-    protected ObservableGridView productsGrid;
+    protected RecyclerView productsRecyclerView;
     protected SearchView mSearchView;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'products.xml'
-        setContentView( R.layout.products );
+        setContentView(R.layout.product_recycler);
 
         // Cargamos la action bar personalizada
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM );
         getSupportActionBar().setCustomView( R.layout.action_bar );
 
         // Inicializamos el grid de productos
-        productsGrid = ( ObservableGridView )findViewById( R.id.gridview );
-        productsGrid.setAdapter( new ImageAdapter( ProductsUI.this ) );
-        productsGrid.setScrollViewCallbacks( this );
+        productsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
+        productsRecyclerView.setAdapter( new ProductAdapter() );
+        productsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        productsRecyclerView.addItemDecoration(
+                                new ProductDecorator( getResources().getDimensionPixelSize( R.dimen.vertical_spacing_grid )
+                                        , getResources().getDimensionPixelSize( R.dimen.horizontal_spacing_grid ) ) );
     }
 
     @Override
@@ -83,31 +85,5 @@ public class ProductsUI extends AppCompatActivity implements ObservableScrollVie
     public boolean onQueryTextSubmit( String text )
     {
         return false;
-    }
-
-    @Override
-    public void onScrollChanged( int scrollY
-                    , boolean firstScroll
-                    , boolean dragging ) {}
-
-    @Override
-    public void onDownMotionEvent() {}
-
-    @Override
-    public void onUpOrCancelMotionEvent( ScrollState scrollState )
-    {
-        ActionBar mActionBar = getSupportActionBar();
-
-        if ( scrollState == ScrollState.UP )
-        {
-            if ( mActionBar.isShowing() )
-                mActionBar.hide();
-        }
-
-        else if ( scrollState == ScrollState.DOWN )
-        {
-            if ( ! mActionBar.isShowing() )
-                mActionBar.show();
-        }
     }
 }

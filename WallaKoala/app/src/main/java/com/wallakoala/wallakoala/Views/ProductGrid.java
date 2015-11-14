@@ -9,19 +9,19 @@ import android.widget.ImageView;
  * Created by Daniel Mancebo Aldea on 11/11/2015.
  */
 
-public class ImageGrid extends ImageView
+public class ProductGrid extends ImageView
 {
-    public ImageGrid( Context context )
+    public ProductGrid( Context context )
     {
         super( context );
     }
 
-    public ImageGrid( Context context, AttributeSet attrs )
+    public ProductGrid( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    public ImageGrid( Context context, AttributeSet attrs, int defStyle )
+    public ProductGrid( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }
@@ -30,6 +30,6 @@ public class ImageGrid extends ImageView
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec )
     {
         super.onMeasure( widthMeasureSpec, heightMeasureSpec );
-        setMeasuredDimension( getMeasuredWidth(), (int)(getMeasuredWidth() * 1.42f) );
+        setMeasuredDimension( getMeasuredWidth(), (int)(getMeasuredWidth() * 1.428f) );
     }
 }
