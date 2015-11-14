@@ -31,8 +31,8 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
     {
         super.onCreate( savedInstanceState );
 
-        // Especificamos el layout 'products_recycler.xml'
-        setContentView( R.layout.product_recycler );
+        // Especificamos el layout 'products_grid.xml'
+        setContentView( R.layout.products_grid );
 
         // Cargamos la action bar personalizada
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM );
@@ -63,16 +63,6 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
         searchBar.setLayoutTransition( new LayoutTransition() );
 
         return super.onCreateOptionsMenu( menu );
-    }
-
-    @Override
-    public boolean onOptionsItemSelected( MenuItem item )
-    {
-        int id = item.getItemId();
-        if ( id == R.id.action_settings )
-            return true;
-
-        return super.onOptionsItemSelected( item );
     }
 
     @Override
