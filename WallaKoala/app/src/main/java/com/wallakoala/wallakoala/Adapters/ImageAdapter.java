@@ -48,9 +48,12 @@ public class ImageAdapter extends BaseAdapter
         ImageView image;
     }
 
+    /*
+     * Metodo que inicializa cada item cuando se ejecuta el constructor
+     */
     public View getView( int position, View convertView, ViewGroup parent )
     {
-        View view  = inflater.inflate( R.layout.grid_single, null );
+        View view  = inflater.inflate( R.layout.product, null );
 
         Holder holder = new Holder();
 

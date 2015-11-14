@@ -5,47 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProductsUI"
-    android:background="#444444"
-    android:weightSum="1">
+    android:background="#444444">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_weight="0.1">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Novedades"
-            android:textSize="25dp"
-            android:textColor="#E5E5E5"
-            android:gravity="center"
-            />
-
-    </LinearLayout>
-
-    <GridView
+    <com.github.ksoichiro.android.observablescrollview.ObservableGridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.9"
+        android:layout_height="match_parent"
         android:scrollbars="none"
         android:gravity="center"
-        android:numColumns="auto_fit"
+        android:numColumns="2"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
         android:horizontalSpacing="10dp"
         android:verticalSpacing="35dp">
 
-    </GridView>
+    </com.github.ksoichiro.android.observablescrollview.ObservableGridView>
 
 </LinearLayout>

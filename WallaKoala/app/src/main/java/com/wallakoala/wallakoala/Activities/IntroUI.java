@@ -25,12 +25,7 @@ public class IntroUI extends AppCompatActivity
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
-        // Ocultamos la barra de notificaciones y el titulo de la app (debe ejecutarse antes del super.onCreate y de cargar el layout)
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-                , WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'intro.xml'
         setContentView( R.layout.intro );

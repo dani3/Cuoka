@@ -83,7 +83,7 @@ public class ImageManager
                 
                 // Descargar los iconos si es necesario
                 String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_ICON.jpg";
+                                + "_" + cv.getReference() + "_" + cv.getColorName().replaceAll( " " , "_" ) + "_ICON.jpg";
                 if ( ! FileManager.existsFile( path ) )
                 {
                     boolean ok = downloadImage( cv.getColorURL(), path );
