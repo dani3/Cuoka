@@ -31,8 +31,8 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
     {
         super.onCreate( savedInstanceState );
 
-        // Especificamos el layout 'products.xml'
-        setContentView(R.layout.product_recycler);
+        // Especificamos el layout 'products_recycler.xml'
+        setContentView( R.layout.product_recycler );
 
         // Cargamos la action bar personalizada
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM );
@@ -41,7 +41,7 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
         // Inicializamos el grid de productos
         productsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
         productsRecyclerView.setAdapter( new ProductAdapter() );
-        productsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        productsRecyclerView.setLayoutManager( new GridLayoutManager( this, 2 ) );
         productsRecyclerView.addItemDecoration(
                                 new ProductDecorator( getResources().getDimensionPixelSize( R.dimen.vertical_spacing_grid )
                                         , getResources().getDimensionPixelSize( R.dimen.horizontal_spacing_grid ) ) );
