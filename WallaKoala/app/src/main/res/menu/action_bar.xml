@@ -9,4 +9,9 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
+    <item android:id="@+id/right_drawer"
+        android:title="Filter"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="always"/>
+
 </menu>

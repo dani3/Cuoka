@@ -58,7 +58,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public ProductHolder onCreateViewHolder( ViewGroup viewGroup, int viewType )
     {
         View itemView = LayoutInflater.from( viewGroup.getContext() )
-                                      .inflate( R.layout.product, viewGroup, false );
+                                      .inflate( R.layout.product_item_grid, viewGroup, false );
 
         return new ProductHolder( itemView );
     }

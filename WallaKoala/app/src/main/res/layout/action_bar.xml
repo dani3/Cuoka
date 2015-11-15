@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="WallaKoala"
-        android:textColor="#B0F6F6F6"
+        android:textColor="@color/colorBackgroundTextImage"
         android:textSize="22sp"
         android:gravity="center_vertical" />
 

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WallaKoala</string>
+    <string name="open_drawer">Menu Abierto</string>
+    <string name="close_drawer">Menu Cerrado</string>
 </resources>
