@@ -27,6 +27,8 @@
 
     </LinearLayout>
 
-    <include layout="@layout/filter_navigation_drawer"/>
+    <include layout="@layout/right_navigation_drawer"/>
+
+    <include layout="@layout/left_navigation_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>
