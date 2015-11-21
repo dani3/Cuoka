@@ -3,5 +3,6 @@
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>
     <string name="left_drawer_title">Preferencias</string>
-    <string name="right_drawer_title">Filtros</string>
+    <string name="right_drawer_title">Buscar</string>
+    <string name="search_background_text">Tiendas, secciones, etc.</string>
 </resources>

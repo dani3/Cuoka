@@ -1,24 +1,27 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.animation.LayoutTransition;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,17 +34,18 @@ import com.wallakoala.wallakoala.R;
  * Created by Daniel Mancebo on 09/11/2015.
  */
 
-public class ProductsUI extends AppCompatActivity implements  SearchView.OnQueryTextListener
+public class ProductsUI extends AppCompatActivity
 {
     protected RecyclerView mProductsRecyclerView;
-    protected SearchView mSearchView;
     protected ListView mRightDrawerListView, mLeftDrawerListView;
     protected DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mActionBarTextView;
+    protected EditText mSearchEditText;
+    protected ImageView mSearchImageView;
     protected Menu mMenu;
 
-    protected Animation hideToRight, showFromRight, hideToTop, showFromTop;
+    protected Animation hideToRight, showFromRight, fadeIn, fadeOut;
 
     /*
      * AUX
@@ -64,6 +68,28 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
         initActionBar();
         initRecyclerView();
         initNavigationDrawers();
+        initSearch();
+
+        mSearchEditText = ( EditText )findViewById( R.id.searchEditText );
+        mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() - 200 >= (mSearchEditText.getRight() - mSearchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        mSearchEditText.setText("");
+
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
     /*
@@ -81,6 +107,15 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
 
         // Cargamos el textview del titulo de la action bar
         mActionBarTextView = ( TextView )findViewById( R.id.actionBarTitle );
+    }
+
+    /*
+     * Inicializacion del icono de busqueda
+     */
+    private void initSearch()
+    {
+        mSearchImageView = ( ImageView )findViewById( R.id.searchImageView );
+        mSearchImageView.setImageResource(android.R.drawable.ic_menu_search);
     }
 
     /*
@@ -140,26 +175,50 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
                                                 , R.anim.show_translation_horizontal );
                         showFromRight.setFillAfter(true);
 
-                        itemView.startAnimation(showFromRight);
+                        itemView.startAnimation( showFromRight );
                     }
 
                     mLeftDrawerToggle.syncState();
                 }
 
-                // Comprobamos si es el drawer derecho el que se ha cerrado
+                // Si se cierra el drawer derecho, reestablecemos el icono y el titulo
                 if ( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
-                    // Reestablecemos el titulo de la action bar
-                    mActionBarTextView.setText(R.string.app_name);
+                    mActionBarTextView.setText( R.string.app_name );
 
-                    // Restauramos el item de busqueda de la action bar
-                    View itemView = findViewById( R.id.action_search );
+                    final View itemView = findViewById(mMenu.getItem(0).getItemId());
 
-                    showFromTop = AnimationUtils.loadAnimation( ProductsUI.this
-                            , R.anim.show_translation_vertical );
-                    showFromTop.setFillAfter(true);
+                    hideToRight = AnimationUtils.loadAnimation( ProductsUI.this, R.anim.hide_translation_horizontal);
+                    showFromRight = AnimationUtils.loadAnimation( ProductsUI.this, R.anim.show_translation_horizontal );
+                    showFromRight.setFillAfter(true);
 
-                    itemView.startAnimation(showFromTop);
+                    itemView.startAnimation(hideToRight);
+
+                    hideToRight.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            MenuItem searchItem = mMenu.findItem(R.id.right_drawer);
+                            searchItem.setIcon(android.R.drawable.ic_menu_search);
+
+                            itemView.startAnimation(showFromRight);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+                    });
+
+                    // Si se cierra el drawer derecho con el teclado abierto, lo ocultamos
+                    View view = ProductsUI.this.getCurrentFocus();
+                    if (view != null)
+                    {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
                 }
             }
 
@@ -168,18 +227,42 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
             public void onDrawerOpened( View drawerView )
             {
                 // Comprobamos si es el drawer izquierdo el que se ha abierto
-                if( drawerView == findViewById( R.id.leftDrawerLayout ) )
+                if (drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
                     // Crea la llamada a onPrepareOptionsMenu()
                     supportInvalidateOptionsMenu();
                     mLeftDrawerToggle.syncState();
                 }
 
-                // Comprobamos si es el drawer derecho el que se ha abierto
-                if ( drawerView == findViewById( R.id.rightDrawerLayout ) )
+                // Si se abre el drawer derecho, cambiamos el icono y el titulo
+                if( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
-                    // Crea la llamada a onPrepareOptionsMenu()
-                    supportInvalidateOptionsMenu();
+                    mActionBarTextView.setText( R.string.right_drawer_title );
+
+                    final View itemView = findViewById(mMenu.getItem(0).getItemId());
+
+                    hideToRight = AnimationUtils.loadAnimation( ProductsUI.this, R.anim.hide_translation_horizontal);
+                    showFromRight = AnimationUtils.loadAnimation( ProductsUI.this, R.anim.show_translation_horizontal );
+                    showFromRight.setFillAfter(true);
+
+                    itemView.startAnimation(hideToRight);
+
+                    hideToRight.setAnimationListener(new Animation.AnimationListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animation animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            MenuItem searchItem = mMenu.findItem(R.id.right_drawer);
+                            searchItem.setIcon(android.R.drawable.ic_menu_revert);
+
+                            itemView.startAnimation(showFromRight);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {}
+                    });
                 }
             }
 
@@ -211,7 +294,7 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         // Si el Navigation Drawer izquierdo esta abierto, ocultamos los items de la action bar
-        if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
+        if ( mDrawerLayout.isDrawerOpen(Gravity.LEFT) )
         {
             // Cambiamos el titulo de la action bar
             mActionBarTextView.setText( R.string.left_drawer_title );
@@ -229,23 +312,7 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
             }
         }
 
-        // Si el Navigation Drawer derecho esta abierto, ocultamos solo la busqueda
-        if ( mDrawerLayout.isDrawerOpen( Gravity.RIGHT ) )
-        {
-            // Cambiamos el titulo de la action bar
-            mActionBarTextView.setText( R.string.right_drawer_title );
-
-            // Hacemos desaparecer el item de busqueda con una translacion vertical
-            View itemView = findViewById( R.id.action_search );
-
-            hideToTop = AnimationUtils.loadAnimation( this
-                            , R.anim.hide_translation_vertical );
-            hideToTop.setFillAfter( true );
-
-            itemView.startAnimation( hideToTop );
-        }
-
-        return super.onPrepareOptionsMenu( menu );
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -256,16 +323,6 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
 
         // Inflamos la ActionBar
         getMenuInflater().inflate( R.menu.action_bar, menu );
-
-        // Obtenemos la View de busqueda para establecer los listeners
-        MenuItem searchItem = menu.findItem( R.id.action_search );
-        mSearchView = ( SearchView ) MenuItemCompat.getActionView( searchItem );
-        mSearchView.setQueryHint( "Tiendas, secciones, etc." );
-        mSearchView.setOnQueryTextListener( this );
-
-        // Establecemos una transicion en el boton de busqueda
-        LinearLayout searchBar = ( LinearLayout )mSearchView.findViewById( R.id.search_bar );
-        searchBar.setLayoutTransition( new LayoutTransition() );
 
         return super.onCreateOptionsMenu( menu );
     }
@@ -282,30 +339,21 @@ public class ProductsUI extends AppCompatActivity implements  SearchView.OnQuery
             return true;
         }
 
-        // Funcionamiento del right drawer
-        if ( item.getItemId() == R.id.right_drawer )
+        if ( ! mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
-            if ( mDrawerLayout.isDrawerOpen( Gravity.RIGHT ) )
-                mDrawerLayout.closeDrawer( Gravity.RIGHT );
+            // Funcionamiento del right drawer
+            if (item.getItemId() == R.id.right_drawer)
+            {
+                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT))
+                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
 
-            else
-                mDrawerLayout.openDrawer( Gravity.RIGHT );
+                else
+                    mDrawerLayout.openDrawer(Gravity.RIGHT);
 
-            return true;
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected( item );
-    }
-
-    @Override
-    public boolean onQueryTextChange( String newText )
-    {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit( String text )
-    {
-        return false;
     }
 }

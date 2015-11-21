@@ -30,7 +30,8 @@
 
         <activity android:name=".Activities.ProductsUI"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
 
     </application>

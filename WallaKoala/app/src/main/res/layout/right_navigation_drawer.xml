@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rightDrawerLayout"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:layout_gravity="end">
+    android:layout_gravity="end"
+    android:background="@color/backgroundColorDark"
+    android:weightSum="1">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        layout="@layout/right_navigation_drawer_search_item"/>
 
     <ListView
         android:id="@+id/rightlistviewdrawer"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
-        android:background="@color/backgroundColorDark"/>
+        android:layout_weight="0.9"/>
 
 </LinearLayout>
