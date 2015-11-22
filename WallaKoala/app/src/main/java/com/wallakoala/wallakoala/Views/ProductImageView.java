@@ -9,19 +9,19 @@ import android.widget.ImageView;
  * Created by Daniel Mancebo Aldea on 11/11/2015.
  */
 
-public class ProductGrid extends ImageView
+public class ProductImageView extends ImageView
 {
-    public ProductGrid( Context context )
+    public ProductImageView(Context context)
     {
         super( context );
     }
 
-    public ProductGrid( Context context, AttributeSet attrs )
+    public ProductImageView(Context context, AttributeSet attrs)
     {
         super( context, attrs );
     }
 
-    public ProductGrid( Context context, AttributeSet attrs, int defStyle )
+    public ProductImageView(Context context, AttributeSet attrs, int defStyle)
     {
         super( context, attrs, defStyle );
     }

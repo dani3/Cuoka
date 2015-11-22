@@ -356,7 +356,7 @@ public class ProductsUI extends AppCompatActivity
     public boolean onCreateOptionsMenu( Menu menu )
     {
         // Guardamos el menu para poder acceder a los items mas adelante
-        mMenu = menu;
+        this.mMenu = menu;
 
         // Inflamos la ActionBar
         getMenuInflater().inflate( R.menu.action_bar, menu );

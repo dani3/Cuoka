@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <com.wallakoala.wallakoala.Views.ProductGrid
+    <com.wallakoala.wallakoala.Views.ProductImageView
         android:id="@+id/grid_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
