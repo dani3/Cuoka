@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/item_navigation_drawer"
+        android:id="@+id/header_navigation_drawer"
         android:text="Pepito"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textColor="@color/colorBackgroundTextImage"
-        android:textSize="16dp"/>
+        android:textSize="20dp"/>
 
 </LinearLayout>
