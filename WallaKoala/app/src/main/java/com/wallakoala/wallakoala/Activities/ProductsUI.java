@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +20,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,6 +55,7 @@ public class ProductsUI extends AppCompatActivity
     protected TextView mActionBarTextView;
     protected EditText mSearchEditText;
     protected ImageView mSearchImageView;
+    protected Button mSearchClearButton;
 
     protected Menu mMenu;
 
@@ -110,25 +113,14 @@ public class ProductsUI extends AppCompatActivity
         mSearchImageView.setImageResource(android.R.drawable.ic_menu_search);
 
         mSearchEditText = ( EditText )findViewById( R.id.searchEditText );
-        mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
+
+        mSearchClearButton = ( Button )findViewById( R.id.searchClearButton );
+        mSearchClearButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if ((event.getRawX() - 200)
-                            >= (mSearchEditText.getRight()
-                            - mSearchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        mSearchEditText.setText("");
-
-                        return true;
-                    }
-                }
-
-                return false;
+            public void onClick( View v )
+            {
+                mSearchEditText.setText("");
             }
         });
     }
@@ -155,7 +147,7 @@ public class ProductsUI extends AppCompatActivity
         mLeftDrawerListView            = ( ListView )findViewById( R.id.leftlistviewdrawer );
         mDrawerLayout                  = ( DrawerLayout )findViewById( R.id.drawer_layout );
 
-        prepareListData();
+        initRightDrawerExpandableList();
 
         mRightDrawerExpandableAdapter = new ExpandableAdapter(this, listDataHeader, listDataChild);
 
@@ -270,6 +262,9 @@ public class ProductsUI extends AppCompatActivity
                     // Cambiamos el titulo de la action bar
                     mActionBarTextView.setText( R.string.right_drawer_title );
 
+                    // Borramos lo que se haya escrito anteriormente
+                    mSearchEditText.setText( "" );
+
                     // Sacamos la vista del toggle derecho
                     final View itemView = findViewById(mMenu.getItem(0).getItemId());
 
@@ -339,11 +334,23 @@ public class ProductsUI extends AppCompatActivity
             // Hacemos desaparecer los items del menu con una translacion horizontal
             for (int i = 0; i < menu.size(); i++)
             {
-                View itemView = findViewById( menu.getItem( i ).getItemId() );
+                final View itemView = findViewById( menu.getItem( i ).getItemId() );
 
                 hideToRight = AnimationUtils.loadAnimation( this
                                     , R.anim.hide_translation_horizontal );
                 hideToRight.setFillAfter( true );
+                hideToRight.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        itemView.setEnabled( false );
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
 
                 itemView.startAnimation( hideToRight );
             }
@@ -395,10 +402,8 @@ public class ProductsUI extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-     * Preparing the list data
-     */
-    private void prepareListData() {
+    private void initRightDrawerExpandableList()
+    {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
