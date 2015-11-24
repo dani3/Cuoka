@@ -1,16 +1,15 @@
 package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Views.AnimatedExpandableListView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,100 +17,107 @@ import java.util.List;
  * Created by Daniel Mancebo Aldea on 21/11/2015.
  */
 
-public class ExpandableAdapter extends BaseExpandableListAdapter
+public class ExpandableAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter
 {
-    private Context mContext;
-    private List<String> headerList;
-    private HashMap<String, List<String>> childList;
+    private LayoutInflater inflater;
+    private List<GroupItem> items;
 
-    public ExpandableAdapter( Context context
-                    , List<String> listDataHeader
-                    , HashMap<String
-                    , List<String>> listChildData )
+    /*
+     * Atributos de la cabecera
+     */
+    public static class GroupItem
     {
-        mContext = context;
-        headerList = listDataHeader;
-        childList = listChildData;
+        public String header;
+        public List<ChildItem> items = new ArrayList<>();
+    }
+
+    /*
+     * Atributos de los items de cada cabecera
+     */
+    public static class ChildItem
+    {
+        public String title;
+    }
+
+    /*
+     * Views que forman los items de cada cabecera
+     */
+    private static class ChildHolder
+    {
+        TextView title;
+    }
+
+    /*
+     * Views que forman la cabecera
+     */
+    private static class GroupHolder
+    {
+        TextView title;
+    }
+
+    public ExpandableAdapter(Context context)
+    {
+        inflater = LayoutInflater.from(context);
+    }
+
+    public void setData(List<GroupItem> items)
+    {
+        this.items = items;
     }
 
     @Override
-    public Object getChild( int groupPosition, int childPosititon )
+    public ChildItem getChild(int groupPosition, int childPosition)
     {
-        return this.childList.get( this.headerList.get( groupPosition ) )
-                   .get( childPosititon );
+        return items.get(groupPosition).items.get(childPosition);
     }
 
     @Override
-    public long getChildId( int groupPosition, int childPosition )
+    public long getChildId(int groupPosition, int childPosition)
     {
         return childPosition;
     }
 
     @Override
-    public View getChildView( int groupPosition
-                    , final int childPosition
+    public View getRealChildView(int groupPosition
+                    , int childPosition
                     , boolean isLastChild
-                    , View convertView
-                    , ViewGroup parent )
-    {
-        final String childText = ( String )getChild( groupPosition, childPosition );
-
-        if ( convertView == null )
-        {
-            LayoutInflater infalInflater = ( LayoutInflater )this.mContext
-                    .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-
-            convertView = infalInflater.inflate( R.layout.right_navigation_drawer_item, null );
-        }
-
-        TextView txtListChild = ( TextView )convertView
-                .findViewById( R.id.item_navigation_drawer );
-
-        txtListChild.setText( childText );
-
-        return convertView;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition
-                    , boolean isExpanded
                     , View convertView
                     , ViewGroup parent)
     {
-        String headerTitle = ( String )getGroup( groupPosition );
+        ChildHolder holder;
+        ChildItem item = getChild(groupPosition, childPosition);
 
-        if ( convertView == null )
+        if (convertView == null)
         {
-            LayoutInflater infalInflater = ( LayoutInflater )this.mContext
-                    .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            holder = new ChildHolder();
+            convertView = inflater.inflate(R.layout.right_navigation_drawer_item, parent, false);
+            holder.title = (TextView) convertView.findViewById(R.id.item_navigation_drawer);
+            convertView.setTag(holder);
 
-            convertView = infalInflater.inflate( R.layout.right_navigation_drawer_header, null );
-        }
+        } else
+            holder = (ChildHolder) convertView.getTag();
 
-        TextView lblListHeader = ( TextView )convertView
-                .findViewById( R.id.header_navigation_drawer );
-        lblListHeader.setText( headerTitle );
+        holder.title.setText(item.title);
 
         return convertView;
     }
 
     @Override
-    public int getChildrenCount(int groupPosition)
+    public int getRealChildrenCount(int groupPosition)
     {
-        return this.childList.get(this.headerList.get(groupPosition))
-                .size();
+        return items.get(groupPosition).items.size();
     }
 
     @Override
-    public Object getGroup(int groupPosition)
+    public GroupItem getGroup(int groupPosition)
     {
-        return this.headerList.get(groupPosition);
+        return items.get(groupPosition);
     }
 
     @Override
     public int getGroupCount()
     {
-        return this.headerList.size();
+        return items.size();
     }
 
     @Override
@@ -121,13 +127,37 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public boolean hasStableIds()
+    public View getGroupView(int groupPosition
+                    , boolean isExpanded
+                    , View convertView
+                    , ViewGroup parent)
     {
-        return false;
+        GroupHolder holder;
+        GroupItem item = getGroup(groupPosition);
+
+        if (convertView == null)
+        {
+            holder = new GroupHolder();
+            convertView = inflater.inflate(R.layout.right_navigation_drawer_header, parent, false);
+            holder.title = (TextView) convertView.findViewById(R.id.header_navigation_drawer);
+            convertView.setTag(holder);
+
+        } else
+            holder = (GroupHolder) convertView.getTag();
+
+        holder.title.setText(item.header);
+
+        return convertView;
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition)
+    public boolean hasStableIds()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isChildSelectable(int arg0, int arg1)
     {
         return true;
     }

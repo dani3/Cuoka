@@ -15,7 +15,7 @@
         android:layout_weight="0.1"
         layout="@layout/right_navigation_drawer_search_item"/>
 
-    <ExpandableListView
+    <com.wallakoala.wallakoala.Views.AnimatedExpandableListView
         android:id="@+id/rightlistviewdrawer"
         android:layout_width="wrap_content"
         android:layout_height="0dp"

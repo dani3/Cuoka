@@ -2,7 +2,6 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -10,11 +9,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -31,9 +28,9 @@ import com.wallakoala.wallakoala.Adapters.ExpandableAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Decorators.ProductDecorator;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Views.AnimatedExpandableListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,7 +42,7 @@ public class ProductsUI extends AppCompatActivity
 {
     protected RecyclerView mProductsRecyclerView;
     protected ListView mLeftDrawerListView;
-    protected ExpandableListView mRightDrawerExpandableListView;
+    protected AnimatedExpandableListView mRightDrawerExpandableListView;
 
     protected ExpandableAdapter mRightDrawerExpandableAdapter;
 
@@ -65,8 +62,7 @@ public class ProductsUI extends AppCompatActivity
      * AUX
      */
     protected String[] aux = new String[]{ "Prueba 1", "Prueba 2", "Prueba 3" };
-    protected List<String> listDataHeader;
-    protected HashMap<String, List<String>> listDataChild;
+    List<ExpandableAdapter.GroupItem> expandableItems = new ArrayList<>();
     protected ArrayAdapter<String> menuAdapter;
 
     @Override
@@ -92,11 +88,11 @@ public class ProductsUI extends AppCompatActivity
      */
     private void initActionBar()
     {
-        // Cargamos la action bar personalizada
+        // Especificamos que vamos a usar un layout personalizado para la actionBar
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
 
-        // Cargamos el boton del left drawer
+        // Cargamos el toggle del navigation drawer izquierdo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -109,11 +105,13 @@ public class ProductsUI extends AppCompatActivity
      */
     private void initSearch()
     {
+        // Inicializamos el icono a la izquierda del edittext
         mSearchImageView = ( ImageView )findViewById( R.id.searchImageView );
         mSearchImageView.setImageResource(android.R.drawable.ic_menu_search);
 
         mSearchEditText = ( EditText )findViewById( R.id.searchEditText );
 
+        // Inicializamos el boton de borrar y establecemos el listener
         mSearchClearButton = ( Button )findViewById( R.id.searchClearButton );
         mSearchClearButton.setOnClickListener(new View.OnClickListener()
         {
@@ -143,13 +141,33 @@ public class ProductsUI extends AppCompatActivity
      */
     private void initNavigationDrawers()
     {
-        mRightDrawerExpandableListView = (ExpandableListView)findViewById( R.id.rightlistviewdrawer );
+        mRightDrawerExpandableListView = ( AnimatedExpandableListView )findViewById( R.id.rightlistviewdrawer );
         mLeftDrawerListView            = ( ListView )findViewById( R.id.leftlistviewdrawer );
         mDrawerLayout                  = ( DrawerLayout )findViewById( R.id.drawer_layout );
 
         initRightDrawerExpandableList();
 
-        mRightDrawerExpandableAdapter = new ExpandableAdapter(this, listDataHeader, listDataChild);
+        mRightDrawerExpandableAdapter = new ExpandableAdapter(this);
+        mRightDrawerExpandableAdapter.setData(expandableItems);
+        mRightDrawerExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
+        {
+            @Override
+            public boolean onGroupClick( ExpandableListView parent
+                                , View v
+                                , int groupPosition
+                                , long id )
+            {
+                // Para realizar la animacion al expandir o al cerrar se llama a un metodo de la ExpandableListView
+                if (mRightDrawerExpandableListView.isGroupExpanded(groupPosition))
+                    mRightDrawerExpandableListView.collapseGroupWithAnimation(groupPosition);
+
+                else
+                    mRightDrawerExpandableListView.expandGroupWithAnimation(groupPosition);
+
+                return true;
+            }
+
+        });
 
         mLeftDrawerListView.setAdapter(menuAdapter);
         mRightDrawerExpandableListView.setAdapter(mRightDrawerExpandableAdapter);
@@ -177,7 +195,7 @@ public class ProductsUI extends AppCompatActivity
                     // Reestablecemos el titulo de la action bar
                     mActionBarTextView.setText(R.string.app_name);
 
-                    // Restauramos los items de la action bar con una translacion
+                    // Restauramos los expandableItems de la action bar con una translacion
                     for (int i = 0; i < mMenu.size(); i++)
                     {
                         // Sacamos la vista de cada item
@@ -188,7 +206,10 @@ public class ProductsUI extends AppCompatActivity
                                                 , R.anim.show_translation_horizontal );
                         showFromRight.setFillAfter(true);
 
-                        itemView.startAnimation( showFromRight );
+                        itemView.startAnimation(showFromRight);
+
+                        // Habilitamos de nuevo el item
+                        itemView.setEnabled( true );
                     }
 
                     mLeftDrawerToggle.syncState();
@@ -325,13 +346,13 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        // Si el Navigation Drawer izquierdo esta abierto, ocultamos los items de la action bar
+        // Si el Navigation Drawer izquierdo esta abierto, ocultamos los expandableItems de la action bar
         if ( mDrawerLayout.isDrawerOpen(Gravity.LEFT) )
         {
             // Cambiamos el titulo de la action bar
             mActionBarTextView.setText( R.string.left_drawer_title );
 
-            // Hacemos desaparecer los items del menu con una translacion horizontal
+            // Hacemos desaparecer los expandableItems del menu con una translacion horizontal y los deshabilitamos
             for (int i = 0; i < menu.size(); i++)
             {
                 final View itemView = findViewById( menu.getItem( i ).getItemId() );
@@ -339,17 +360,18 @@ public class ProductsUI extends AppCompatActivity
                 hideToRight = AnimationUtils.loadAnimation( this
                                     , R.anim.hide_translation_horizontal );
                 hideToRight.setFillAfter( true );
-                hideToRight.setAnimationListener(new Animation.AnimationListener() {
+                hideToRight.setAnimationListener( new Animation.AnimationListener()
+                {
                     @Override
-                    public void onAnimationStart(Animation animation) {}
+                    public void onAnimationStart( Animation animation ) {}
 
                     @Override
-                    public void onAnimationEnd(Animation animation) {
+                    public void onAnimationEnd( Animation animation ) {
                         itemView.setEnabled( false );
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {}
+                    public void onAnimationRepeat( Animation animation ) {}
                 });
 
                 itemView.startAnimation( hideToRight );
@@ -362,7 +384,7 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu( Menu menu )
     {
-        // Guardamos el menu para poder acceder a los items mas adelante
+        // Guardamos el menu para poder acceder a los expandableItems mas adelante
         this.mMenu = menu;
 
         // Inflamos la ActionBar
@@ -404,41 +426,63 @@ public class ProductsUI extends AppCompatActivity
 
     private void initRightDrawerExpandableList()
     {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        // Populate our list with groups and its children
+        ExpandableAdapter.GroupItem item = new ExpandableAdapter.GroupItem();
+        ExpandableAdapter.ChildItem child = new ExpandableAdapter.ChildItem();
 
-        // Adding child data
-        listDataHeader.add("Colores");
-        listDataHeader.add("Tallas");
-        listDataHeader.add("Secciones");
+        item.header = "Colores";
+        child.title = "Rojo";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "Azul";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "Negro";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "Blanco";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
 
-        // Adding child data
-        List<String> colors = new ArrayList<String>();
-        colors.add("Rojo");
-        colors.add("Negro");
-        colors.add("Azul");
-        colors.add("Gris");
-        colors.add("Blanco");
-        colors.add("Verde");
-        colors.add("Rosa");
+        expandableItems.add(item);
 
-        List<String> sizes = new ArrayList<String>();
-        sizes.add("XS");
-        sizes.add("S");
-        sizes.add("M");
-        sizes.add("L");
-        sizes.add("XL");
-        sizes.add("XXL");
+        item = new ExpandableAdapter.GroupItem();
+        item.header = "Tallas";
+        child.title = "XS";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "S";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "M";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "L";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "XL";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "XXL";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
 
-        List<String> sections = new ArrayList<String>();
-        sections.add("Pantalones");
-        sections.add("Camisas");
-        sections.add("Camisetas");
-        sections.add("Abrigos");
-        sections.add("Vestidos");
+        expandableItems.add(item);
 
-        listDataChild.put(listDataHeader.get(0), colors); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), sizes);
-        listDataChild.put(listDataHeader.get(2), sections);
+        item = new ExpandableAdapter.GroupItem();
+        item.header = "Secciones";
+        child.title = "Camisas";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "Faldas";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "Vestidos";
+        item.items.add( child );
+        child = new ExpandableAdapter.ChildItem();
+        child.title = "Pantalones";
+        item.items.add( child );
+
+        expandableItems.add(item);
     }
 }
