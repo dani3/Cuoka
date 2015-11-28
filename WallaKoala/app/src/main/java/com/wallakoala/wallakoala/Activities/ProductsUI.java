@@ -68,7 +68,7 @@ public class ProductsUI extends AppCompatActivity
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'products_grid.xml'
         setContentView(R.layout.products_grid);

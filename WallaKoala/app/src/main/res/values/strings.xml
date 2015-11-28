@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AppName</string>
+    <string name="app_name">Cuoka</string>
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>
     <string name="left_drawer_title">Preferencias</string>

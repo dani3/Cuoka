@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wallakoala.wallakoala.Layouts.RoundedCornersLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
@@ -20,7 +20,7 @@
         android:id="@+id/grid_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorBackgroundTextImage"
+        android:background="@color/colorBackgroundEditText"
         android:paddingBottom="15dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -30,4 +30,4 @@
         android:layout_weight="0.2"
         />
 
-</LinearLayout>
+</com.wallakoala.wallakoala.Layouts.RoundedCornersLayout>
