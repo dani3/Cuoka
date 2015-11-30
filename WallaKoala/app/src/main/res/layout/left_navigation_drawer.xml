@@ -13,6 +13,6 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
-        android:background="@color/backgroundColorDark"/>
+        android:background="@color/colorBackground"/>
 
 </LinearLayout>

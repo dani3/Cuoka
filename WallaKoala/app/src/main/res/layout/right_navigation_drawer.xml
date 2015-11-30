@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:layout_gravity="end"
-    android:background="@color/backgroundColorDark"
+    android:background="@color/colorPrimary"
     android:weightSum="1">
 
     <include
