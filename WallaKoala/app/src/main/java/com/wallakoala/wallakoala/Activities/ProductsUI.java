@@ -40,27 +40,31 @@ import java.util.List;
 
 public class ProductsUI extends AppCompatActivity
 {
+    /* Container Views */
     protected RecyclerView mProductsRecyclerView;
     protected ListView mLeftDrawerListView;
     protected AnimatedExpandableListView mRightDrawerExpandableListView;
 
+    /* Adapters */
     protected ExpandableAdapter mRightDrawerExpandableAdapter;
 
+    /* Layouts */
     protected DrawerLayout mDrawerLayout;
 
+    /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mActionBarTextView;
     protected EditText mSearchEditText;
     protected ImageView mSearchImageView;
     protected Button mSearchClearButton;
 
-    protected Menu mMenu;
-
+    /* Animations */
     protected Animation hideToRight, showFromRight;
 
-    /*
-     * AUX
-     */
+    /* Others */
+    protected Menu mMenu;
+
+    /* Temp */
     protected String[] aux = new String[]{ "Prueba 1", "Prueba 2", "Prueba 3" };
     List<ExpandableAdapter.GroupItem> expandableItems = new ArrayList<>();
     protected ArrayAdapter<String> menuAdapter;
@@ -89,12 +93,12 @@ public class ProductsUI extends AppCompatActivity
     private void initActionBar()
     {
         // Especificamos que vamos a usar un layout personalizado para la actionBar
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.action_bar);
+        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM );
+        getSupportActionBar().setCustomView( R.layout.action_bar );
 
         // Cargamos el toggle del navigation drawer izquierdo
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled( true );
+        getSupportActionBar().setHomeButtonEnabled( true );
 
         // Cargamos el textview del titulo de la action bar
         mActionBarTextView = ( TextView )findViewById( R.id.actionBarTitle );
@@ -107,13 +111,13 @@ public class ProductsUI extends AppCompatActivity
     {
         // Inicializamos el icono a la izquierda del edittext
         mSearchImageView = ( ImageView )findViewById( R.id.searchImageView );
-        mSearchImageView.setImageResource(android.R.drawable.ic_menu_search);
+        mSearchImageView.setImageResource( android.R.drawable.ic_menu_search );
 
         mSearchEditText = ( EditText )findViewById( R.id.searchEditText );
 
         // Inicializamos el boton de borrar y establecemos el listener
         mSearchClearButton = ( Button )findViewById( R.id.searchClearButton );
-        mSearchClearButton.setOnClickListener(new View.OnClickListener()
+        mSearchClearButton.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -128,12 +132,12 @@ public class ProductsUI extends AppCompatActivity
      */
     private void initRecyclerView()
     {
-        mProductsRecyclerView = ( RecyclerView )findViewById(R.id.grid_recycler);
-        mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mProductsRecyclerView.setAdapter(new ProductAdapter());
+        mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
+        mProductsRecyclerView.setLayoutManager( new GridLayoutManager( this, 2 ) );
+        mProductsRecyclerView.setAdapter( new ProductAdapter() );
         mProductsRecyclerView.addItemDecoration(
-                new ProductDecorator(getResources().getDimensionPixelSize(R.dimen.vertical_spacing_grid)
-                        , getResources().getDimensionPixelSize(R.dimen.horizontal_spacing_grid)));
+                new ProductDecorator( getResources().getDimensionPixelSize(R.dimen.vertical_spacing_grid)
+                        , getResources().getDimensionPixelSize(R.dimen.horizontal_spacing_grid) ) );
     }
 
     /*
@@ -147,8 +151,8 @@ public class ProductsUI extends AppCompatActivity
 
         initRightDrawerExpandableList();
 
-        mRightDrawerExpandableAdapter = new ExpandableAdapter(this);
-        mRightDrawerExpandableAdapter.setData(expandableItems);
+        mRightDrawerExpandableAdapter = new ExpandableAdapter( this );
+        mRightDrawerExpandableAdapter.setData( expandableItems );
         mRightDrawerExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
         {
             @Override
@@ -158,23 +162,23 @@ public class ProductsUI extends AppCompatActivity
                                 , long id )
             {
                 // Para realizar la animacion al expandir o al cerrar se llama a un metodo de la ExpandableListView
-                if (mRightDrawerExpandableListView.isGroupExpanded(groupPosition))
-                    mRightDrawerExpandableListView.collapseGroupWithAnimation(groupPosition);
+                if ( mRightDrawerExpandableListView.isGroupExpanded( groupPosition ) )
+                    mRightDrawerExpandableListView.collapseGroupWithAnimation( groupPosition );
 
                 else
-                    mRightDrawerExpandableListView.expandGroupWithAnimation(groupPosition);
+                    mRightDrawerExpandableListView.expandGroupWithAnimation( groupPosition );
 
                 return true;
             }
 
         });
 
-        mLeftDrawerListView.setAdapter(menuAdapter);
-        mRightDrawerExpandableListView.setAdapter(mRightDrawerExpandableAdapter);
+        mLeftDrawerListView.setAdapter( menuAdapter );
+        mRightDrawerExpandableListView.setAdapter( mRightDrawerExpandableAdapter );
 
         initDrawerToggle();
 
-        mDrawerLayout.setDrawerListener(mLeftDrawerToggle);
+        mDrawerLayout.setDrawerListener( mLeftDrawerToggle );
     }
 
     /*
@@ -199,14 +203,14 @@ public class ProductsUI extends AppCompatActivity
                     for (int i = 0; i < mMenu.size(); i++)
                     {
                         // Sacamos la vista de cada item
-                        final View itemView = findViewById(mMenu.getItem(i).getItemId());
+                        final View itemView = findViewById( mMenu.getItem( i ).getItemId() );
 
                         // Cargamos la animacion y decimos que mantenga el estado cuando termine
                         showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
                                                 , R.anim.show_translation_horizontal );
-                        showFromRight.setFillAfter(true);
+                        showFromRight.setFillAfter( true );
 
-                        itemView.startAnimation(showFromRight);
+                        itemView.startAnimation( showFromRight );
 
                         // Habilitamos de nuevo el item
                         itemView.setEnabled( true );
@@ -222,44 +226,44 @@ public class ProductsUI extends AppCompatActivity
                     mActionBarTextView.setText( R.string.app_name );
 
                     // Sacamos la vista del toggle derecho
-                    final View itemView = findViewById(mMenu.getItem(0).getItemId());
+                    final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
 
                     // Cargamos las animaciones de entrada y salida
                     hideToRight = AnimationUtils.loadAnimation( ProductsUI.this
                                         , R.anim.hide_translation_horizontal);
                     showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
                                         , R.anim.show_translation_horizontal );
-                    showFromRight.setFillAfter(true);
+                    showFromRight.setFillAfter( true );
 
                     // Iniciamos la animacion de salida
-                    itemView.startAnimation(hideToRight);
+                    itemView.startAnimation( hideToRight );
 
                     // Establecemos un listener para que arranque la animacion de entrada cuando termine la de salida
-                    hideToRight.setAnimationListener(new Animation.AnimationListener()
+                    hideToRight.setAnimationListener( new Animation.AnimationListener()
                     {
                         @Override
-                        public void onAnimationStart(Animation animation) {}
+                        public void onAnimationStart( Animation animation ) {}
 
                         @Override
-                        public void onAnimationEnd(Animation animation)
+                        public void onAnimationEnd( Animation animation )
                         {
                             // Cambiamos el icono cuando termine la animacion de salida
-                            MenuItem searchItem = mMenu.findItem(R.id.right_drawer);
-                            searchItem.setIcon(android.R.drawable.ic_menu_search);
+                            MenuItem searchItem = mMenu.findItem( R.id.right_drawer );
+                            searchItem.setIcon( android.R.drawable.ic_menu_search );
 
-                            itemView.startAnimation(showFromRight);
+                            itemView.startAnimation( showFromRight );
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animation animation) {}
+                        public void onAnimationRepeat( Animation animation ) {}
                     });
 
                     // Si se cierra el drawer derecho con el teclado abierto, lo ocultamos
                     View view = ProductsUI.this.getCurrentFocus();
-                    if (view != null)
+                    if ( view != null )
                     {
-                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        InputMethodManager imm = ( InputMethodManager )getSystemService( Context.INPUT_METHOD_SERVICE );
+                        imm.hideSoftInputFromWindow( view.getWindowToken(), 0 );
                     }
                 }
             }
@@ -339,15 +343,15 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public void onConfigurationChanged( Configuration newConfig )
     {
-        super.onConfigurationChanged(newConfig);
-        mLeftDrawerToggle.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged( newConfig );
+        mLeftDrawerToggle.onConfigurationChanged( newConfig );
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    public boolean onPrepareOptionsMenu( Menu menu )
     {
         // Si el Navigation Drawer izquierdo esta abierto, ocultamos los expandableItems de la action bar
-        if ( mDrawerLayout.isDrawerOpen(Gravity.LEFT) )
+        if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
             // Cambiamos el titulo de la action bar
             mActionBarTextView.setText( R.string.left_drawer_title );
@@ -378,7 +382,7 @@ public class ProductsUI extends AppCompatActivity
             }
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        return super.onPrepareOptionsMenu( menu );
     }
 
     @Override
@@ -390,7 +394,7 @@ public class ProductsUI extends AppCompatActivity
         // Inflamos la ActionBar
         getMenuInflater().inflate( R.menu.action_bar, menu );
 
-        return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu( menu );
     }
 
     @Override
@@ -409,19 +413,19 @@ public class ProductsUI extends AppCompatActivity
         if ( ! mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
             // Funcionamiento del toggle derecho
-            if (item.getItemId() == R.id.right_drawer)
+            if ( item.getItemId() == R.id.right_drawer )
             {
-                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT))
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+                if (mDrawerLayout.isDrawerOpen( Gravity.RIGHT ) )
+                    mDrawerLayout.closeDrawer( Gravity.RIGHT );
 
                 else
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+                    mDrawerLayout.openDrawer( Gravity.RIGHT );
 
                 return true;
             }
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected( item );
     }
 
     private void initRightDrawerExpandableList()
