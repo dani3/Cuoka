@@ -1,5 +1,7 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -96,7 +99,7 @@ public class ProductsUI extends AppCompatActivity
     {
         mToolbar = ( Toolbar )findViewById( R.id.appbar );
 
-        setSupportActionBar( mToolbar );
+        setSupportActionBar(mToolbar);
     }
 
     /*
@@ -106,17 +109,15 @@ public class ProductsUI extends AppCompatActivity
     {
         // Inicializamos el icono a la izquierda del edittext
         mSearchImageView = ( ImageView )findViewById( R.id.searchImageView );
-        mSearchImageView.setImageResource( android.R.drawable.ic_menu_search );
+        mSearchImageView.setImageResource(android.R.drawable.ic_menu_search);
 
         mSearchEditText = ( EditText )findViewById( R.id.searchEditText );
 
         // Inicializamos el boton de borrar y establecemos el listener
         mSearchClearButton = ( Button )findViewById( R.id.searchClearButton );
-        mSearchClearButton.setOnClickListener( new View.OnClickListener()
-        {
+        mSearchClearButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick( View v )
-            {
+            public void onClick(View v) {
                 mSearchEditText.setText("");
             }
         });
@@ -133,6 +134,68 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView.addItemDecoration(
                 new ProductDecorator( getResources().getDimensionPixelSize(R.dimen.vertical_spacing_grid)
                         , getResources().getDimensionPixelSize(R.dimen.horizontal_spacing_grid) ) );
+
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int verticalOffset;
+            boolean scrollingUp;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    if (scrollingUp)
+                        if (verticalOffset > mToolbar.getHeight())
+                            toolbarAnimateHide();
+
+                        else
+                            toolbarAnimateShow(verticalOffset);
+
+                    else if (mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
+                            (verticalOffset > mToolbar.getHeight()))
+                        toolbarAnimateHide();
+
+                    else
+                        toolbarAnimateShow(verticalOffset);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                verticalOffset += dy;
+                scrollingUp = dy > 0;
+
+                int toolbarYOffset = (int) (dy - mToolbar.getTranslationY());
+
+                mToolbar.animate().cancel();
+
+                if (scrollingUp)
+                    if (toolbarYOffset < mToolbar.getHeight())
+                        mToolbar.setTranslationY(-toolbarYOffset);
+
+                    else
+                        mToolbar.setTranslationY(-mToolbar.getHeight());
+
+
+                else if (toolbarYOffset < 0)
+                    mToolbar.setTranslationY(0);
+
+                else
+                    mToolbar.setTranslationY(-toolbarYOffset);
+            }
+        });
+    }
+
+    private void toolbarAnimateShow( final int verticalOffset )
+    {
+        mToolbar.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180);
+    }
+
+    private void toolbarAnimateHide() {
+        mToolbar.animate()
+                .translationY(-mToolbar.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180);
     }
 
     /*
