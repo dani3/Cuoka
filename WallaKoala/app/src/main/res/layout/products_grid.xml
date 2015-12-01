@@ -14,6 +14,9 @@
         tools:context=".ProductsUI"
         android:background="@color/colorBackground">
 
+        <include android:id="@+id/appbar"
+            layout="@layout/toolbar"> </include>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/grid_recycler"
             android:layout_width="match_parent"

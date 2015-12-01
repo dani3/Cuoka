@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,13 +53,15 @@ public class ProductsUI extends AppCompatActivity
 
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
-    protected TextView mActionBarTextView;
     protected EditText mSearchEditText;
     protected ImageView mSearchImageView;
     protected Button mSearchClearButton;
 
     /* Animations */
     protected Animation hideToRight, showFromRight;
+
+    /* Toolbar */
+    protected Toolbar mToolbar;
 
     /* Others */
     protected Menu mMenu;
@@ -81,27 +83,20 @@ public class ProductsUI extends AppCompatActivity
                 , android.R.layout.simple_list_item_activated_1
                 , aux );
 
-        initActionBar();
+        initToolbar();
         initRecyclerView();
         initNavigationDrawers();
         initSearch();
     }
 
     /*
-     * Configuracion de la action bar
+     * Inicializacion de la toolbar
      */
-    private void initActionBar()
+    private void initToolbar()
     {
-        // Especificamos que vamos a usar un layout personalizado para la actionBar
-        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM );
-        getSupportActionBar().setCustomView( R.layout.action_bar );
+        mToolbar = ( Toolbar )findViewById( R.id.appbar );
 
-        // Cargamos el toggle del navigation drawer izquierdo
-        getSupportActionBar().setDisplayHomeAsUpEnabled( true );
-        getSupportActionBar().setHomeButtonEnabled( true );
-
-        // Cargamos el textview del titulo de la action bar
-        mActionBarTextView = ( TextView )findViewById( R.id.actionBarTitle );
+        setSupportActionBar( mToolbar );
     }
 
     /*
@@ -187,7 +182,7 @@ public class ProductsUI extends AppCompatActivity
     private void initDrawerToggle()
     {
         // Inicializamos el control en la action bar
-        mLeftDrawerToggle = new ActionBarDrawerToggle( this, mDrawerLayout, R.string.open_drawer, R.string.close_drawer )
+        mLeftDrawerToggle = new ActionBarDrawerToggle( this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer )
         {
             // Metodo llamado cuando el drawer esta completamente cerrado
             @Override
@@ -197,7 +192,7 @@ public class ProductsUI extends AppCompatActivity
                 if( drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
                     // Reestablecemos el titulo de la action bar
-                    mActionBarTextView.setText(R.string.app_name);
+                    mToolbar.setTitle(R.string.app_name);
 
                     // Restauramos los expandableItems de la action bar con una translacion
                     for (int i = 0; i < mMenu.size(); i++)
@@ -223,7 +218,7 @@ public class ProductsUI extends AppCompatActivity
                 if ( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
                     // Reestablecemos el titulo de la action bar
-                    mActionBarTextView.setText( R.string.app_name );
+                    mToolbar.setTitle(R.string.app_name);
 
                     // Sacamos la vista del toggle derecho
                     final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
@@ -285,7 +280,7 @@ public class ProductsUI extends AppCompatActivity
                 if( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
                     // Cambiamos el titulo de la action bar
-                    mActionBarTextView.setText( R.string.right_drawer_title );
+                    mToolbar.setTitle("");
 
                     // Borramos lo que se haya escrito anteriormente
                     mSearchEditText.setText( "" );
@@ -354,7 +349,7 @@ public class ProductsUI extends AppCompatActivity
         if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
             // Cambiamos el titulo de la action bar
-            mActionBarTextView.setText( R.string.left_drawer_title );
+            mToolbar.setTitle( R.string.left_drawer_title );
 
             // Hacemos desaparecer los expandableItems del menu con una translacion horizontal y los deshabilitamos
             for (int i = 0; i < menu.size(); i++)
