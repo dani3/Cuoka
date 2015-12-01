@@ -5,7 +5,7 @@
 
     <item android:id="@+id/right_drawer"
         android:title="Filter"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom"/>
 
 </menu>

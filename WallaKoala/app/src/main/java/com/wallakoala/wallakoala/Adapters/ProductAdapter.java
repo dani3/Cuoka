@@ -1,18 +1,15 @@
 package com.wallakoala.wallakoala.Adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
-
-import org.w3c.dom.Text;
 
 /**
  * @class Adapter para el grid de productos
@@ -21,20 +18,24 @@ import org.w3c.dom.Text;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
 {
-    private String[] names;
+    private String[] titles;
+    private String[] subtitles;
     private int[] images;
 
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
-        private TextView text;
+        private TextView title, subtitle;
+        private ImageButton fav;
         private ImageView image;
 
         public ProductHolder( View itemView )
         {
             super( itemView );
 
-            text = ( TextView )itemView.findViewById( R.id.grid_text );
-            image = ( ImageView )itemView.findViewById( R.id.grid_image );
+            title    = ( TextView )itemView.findViewById( R.id.footer_title );
+            subtitle = ( TextView )itemView.findViewById( R.id.footer_subtitle );
+            image    = ( ImageView )itemView.findViewById( R.id.grid_image );
+            fav      = ( ImageButton )itemView.findViewById( R.id.footer_fav_button );
         }
 
         public void bindProduct( Product product )
@@ -45,7 +46,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     public ProductAdapter()
     {
-        names = new String[]{"Prueba1", "Prueba2", "Prueba3", "Prueba4","Prueba5", "Prueba6", };
+        titles = new String[]{"ZARA", "BLANCO", "BERSHKA", "SPRINGFIELD","H&M", "ZARA", };
+        subtitles = new String[]{"Pantalones", "Camisas", "Camisetas", "Faldas","Vestidos", "Abrigos", };
         images = new int[]{ R.drawable.imagen1
                     , R.drawable.imagen2
                     , R.drawable.imagen3
@@ -64,15 +66,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     }
 
     @Override
-    public void onBindViewHolder( ProductHolder productHolder, int pos )
+    public void onBindViewHolder( final ProductHolder productHolder, int pos )
     {
-        productHolder.text.setText( names[ pos ] );
-        productHolder.image.setImageResource( images[ pos ] );
+        productHolder.title.setText(titles[pos]);
+        productHolder.subtitle.setText( subtitles[pos] );
+        productHolder.image.setImageResource(images[pos]);
+        productHolder.fav.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                productHolder.fav.setBackgroundResource( R.drawable.ic_favorite_white );
+            }
+        });
     }
 
     @Override
     public int getItemCount()
     {
-        return names.length;
+        return titles.length;
     }
 }

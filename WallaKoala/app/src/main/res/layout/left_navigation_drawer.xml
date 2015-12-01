@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:layout_gravity="start">
+    android:layout_gravity="start"
+    android:elevation="16dp">
 
     <ListView
         android:id="@+id/leftlistviewdrawer"

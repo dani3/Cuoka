@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     android:layout_gravity="end"
     android:background="@color/colorPrimary"
+    android:elevation="16dp"
     android:weightSum="1">
 
     <include

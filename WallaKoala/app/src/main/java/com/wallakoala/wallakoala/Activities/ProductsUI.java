@@ -220,39 +220,6 @@ public class ProductsUI extends AppCompatActivity
                     // Reestablecemos el titulo de la action bar
                     mToolbar.setTitle(R.string.app_name);
 
-                    // Sacamos la vista del toggle derecho
-                    final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
-
-                    // Cargamos las animaciones de entrada y salida
-                    hideToRight = AnimationUtils.loadAnimation( ProductsUI.this
-                                        , R.anim.hide_translation_horizontal);
-                    showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
-                                        , R.anim.show_translation_horizontal );
-                    showFromRight.setFillAfter( true );
-
-                    // Iniciamos la animacion de salida
-                    itemView.startAnimation( hideToRight );
-
-                    // Establecemos un listener para que arranque la animacion de entrada cuando termine la de salida
-                    hideToRight.setAnimationListener( new Animation.AnimationListener()
-                    {
-                        @Override
-                        public void onAnimationStart( Animation animation ) {}
-
-                        @Override
-                        public void onAnimationEnd( Animation animation )
-                        {
-                            // Cambiamos el icono cuando termine la animacion de salida
-                            MenuItem searchItem = mMenu.findItem( R.id.right_drawer );
-                            searchItem.setIcon( android.R.drawable.ic_menu_search );
-
-                            itemView.startAnimation( showFromRight );
-                        }
-
-                        @Override
-                        public void onAnimationRepeat( Animation animation ) {}
-                    });
-
                     // Si se cierra el drawer derecho con el teclado abierto, lo ocultamos
                     View view = ProductsUI.this.getCurrentFocus();
                     if ( view != null )
@@ -279,42 +246,8 @@ public class ProductsUI extends AppCompatActivity
                 // Si se abre el drawer derecho, cambiamos el icono y el titulo
                 if( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
-                    // Cambiamos el titulo de la action bar
-                    mToolbar.setTitle("");
-
                     // Borramos lo que se haya escrito anteriormente
                     mSearchEditText.setText( "" );
-
-                    // Sacamos la vista del toggle derecho
-                    final View itemView = findViewById(mMenu.getItem(0).getItemId());
-
-                    // Cargamos las animaciones de entrada y salida
-                    hideToRight = AnimationUtils.loadAnimation( ProductsUI.this, R.anim.hide_translation_horizontal);
-                    showFromRight = AnimationUtils.loadAnimation( ProductsUI.this, R.anim.show_translation_horizontal );
-                    showFromRight.setFillAfter(true);
-
-                    // Iniciamos la animacion de salida
-                    itemView.startAnimation(hideToRight);
-
-                    // Establecemos un listener para que arranque la animacion de entrada cuando termine la de salida
-                    hideToRight.setAnimationListener(new Animation.AnimationListener()
-                    {
-                        @Override
-                        public void onAnimationStart(Animation animation) {}
-
-                        @Override
-                        public void onAnimationEnd(Animation animation)
-                        {
-                            // Cuando termine la animacion de salida, cambiamos el icono
-                            MenuItem searchItem = mMenu.findItem(R.id.right_drawer);
-                            searchItem.setIcon(android.R.drawable.ic_menu_revert);
-
-                            itemView.startAnimation(showFromRight);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {}
-                    });
                 }
             }
 
