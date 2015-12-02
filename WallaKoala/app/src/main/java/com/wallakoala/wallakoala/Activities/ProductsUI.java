@@ -1,10 +1,9 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,12 +23,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.ExpandableAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
-import com.wallakoala.wallakoala.Decorators.ProductDecorator;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Views.AnimatedExpandableListView;
 
@@ -45,7 +42,7 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
-    protected ListView mLeftDrawerListView;
+    protected NavigationView mLeftNavigationVew;
     protected AnimatedExpandableListView mRightDrawerExpandableListView;
 
     /* Adapters */
@@ -59,6 +56,7 @@ public class ProductsUI extends AppCompatActivity
     protected EditText mSearchEditText;
     protected ImageView mSearchImageView;
     protected Button mSearchClearButton;
+    protected TextView mToolbarTextView;
 
     /* Animations */
     protected Animation hideToRight, showFromRight;
@@ -86,26 +84,28 @@ public class ProductsUI extends AppCompatActivity
                 , android.R.layout.simple_list_item_activated_1
                 , aux );
 
-        initToolbar();
-        initRecyclerView();
-        initNavigationDrawers();
-        initSearch();
+        _initToolbar();
+        _initRecyclerView();
+        _initNavigationDrawers();
+        _initSearch();
     }
 
     /*
      * Inicializacion de la toolbar
      */
-    private void initToolbar()
+    private void _initToolbar()
     {
         mToolbar = ( Toolbar )findViewById( R.id.appbar );
+        mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar( mToolbar );
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     /*
      * Inicializacion del icono y del edittext de busqueda
      */
-    private void initSearch()
+    private void _initSearch()
     {
         // Inicializamos el icono a la izquierda del edittext
         mSearchImageView = ( ImageView )findViewById( R.id.searchImageView );
@@ -126,14 +126,11 @@ public class ProductsUI extends AppCompatActivity
     /*
      * Inicializacion y configuracion del recyclerView
      */
-    private void initRecyclerView()
+    private void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
-        mProductsRecyclerView.setLayoutManager( new GridLayoutManager( this, 2 ) );
-        mProductsRecyclerView.setAdapter( new ProductAdapter() );
-        mProductsRecyclerView.addItemDecoration(
-                new ProductDecorator( getResources().getDimensionPixelSize(R.dimen.vertical_spacing_grid)
-                        , getResources().getDimensionPixelSize(R.dimen.horizontal_spacing_grid) ) );
+        mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mProductsRecyclerView.setAdapter(new ProductAdapter());
 
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
@@ -144,17 +141,17 @@ public class ProductsUI extends AppCompatActivity
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     if (scrollingUp)
                         if (verticalOffset > mToolbar.getHeight())
-                            toolbarAnimateHide();
+                            _toolbarAnimateHide();
 
                         else
-                            toolbarAnimateShow(verticalOffset);
+                            _toolbarAnimateShow(verticalOffset);
 
                     else if (mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
                             (verticalOffset > mToolbar.getHeight()))
-                        toolbarAnimateHide();
+                        _toolbarAnimateHide();
 
                     else
-                        toolbarAnimateShow(verticalOffset);
+                        _toolbarAnimateShow(verticalOffset);
             }
 
             @Override
@@ -183,7 +180,7 @@ public class ProductsUI extends AppCompatActivity
         });
     }
 
-    private void toolbarAnimateShow( final int verticalOffset )
+    private void _toolbarAnimateShow(final int verticalOffset)
     {
         mToolbar.animate()
                 .translationY(0)
@@ -191,7 +188,7 @@ public class ProductsUI extends AppCompatActivity
                 .setDuration(180);
     }
 
-    private void toolbarAnimateHide()
+    private void _toolbarAnimateHide()
     {
         mToolbar.animate()
                 .translationY(-mToolbar.getHeight())
@@ -202,10 +199,10 @@ public class ProductsUI extends AppCompatActivity
     /*
      * Inicializacion y configuracion de los navigation drawers
      */
-    private void initNavigationDrawers()
+    private void _initNavigationDrawers()
     {
         mRightDrawerExpandableListView = ( AnimatedExpandableListView )findViewById( R.id.rightlistviewdrawer );
-        mLeftDrawerListView            = ( ListView )findViewById( R.id.leftlistviewdrawer );
+        mLeftNavigationVew             = ( NavigationView )findViewById( R.id.nav_view );
         mDrawerLayout                  = ( DrawerLayout )findViewById( R.id.drawer_layout );
 
         initRightDrawerExpandableList();
@@ -232,10 +229,9 @@ public class ProductsUI extends AppCompatActivity
 
         });
 
-        mLeftDrawerListView.setAdapter( menuAdapter );
         mRightDrawerExpandableListView.setAdapter( mRightDrawerExpandableAdapter );
 
-        initDrawerToggle();
+        _initDrawerToggle();
 
         mDrawerLayout.setDrawerListener( mLeftDrawerToggle );
     }
@@ -243,7 +239,7 @@ public class ProductsUI extends AppCompatActivity
     /*
      * Inicializacion y configuracion del drawer toggle del leftDrawer
      */
-    private void initDrawerToggle()
+    private void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar
         mLeftDrawerToggle = new ActionBarDrawerToggle( this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer )
@@ -255,9 +251,6 @@ public class ProductsUI extends AppCompatActivity
                 // Comprobamos si es el drawer izquierdo el que se ha cerrado
                 if( drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
-                    // Reestablecemos el titulo de la action bar
-                    mToolbar.setTitle(R.string.app_name);
-
                     // Restauramos los items de la action bar con una translacion
                     for (int i = 0; i < mMenu.size(); i++)
                     {
@@ -281,9 +274,6 @@ public class ProductsUI extends AppCompatActivity
                 // Si se cierra el drawer derecho, reestablecemos el titulo
                 if ( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
-                    // Reestablecemos el titulo de la action bar
-                    mToolbar.setTitle(R.string.app_name);
-
                     // Si se cierra el drawer derecho con el teclado abierto, lo ocultamos
                     View view = ProductsUI.this.getCurrentFocus();
                     if ( view != null )
@@ -345,9 +335,6 @@ public class ProductsUI extends AppCompatActivity
         // Si el Navigation Drawer izquierdo esta abierto, ocultamos los expandableItems de la action bar
         if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
-            // Cambiamos el titulo de la action bar
-            mToolbar.setTitle( R.string.left_drawer_title );
-
             // Hacemos desaparecer los expandableItems del menu con una translacion horizontal y los deshabilitamos
             for (int i = 0; i < menu.size(); i++)
             {

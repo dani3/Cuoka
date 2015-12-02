@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group1">
+
+        <item
+            android:id="@+id/nav_my_profile"
+            android:icon="@drawable/ic_face_black"
+            android:title="@string/profile_item" />
+
+        <item
+            android:id="@+id/nav_my_shops"
+            android:icon="@drawable/ic_local_mall_black"
+            android:title="@string/shops_item" />
+
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite_black"
+            android:title="@string/favorites_item" />
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group2">
+
+        <item
+            android:id="@+id/nav_preferences"
+            android:icon="@drawable/ic_settings_black"
+            android:title="@string/settings_item" />
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_outline_black"
+            android:title="@string/help_item" />
+
+    </group>
+
+</menu>
