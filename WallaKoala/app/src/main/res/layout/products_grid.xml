@@ -10,12 +10,13 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ProductsUI"
-        android:background="@color/colorBackground">
+        tools:context=".ProductsUI">
 
+        <!-- Toolbar -->
         <include android:id="@+id/appbar"
             layout="@layout/toolbar"> </include>
 
+        <!-- Recylcer Grid -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/grid_recycler"
             android:layout_width="match_parent"

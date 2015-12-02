@@ -191,7 +191,8 @@ public class ProductsUI extends AppCompatActivity
                 .setDuration(180);
     }
 
-    private void toolbarAnimateHide() {
+    private void toolbarAnimateHide()
+    {
         mToolbar.animate()
                 .translationY(-mToolbar.getHeight())
                 .setInterpolator(new LinearInterpolator())
@@ -257,7 +258,7 @@ public class ProductsUI extends AppCompatActivity
                     // Reestablecemos el titulo de la action bar
                     mToolbar.setTitle(R.string.app_name);
 
-                    // Restauramos los expandableItems de la action bar con una translacion
+                    // Restauramos los items de la action bar con una translacion
                     for (int i = 0; i < mMenu.size(); i++)
                     {
                         // Sacamos la vista de cada item
@@ -277,7 +278,7 @@ public class ProductsUI extends AppCompatActivity
                     mLeftDrawerToggle.syncState();
                 }
 
-                // Si se cierra el drawer derecho, reestablecemos el icono y el titulo
+                // Si se cierra el drawer derecho, reestablecemos el titulo
                 if ( drawerView == findViewById( R.id.rightDrawerLayout ) )
                 {
                     // Reestablecemos el titulo de la action bar
