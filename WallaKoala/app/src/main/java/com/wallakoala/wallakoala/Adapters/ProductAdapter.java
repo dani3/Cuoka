@@ -1,13 +1,17 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wallakoala.wallakoala.Activities.ProductsUI;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 
@@ -18,9 +22,13 @@ import com.wallakoala.wallakoala.R;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
 {
+    private Context mContext;
     private String[] titles;
     private String[] subtitles;
     private int[] images;
+    private boolean[] fav;
+
+    private Animation implode, explode;
 
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
@@ -44,10 +52,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         }
     }
 
-    public ProductAdapter()
+    public ProductAdapter( Context context )
     {
+        mContext = context;
+
         titles = new String[]{"ZARA", "BLANCO", "BERSHKA", "SPRINGFIELD","H&M", "ZARA", };
         subtitles = new String[]{"Pantalones", "Camisas", "Camisetas", "Faldas","Vestidos", "Abrigos", };
+        fav = new boolean[]{ false, false, false, false, false, false };
         images = new int[]{ R.drawable.imagen1
                     , R.drawable.imagen2
                     , R.drawable.imagen3
@@ -68,15 +79,44 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     @Override
     public void onBindViewHolder( final ProductHolder productHolder, int pos )
     {
+        final int i = pos;
+
         productHolder.title.setText(titles[pos]);
-        productHolder.subtitle.setText( subtitles[pos] );
+        productHolder.subtitle.setText(subtitles[pos]);
         productHolder.image.setImageResource(images[pos]);
         productHolder.fav.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                productHolder.fav.setBackgroundResource( R.drawable.ic_favorite_white );
+                implode = AnimationUtils.loadAnimation(mContext, R.anim.implode);
+                explode = AnimationUtils.loadAnimation(mContext, R.anim.explode);
+                explode.setFillAfter(true);
+
+                productHolder.fav.startAnimation(implode);
+                implode.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        if (!fav[i])
+                            productHolder.fav.setBackgroundResource(R.drawable.ic_favorite_white);
+
+                        else
+                            productHolder.fav.setBackgroundResource(R.drawable.ic_favorite_border_white);
+
+                        fav[i] = !fav[i];
+                        productHolder.fav.startAnimation(explode);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+
+
+
             }
         });
     }

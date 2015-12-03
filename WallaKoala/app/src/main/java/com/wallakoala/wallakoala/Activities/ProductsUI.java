@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -17,21 +16,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wallakoala.wallakoala.Adapters.ExpandableAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.R;
-import com.wallakoala.wallakoala.Views.AnimatedExpandableListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @class Pantalla principal de la app, donde se muestran los productos
@@ -43,19 +31,14 @@ public class ProductsUI extends AppCompatActivity
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
     protected NavigationView mLeftNavigationVew;
-    protected AnimatedExpandableListView mRightDrawerExpandableListView;
 
     /* Adapters */
-    protected ExpandableAdapter mRightDrawerExpandableAdapter;
 
     /* Layouts */
     protected DrawerLayout mDrawerLayout;
 
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
-    protected EditText mSearchEditText;
-    protected ImageView mSearchImageView;
-    protected Button mSearchClearButton;
     protected TextView mToolbarTextView;
 
     /* Animations */
@@ -68,9 +51,6 @@ public class ProductsUI extends AppCompatActivity
     protected Menu mMenu;
 
     /* Temp */
-    protected String[] aux = new String[]{ "Prueba 1", "Prueba 2", "Prueba 3" };
-    List<ExpandableAdapter.GroupItem> expandableItems = new ArrayList<>();
-    protected ArrayAdapter<String> menuAdapter;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -80,17 +60,13 @@ public class ProductsUI extends AppCompatActivity
         // Especificamos el layout 'products_grid.xml'
         setContentView(R.layout.products_grid);
 
-        menuAdapter = new ArrayAdapter<>( this
-                , android.R.layout.simple_list_item_activated_1
-                , aux );
-
         _initToolbar();
         _initRecyclerView();
         _initNavigationDrawers();
         _initSearch();
     }
 
-    /*
+    /**
      * Inicializacion de la toolbar
      */
     private void _initToolbar()
@@ -102,35 +78,22 @@ public class ProductsUI extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-    /*
-     * Inicializacion del icono y del edittext de busqueda
+    /**
+     * TBD
      */
     private void _initSearch()
     {
-        // Inicializamos el icono a la izquierda del edittext
-        mSearchImageView = ( ImageView )findViewById( R.id.searchImageView );
-        mSearchImageView.setImageResource(android.R.drawable.ic_menu_search);
 
-        mSearchEditText = ( EditText )findViewById( R.id.searchEditText );
-
-        // Inicializamos el boton de borrar y establecemos el listener
-        mSearchClearButton = ( Button )findViewById( R.id.searchClearButton );
-        mSearchClearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSearchEditText.setText("");
-            }
-        });
     }
 
-    /*
+    /**
      * Inicializacion y configuracion del recyclerView
      */
     private void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
         mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mProductsRecyclerView.setAdapter(new ProductAdapter());
+        mProductsRecyclerView.setAdapter(new ProductAdapter( this ));
 
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
@@ -196,47 +159,20 @@ public class ProductsUI extends AppCompatActivity
                 .setDuration(180);
     }
 
-    /*
+    /**
      * Inicializacion y configuracion de los navigation drawers
      */
     private void _initNavigationDrawers()
     {
-        mRightDrawerExpandableListView = ( AnimatedExpandableListView )findViewById( R.id.rightlistviewdrawer );
-        mLeftNavigationVew             = ( NavigationView )findViewById( R.id.nav_view );
-        mDrawerLayout                  = ( DrawerLayout )findViewById( R.id.drawer_layout );
-
-        initRightDrawerExpandableList();
-
-        mRightDrawerExpandableAdapter = new ExpandableAdapter( this );
-        mRightDrawerExpandableAdapter.setData( expandableItems );
-        mRightDrawerExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
-        {
-            @Override
-            public boolean onGroupClick( ExpandableListView parent
-                                , View v
-                                , int groupPosition
-                                , long id )
-            {
-                // Para realizar la animacion al expandir o al cerrar se llama a un metodo de la ExpandableListView
-                if ( mRightDrawerExpandableListView.isGroupExpanded( groupPosition ) )
-                    mRightDrawerExpandableListView.collapseGroupWithAnimation( groupPosition );
-
-                else
-                    mRightDrawerExpandableListView.expandGroupWithAnimation( groupPosition );
-
-                return true;
-            }
-
-        });
-
-        mRightDrawerExpandableListView.setAdapter( mRightDrawerExpandableAdapter );
+        mLeftNavigationVew = ( NavigationView )findViewById( R.id.nav_view );
+        mDrawerLayout      = ( DrawerLayout )findViewById( R.id.drawer_layout );
 
         _initDrawerToggle();
 
         mDrawerLayout.setDrawerListener( mLeftDrawerToggle );
     }
 
-    /*
+    /**
      * Inicializacion y configuracion del drawer toggle del leftDrawer
      */
     private void _initDrawerToggle()
@@ -248,7 +184,6 @@ public class ProductsUI extends AppCompatActivity
             @Override
             public void onDrawerClosed( View drawerView )
             {
-                // Comprobamos si es el drawer izquierdo el que se ha cerrado
                 if( drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
                     // Restauramos los items de la action bar con una translacion
@@ -270,25 +205,12 @@ public class ProductsUI extends AppCompatActivity
 
                     mLeftDrawerToggle.syncState();
                 }
-
-                // Si se cierra el drawer derecho, reestablecemos el titulo
-                if ( drawerView == findViewById( R.id.rightDrawerLayout ) )
-                {
-                    // Si se cierra el drawer derecho con el teclado abierto, lo ocultamos
-                    View view = ProductsUI.this.getCurrentFocus();
-                    if ( view != null )
-                    {
-                        InputMethodManager imm = ( InputMethodManager )getSystemService( Context.INPUT_METHOD_SERVICE );
-                        imm.hideSoftInputFromWindow( view.getWindowToken(), 0 );
-                    }
-                }
             }
 
             // Metodo llamado cuando el drawer esta completamente abierto
             @Override
             public void onDrawerOpened( View drawerView )
             {
-                // Comprobamos si es el drawer izquierdo el que se ha abierto
                 if (drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
                     // Crea la llamada a onPrepareOptionsMenu()
@@ -296,21 +218,13 @@ public class ProductsUI extends AppCompatActivity
 
                     mLeftDrawerToggle.syncState();
                 }
-
-                // Si se abre el drawer derecho, cambiamos el icono y el titulo
-                if( drawerView == findViewById( R.id.rightDrawerLayout ) )
-                {
-                    // Borramos lo que se haya escrito anteriormente
-                    mSearchEditText.setText( "" );
-                }
             }
 
             // Metodo para realizar la animacion del drawerToggle, solo se realiza con el drawer izquierdo
             @Override
             public void onDrawerSlide( View drawerView, float slideOffset )
             {
-                if( drawerView == findViewById( R.id.leftDrawerLayout ) )
-                    super.onDrawerSlide( drawerView, slideOffset );
+                super.onDrawerSlide( drawerView, slideOffset );
             }
         };
     }
@@ -381,91 +295,12 @@ public class ProductsUI extends AppCompatActivity
     {
         // Comprobar que si se pulsa el izquierdo, cierre antes el derecho (si esta abierto)
         if ( mLeftDrawerToggle.onOptionsItemSelected( item ) )
-        {
-            if ( mDrawerLayout.isDrawerOpen( Gravity.RIGHT ) )
-                mDrawerLayout.closeDrawer( Gravity.RIGHT );
-
             return true;
-        }
 
-        // Deshabilitamos el toggle derecho si el izquierdo esta abierto
-        if ( ! mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
-        {
-            // Funcionamiento del toggle derecho
-            if ( item.getItemId() == R.id.right_drawer )
-            {
-                if (mDrawerLayout.isDrawerOpen( Gravity.RIGHT ) )
-                    mDrawerLayout.closeDrawer( Gravity.RIGHT );
-
-                else
-                    mDrawerLayout.openDrawer( Gravity.RIGHT );
-
-                return true;
-            }
-        }
+        // Funcionamiento del toggle derecho
+        if ( item.getItemId() == R.id.right_drawer )
+            return true;
 
         return super.onOptionsItemSelected( item );
-    }
-
-    private void initRightDrawerExpandableList()
-    {
-        // Populate our list with groups and its children
-        ExpandableAdapter.GroupItem item = new ExpandableAdapter.GroupItem();
-        ExpandableAdapter.ChildItem child = new ExpandableAdapter.ChildItem();
-
-        item.header = "Colores";
-        child.title = "Rojo";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "Azul";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "Negro";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "Blanco";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-
-        expandableItems.add(item);
-
-        item = new ExpandableAdapter.GroupItem();
-        item.header = "Tallas";
-        child.title = "XS";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "S";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "M";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "L";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "XL";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "XXL";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-
-        expandableItems.add(item);
-
-        item = new ExpandableAdapter.GroupItem();
-        item.header = "Secciones";
-        child.title = "Camisas";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "Faldas";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "Vestidos";
-        item.items.add( child );
-        child = new ExpandableAdapter.ChildItem();
-        child.title = "Pantalones";
-        item.items.add( child );
-
-        expandableItems.add(item);
     }
 }

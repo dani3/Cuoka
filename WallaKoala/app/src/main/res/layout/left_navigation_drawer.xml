@@ -16,6 +16,7 @@
         android:layout_height="match_parent"
         app:itemIconTint="@color/colorText"
         app:itemTextColor="@color/colorText"
+        app:itemBackground="@color/navigation_item_colors"
         app:headerLayout="@layout/left_navigation_drawer_header"
         app:menu="@menu/left_navigation_drawer_menu">
 

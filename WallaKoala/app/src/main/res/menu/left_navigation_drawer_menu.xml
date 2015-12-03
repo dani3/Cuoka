@@ -6,6 +6,7 @@
 
         <item
             android:id="@+id/nav_my_profile"
+            android:checked="true"
             android:icon="@drawable/ic_face_black"
             android:title="@string/profile_item" />
 

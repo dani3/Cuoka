@@ -9,6 +9,7 @@
     <color name="colorText">#5D5D5D</color>
     <color name="colorBackgroundTextImage">#FBFDF9</color>
     <color name="colorBackgroundEditText">#FFA4A4A4</color>
+    <color name="colorItemChecked">#B7B7B7</color>
 
     <color name="colorDividerList">#FFA4A4A4</color>
 
