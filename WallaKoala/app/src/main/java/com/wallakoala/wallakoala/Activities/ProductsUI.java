@@ -63,7 +63,6 @@ public class ProductsUI extends AppCompatActivity
         _initToolbar();
         _initRecyclerView();
         _initNavigationDrawers();
-        _initSearch();
     }
 
     /**
@@ -75,15 +74,7 @@ public class ProductsUI extends AppCompatActivity
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
         setSupportActionBar( mToolbar );
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-    }
-
-    /**
-     * TBD
-     */
-    private void _initSearch()
-    {
-
+        getSupportActionBar().setDisplayShowTitleEnabled( false );
     }
 
     /**
@@ -95,12 +86,14 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mProductsRecyclerView.setAdapter(new ProductAdapter( this ));
 
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     if (scrollingUp)
                         if (verticalOffset > mToolbar.getHeight())
@@ -118,7 +111,8 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
 
@@ -186,22 +180,18 @@ public class ProductsUI extends AppCompatActivity
             {
                 if( drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
-                    // Restauramos los items de la action bar con una translacion
-                    for (int i = 0; i < mMenu.size(); i++)
-                    {
-                        // Sacamos la vista de cada item
-                        final View itemView = findViewById( mMenu.getItem( i ).getItemId() );
+                    // Sacamos la vista del item
+                    final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
 
-                        // Cargamos la animacion y decimos que mantenga el estado cuando termine
-                        showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
-                                                , R.anim.show_translation_horizontal );
-                        showFromRight.setFillAfter( true );
+                    // Cargamos la animacion y decimos que mantenga el estado cuando termine
+                    showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
+                            , R.anim.show_translation_horizontal );
+                    showFromRight.setFillAfter( true );
 
-                        itemView.startAnimation( showFromRight );
+                    itemView.startAnimation( showFromRight );
 
-                        // Habilitamos de nuevo el item
-                        itemView.setEnabled( true );
-                    }
+                    // Habilitamos de nuevo el item
+                    itemView.setEnabled( true );
 
                     mLeftDrawerToggle.syncState();
                 }
@@ -249,30 +239,27 @@ public class ProductsUI extends AppCompatActivity
         // Si el Navigation Drawer izquierdo esta abierto, ocultamos los expandableItems de la action bar
         if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
-            // Hacemos desaparecer los expandableItems del menu con una translacion horizontal y los deshabilitamos
-            for (int i = 0; i < menu.size(); i++)
+            final View itemView = findViewById( menu.getItem( 0 ).getItemId() );
+
+            hideToRight = AnimationUtils.loadAnimation( this
+                    , R.anim.hide_translation_horizontal );
+            hideToRight.setFillAfter( true );
+            hideToRight.setAnimationListener( new Animation.AnimationListener()
             {
-                final View itemView = findViewById( menu.getItem( i ).getItemId() );
+                @Override
+                public void onAnimationStart( Animation animation ) {}
 
-                hideToRight = AnimationUtils.loadAnimation( this
-                                    , R.anim.hide_translation_horizontal );
-                hideToRight.setFillAfter( true );
-                hideToRight.setAnimationListener( new Animation.AnimationListener()
+                @Override
+                public void onAnimationEnd( Animation animation )
                 {
-                    @Override
-                    public void onAnimationStart( Animation animation ) {}
+                    itemView.setEnabled( false );
+                }
 
-                    @Override
-                    public void onAnimationEnd( Animation animation ) {
-                        itemView.setEnabled( false );
-                    }
+                @Override
+                public void onAnimationRepeat( Animation animation ) {}
+            });
 
-                    @Override
-                    public void onAnimationRepeat( Animation animation ) {}
-                });
-
-                itemView.startAnimation( hideToRight );
-            }
+            itemView.startAnimation( hideToRight );
         }
 
         return super.onPrepareOptionsMenu( menu );
@@ -293,14 +280,6 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected( MenuItem item )
     {
-        // Comprobar que si se pulsa el izquierdo, cierre antes el derecho (si esta abierto)
-        if ( mLeftDrawerToggle.onOptionsItemSelected( item ) )
-            return true;
-
-        // Funcionamiento del toggle derecho
-        if ( item.getItemId() == R.id.right_drawer )
-            return true;
-
         return super.onOptionsItemSelected( item );
     }
 }
