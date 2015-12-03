@@ -22,14 +22,20 @@ import com.wallakoala.wallakoala.R;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
 {
+    /* Context */
     private Context mContext;
+
     private String[] titles;
     private String[] subtitles;
     private int[] images;
     private boolean[] fav;
 
+    /* Animations */
     private Animation implode, explode;
 
+    /**
+     * ViewHolder del producto con todos los componentes graficos necesarios
+     */
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
         private TextView title, subtitle;
@@ -81,42 +87,40 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     {
         final int i = pos;
 
-        productHolder.title.setText(titles[pos]);
-        productHolder.subtitle.setText(subtitles[pos]);
-        productHolder.image.setImageResource(images[pos]);
-        productHolder.fav.setOnClickListener(new View.OnClickListener()
+        productHolder.title.setText( titles[pos] );
+        productHolder.subtitle.setText( subtitles[pos] );
+        productHolder.image.setImageResource( images[pos] );
+        productHolder.fav.setOnClickListener( new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
+            public void onClick( View v )
             {
-                implode = AnimationUtils.loadAnimation(mContext, R.anim.implode);
-                explode = AnimationUtils.loadAnimation(mContext, R.anim.explode);
-                explode.setFillAfter(true);
+                implode = AnimationUtils.loadAnimation( mContext, R.anim.implode );
+                explode = AnimationUtils.loadAnimation( mContext, R.anim.explode );
+                explode.setFillAfter( true );
 
-                productHolder.fav.startAnimation(implode);
-                implode.setAnimationListener(new Animation.AnimationListener()
+                productHolder.fav.startAnimation( implode );
+                implode.setAnimationListener( new Animation.AnimationListener()
                 {
                     @Override
-                    public void onAnimationStart(Animation animation) {}
+                    public void onAnimationStart( Animation animation ) {}
 
                     @Override
-                    public void onAnimationEnd(Animation animation) {
-                        if (!fav[i])
-                            productHolder.fav.setBackgroundResource(R.drawable.ic_favorite_white);
+                    public void onAnimationEnd( Animation animation )
+                    {
+                        if ( ! fav[i] )
+                            productHolder.fav.setBackgroundResource( R.drawable.ic_favorite_white );
 
                         else
-                            productHolder.fav.setBackgroundResource(R.drawable.ic_favorite_border_white);
+                            productHolder.fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
 
                         fav[i] = !fav[i];
-                        productHolder.fav.startAnimation(explode);
+                        productHolder.fav.startAnimation( explode );
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {}
+                    public void onAnimationRepeat( Animation animation ) {}
                 });
-
-
-
             }
         });
     }

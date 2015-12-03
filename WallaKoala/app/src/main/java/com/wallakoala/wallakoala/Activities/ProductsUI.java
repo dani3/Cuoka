@@ -58,7 +58,7 @@ public class ProductsUI extends AppCompatActivity
         super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'products_grid.xml'
-        setContentView(R.layout.products_grid);
+        setContentView( R.layout.products_grid );
 
         _initToolbar();
         _initRecyclerView();

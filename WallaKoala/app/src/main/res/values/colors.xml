@@ -3,14 +3,14 @@
     <color name="colorPrimary">#04B178</color>
     <color name="colorPrimaryDark">#076446</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorBackground">#EBF7E4</color>
+    <color name="colorBackground">#E7E7E7</color>
 
     <color name="colorTextView">#FBFDF9</color>
     <color name="colorText">#5D5D5D</color>
-    <color name="colorBackgroundTextImage">#FBFDF9</color>
-    <color name="colorBackgroundEditText">#FFA4A4A4</color>
-    <color name="colorItemChecked">#B7B7B7</color>
 
+    <color name="colorItemChecked">#CACACA</color>
+
+    <color name="colorBackgroundNavigationView">#F5F5F5</color>
     <color name="colorDividerList">#FFA4A4A4</color>
 
 </resources>
