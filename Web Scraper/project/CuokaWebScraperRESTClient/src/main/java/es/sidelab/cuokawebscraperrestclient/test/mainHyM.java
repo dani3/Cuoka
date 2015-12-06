@@ -113,7 +113,7 @@ public class mainHyM {
             
             System.out.print( " - Available sizes: " );
             for( Size size : cv.getSizes() )
-                if ( size.hasStock() )
+                if ( size.isStock() )
                     System.out.print( size.getSize() + " | " );
             
             System.out.println( "\n" );            
