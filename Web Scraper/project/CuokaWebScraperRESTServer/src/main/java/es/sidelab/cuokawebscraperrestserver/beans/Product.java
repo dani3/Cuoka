@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,6 +49,12 @@ public class Product
     @Column( name = "COLORS" )
     private List<ColorVariant> colors;
     
+    @Column( name = "NEWNESS" )
+    private boolean newness;
+    
+    @Column( name = "INSERT_DATE" )
+    private Calendar insertDate;
+    
     public Product() {}
     
     @Override
@@ -89,6 +96,8 @@ public class Product
     public void setLink( String link ) { this.link = link; }
     public void setMan( boolean man ) { this.man = man; }
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
+    public void setNewness( boolean newness ) { this.newness = newness; }
+    public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
     
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
@@ -98,4 +107,6 @@ public class Product
     public boolean isMan() { return this.man; }
     public List<ColorVariant> getColors() { return this.colors; }
     public long getId() { return this.id; }
+    public boolean isNewness() { return this.newness; }
+    public Calendar getInsertDate() { return this.insertDate; }
 }

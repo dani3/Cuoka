@@ -1,10 +1,14 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
+import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
+import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
+import java.util.Calendar;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,13 +37,16 @@ public class Controller
     @Autowired
     ProductsRepository productsRepository;
     
+    @Autowired
+    HistoricProductsRepository historicProductsRepository;
+    
     /*
-     * Metodo que aÃ±ade una nueva tienda, si ya existe se devuelve un error 400
+     * Metodo que anade una nueva tienda, si ya existe se devuelve un error 400
      */
     @RequestMapping( value = "/addShop", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
     {      
-        LOG.info( "Peticion POST recibida para aÃƒÂ±adir una nueva tienda..." );
+        LOG.info( "Peticion POST recibida para anadir una nueva tienda..." );
         
         // Se devuelve error 400 si hay algun atributo incorrecto
         if ( ! shop.isOkay() )
@@ -47,7 +54,7 @@ public class Controller
         
         LOG.info( "Comprobando si existe la tienda..." );
         
-        // Si existe ya la tienda, aÃ±adimos solo las URLs que no existan
+        // Si existe ya la tienda, anadimos solo las URLs que no existan
         Shop currentShop = shopsRepository.findByName( shop.getName() );
         if ( currentShop != null ) 
         {
@@ -56,7 +63,7 @@ public class Controller
             LOG.info( "Tienda eliminada correctamente" );
         }
         
-        LOG.info( "Se aÃ±ade la nueva tienda a la BD:\n" );  
+        LOG.info( "Se anade la nueva tienda a la BD:\n" );  
         LOG.info( shop.toString() );
         shopsRepository.save( shop );          
         LOG.info( "Tienda insertada correctamente, saliendo del metodo addShop" );
@@ -122,7 +129,40 @@ public class Controller
         LOG.info( "Llamando a ImageManager para descargar las imagenes que no existan " );
         List<Product> productsUpdated = ImageManager.downloadImages( products, shop );
         for ( Product product : productsUpdated )
+        {
+            boolean newness = false;
+            Calendar insertDate = Calendar.getInstance();
+            
+            for ( ColorVariant cv : product.getColors() )
+            {
+                insertDate = historicProductsRepository.getInsertDateByReference( shop
+                                                    , product.getSection()
+                                                    , cv.getReference()
+                                                    , cv.getColorName() );
+                
+                
+                if ( insertDate == null )
+                {
+                    historicProductsRepository.save( new HistoricProduct( shop
+                                                            , product.getSection()
+                                                            , cv.getReference() 
+                                                            , cv.getColorName() 
+                                                            , Calendar.getInstance() ) );
+                    
+                    newness = true;
+                }               
+            }
+            
+            product.setNewness( newness );
+            if ( newness )
+            
+                product.setInsertDate( Calendar.getInstance() );
+                
+            else 
+                product.setInsertDate( insertDate );
+                
             productsRepository.save( product );
+        }
         
         LOG.info( "Productos de " + shop + " insertados correctamente" );        
         LOG.info( "Saliendo del metodo addShop" );
