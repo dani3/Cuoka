@@ -38,6 +38,8 @@ public class Product
         this.link = link;
         this.man = man;
         this.colors = colors;
+        this.newness = false;
+        this.insertDate = Calendar.getInstance();
     }  
     
     public void setPrice( double price ) { this.price = price; }
