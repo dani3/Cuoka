@@ -133,6 +133,7 @@ public class Controller
             boolean newness = false;
             Calendar insertDate = Calendar.getInstance();
             
+            // Comprobamos si el producto se ha insertado anteriormente, si no es asi, se considera novedad
             for ( ColorVariant cv : product.getColors() )
             {
                 insertDate = historicProductsRepository.getInsertDateByReference( shop
@@ -154,8 +155,7 @@ public class Controller
             }
             
             product.setNewness( newness );
-            if ( newness )
-            
+            if ( newness )            
                 product.setInsertDate( Calendar.getInstance() );
                 
             else 
