@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- *
- * @author Dani
+ * @class Clase que representa los productos que han sido añadidos en el pasado
+ * @author Daniel Mancebo Aldea
  */
 
 @Entity
@@ -37,7 +37,11 @@ public class HistoricProduct
     @Column( name = "INSERT_DATE" )
     private Calendar insertDate;
 
-    public HistoricProduct(String shop, String section, String reference, String color, Calendar insertDate) 
+    public HistoricProduct( String shop
+                , String section
+                , String reference
+                , String color
+                , Calendar insertDate ) 
     {
         this.shop = shop;
         this.section = section;
@@ -46,43 +50,15 @@ public class HistoricProduct
         this.color = color;
     }
 
-    public String getColor() {
-        return color;
-    }
+    public String getColor() { return color; }
+    public String getReference() { return reference; }
+    public Calendar getInsertDate() { return insertDate; }
+    public String getSection() { return section; }
+    public String getShop() { return shop; }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getShop() {
-        return shop;
-    }
-
-    public void setShop(String shop) {
-        this.shop = shop;
-    }
-
-    public String getSection() {
-        return section;
-    }
-
-    public void setSection(String section) {
-        this.section = section;
-    }
-
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
-
-    public Calendar getInsertDate() {
-        return insertDate;
-    }
-
-    public void setInsertDate(Calendar insertDate) {
-        this.insertDate = insertDate;
-    }
+    public void setColor( String color ) { this.color = color; }
+    public void setShop( String shop ) { this.shop = shop; }
+    public void setSection( String section ) { this.section = section; }
+    public void setReference( String reference ) { this.reference = reference; }
+    public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
 }

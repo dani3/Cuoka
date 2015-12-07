@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Beans;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class Product 
@@ -10,6 +11,8 @@ public class Product
 	private double price;
 	private boolean man;
 	private String link;
+	private boolean newness;
+	private Calendar insertDate;
 	private List<ColorVariant> colors;
 	
 	public Product() {}
@@ -20,7 +23,9 @@ public class Product
 			 , double price
 			 , boolean man
 			 , String link
-			 , List<ColorVariant> colors )
+			 , List<ColorVariant> colors
+			 , boolean newness
+			 , Calendar insertDate )
 	{
 		this.name = name;
 		this.shop = shop;
@@ -29,6 +34,8 @@ public class Product
 		this.man = man;
 		this.link = link;
 		this.colors = colors;
+		this.newness = newness;
+		this.insertDate = insertDate;
 	}
 
 	public String getName() { return this.name; }
@@ -38,6 +45,8 @@ public class Product
 	public List<ColorVariant> getColors() { return this.colors; }
 	public boolean isMan() { return this.man; }
 	public String getLink() { return this.link; }
+	public boolean isNewness() { return this.newness; }
+	public Calendar getInsertDate() { return this.insertDate; }
 
 	public void setName( String name ) { this.name = name; }
 	public void setShop( String shop ) {	this.shop = shop; 	}
@@ -46,4 +55,6 @@ public class Product
 	public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
 	public void setMan( boolean man ) { this.man = man; }
 	public void setLink( String link ) { this.link = link; }
+	public void setNewness( boolean newness ) { this.newness = newness; }
+	public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
 }

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- *
- * @author Dani 
+ * @class Repositorio que gestiona el historico de productos
+ * @author Daniel Mancebo Aldea
  */
 
 public interface HistoricProductsRepository extends JpaRepository<HistoricProduct, Long> 
