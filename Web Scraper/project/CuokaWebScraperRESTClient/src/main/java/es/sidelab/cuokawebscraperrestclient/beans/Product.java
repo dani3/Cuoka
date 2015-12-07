@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -16,6 +17,8 @@ public class Product
     private String section;
     private String link;
     private boolean man;
+    private boolean newness;
+    private Calendar insertDate;
     private List<ColorVariant> colors;
     
     public Product() {}
@@ -44,6 +47,8 @@ public class Product
     public void setLink( String link ) { this.link = link; }
     public void setMan( boolean man ) { this.man = man; }
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
+    public void setNewness( boolean newness ) { this.newness = newness; }
+    public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
     
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }
@@ -52,4 +57,6 @@ public class Product
     public String getLink() { return this.link; }
     public boolean isMan() { return this.man; }
     public List<ColorVariant> getColors() { return this.colors; }
+    public boolean isNewness() { return this.newness; }
+    public Calendar getInsertDate() { return this.insertDate; }
 }
