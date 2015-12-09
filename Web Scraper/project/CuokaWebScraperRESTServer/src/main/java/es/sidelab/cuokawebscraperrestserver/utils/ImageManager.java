@@ -163,7 +163,7 @@ public class ImageManager
         {            
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
-                        , "./resizeProducts.py"
+                        , "../scripts/python/./resizeProducts.py"
                         , Properties.IMAGE_PATH + shop
                         , Integer.toString( Properties.IMAGE_WIDTH_L )
                         , Integer.toString( Properties.IMAGE_HEIGHT_L )
@@ -186,7 +186,7 @@ public class ImageManager
         {            
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
-                        , "./resizeColors.py"
+                        , "../scripts/python/./resizeColors.py"
                         , Properties.COLOR_PATH + shop
                         , Integer.toString( Properties.ICON_WIDTH )
                         , Integer.toString( Properties.ICON_HEIGHT ) } );

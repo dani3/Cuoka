@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -jar CuokaWebScraperRESTServer-1.0.jar &
+java -jar CuokaRESTServer.jar &
