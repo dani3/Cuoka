@@ -46,7 +46,7 @@ public class HyMScraper implements GenericScraper
 
             // Obtener los atributos propios del producto
             String link = shop.getURL().toString() + element.attr( "href" );
-            String name = document.select( "h1.product-item-headline" ).first().ownText(); 
+            String name = document.select( "h1.product-item-headline" ).first().ownText().toUpperCase(); 
             String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
             
