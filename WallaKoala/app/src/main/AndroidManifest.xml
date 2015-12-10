@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".Activities.IntroUI"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
 

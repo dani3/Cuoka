@@ -35,6 +35,7 @@ public class IntroUI extends AppCompatActivity
     protected RubberLoaderView loader;
     protected Button enter;
 
+    /* Data */
     protected List<JSONObject> jsonList;
     protected List<Product> productsList;
 
@@ -60,43 +61,45 @@ public class IntroUI extends AppCompatActivity
 
         jsonList = new ArrayList<>();
 
-        loader.startLoading();
-
-        new Products().execute();
+        new Products().execute( "Blanco", "HyM" );
     }
 
     private class Products  extends AsyncTask<String, Void, Void>
     {
-        private String content = "";
+        private List<String> content = new ArrayList<>();
         private String error = null;
 
-        protected void onPreExecute() {}
+        protected void onPreExecute()
+        {
+            loader.startLoading();
+            enter.setEnabled(false);
+        }
 
-        protected Void doInBackground( String... urls )
+        protected Void doInBackground( String... shops )
         {
             BufferedReader reader = null;
 
             try
             {
-                URL url = new URL( "http://192.168.1.47:8080/getProducts/Blanco" );
+                for ( int i = 0; i < shops.length; i++ )
+                {
+                    URL url = new URL("http://cuoka.cloudapp.net:8080/getProducts/" + shops[i]);
+                    URLConnection conn = url.openConnection();
 
-                Log.e("CUCU", "URL Creada");
+                    Log.e("CUCU", "Conectado");
 
-                URLConnection conn = url.openConnection();
+                    // Get the server response
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
 
-                Log.e("CUCU", "Conectado");
+                    // Read Server Response
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
 
-                // Get the server response
-                reader = new BufferedReader( new InputStreamReader( conn.getInputStream() ) );
-                StringBuilder sb = new StringBuilder( );
-                String line = "";
-
-                // Read Server Response
-                while( ( line = reader.readLine() ) != null )
-                    sb.append( line + "" );
-
-                // Append Server Response To Content String
-                content = sb.toString();
+                    // Append Server Response To Content String
+                    content.add(sb.toString());
+                }
 
             } catch( Exception ex )  {
                 error = ex.getMessage();
@@ -118,25 +121,25 @@ public class IntroUI extends AppCompatActivity
         {
             if ( error != null ) {
 
-                // Toast
-
             } else {
                 JSONArray jsonResponse;
-                Toast.makeText(IntroUI.this, "OnPostExecute", Toast.LENGTH_SHORT).show();
 
                 try {
-                    jsonResponse = new JSONArray( content );
-
-                    Toast.makeText(IntroUI.this, "JSON Array creado", Toast.LENGTH_SHORT).show();
-
-                    for ( int j=0; j < jsonResponse.length(); j++)
+                    for( int i = 0; i < content.size(); i++ )
                     {
-                        JSONObject js = jsonResponse.getJSONObject(j);
+                        jsonResponse = new JSONArray(content.get(i));
 
-                        jsonList.add(js);
+                        for (int j = 0; j < jsonResponse.length(); j++)
+                        {
+                            JSONObject js = jsonResponse.getJSONObject(j);
+
+                            jsonList.add(js);
+                        }
                     }
 
                     Log.e("CUCU", "Numero de productos: " + jsonList.size());
+
+                    enter.setEnabled(true);
 
                 } catch ( JSONException e ) {
                     e.printStackTrace();

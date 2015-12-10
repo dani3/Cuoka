@@ -9,15 +9,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".IntroUI"
-    android:background="#B0F6F6F6">
+    android:background="@color/colorBackground">
 
     <com.greenfrvr.rubberloader.RubberLoaderView
         android:id="@+id/rubber_loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:loaderExtraColor="#444444"
-        app:loaderPrimeColor="#444444"
+        app:loaderExtraColor="@color/colorAccent"
+        app:loaderPrimeColor="@color/colorAccent"
         app:loaderSize="medium"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
