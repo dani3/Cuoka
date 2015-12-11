@@ -1,6 +1,6 @@
 package com.wallakoala.wallakoala.Beans;
 
-public class Image 
+public class Image
 {
     private String url;
     private String pathSmallSize;

@@ -2,7 +2,7 @@ package com.wallakoala.wallakoala.Beans;
 
 import java.util.List;
 
-public class ColorVariant 
+public class ColorVariant
 {
     private String reference;
     private String colorName;

@@ -3,7 +3,7 @@ package com.wallakoala.wallakoala.Beans;
 import java.util.Calendar;
 import java.util.List;
 
-public class Product 
+public class Product
 {
 	private String name;
 	private String shop;

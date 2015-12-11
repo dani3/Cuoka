@@ -1,6 +1,6 @@
 package com.wallakoala.wallakoala.Beans;
 
-public class Size 
+public class Size
 {
 	private String size; 
     private boolean stock;

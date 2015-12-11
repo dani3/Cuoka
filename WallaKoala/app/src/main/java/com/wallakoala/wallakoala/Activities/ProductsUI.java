@@ -19,7 +19,11 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
+import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @class Pantalla principal de la app, donde se muestran los productos
@@ -28,6 +32,9 @@ import com.wallakoala.wallakoala.R;
 
 public class ProductsUI extends AppCompatActivity
 {
+    /* Data */
+    protected HashMap<String, List<Product>> mProductsMap;
+
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
     protected NavigationView mLeftNavigationVew;

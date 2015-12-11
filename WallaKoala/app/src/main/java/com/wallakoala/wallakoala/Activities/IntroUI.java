@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.greenfrvr.rubberloader.RubberLoaderView;
+import com.wallakoala.wallakoala.Beans.ColorVariant;
+import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.Size;
 import com.wallakoala.wallakoala.R;
 
 import org.json.JSONArray;
@@ -22,7 +25,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @class Pantalla de introduccion de la app
@@ -37,7 +43,7 @@ public class IntroUI extends AppCompatActivity
 
     /* Data */
     protected List<JSONObject> jsonList;
-    protected List<Product> productsList;
+    protected Map<String, List<Product>> productsMap;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -46,6 +52,9 @@ public class IntroUI extends AppCompatActivity
 
         // Especificamos el layout 'intro.xml'
         setContentView( R.layout.intro );
+
+        jsonList = new ArrayList<>();
+        productsMap = new HashMap<>();
 
         loader = ( RubberLoaderView )findViewById( R.id.rubber_loader );
         enter = ( Button )findViewById( R.id.enter );
@@ -58,8 +67,6 @@ public class IntroUI extends AppCompatActivity
                 finish();
             }
         });
-
-        jsonList = new ArrayList<>();
 
         new Products().execute( "Blanco", "HyM" );
     }
@@ -135,6 +142,8 @@ public class IntroUI extends AppCompatActivity
 
                             jsonList.add(js);
                         }
+
+                        convertJSONtoProduct(jsonList);
                     }
 
                     Log.e("CUCU", "Numero de productos: " + jsonList.size());
@@ -144,8 +153,73 @@ public class IntroUI extends AppCompatActivity
                 } catch ( JSONException e ) {
                     e.printStackTrace();
                 }
-            }
+
+            } // else
+
         } // onPostExecute
+
+        /**
+         * Metodo que inicializa el mapa de productos
+         */
+        private void convertJSONtoProduct( List<JSONObject> jsonList ) throws JSONException
+        {
+            List<Product> productsList = new ArrayList<>();
+            String key = null;
+
+            for( JSONObject jsonObject : jsonList )
+            {
+                String name = jsonObject.getString("name");
+                String shop = key = jsonObject.getString("shop");
+                String section = jsonObject.getString("section");
+                double price = jsonObject.getDouble("price");
+                boolean man = jsonObject.getBoolean("man");
+                String link = jsonObject.getString("link");
+                boolean newness = jsonObject.getBoolean("newness");
+
+                JSONArray jsColors = jsonObject.getJSONArray("colors");
+                List<ColorVariant> colors = new ArrayList<>();
+                for( int i = 0; i < jsColors.length(); i++ )
+                {
+                    JSONObject jsColor = jsColors.getJSONObject(i);
+
+                    String reference = jsColor.getString("reference");
+                    String colorName = jsColor.getString("colorName");
+                    String colorURL = jsColor.getString("colorURL");
+                    String colorPath = jsColor.getString("colorPath");
+
+                    List<Image> images = new ArrayList<>();
+                    List<Size> sizes = new ArrayList<>();
+                    JSONArray jsImages = jsColor.getJSONArray("images");
+                    JSONArray jsSizes = jsColor.getJSONArray("sizes");
+                    for ( int j = 0; j < jsImages.length(); j++ )
+                    {
+                        JSONObject jsImage = jsImages.getJSONObject(j);
+
+                        String url = jsImage.getString("url");
+                        String pathLargeSize = jsImage.getString("pathLargeSize");
+                        String pathSmallSize = jsImage.getString("pathSmallSize");
+
+                        images.add( new Image( url, pathSmallSize, pathLargeSize ) );
+                    }
+
+                    for ( int j = 0; j < jsSizes.length(); j++ )
+                    {
+                        JSONObject jsSize = jsSizes.getJSONObject(j);
+
+                        String size = jsSize.getString("size");
+                        boolean stock = jsSize.getBoolean("stock");
+
+                        sizes.add( new Size( size, stock ) );
+                    }
+
+                    colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images, sizes ) );
+                }
+
+                productsList.add( new Product( name, shop, section, price, man, link, colors, newness, null ) );
+            }
+
+            productsMap.put( key, productsList );
+        }
 
     } // Products
 }
