@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 /**
- * @class Vista que muestra la imagen del producto en el grid manteniendo su aspect ratio
+ * @class Vista que muestra la imagen del producto en el grid manteniendo su aspect ratio.
  * Created by Daniel Mancebo Aldea on 11/11/2015.
  */
 

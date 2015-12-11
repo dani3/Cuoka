@@ -33,7 +33,7 @@ import java.util.List;
 public class ProductsUI extends AppCompatActivity
 {
     /* Data */
-    protected HashMap<String, List<Product>> mProductsMap;
+    protected HashMap< String, List< Product > > mProductsMap;
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
@@ -144,7 +144,7 @@ public class ProductsUI extends AppCompatActivity
         });
     }
 
-    private void _toolbarAnimateShow(final int verticalOffset)
+    private void _toolbarAnimateShow( final int verticalOffset )
     {
         mToolbar.animate()
                 .translationY(0)

@@ -25,6 +25,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     /* Context */
     private Context mContext;
 
+    /* Data */
     private String[] titles;
     private String[] subtitles;
     private int[] images;

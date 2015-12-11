@@ -1,5 +1,10 @@
 package com.wallakoala.wallakoala.Beans;
 
+/**
+ * @class Clase que representa una talla de un producto.
+ * Created by Daniel Mancebo on 11/12/2015.
+ */
+
 public class Size
 {
 	private String size; 

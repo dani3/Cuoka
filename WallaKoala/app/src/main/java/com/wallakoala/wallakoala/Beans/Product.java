@@ -3,6 +3,11 @@ package com.wallakoala.wallakoala.Beans;
 import java.util.Calendar;
 import java.util.List;
 
+/*
+ * @class Clase que representa un producto
+ * Created by Daniel Mancebo on 11/12/2015.
+ */
+
 public class Product
 {
 	private String name;
