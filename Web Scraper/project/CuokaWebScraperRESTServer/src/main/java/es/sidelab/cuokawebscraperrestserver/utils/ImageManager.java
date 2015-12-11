@@ -99,12 +99,10 @@ public class ImageManager
         } // for products
         
         LOG.info( "Todas las imagenes se han descargado correctamente, se reescalan" );
-        resizeImages( shop );
-        LOG.info( "Todas las imagenes han sido reescaladas correctamente" );
+        resizeImages( shop );        
         
         LOG.info( "Se reescalan los iconos de los colores" );
-        resizeColors( shop );
-        LOG.info( "Todos los iconos han sido reescalados correctamente" );
+        resizeColors( shop );        
         
         return productsUpdated;
     }

@@ -10,6 +10,8 @@ import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller 
 {
     private static final Log LOG = LogFactory.getLog( Controller.class );
+    
+    @Autowired
+    private static ExecutorService executor = Executors.newFixedThreadPool( 1 );
     
     @Autowired
     ShopsRepository shopsRepository;
@@ -118,54 +123,62 @@ public class Controller
                                         , @PathVariable String shop )
     {
         LOG.info( "Peticion POST para anadir productos recibida" );
-        LOG.info( "Eliminando los productos existentes de la tienda " + shop );
-        List<Product> productsToBeRemoved = productsRepository.findByShop( shop );
-        for ( Product product : productsToBeRemoved )
-            productsRepository.delete( product.getId() );
         
-        LOG.info( "Productos eliminados!" );
-        
-        LOG.info( "Insertando nuevos productos" );
-        LOG.info( "Llamando a ImageManager para descargar las imagenes que no existan " );
-        List<Product> productsUpdated = ImageManager.downloadImages( products, shop );
-        for ( Product product : productsUpdated )
-        {
-            boolean newness = false;
-            Calendar insertDate = Calendar.getInstance();
-            
-            // Comprobamos si el producto se ha insertado anteriormente, si no es asi, se considera novedad
-            for ( ColorVariant cv : product.getColors() )
+        Runnable task = () -> {
+            LOG.info( "Eliminando los productos existentes de la tienda " + shop );
+            List<Product> productsToBeRemoved = productsRepository.findByShop( shop );
+            for ( Product product : productsToBeRemoved )
+                productsRepository.delete( product.getId() );
+
+            LOG.info( "Productos eliminados!" );
+
+            LOG.info( "Insertando nuevos productos" );
+            LOG.info( "Llamando a ImageManager para descargar las imagenes que no existan " );
+            List<Product> productsUpdated = ImageManager.downloadImages( products, shop );
+            for ( Product product : productsUpdated )
             {
-                insertDate = historicProductsRepository.getInsertDateByReference( shop
+                boolean newness = false;
+                Calendar insertDate = Calendar.getInstance();
+
+                // Comprobamos si el producto se ha insertado anteriormente, si no es asi, se considera novedad
+                for ( ColorVariant cv : product.getColors() )
+                {
+                    insertDate = historicProductsRepository.getInsertDateByReference( shop
                                                     , product.getSection()
                                                     , cv.getReference()
                                                     , cv.getColorName() );
-                
-                
-                if ( insertDate == null )
-                {
-                    historicProductsRepository.save( new HistoricProduct( shop
-                                                            , product.getSection()
-                                                            , cv.getReference() 
-                                                            , cv.getColorName() 
-                                                            , Calendar.getInstance() ) );
-                    
-                    newness = true;
-                }               
+
+
+                    if ( insertDate == null )
+                    {
+                        historicProductsRepository.save( new HistoricProduct( shop
+                                                                , product.getSection()
+                                                                , cv.getReference() 
+                                                                , cv.getColorName() 
+                                                                , Calendar.getInstance() ) );
+
+                        newness = true;
+                    }               
+                }
+
+                product.setNewness( newness );
+                if ( newness )            
+                    product.setInsertDate( Calendar.getInstance() );
+
+                else 
+                    product.setInsertDate( insertDate );
+
+                productsRepository.save( product );
             }
             
-            product.setNewness( newness );
-            if ( newness )            
-                product.setInsertDate( Calendar.getInstance() );
-                
-            else 
-                product.setInsertDate( insertDate );
+            LOG.info( "Todas las imagenes han sido reescaladas correctamente" );
+            LOG.info( "Todos los iconos han sido reescalados correctamente" );
+            
+            LOG.info( "Productos de " + shop + " insertados correctamente" );        
+            LOG.info( "Saliendo del metodo addShop" );
+        };
         
-            productsRepository.save( product );
-        }
-        
-        LOG.info( "Productos de " + shop + " insertados correctamente" );        
-        LOG.info( "Saliendo del metodo addShop" );
+        executor.execute( task );       
                 
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
