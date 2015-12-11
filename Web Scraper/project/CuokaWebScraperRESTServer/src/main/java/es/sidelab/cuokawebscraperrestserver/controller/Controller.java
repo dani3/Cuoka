@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +47,7 @@ public class Controller
     @Autowired
     HistoricProductsRepository historicProductsRepository;
     
-    /*
+    /**
      * Metodo que anade una nueva tienda, si ya existe se devuelve un error 400
      */
     @RequestMapping( value = "/addShop", method = RequestMethod.POST )
@@ -93,7 +95,7 @@ public class Controller
         return shop;
     }
     
-    /*
+    /**
      * Metodo que devuelve una lista con todas las tiendas
      */
     @RequestMapping( value = "/getShops", method = RequestMethod.GET )
@@ -115,9 +117,10 @@ public class Controller
         return shops;
     }
     
-    /*
+    /**
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
      */
+    @CacheEvict( value = "products", key = "#shop" )
     @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addProducts( @RequestBody List<Product> products
                                         , @PathVariable String shop )
@@ -183,9 +186,10 @@ public class Controller
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
     
-    /*
+    /**
      * Metodo que devuelve una lista de productos de una tienda
      */
+    @Cacheable( value = "products", key = "#shop" )
     @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
     public List<Product> getProducts( @PathVariable String shop )
     {
@@ -193,7 +197,7 @@ public class Controller
         return productsRepository.findByShop( shop );
     }
     
-    /*
+    /**
      * Metodo que devuelve una lista de todos los productos
      */
     @RequestMapping( value = "/getProducts", method = RequestMethod.GET )
