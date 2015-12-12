@@ -4,7 +4,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import es.sidelab.cuokawebscraperrestclient.scrapers.GenericScraper;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
+import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperInterface;
 
 /**
  * @class Clase que gestiona todas las tareas que se realicen en paralelo.
@@ -27,7 +27,7 @@ public class MultithreadManager
     private static final Logger LOG = Logger.getLogger( MultithreadManager.class ); 
     
     /*
-     * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor
+     * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor.
      */
     public static void parallelScrap( Shop[] shops )
     {
@@ -44,7 +44,7 @@ public class MultithreadManager
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
                 LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );
-                GenericScraper scraper = ScraperManager.getScraper( shop );
+                ScraperInterface scraper = ScraperManager.getScraper( shop );
                 LOG.info( "Scraper de " + shop.getName() + " obtenido" );
                  
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
@@ -125,7 +125,7 @@ public class MultithreadManager
     }
     
     /*
-     * Metodo que comprueba si todos los threads han acabado
+     * Metodo que comprueba si todos los threads han acabado.
      */
     private static boolean hasEveryoneFinished( boolean[] finishedSections )
     {
@@ -138,7 +138,7 @@ public class MultithreadManager
     }
     
     /*
-     * Metodo que devuelve el estado de los threads
+     * Metodo que devuelve el estado de los threads.
      */
     private static String threadStatus( boolean[] finishedSections )
     {

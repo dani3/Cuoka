@@ -1,7 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
 /**
- * @class Clase que representa una talla
+ * @class Clase que representa una talla.
  * @author Daniel Mancebo Aldea
  */
 

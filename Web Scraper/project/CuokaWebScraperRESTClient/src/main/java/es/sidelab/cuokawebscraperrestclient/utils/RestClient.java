@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @class Clase que gestiona la comunicacion con el servidor REST
+ * @class Clase que gestiona la comunicacion con el servidor REST.
  * @author Daniel Mancebo Aldea
  */
 
@@ -21,12 +21,12 @@ public class RestClient
     
     public RestClient( URL server ) 
     {
-        this.restClient = new RestTemplate();
-        this.SERVER = server;
+        RestClient.restClient = new RestTemplate();
+        RestClient.SERVER = server;
     }
     
     /*
-     * Metodo que conecta con el servidor REST y devuelve la lista de tiendas online
+     * Metodo que conecta con el servidor REST y devuelve la lista de tiendas online.
      */
     public Shop[] getArrayOfShops()
     {
@@ -35,7 +35,7 @@ public class RestClient
     } 
     
     /*
-     * Metodo que envia una lista de productos al servidor REST
+     * Metodo que envia una lista de productos al servidor REST.
      */
     public static synchronized void saveProducts( List<Product> products, Shop shop )
     {
@@ -46,7 +46,7 @@ public class RestClient
     }
     
     /*
-     * Metodo que elimina del vector todas las tiendas que no esten online
+     * Metodo que elimina del vector todas las tiendas que no esten online.
      */
     private static Shop[] deleteShopsOffline( Shop[] shops )
     {

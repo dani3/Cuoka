@@ -2,12 +2,11 @@ package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.io.File;
-import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @class Clase que gestionara todo lo relacionado con directorios y ficheros
+ * @class Clase que gestionara todo lo relacionado con directorios y ficheros.
  * @author Daniel Mancebo Aldea
  */
 
@@ -16,7 +15,7 @@ public class FileManager
     private static final Log LOG = LogFactory.getLog( FileManager.class );
     
     /*
-     * Metodo que crea el directorio para almacenar los productos de una tienda
+     * Metodo que crea el directorio para almacenar los productos de una tienda.
      */
     public static void createProductsDirectory( String shop )
     {
@@ -33,7 +32,7 @@ public class FileManager
     }
     
     /*
-     * Metodo que crea el directorio para almacenar los iconos de los colores
+     * Metodo que crea el directorio para almacenar los iconos de los colores.
      */
     public static void createColorsDirectory()
     {
@@ -50,7 +49,7 @@ public class FileManager
     }
     
     /*
-     * Metodo que comprueba si existe un fichero
+     * Metodo que comprueba si existe un fichero.
      */
     public static boolean existsFile( String file )
     {
@@ -58,7 +57,7 @@ public class FileManager
     }
     
     /*
-     * Metodo que elimina un fichero 
+     * Metodo que elimina un fichero.
      */
     public static boolean deleteFile( String file )
     {

@@ -8,7 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Daniel Mancebo Aldea
  */
 
-public interface SizesRepository extends JpaRepository<Size, Long> 
-{
-    
-}
+public interface SizesRepository extends JpaRepository<Size, Long> {}

@@ -8,7 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Daniel Mancebo Aldea
  */
 
-public interface SectionsRepository extends JpaRepository<Section, Long>
-{
-    
-}
+public interface SectionsRepository extends JpaRepository<Section, Long> {}

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @class Controlador que proporcionara las URLs a los scrapers y tambien guardara los productos
+ * @class Controlador que proporcionara las URLs a los scrapers y tambien guardara los productos.
  * @author Daniel Mancebo Aldea
  */
 
@@ -48,7 +48,9 @@ public class Controller
     HistoricProductsRepository historicProductsRepository;
     
     /**
-     * Metodo que anade una nueva tienda, si ya existe se devuelve un error 400
+     * Metodo que anade una nueva tienda, si ya existe se devuelve un error 400.
+     * @param shop: Tienda a anadir.
+     * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @RequestMapping( value = "/addShop", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
@@ -79,7 +81,7 @@ public class Controller
     }
     
     /*
-     * Metodo que devuelve una tienda dado su nombre
+     * Metodo que devuelve una tienda dado su nombre.
      */
     @RequestMapping( value = "/getShop/{name}", method = RequestMethod.GET )
     public Shop getShop( @PathVariable String name )
@@ -96,8 +98,8 @@ public class Controller
     }
     
     /**
-     * Metodo que devuelve una lista con todas las tiendas
-     * @return Lista con todas las tiendas
+     * Metodo que devuelve una lista con todas las tiendas.
+     * @return Lista con todas las tiendas.
      */
     @RequestMapping( value = "/getShops", method = RequestMethod.GET )
     public List<Shop> getShops()
@@ -119,10 +121,10 @@ public class Controller
     }
     
     /**
-     * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
-     * @param products: Lista de los productos a insertar
-     * @param shop: Tienda a la que pertenecen los productos
-     * @return Codigo HTTP con el resultado de la ejecucion
+     * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos.
+     * @param products: Lista de los productos a insertar.
+     * @param shop: Tienda a la que pertenecen los productos.
+     * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @CacheEvict( value = "products", key = "#shop" )
     @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
@@ -191,9 +193,9 @@ public class Controller
     }
     
     /**
-     * Metodo que devuelve una lista de productos de una tienda
-     * @param shop: Tienda de la que se quieren los productos
-     * @return Lista de productos
+     * Metodo que devuelve una lista de productos de una tienda.
+     * @param shop: Tienda de la que se quieren los productos.
+     * @return Lista de productos.
      */
     @Cacheable( value = "products", key = "#shop" )
     @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
@@ -204,8 +206,8 @@ public class Controller
     }
     
     /**
-     * Metodo que devuelve una lista de todos los productos
-     * @return Lista de todos los productos de todas las tiendas
+     * Metodo que devuelve una lista de todos los productos.
+     * @return Lista de todos los productos de todas las tiendas.
      */
     @RequestMapping( value = "/getProducts", method = RequestMethod.GET )
     public List<Product> getProducts()

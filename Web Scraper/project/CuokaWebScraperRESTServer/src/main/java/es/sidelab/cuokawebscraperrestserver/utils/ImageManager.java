@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
 /**
- * @class Clase que gestionara todo lo relacionado con las imagenes de los productos
+ * @class Clase que gestionara todo lo relacionado con las imagenes de los productos.
  * @author Daniel Mancebo Aldea
  */
 
@@ -26,7 +26,7 @@ public class ImageManager
     private static final Log LOG = LogFactory.getLog( ImageManager.class );
     
     /*
-     * Metodo que descarga si es necesario las imagenes del producto y los iconos de los colores
+     * Metodo que descarga si es necesario las imagenes del producto y los iconos de los colores.
      */
     public static List<Product> downloadImages( List<Product> products, String shop )
     {
@@ -108,7 +108,7 @@ public class ImageManager
     }
     
     /*
-     * Metodo que descarga la imagen del producto y le baja la resolucion a 350x500
+     * Metodo que descarga la imagen del producto y le baja la resolucion.
      */
     private static boolean downloadImage( String imageURL, String path )
     {
@@ -153,7 +153,7 @@ public class ImageManager
     }
     
     /*
-     * Metodo que ejecuta un script en python para reescalar las imagenes de una tienda
+     * Metodo que ejecuta un script en python para reescalar las imagenes de una tienda.
      */
     private static void resizeImages( String shop )
     {
@@ -176,7 +176,7 @@ public class ImageManager
     }
     
     /*
-     * Metodo que ejecuta un script en python que reescala todos los iconos de los colores
+     * Metodo que ejecuta un script en python que reescala todos los iconos de los colores.
      */
     private static void resizeColors( String shop )
     {
@@ -195,50 +195,4 @@ public class ImageManager
             
         }
     }
-    
-    private static boolean checkConnectivity( URL url )
-    {
-        try {
-            HttpURLConnection urlConn = ( HttpURLConnection ) url.openConnection();
-            
-            int i = 0;
-            while ( i++ < 5 )
-            {
-                urlConn.connect();
-                
-                if ( ( HttpURLConnection.HTTP_OK == urlConn.getResponseCode() ) )
-                    return true;
-            }
-            
-        } catch ( IOException e ) {
-            LOG.info( e.getMessage() );
-        }  
-        
-        return false;
-    }
-    
-    /*
-     * Metodo que cambia la resolucion de la imagen a 350x500
-     */
-    /*private static void resizeImage( String imagePath ) throws IOException
-    {     
-        // Creamos una BufferedImage donde guardamos la imagen original
-        BufferedImage original = ImageIO.read( new FileInputStream( imagePath ) );
-        
-        // Creamos una Image reescalando la original y una BufferedImage
-        Image resized = original.getScaledInstance( Properties.IMAGE_WIDTH_S
-                                        , Properties.IMAGE_HEIGHT_S
-                                        , Image.SCALE_FAST );       
-        BufferedImage bImgResized = new BufferedImage( Properties.IMAGE_WIDTH_S
-                                            , Properties.IMAGE_HEIGHT_S
-                                            , original.getType() );       
-        
-        // Utilizamos Graphics2D para guardar la imagen reescalada (Image) en un BufferedImage
-        Graphics2D bGr = bImgResized.createGraphics();
-        bGr.drawImage( resized, 0 , 0, null );
-        bGr.dispose();
-        
-        // Guardamos en fichero la imagen reescalada con el mismo nombre
-        ImageIO.write( bImgResized, "jpg", new FileOutputStream( imagePath ) );
-    }*/
 }

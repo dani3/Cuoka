@@ -8,7 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Daniel Mancebo Aldea
  */
 
-public interface ColorVariantsRepository extends JpaRepository<ColorVariant, Long>
-{
-    
-}
+public interface ColorVariantsRepository extends JpaRepository<ColorVariant, Long> {}
