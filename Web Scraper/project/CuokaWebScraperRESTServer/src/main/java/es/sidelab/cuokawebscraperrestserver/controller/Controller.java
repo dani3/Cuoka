@@ -36,7 +36,7 @@ public class Controller
     private static final Log LOG = LogFactory.getLog( Controller.class );
     
     @Autowired
-    private static ExecutorService executor = Executors.newFixedThreadPool( 1 );
+    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool( 1 );
     
     @Autowired
     ShopsRepository shopsRepository;
@@ -97,6 +97,7 @@ public class Controller
     
     /**
      * Metodo que devuelve una lista con todas las tiendas
+     * @return Lista con todas las tiendas
      */
     @RequestMapping( value = "/getShops", method = RequestMethod.GET )
     public List<Shop> getShops()
@@ -119,6 +120,9 @@ public class Controller
     
     /**
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos
+     * @param products: Lista de los productos a insertar
+     * @param shop: Tienda a la que pertenecen los productos
+     * @return Codigo HTTP con el resultado de la ejecucion
      */
     @CacheEvict( value = "products", key = "#shop" )
     @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
@@ -181,13 +185,15 @@ public class Controller
             LOG.info( "Saliendo del metodo addShop" );
         };
         
-        executor.execute( task );       
+        EXECUTOR.execute( task );       
                 
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
     
     /**
      * Metodo que devuelve una lista de productos de una tienda
+     * @param shop: Tienda de la que se quieren los productos
+     * @return Lista de productos
      */
     @Cacheable( value = "products", key = "#shop" )
     @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
@@ -199,6 +205,7 @@ public class Controller
     
     /**
      * Metodo que devuelve una lista de todos los productos
+     * @return Lista de todos los productos de todas las tiendas
      */
     @RequestMapping( value = "/getProducts", method = RequestMethod.GET )
     public List<Product> getProducts()
