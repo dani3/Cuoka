@@ -11,19 +11,6 @@
     tools:context=".IntroUI"
     android:background="@color/colorBackground">
 
-    <com.greenfrvr.rubberloader.RubberLoaderView
-        android:id="@+id/rubber_loader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:loaderExtraColor="@color/colorAccent"
-        app:loaderPrimeColor="@color/colorAccent"
-        app:loaderSize="medium"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="75dp"
-        />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
