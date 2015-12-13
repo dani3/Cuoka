@@ -13,4 +13,7 @@
     <string name="favorites_item">Mis Favoritos</string>
     <string name="settings_item">Preferencias</string>
     <string name="help_item">Ayuda</string>
+
+    <string name="error_message">Ops! Algo ha ido mal</string>
+    <string name="nodata_message">No hay ningún resultado...</string>
 </resources>

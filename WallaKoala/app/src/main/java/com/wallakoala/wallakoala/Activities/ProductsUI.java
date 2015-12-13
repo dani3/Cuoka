@@ -33,6 +33,7 @@ import com.wallakoala.wallakoala.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -63,8 +64,6 @@ public class ProductsUI extends AppCompatActivity
     protected RecyclerView mProductsRecyclerView;
     protected NavigationView mLeftNavigationVew;
 
-    /* Adapters */
-
     /* Layouts */
     protected DrawerLayout mDrawerLayout;
 
@@ -72,6 +71,8 @@ public class ProductsUI extends AppCompatActivity
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
     protected RubberLoaderView mRubberLoader;
+    protected View mDarkenScreenView;
+    protected TextView mNoDataTextView, mErrorTextView;
 
     /* Animations */
     protected Animation hideToRight, showFromRight;
@@ -81,7 +82,6 @@ public class ProductsUI extends AppCompatActivity
 
     /* Others */
     protected Menu mMenu;
-    protected View mDarkenScreenView;
     protected int number_of_shops;
 
     /* Temp */
@@ -122,6 +122,10 @@ public class ProductsUI extends AppCompatActivity
 
         // ImageView que oscurece la pantalla
         mDarkenScreenView = findViewById(R.id.darken_screen);
+
+        // TextViews que muestran que no hay productos disponibles o se ha producido un error
+        mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
+        mErrorTextView = (TextView)findViewById(R.id.error_textview);
     }
 
     /**
@@ -143,16 +147,14 @@ public class ProductsUI extends AppCompatActivity
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
         mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mProductsRecyclerView.setAdapter(new ProductAdapter( this ));
+        mProductsRecyclerView.setAdapter(new ProductAdapter(this));
 
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     if (scrollingUp)
                         if (verticalOffset > mToolbar.getHeight())
@@ -170,8 +172,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
 
@@ -213,7 +214,7 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Inicializacion y configuracion de los navigation drawers
+     * Inicializacion y configuracion de los navigation drawers.
      */
     private void _initNavigationDrawers()
     {
@@ -223,13 +224,10 @@ public class ProductsUI extends AppCompatActivity
         _initDrawerToggle();
 
         mDrawerLayout.setDrawerListener(mLeftDrawerToggle);
-
-        // Deshabilitamos que se pueda abrir el drawer deslizando
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     /**
-     * Inicializacion y configuracion del drawer toggle del leftDrawer
+     * Inicializacion y configuracion del drawer toggle del leftDrawer.
      */
     private void _initDrawerToggle()
     {
@@ -281,6 +279,63 @@ public class ProductsUI extends AppCompatActivity
         };
     }
 
+    /**
+     * Metodo que inhabilita ciertos controles cuando está la pantalla de carga.
+     * @param loading: true indica que se inicia la carga, false que ha terminado.
+     */
+    private void _loading( boolean loading )
+    {
+        if ( ! loading )
+        {
+            mRubberLoader.setVisibility(View.GONE);
+            mDarkenScreenView.setVisibility(View.GONE);
+
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+
+        } else {
+            mRubberLoader.setVisibility(View.VISIBLE);
+            mRubberLoader.startLoading();
+            mDarkenScreenView.setVisibility(View.VISIBLE);
+
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
+    /**
+     * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
+     * @param noData: true indica que no hay ningun producto que mostrar.
+     */
+    private void _noData( boolean noData )
+    {
+        if ( ! noData )
+        {
+            mProductsRecyclerView.setVisibility(View.VISIBLE);
+            mNoDataTextView.setVisibility(View.GONE);
+
+        } else {
+            mProductsRecyclerView.setVisibility(View.GONE);
+            mNoDataTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Metodo que muestra un mensaje cuando se ha producido un error.
+     * @param error: si se ha producido un error.
+     */
+    private void _error( boolean error )
+    {
+        if ( ! error )
+        {
+            mProductsRecyclerView.setVisibility(View.VISIBLE);
+            mErrorTextView.setVisibility(View.GONE);
+
+        } else {
+            mProductsRecyclerView.setVisibility(View.GONE);
+            mErrorTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onPostCreate( Bundle savedInstanceState )
     {
@@ -291,8 +346,8 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public void onConfigurationChanged( Configuration newConfig )
     {
-        super.onConfigurationChanged( newConfig );
-        mLeftDrawerToggle.onConfigurationChanged( newConfig );
+        super.onConfigurationChanged(newConfig);
+        mLeftDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -353,7 +408,7 @@ public class ProductsUI extends AppCompatActivity
 
         protected void onPreExecute()
         {
-            mRubberLoader.startLoading();
+            _loading(true);
         }
 
         protected Void doInBackground( String... shops )
@@ -401,7 +456,9 @@ public class ProductsUI extends AppCompatActivity
 
         protected void onPostExecute( Void unused )
         {
-            if ( error != null ) {
+            if ( error != null )
+            {
+                _error(true);
 
             } else {
                 JSONArray jsonResponse;
@@ -421,19 +478,17 @@ public class ProductsUI extends AppCompatActivity
                         convertJSONtoProduct(jsonList);
                     }
 
-                    // Eliminamos la LoaderView y la imagen para oscurecer la pantalla
-                    ( ( ViewGroup )mRubberLoader.getParent() ).removeView(mRubberLoader);
-                    mDarkenScreenView.setVisibility(View.GONE);
+                    _loading(false);
 
                     // Sacamos los siguientes productos que se tienen que mostrar en el grid
                     getNextProductsToBeDisplayed();
 
+                    _initRecyclerView();
+
                 } catch ( JSONException e ) {
                     e.printStackTrace();
                 }
-
             } // else
-
         } // onPostExecute
 
 
@@ -444,7 +499,9 @@ public class ProductsUI extends AppCompatActivity
         }
 
         /**
-         * Metodo que inicializa el mapa de productos
+         * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's
+         * @param jsonList: lista de JSON a convertir
+         * @throws JSONException
          */
         private void convertJSONtoProduct( List<JSONObject> jsonList ) throws JSONException
         {
