@@ -92,7 +92,7 @@ public class ProductsUI extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Especificamos el layout 'products_grid.xml'
-        setContentView( R.layout.products_grid );
+        setContentView(R.layout.products_grid);
 
         _initData();
         _initAuxViews();
@@ -292,13 +292,14 @@ public class ProductsUI extends AppCompatActivity
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
-
         } else {
             mRubberLoader.setVisibility(View.VISIBLE);
             mRubberLoader.startLoading();
             mDarkenScreenView.setVisibility(View.VISIBLE);
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            mDrawerLayout.setDrawerListener(null); // NOT WORKING
+            mLeftDrawerToggle.setToolbarNavigationClickListener(null); // NOT WORKING
         }
     }
 
@@ -339,7 +340,7 @@ public class ProductsUI extends AppCompatActivity
     @Override
     protected void onPostCreate( Bundle savedInstanceState )
     {
-        super.onPostCreate( savedInstanceState );
+        super.onPostCreate(savedInstanceState);
         mLeftDrawerToggle.syncState();
     }
 
@@ -360,23 +361,23 @@ public class ProductsUI extends AppCompatActivity
 
             hideToRight = AnimationUtils.loadAnimation( this
                     , R.anim.hide_translation_horizontal );
-            hideToRight.setFillAfter( true );
-            hideToRight.setAnimationListener( new Animation.AnimationListener()
-            {
+            hideToRight.setFillAfter(true);
+            hideToRight.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart( Animation animation ) {}
-
-                @Override
-                public void onAnimationEnd( Animation animation )
-                {
-                    itemView.setEnabled( false );
+                public void onAnimationStart(Animation animation) {
                 }
 
                 @Override
-                public void onAnimationRepeat( Animation animation ) {}
+                public void onAnimationEnd(Animation animation) {
+                    itemView.setEnabled(false);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
             });
 
-            itemView.startAnimation( hideToRight );
+            itemView.startAnimation(hideToRight);
         }
 
         return super.onPrepareOptionsMenu( menu );
