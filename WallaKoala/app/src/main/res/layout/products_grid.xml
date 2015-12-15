@@ -14,15 +14,6 @@
         <include android:id="@+id/appbar"
             layout="@layout/toolbar"> </include>
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/main_frame_layout"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ProductsUI">
-
         <!-- Recylcer Grid -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/grid_recycler"
@@ -31,6 +22,15 @@
             android:scrollbars="none"
             android:clipToPadding="false"
             android:paddingTop="?attr/actionBarSize"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/main_frame_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ProductsUI">
 
         <!-- Fondo para oscurecer la pantalla -->
         <ImageView
@@ -65,6 +65,7 @@
             android:textSize="20sp"
             android:textColor="@color/colorText" />
 
+        <!-- Texto de no prductos -->
         <TextView
             android:id="@+id/nodata_textview"
             android:layout_width="wrap_content"

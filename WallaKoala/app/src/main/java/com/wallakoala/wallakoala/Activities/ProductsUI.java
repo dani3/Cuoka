@@ -15,11 +15,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.greenfrvr.rubberloader.RubberLoaderView;
@@ -28,22 +26,24 @@ import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.Size;
+import com.wallakoala.wallakoala.Decorators.ProductDecorator;
 import com.wallakoala.wallakoala.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @class Pantalla principal de la app, donde se muestran los productos
@@ -56,9 +56,11 @@ public class ProductsUI extends AppCompatActivity
     private final int NUM_PRODUCTS_DISPLAYED = 20;
 
     /* Data */
-    protected HashMap< String, List< Product > > mProductsMap;
-    protected List<Product> mProductsNewnessList;
-    protected List<Boolean> mProductsDisplayedList;
+    protected Map<String, List<Product>> mProductsMap;
+    protected Map<String, List<Product>> mProductsNonFilteredMap;
+    protected Map<String, ?> mFilterMap;
+    protected Deque<Product> mProductsCandidatesDeque;
+    protected Product[] mProductsDisplayedArray;
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
@@ -74,6 +76,9 @@ public class ProductsUI extends AppCompatActivity
     protected View mDarkenScreenView;
     protected TextView mNoDataTextView, mErrorTextView;
 
+    /* Adapters */
+    protected ProductAdapter mProductAdapter;
+
     /* Animations */
     protected Animation hideToRight, showFromRight;
 
@@ -82,7 +87,7 @@ public class ProductsUI extends AppCompatActivity
 
     /* Others */
     protected Menu mMenu;
-    protected int number_of_shops;
+    protected int _numberOfShops;
 
     /* Temp */
 
@@ -103,19 +108,37 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Inicializacion de las estructuras de datos.
+     * Inicializacion de las distintias estructuras de datos.
      */
-    private void _initData()
+    protected void _initData()
     {
-        mProductsMap = new HashMap<>();
-        mProductsNewnessList = new ArrayList<>();
-        mProductsDisplayedList = new ArrayList<>();
+        mProductsMap             = new HashMap<>();
+        mFilterMap               = _initFilterMap();
+        mProductsNonFilteredMap  = new HashMap<>();
+        mProductsDisplayedArray  = new Product[NUM_PRODUCTS_DISPLAYED];
+        mProductsCandidatesDeque = new ArrayDeque<>();
+    }
+
+    /**
+     * Metodo que inicializa el mapa de filtros
+     * @return: Mapa con los filtros actuales
+     */
+    protected Map<String, ?> _initFilterMap()
+    {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("newness", true);
+        map.put("colors", new ArrayList<String>());
+        map.put("sizes", new ArrayList<String>());
+        map.put("sections", new ArrayList<String>());
+
+        return map;
     }
 
     /**
      * Inicializacion de vistas auxiliares
      */
-    private void _initAuxViews()
+    protected void _initAuxViews()
     {
         // LoaderView
         mRubberLoader = ( RubberLoaderView )findViewById(R.id.rubber_loader);
@@ -131,7 +154,7 @@ public class ProductsUI extends AppCompatActivity
     /**
      * Inicializacion de la toolbar.
      */
-    private void _initToolbar()
+    protected void _initToolbar()
     {
         mToolbar = ( Toolbar )findViewById( R.id.appbar );
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
@@ -143,11 +166,14 @@ public class ProductsUI extends AppCompatActivity
     /**
      * Inicializacion y configuracion del recyclerView.
      */
-    private void _initRecyclerView()
+    protected void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
         mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mProductsRecyclerView.setAdapter(new ProductAdapter(this));
+
+        mProductAdapter = new ProductAdapter(this);
+
+        mProductsRecyclerView.setAdapter(mProductAdapter);
 
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
@@ -197,7 +223,7 @@ public class ProductsUI extends AppCompatActivity
         });
     }
 
-    private void _toolbarAnimateShow( final int verticalOffset )
+    protected void _toolbarAnimateShow( final int verticalOffset )
     {
         mToolbar.animate()
                 .translationY(0)
@@ -205,7 +231,7 @@ public class ProductsUI extends AppCompatActivity
                 .setDuration(180);
     }
 
-    private void _toolbarAnimateHide()
+    protected void _toolbarAnimateHide()
     {
         mToolbar.animate()
                 .translationY(-mToolbar.getHeight())
@@ -216,7 +242,7 @@ public class ProductsUI extends AppCompatActivity
     /**
      * Inicializacion y configuracion de los navigation drawers.
      */
-    private void _initNavigationDrawers()
+    protected void _initNavigationDrawers()
     {
         mLeftNavigationVew = ( NavigationView )findViewById( R.id.nav_view );
         mDrawerLayout      = ( DrawerLayout )findViewById( R.id.drawer_layout );
@@ -229,7 +255,7 @@ public class ProductsUI extends AppCompatActivity
     /**
      * Inicializacion y configuracion del drawer toggle del leftDrawer.
      */
-    private void _initDrawerToggle()
+    protected void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar
         mLeftDrawerToggle = new ActionBarDrawerToggle( this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer )
@@ -283,7 +309,7 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que inhabilita ciertos controles cuando está la pantalla de carga.
      * @param loading: true indica que se inicia la carga, false que ha terminado.
      */
-    private void _loading( boolean loading )
+    protected void _loading( boolean loading )
     {
         if ( ! loading )
         {
@@ -298,8 +324,6 @@ public class ProductsUI extends AppCompatActivity
             mDarkenScreenView.setVisibility(View.VISIBLE);
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            mDrawerLayout.setDrawerListener(null); // NOT WORKING
-            mLeftDrawerToggle.setToolbarNavigationClickListener(null); // NOT WORKING
         }
     }
 
@@ -307,15 +331,19 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
      * @param noData: true indica que no hay ningun producto que mostrar.
      */
-    private void _noData( boolean noData )
+    protected void _noData( boolean noData )
     {
         if ( ! noData )
         {
-            mProductsRecyclerView.setVisibility(View.VISIBLE);
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.VISIBLE);
+
             mNoDataTextView.setVisibility(View.GONE);
 
         } else {
-            mProductsRecyclerView.setVisibility(View.GONE);
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.GONE);
+
             mNoDataTextView.setVisibility(View.VISIBLE);
         }
     }
@@ -324,15 +352,22 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que muestra un mensaje cuando se ha producido un error.
      * @param error: si se ha producido un error.
      */
-    private void _error( boolean error )
+    protected void _error( boolean error )
     {
         if ( ! error )
         {
-            mProductsRecyclerView.setVisibility(View.VISIBLE);
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.VISIBLE);
+
             mErrorTextView.setVisibility(View.GONE);
 
         } else {
-            mProductsRecyclerView.setVisibility(View.GONE);
+            _noData(false);
+            _loading(false);
+
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.GONE);
+
             mErrorTextView.setVisibility(View.VISIBLE);
         }
     }
@@ -390,15 +425,183 @@ public class ProductsUI extends AppCompatActivity
         this.mMenu = menu;
 
         // Inflamos la ActionBar
-        getMenuInflater().inflate( R.menu.action_bar, menu );
+        getMenuInflater().inflate(R.menu.action_bar, menu);
 
-        return super.onCreateOptionsMenu( menu );
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected( MenuItem item )
     {
-        return super.onOptionsItemSelected( item );
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Metodo que determina si un producto pasa el filtro o no.
+     * @param product: Producto a comprobar.
+     * @return: true si el producto ha pasado el filtro.
+     */
+    protected boolean _isDisplayable( Product product )
+    {
+        boolean displayable = true;
+
+        // Recorremos el mapa de filtros
+        for ( String key : mFilterMap.keySet() )
+        {
+            // Si es el filtro de novedades
+            if ( key.equals("newness") )
+            {
+                if (mFilterMap.get(key) == null)
+                    displayable = true;
+
+                else
+                    displayable = ( (Boolean)mFilterMap.get(key) == product.isNewness() );
+            }
+        }
+
+        return displayable;
+    }
+
+    protected boolean _checkIfFinished( Map<String, Integer> indexMap )
+    {
+        boolean finished = true;
+        Iterator<String> iterator = indexMap.keySet().iterator();
+        while ( ( iterator.hasNext() ) && ( finished ) )
+        {
+            String key = iterator.next();
+
+            finished = ( mProductsMap.get(key).size() == indexMap.get(key) );
+        }
+
+        return finished;
+    }
+
+    /**
+     * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
+     * Solo se queda con los productos que pasen el filtro.
+     */
+    protected void updateCandidates()
+    {
+        // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior
+        Map<String, Integer> indexMap = new HashMap<>();
+        boolean finished = false;
+        boolean turn = true;
+
+        // Inicializar mapa de indices con todos a 0
+        for ( String key : mProductsMap.keySet() )
+            indexMap.put(key, 0);
+
+        Iterator<String> iterator = mProductsMap.keySet().iterator();
+
+        // Mientras queden productos pendientes
+        while ( ! finished )
+        {
+            String key = iterator.next();
+
+            // Sacamos el indice de donde nos quedamos y la lista de productos
+            int index = indexMap.get(key);
+            List<Product> list = mProductsMap.get(key);
+
+            // Mientras queden productos y no encontremos un producto mostrable
+            while( ( index < list.size() ) && ( turn ) )
+            {
+                // Si el producto pasa el filtro, se añade a la cola
+                if ( _isDisplayable( list.get(index) ) )
+                {
+                    mProductsCandidatesDeque.addLast( list.get(index) );
+                    turn = false;
+                }
+
+                index++;
+            } // while #2
+
+            // Actualizamos el mapa de indices
+            indexMap.put(key, index);
+            turn = true;
+
+            // Si se ha terminado el recorrido, lo iniciamos de nuevo
+            if ( ! iterator.hasNext() )
+                iterator = mProductsMap.keySet().iterator();
+
+            finished = _checkIfFinished( indexMap );
+
+        } // while #1
+    }
+
+    /**
+     * Metodo que inserta los productos en la cola ordenados.
+     * @return: Cola con todos los productos ordenados para ser mostrados en el RecyclerView.
+     */
+    protected Deque<Product> getNextProductsToBeDisplayed()
+    {
+
+        return null;
+    }
+
+    /**
+     * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's.
+     * @param jsonList: lista de JSON a convertir.
+     * @throws JSONException
+     */
+    protected void convertJSONtoProduct( List<JSONObject> jsonList ) throws JSONException
+    {
+        List<Product> productsList = new ArrayList<>();
+        String key = null;
+
+        for( JSONObject jsonObject : jsonList )
+        {
+            String name = jsonObject.getString("name");
+            String shop = key = jsonObject.getString("shop");
+            String section = jsonObject.getString("section");
+            double price = jsonObject.getDouble("price");
+            boolean man = jsonObject.getBoolean("man");
+            String link = jsonObject.getString("link");
+            boolean newness = jsonObject.getBoolean("newness");
+
+            JSONArray jsColors = jsonObject.getJSONArray("colors");
+            List<ColorVariant> colors = new ArrayList<>();
+            for( int i = 0; i < jsColors.length(); i++ )
+            {
+                JSONObject jsColor = jsColors.getJSONObject(i);
+
+                String reference = jsColor.getString("reference");
+                String colorName = jsColor.getString("colorName");
+                String colorURL = jsColor.getString("colorURL");
+                String colorPath = jsColor.getString("colorPath");
+
+                List<Image> images = new ArrayList<>();
+                List<Size> sizes = new ArrayList<>();
+                JSONArray jsImages = jsColor.getJSONArray("images");
+                JSONArray jsSizes = jsColor.getJSONArray("sizes");
+                for ( int j = 0; j < jsImages.length(); j++ )
+                {
+                    JSONObject jsImage = jsImages.getJSONObject(j);
+
+                    String url = jsImage.getString("url");
+                    String pathLargeSize = jsImage.getString("pathLargeSize");
+                    String pathSmallSize = jsImage.getString("pathSmallSize");
+
+                    images.add( new Image( url, pathSmallSize, pathLargeSize ) );
+                }
+
+                for ( int j = 0; j < jsSizes.length(); j++ )
+                {
+                    JSONObject jsSize = jsSizes.getJSONObject(j);
+
+                    String size = jsSize.getString("size");
+                    boolean stock = jsSize.getBoolean("stock");
+
+                    sizes.add( new Size( size, stock ) );
+                }
+
+                colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images, sizes ) );
+            }
+
+            productsList.add( new Product( name, shop, section, price, man, link, colors, newness, null ) );
+
+        }
+
+        mProductsMap.put(key, productsList);
     }
 
     private class Products  extends AsyncTask<String, Void, Void>
@@ -418,7 +621,7 @@ public class ProductsUI extends AppCompatActivity
 
             try
             {
-                number_of_shops = shops.length;
+                _numberOfShops = shops.length;
 
                 for ( int i = 0; i < shops.length; i++ )
                 {
@@ -477,100 +680,29 @@ public class ProductsUI extends AppCompatActivity
                         }
 
                         convertJSONtoProduct(jsonList);
+                        
+                        jsonList.clear();
                     }
 
                     _loading(false);
 
-                    // Sacamos los siguientes productos que se tienen que mostrar en el grid
-                    getNextProductsToBeDisplayed();
+                    // Una vez cargados los productos, actualizamos la cola de candidatos
+                    updateCandidates();
+
+                    Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
+                    Log.e("CUCU", "Lista de HyM: " + mProductsMap.get("HyM").size());
+                    Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
 
                     _initRecyclerView();
 
                 } catch ( JSONException e ) {
                     e.printStackTrace();
                 }
+
             } // else
+
         } // onPostExecute
 
-
-        private List<Product> getNextProductsToBeDisplayed()
-        {
-
-            return null;
-        }
-
-        /**
-         * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's
-         * @param jsonList: lista de JSON a convertir
-         * @throws JSONException
-         */
-        private void convertJSONtoProduct( List<JSONObject> jsonList ) throws JSONException
-        {
-            List<Product> productsList = new ArrayList<>();
-            String key = null;
-
-            for( JSONObject jsonObject : jsonList )
-            {
-                String name = jsonObject.getString("name");
-                String shop = key = jsonObject.getString("shop");
-                String section = jsonObject.getString("section");
-                double price = jsonObject.getDouble("price");
-                boolean man = jsonObject.getBoolean("man");
-                String link = jsonObject.getString("link");
-                boolean newness = jsonObject.getBoolean("newness");
-
-                JSONArray jsColors = jsonObject.getJSONArray("colors");
-                List<ColorVariant> colors = new ArrayList<>();
-                for( int i = 0; i < jsColors.length(); i++ )
-                {
-                    JSONObject jsColor = jsColors.getJSONObject(i);
-
-                    String reference = jsColor.getString("reference");
-                    String colorName = jsColor.getString("colorName");
-                    String colorURL = jsColor.getString("colorURL");
-                    String colorPath = jsColor.getString("colorPath");
-
-                    List<Image> images = new ArrayList<>();
-                    List<Size> sizes = new ArrayList<>();
-                    JSONArray jsImages = jsColor.getJSONArray("images");
-                    JSONArray jsSizes = jsColor.getJSONArray("sizes");
-                    for ( int j = 0; j < jsImages.length(); j++ )
-                    {
-                        JSONObject jsImage = jsImages.getJSONObject(j);
-
-                        String url = jsImage.getString("url");
-                        String pathLargeSize = jsImage.getString("pathLargeSize");
-                        String pathSmallSize = jsImage.getString("pathSmallSize");
-
-                        images.add( new Image( url, pathSmallSize, pathLargeSize ) );
-                    }
-
-                    for ( int j = 0; j < jsSizes.length(); j++ )
-                    {
-                        JSONObject jsSize = jsSizes.getJSONObject(j);
-
-                        String size = jsSize.getString("size");
-                        boolean stock = jsSize.getBoolean("stock");
-
-                        sizes.add( new Size( size, stock ) );
-                    }
-
-                    colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images, sizes ) );
-                }
-
-                if ( ! newness )
-                    productsList.add( new Product( name, shop, section, price, man, link, colors, newness, null ) );
-
-                else
-                {
-                    mProductsNewnessList.add(new Product(name, shop, section, price, man, link, colors, newness, null));
-                    mProductsDisplayedList.add( new Boolean( false ) );
-                }
-
-            }
-
-            mProductsMap.put(key, productsList);
-        }
-
     } // Products
-}
+
+} // Activity
