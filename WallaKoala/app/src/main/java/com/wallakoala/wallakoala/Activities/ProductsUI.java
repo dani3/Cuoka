@@ -54,6 +54,13 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     private final int NUM_PRODUCTS_DISPLAYED = 20;
+    private enum STATE
+    {
+        ERROR,
+        LOADING,
+        NODATA,
+        NORMAL
+    }
 
     /* Data */
     protected Map<String, List<Product>> mProductsMap;
@@ -87,6 +94,7 @@ public class ProductsUI extends AppCompatActivity
 
     /* Others */
     protected Menu mMenu;
+    protected STATE mState;
 
     /* Temp */
 
@@ -317,12 +325,16 @@ public class ProductsUI extends AppCompatActivity
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
+            mState = STATE.NORMAL;
+
         } else {
             mRubberLoader.setVisibility(View.VISIBLE);
             mRubberLoader.startLoading();
             mDarkenScreenView.setVisibility(View.VISIBLE);
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+            mState = STATE.LOADING;
         }
     }
 
@@ -339,11 +351,15 @@ public class ProductsUI extends AppCompatActivity
 
             mNoDataTextView.setVisibility(View.GONE);
 
+            mState = STATE.NORMAL;
+
         } else {
             if ( mProductsRecyclerView != null )
                 mProductsRecyclerView.setVisibility(View.GONE);
 
             mNoDataTextView.setVisibility(View.VISIBLE);
+
+            mState = STATE.NODATA;
         }
     }
 
@@ -360,6 +376,8 @@ public class ProductsUI extends AppCompatActivity
 
             mErrorTextView.setVisibility(View.GONE);
 
+            mState = STATE.NORMAL;
+
         } else {
             _noData(false);
             _loading(false);
@@ -368,6 +386,8 @@ public class ProductsUI extends AppCompatActivity
                 mProductsRecyclerView.setVisibility(View.GONE);
 
             mErrorTextView.setVisibility(View.VISIBLE);
+
+            mState = STATE.ERROR;
         }
     }
 
