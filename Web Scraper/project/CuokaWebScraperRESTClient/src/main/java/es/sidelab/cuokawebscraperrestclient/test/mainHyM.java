@@ -26,20 +26,30 @@ public class mainHyM {
     
     public static void main(String[] args) throws Exception {
         
-        // Lista preparada para la concurrencia donde escribiran todos los scrapers
+        // Lista de productos
         List<Product> productList = new ArrayList<>();
       
-        // Obtener el HTML
-        Document document = Jsoup.connect( "http://www2.hm.com/es_es/hombre/compra-por-producto/camisas.html" )
+        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
+        Document document = Jsoup.connect( "http://www2.hm.com/es_es/hombre/compra-por-producto/camisas.html?product-type=men_shirts&sort=stock&offset=0&page-size=1000" )
                                     .timeout( Properties.TIMEOUT ).get();
           
-        // Obtener los links a todos los productos
+        // Obtener los links a todos los productos. 
+        // En este caso, los links estan en el 'a' que hay dentro de los 'h3' llamado 'product-item-headline'.
+        // Los links los guardamos en una lista de Element llamada 'products'.
         Elements products = document.select( "h3.product-item-headline > a" );
+        
+        // Comprobamos que hemos sacado bien los links. El link está en un atributo llamado 'href'.
+        // Recorremos cada elemento de la lista, y con cada uno, mostramos el atributo 'href' con el metodo .attr("NOMBRE")
+        // También sacamos el tamaño de la lista, asi nos aseguramos de que se han sacado todos los productos.
+        for ( Element element : products )
+            System.out.println( element.attr( "href" ) );
+        
+        System.out.println( "Numero de productos: " + products.size() );
           
         // Recorremos todos los productos y sacamos sus atributos
         for ( Element element : products )
         {
-            // Obtener el HTML del producto
+            // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
             document = Jsoup.connect( "http://www2.hm.com/"
                             + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
                                                       .ignoreHttpErrors( true ).get();

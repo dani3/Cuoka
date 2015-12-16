@@ -87,7 +87,6 @@ public class ProductsUI extends AppCompatActivity
 
     /* Others */
     protected Menu mMenu;
-    protected int _numberOfShops;
 
     /* Temp */
 
@@ -120,23 +119,23 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa el mapa de filtros
-     * @return: Mapa con los filtros actuales
+     * Metodo que inicializa el mapa de filtros.
+     * @return: Mapa con los filtros actuales.
      */
     protected Map<String, ?> _initFilterMap()
     {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("newness", true);
-        map.put("colors", new ArrayList<String>());
-        map.put("sizes", new ArrayList<String>());
-        map.put("sections", new ArrayList<String>());
+        map.put(getResources().getString(R.string.filter_newness), true);
+        map.put(getResources().getString(R.string.filter_colors), new ArrayList<String>());
+        map.put(getResources().getString(R.string.filter_sections), new ArrayList<String>());
+        map.put(getResources().getString(R.string.filter_sizes), new ArrayList<String>());
 
         return map;
     }
 
     /**
-     * Inicializacion de vistas auxiliares
+     * Inicializacion de vistas auxiliares.
      */
     protected void _initAuxViews()
     {
@@ -148,7 +147,7 @@ public class ProductsUI extends AppCompatActivity
 
         // TextViews que muestran que no hay productos disponibles o se ha producido un error
         mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
-        mErrorTextView = (TextView)findViewById(R.id.error_textview);
+        mErrorTextView  = (TextView)findViewById(R.id.error_textview);
     }
 
     /**
@@ -159,8 +158,8 @@ public class ProductsUI extends AppCompatActivity
         mToolbar = ( Toolbar )findViewById( R.id.appbar );
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
-        setSupportActionBar( mToolbar );
-        getSupportActionBar().setDisplayShowTitleEnabled( false );
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     /**
@@ -482,27 +481,27 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void updateCandidates()
     {
-        // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior
+        // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior.
         Map<String, Integer> indexMap = new HashMap<>();
         boolean finished = false;
         boolean turn = true;
 
-        // Inicializar mapa de indices con todos a 0
+        // Inicializar mapa de indices con todos a 0.
         for ( String key : mProductsMap.keySet() )
             indexMap.put(key, 0);
 
         Iterator<String> iterator = mProductsMap.keySet().iterator();
 
-        // Mientras queden productos pendientes
+        // Mientras queden productos pendientes.
         while ( ! finished )
         {
             String key = iterator.next();
 
-            // Sacamos el indice de donde nos quedamos y la lista de productos
+            // Sacamos el indice de donde nos quedamos y la lista de productos.
             int index = indexMap.get(key);
             List<Product> list = mProductsMap.get(key);
 
-            // Mientras queden productos y no encontremos un producto mostrable
+            // Mientras queden productos y no encontremos un producto mostrable.
             while( ( index < list.size() ) && ( turn ) )
             {
                 // Si el producto pasa el filtro, se añade a la cola
@@ -515,11 +514,11 @@ public class ProductsUI extends AppCompatActivity
                 index++;
             } // while #2
 
-            // Actualizamos el mapa de indices
+            // Actualizamos el mapa de indices.
             indexMap.put(key, index);
             turn = true;
 
-            // Si se ha terminado el recorrido, lo iniciamos de nuevo
+            // Si se ha terminado el recorrido, lo iniciamos de nuevo.
             if ( ! iterator.hasNext() )
                 iterator = mProductsMap.keySet().iterator();
 
@@ -610,19 +609,19 @@ public class ProductsUI extends AppCompatActivity
         private List<JSONObject> jsonList = new ArrayList<>();
         private String error = null;
 
+        @Override
         protected void onPreExecute()
         {
             _loading(true);
         }
 
+        @Override
         protected Void doInBackground( String... shops )
         {
             BufferedReader reader = null;
 
             try
             {
-                _numberOfShops = shops.length;
-
                 for ( int i = 0; i < shops.length; i++ )
                 {
                     URL url = new URL("http://cuoka.cloudapp.net:8080/getProducts/" + shops[i]);
@@ -658,6 +657,7 @@ public class ProductsUI extends AppCompatActivity
 
         } // doInBackground
 
+        @Override
         protected void onPostExecute( Void unused )
         {
             if ( error != null )
@@ -684,6 +684,7 @@ public class ProductsUI extends AppCompatActivity
                         jsonList.clear();
                     }
 
+                    // Deshabilitamos la pantalla de carga
                     _loading(false);
 
                     // Una vez cargados los productos, actualizamos la cola de candidatos

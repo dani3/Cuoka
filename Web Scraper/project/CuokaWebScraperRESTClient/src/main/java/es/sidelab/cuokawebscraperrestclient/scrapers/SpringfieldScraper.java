@@ -29,83 +29,98 @@ public class SpringfieldScraper implements ScraperInterface
     @Override
     public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
-        // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() )
-                                    .timeout( Properties.TIMEOUT ).get();
-            
-        // Obtener el link de 'Ver todos'
-        Element seeAll = document.select( "div.pagination a" ).last();
-            
-        // Comprobar que existe el link de 'Ver todos'
-        if ( seeAll != null )
-            document = Jsoup.connect( shop.getURL().toString() 
-                           + seeAll.attr( "href" ) ).timeout( Properties.TIMEOUT ).get();            
-            
-        // Obtener el campo info de todos los productos
-        Elements products = document.select( "ul.product-listing li div div.content_product > a" );
-            
-        for ( Element element : products )
-        {
-            // Obtener el HTML del producto
-            document = Jsoup.connect( shop.getURL().toString()
-                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+        List<String> pages = new ArrayList<>();
         
-            // Obtener los atributos del producto
-            String link = shop.getURL().toString() + element.attr( "href" );
-            String name = document.select( "h1" ).first().ownText().toUpperCase();
-            String price = document.select( "div.product-price-block strong" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = document.select( "span.patron" ).first().ownText().replaceAll( "Ref: " , "" );
-            
-            // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
-            if ( ! containsProduct( productList, reference ) )
+        // Añadimos la primera página
+        pages.add( section.getURL().toString() );
+        
+        Document document = Jsoup.connect( section.getURL().toString() )
+                                        .timeout( Properties.TIMEOUT ).get();    
+        
+        // Sacamos las páginas, si las hay
+        Elements pageElements = document.select( "ul.pagination__list > li.pagination__list-item" );
+        
+        // En el caso de que haya paginas, las metemos en la lista
+        if ( ! pageElements.isEmpty() )
+        {
+            pageElements.remove( pageElements.size() - 1 );
+            for ( Element page : pageElements )
+                if ( ! page.hasClass( "pagination__list-item--current" ) & ! page.hasClass( "first-last" ) )
+                    if ( ! page.select("a").text().equals("") )
+                        pages.add( page.select("a").attr("href").concat( "&format=ajax" ) );
+        }
+        
+        for ( String page : pages )
+        {
+            // Obtener el HTML
+            document = Jsoup.connect( page ).timeout( Properties.TIMEOUT ).get();           
+
+            // Obtener el campo info de todos los productos
+            Elements products = document.select( "div.product-name > a.name-link" );
+
+            for ( Element element : products )
             {
-                List<ColorVariant> variants = new ArrayList<>();
-                
-                // Obtener los colores disponibles
-                Elements colors = document.select( "ul.product_colors > li" );
-                for ( Element color : colors )
-                {                    
-                    // Sacamos el identificador del color de la URL ('?color=XXXXX'); hara falta mas adelante para filtrar las imagenes
-                    String idColor = color.select( "a" ).attr( "href" )
-                                        .substring( color.select( "a" ).attr( "href" ).indexOf( "=" ) + 1 
-                                            , color.select( "a" ).attr( "href" ).length() );
-                    
-                    // Obtenemos el nombre del color y la URL del icono
-                    String colorName = color.attr( "title" ).toUpperCase();
-                    String colorURL = fixURL( color.select( "img" ).attr( "src" ) );     
-                    
-                    // Si hay varios colores, nos quedamos solo con las imagenes del color actual
-                    Elements images;
-                    if ( colors.size() > 1 )
-                        images = document.select( "#product_image_list li.color_" + idColor + " a" );
-                    else
-                        images = document.select( "#product_image_list a" );
-                   
-                    // Sacamos las URLs de las imagenes anteriores
-                    List<Image> imagesURL = new ArrayList<>();
-                    for ( Element img : images )
-                        imagesURL.add( new Image( fixURL( img.attr( "href" ) ) ) );
-                    
-                    // Sacamos los tamaños disponibles, en Springfield las tallas no disponibles no vienen en el HTML
-                    Elements elements = document.select( "ul.product_sizes.color_" + idColor + " li");
-                    List<Size> sizes = new ArrayList<>();
-                    for( Element size : elements )
-                        sizes.add( new Size( size.select( "label" ).text(), true ) );
-                    
-                    // Añadimos un nuevo ColorVariant a la lista 
-                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
-                }
-                    
-                productList.add( new Product( Double.parseDouble( price )
-                                    , name
-                                    , shop.getName()
-                                    , section.getName()
-                                    , link 
-                                    , section.isMan()
-                                    , variants ) );
-            }
-            
-        } // for products
+                try {
+                    // Obtener el HTML del producto
+                    document = Jsoup.connect( element.attr( "href" ) )
+                                        .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+
+                    // Obtener los atributos del producto
+                    String link = element.attr( "href" );
+                    String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
+                    String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+                    String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
+
+                    // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
+                    if ( ! containsProduct( productList, reference ) )
+                    {
+                        List<ColorVariant> variants = new ArrayList<>();
+
+                        // Obtener los colores disponibles
+                        Elements colors = document.select( "ul.c02__swatch-list > li" );
+
+                        for ( Element color : colors )
+                        {                    
+                            // Sacamos el link del color y nos conectamos
+                            String colorLink = color.select( "a.swatchanchor" ).attr( "href" );
+                            document = Jsoup.connect( colorLink )   
+                                        .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+
+                            // Obtenemos el nombre del color y la URL del icono 
+                            String colorName = color.select("span.screen-reader-text").first().ownText().toUpperCase();
+                            String colorURL = color.select( "span.c02__square" ).attr( "style" ).replace( "background: url(" , "").replace( ")", "" );                      
+
+                            // Si hay varios colores, nos quedamos solo con las imagenes del color actual
+                            Elements images = document.select( "div.c01--navdots div.c01__media" );
+
+                            // Sacamos las URLs de las imagenes anteriores
+                            List<Image> imagesURL = new ArrayList<>();
+                            for ( Element img : images )
+                                imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );
+
+                            // Sacamos los tamaños disponibles
+                            Elements elements = document.select( "ul.c02__size-list > li" );
+                            List<Size> sizes = new ArrayList<>();
+                            for( Element size : elements )
+                                sizes.add( new Size( size.select( "a" ).text(), size.hasClass( "available" ) ) );
+
+                            // Añadimos un nuevo ColorVariant a la lista 
+                            variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
+                        }
+
+                        productList.add( new Product( Double.parseDouble( price )
+                                            , name
+                                            , ""
+                                            , ""
+                                            , link 
+                                            , true
+                                            , variants ) );
+                    }
+
+                } catch ( Exception e ) {}
+
+            } // for products
+        } // for paginas
             
         return productList;
     }

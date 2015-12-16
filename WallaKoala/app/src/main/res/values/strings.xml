@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cuoka</string>
+    <string name="app_name">cuoka</string>
 
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>
@@ -16,4 +16,9 @@
 
     <string name="error_message">Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado...</string>
+
+    <string name="filter_newness">newness</string>
+    <string name="filter_sizes">sizes</string>
+    <string name="filter_colors">colors</string>
+    <string name="filter_sections">sections</string>
 </resources>
