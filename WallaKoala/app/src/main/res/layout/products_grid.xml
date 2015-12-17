@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -41,16 +41,16 @@
             android:visibility="gone"
             android:alpha="0.6" />
 
-        <!-- LoaderView -->
-        <com.greenfrvr.rubberloader.RubberLoaderView
-            android:id="@+id/rubber_loader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <!-- Loading View -->
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_gravity="center"
             android:visibility="gone"
-            app:loaderExtraColor="@color/colorAccent"
-            app:loaderPrimeColor="@color/colorAccent"
-            app:loaderSize="medium" />
+            app:indicator="BallClipRotate"
+            app:indicator_color="@color/colorAccent"
+        />
 
         <!-- Texto de error -->
         <TextView

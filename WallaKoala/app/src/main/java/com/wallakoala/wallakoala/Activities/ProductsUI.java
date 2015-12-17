@@ -56,6 +56,7 @@ import java.util.Map;
 public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
+    protected int NUMBER_OF_CORES;
     protected final String serverURL = "http://cuoka.cloudapp.net";
     private final int NUM_PRODUCTS_DISPLAYED = 10;
     private enum STATE
@@ -86,7 +87,7 @@ public class ProductsUI extends AppCompatActivity
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
-    protected RubberLoaderView mRubberLoader;
+    protected View mLoadingView;
     protected View mDarkenScreenView;
     protected TextView mNoDataTextView, mErrorTextView;
 
@@ -130,8 +131,13 @@ public class ProductsUI extends AppCompatActivity
         mProductsMap             = new HashMap<>();
         mFilterMap               = _initFilterMap();
         mProductsNonFilteredMap  = new HashMap<>();
-        mProductsDisplayedList = new ArrayList<>();
+        mProductsDisplayedList   = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
+
+        start = 0;
+        count = 0;
+
+        NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
     }
 
     /**
@@ -156,7 +162,7 @@ public class ProductsUI extends AppCompatActivity
     protected void _initAuxViews()
     {
         // LoaderView
-        mRubberLoader = ( RubberLoaderView )findViewById(R.id.rubber_loader);
+        mLoadingView = findViewById(R.id.avloadingIndicatorView);
 
         // ImageView que oscurece la pantalla
         mDarkenScreenView = findViewById(R.id.darken_screen);
@@ -184,14 +190,11 @@ public class ProductsUI extends AppCompatActivity
     protected void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
-        mGridLayoutManager = new GridLayoutManager(this, 2);
+        mGridLayoutManager    = new GridLayoutManager(this, 2);
+        mProductAdapter       = new ProductAdapter(this, mProductsDisplayedList);
 
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
-
-        mProductAdapter = new ProductAdapter(this, mProductsDisplayedList);
-
         mProductsRecyclerView.setAdapter(mProductAdapter);
-
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             int verticalOffset;
@@ -234,11 +237,14 @@ public class ProductsUI extends AppCompatActivity
                     else
                         mToolbar.setTranslationY(-mToolbar.getHeight());
 
-                    // Detectamos cuando llegamos abajo
-                    if ( mProductsDisplayedList.size() == ( mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1 ) )
+                    // Detectamos cuando llegamos abajo para cargar nuevos productos
+                    if ( mProductsDisplayedList.size() ==
+                            ( mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1 ) )
                     {
+                        // Sacamos los siguientes productos
                         getNextProductsToBeDisplayed();
 
+                        // Sacamos el indice del primer producto a insertar
                         start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
                         count = mProductsInsertedPreviously;
 
@@ -345,7 +351,7 @@ public class ProductsUI extends AppCompatActivity
     {
         if ( ! loading )
         {
-            mRubberLoader.setVisibility(View.GONE);
+            mLoadingView.setVisibility(View.GONE);
             mDarkenScreenView.setVisibility(View.GONE);
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -353,8 +359,7 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.NORMAL;
 
         } else {
-            mRubberLoader.startLoading();
-            mRubberLoader.setVisibility(View.VISIBLE);
+            mLoadingView.setVisibility(View.VISIBLE);
             mDarkenScreenView.setVisibility(View.VISIBLE);
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -710,10 +715,12 @@ public class ProductsUI extends AppCompatActivity
                     jsonList.clear();
                 }
 
-                // Una vez cargados los productos, actualizamos la cola de candidatos
+                // Una vez cargados los productos, actualizamos la cola de candidatos...
                 updateCandidates();
+                // ... y actualizamos la lista de los que se van a mostrar
                 getNextProductsToBeDisplayed();
 
+                // Descargamos las imagenes, ya que no se puede hacer en el Thread UI
                 for ( Product product : mProductsDisplayedList )
                     product.setMainImage( getBitmapFromURL(serverURL + product.getColors()
                             .get(0).getImages()
@@ -747,6 +754,7 @@ public class ProductsUI extends AppCompatActivity
                 _error(true);
 
             } else {
+                // Inicializamos el grid de productos
                 _initRecyclerView();
 
                 // Deshabilitamos la pantalla de carga
@@ -756,25 +764,25 @@ public class ProductsUI extends AppCompatActivity
 
         } // onPostExecute
 
-        protected Bitmap getBitmapFromURL( String src ) throws Exception
-        {
-                URL url = new URL(src);
-
-                Log.e("CUCU", src);
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                connection.setDoInput(true);
-                connection.connect();
-
-                InputStream input = connection.getInputStream();
-
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-                return myBitmap;
-        }
-
     } // Products
+
+    protected Bitmap getBitmapFromURL( String src ) throws Exception
+    {
+        URL url = new URL(src);
+
+        Log.e("CUCU", src);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setDoInput(true);
+        connection.connect();
+
+        InputStream input = connection.getInputStream();
+
+        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+        return myBitmap;
+    }
 
     private class DownloadImages extends AsyncTask<List<Product>, Void, Void>
     {
@@ -789,6 +797,7 @@ public class ProductsUI extends AppCompatActivity
             List<Product> productList = products[0];
 
             try {
+                // Descargamos las imagenes solo de los nuevos productos
                 for ( int i = start; i < mProductsDisplayedList.size(); i++ )
                 {
                     Product product = productList.get(i);
@@ -813,29 +822,14 @@ public class ProductsUI extends AppCompatActivity
                 _error(true);
 
             } else {
+                // Actualizamos la lista de productos del adapter
                 mProductAdapter.updateProductList(mProductsDisplayedList);
 
+                // Notificamos el cambio
                 mProductAdapter.notifyItemRangeInserted( start, count );
             }
         }
 
-        protected Bitmap getBitmapFromURL( String src ) throws Exception
-        {
-            URL url = new URL(src);
-
-            Log.e("CUCU", src);
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setDoInput(true);
-            connection.connect();
-
-            InputStream input = connection.getInputStream();
-
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-            return myBitmap;
-        }
     } // DownloadImages
 
 } // Activity
