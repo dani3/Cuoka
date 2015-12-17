@@ -35,11 +35,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
@@ -59,7 +57,7 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     protected final String serverURL = "http://cuoka.cloudapp.net";
-    private final int NUM_PRODUCTS_DISPLAYED = 30;
+    private final int NUM_PRODUCTS_DISPLAYED = 10;
     private enum STATE
     {
         ERROR,
@@ -82,6 +80,9 @@ public class ProductsUI extends AppCompatActivity
     /* Layouts */
     protected DrawerLayout mDrawerLayout;
 
+    /* LayoutManagers */
+    protected GridLayoutManager mGridLayoutManager;
+
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
@@ -101,6 +102,7 @@ public class ProductsUI extends AppCompatActivity
     /* Others */
     protected Menu mMenu;
     protected STATE mState;
+    protected int mProductsInsertedPreviously, start, count;
 
     /* Temp */
 
@@ -182,18 +184,22 @@ public class ProductsUI extends AppCompatActivity
     protected void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
-        mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mGridLayoutManager = new GridLayoutManager(this, 2);
+
+        mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
 
         mProductAdapter = new ProductAdapter(this, mProductsDisplayedList);
 
         mProductsRecyclerView.setAdapter(mProductAdapter);
 
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     if (scrollingUp)
                         if (verticalOffset > mToolbar.getHeight())
@@ -219,18 +225,31 @@ public class ProductsUI extends AppCompatActivity
 
                 mToolbar.animate().cancel();
 
-                if (scrollingUp)
+                if ( scrollingUp )
+                {
+                    // Animacion de la toolbar
                     if (toolbarYOffset < mToolbar.getHeight())
                         mToolbar.setTranslationY(-toolbarYOffset);
 
                     else
                         mToolbar.setTranslationY(-mToolbar.getHeight());
 
+                    // Detectamos cuando llegamos abajo
+                    if ( mProductsDisplayedList.size() == ( mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1 ) )
+                    {
+                        getNextProductsToBeDisplayed();
 
-                else if (toolbarYOffset < 0)
+                        start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
+                        count = mProductsInsertedPreviously;
+
+                        new DownloadImages().execute( mProductsDisplayedList );
+                    }
+
+
+                } else if (toolbarYOffset < 0) {
                     mToolbar.setTranslationY(0);
 
-                else
+                } else
                     mToolbar.setTranslationY(-toolbarYOffset);
             }
         });
@@ -558,12 +577,12 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void getNextProductsToBeDisplayed()
     {
-        int MAX = NUM_PRODUCTS_DISPLAYED;
+        mProductsInsertedPreviously = NUM_PRODUCTS_DISPLAYED;
 
         if ( NUM_PRODUCTS_DISPLAYED > mProductsCandidatesDeque.size() )
-            MAX = mProductsCandidatesDeque.size();
+            mProductsInsertedPreviously = mProductsCandidatesDeque.size();
 
-        for ( int i = 0; i < MAX; i++ )
+        for ( int i = 0; i < mProductsInsertedPreviously; i++ )
         {
             mProductsDisplayedList.add(mProductsCandidatesDeque.getFirst());
 
@@ -637,7 +656,7 @@ public class ProductsUI extends AppCompatActivity
         mProductsMap.put(key, productsList);
     }
 
-    private class Products  extends AsyncTask<String, Void, Void>
+    private class Products extends AsyncTask<String, Void, Void>
     {
         private List<String> content = new ArrayList<>();
         private List<JSONObject> jsonList = new ArrayList<>();
@@ -756,5 +775,67 @@ public class ProductsUI extends AppCompatActivity
         }
 
     } // Products
+
+    private class DownloadImages extends AsyncTask<List<Product>, Void, Void>
+    {
+        private String error = null;
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected Void doInBackground( List<Product>... products )
+        {
+            List<Product> productList = products[0];
+
+            try {
+                for ( int i = start; i < mProductsDisplayedList.size(); i++ )
+                {
+                    Product product = productList.get(i);
+
+                    product.setMainImage(getBitmapFromURL(serverURL + product.getColors()
+                            .get(0).getImages()
+                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
+                }
+
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute( Void unused )
+        {
+            if ( error != null )
+            {
+                _error(true);
+
+            } else {
+                mProductAdapter.updateProductList(mProductsDisplayedList);
+
+                mProductAdapter.notifyItemRangeInserted( start, count );
+            }
+        }
+
+        protected Bitmap getBitmapFromURL( String src ) throws Exception
+        {
+            URL url = new URL(src);
+
+            Log.e("CUCU", src);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setDoInput(true);
+            connection.connect();
+
+            InputStream input = connection.getInputStream();
+
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+            return myBitmap;
+        }
+    } // DownloadImages
 
 } // Activity

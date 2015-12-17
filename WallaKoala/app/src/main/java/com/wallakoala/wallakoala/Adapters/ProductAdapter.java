@@ -76,6 +76,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         mProductList = productList;
     }
 
+    public void updateProductList( List<Product> productList )
+    {
+        mProductList = productList;
+    }
+
     @Override
     public ProductHolder onCreateViewHolder( ViewGroup viewGroup, int viewType )
     {
