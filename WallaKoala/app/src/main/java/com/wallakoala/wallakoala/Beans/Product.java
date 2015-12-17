@@ -1,5 +1,7 @@
 package com.wallakoala.wallakoala.Beans;
 
+import android.graphics.Bitmap;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Product
 	private boolean newness;
 	private Calendar insertDate;
 	private List<ColorVariant> colors;
+	private Bitmap mainImage;
 	
 	public Product() {}
 	
@@ -52,6 +55,7 @@ public class Product
 	public String getLink() { return this.link; }
 	public boolean isNewness() { return this.newness; }
 	public Calendar getInsertDate() { return this.insertDate; }
+	public Bitmap getMainImage() { return this.mainImage; }
 
 	public void setName( String name ) { this.name = name; }
 	public void setShop( String shop ) {	this.shop = shop; 	}
@@ -62,4 +66,5 @@ public class Product
 	public void setLink( String link ) { this.link = link; }
 	public void setNewness( boolean newness ) { this.newness = newness; }
 	public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
+	public void setMainImage( Bitmap mainImage ) { this.mainImage = mainImage; }
 }

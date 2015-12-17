@@ -1,19 +1,26 @@
 package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wallakoala.wallakoala.Activities.ProductsUI;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
 
 /**
  * @class Adapter para el grid de productos
@@ -26,10 +33,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     private Context mContext;
 
     /* Data */
-    private String[] titles;
-    private String[] subtitles;
-    private int[] images;
-    private boolean[] fav;
+    private List<Product> mProductList;
 
     /* Animations */
     private Animation implode, explode;
@@ -53,25 +57,23 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             fav      = ( ImageButton )itemView.findViewById( R.id.footer_fav_button );
         }
 
+        /**
+         * Metodo que inicializa las vistas con los datos del producto recibido.
+         * @param product: producto con el que se inicializa un item.
+         */
         public void bindProduct( Product product )
         {
-
+            title.setText( product.getShop() );
+            subtitle.setText( product.getSection() );
+            image.setImageBitmap( product.getMainImage() );
+            fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
         }
     }
 
-    public ProductAdapter( Context context )
+    public ProductAdapter( Context context, List<Product> productList )
     {
         mContext = context;
-
-        titles = new String[]{"ZARA", "BLANCO", "BERSHKA", "SPRINGFIELD","H&M", "ZARA", };
-        subtitles = new String[]{"Pantalones", "Camisas", "Camisetas", "Faldas","Vestidos", "Abrigos", };
-        fav = new boolean[]{ false, false, false, false, false, false };
-        images = new int[]{ R.drawable.imagen1
-                    , R.drawable.imagen2
-                    , R.drawable.imagen3
-                    , R.drawable.imagen4
-                    , R.drawable.imagen5
-                    , R.drawable.imagen6 };
+        mProductList = productList;
     }
 
     @Override
@@ -86,49 +88,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     @Override
     public void onBindViewHolder( final ProductHolder productHolder, int pos )
     {
-        final int i = pos;
-
-        productHolder.title.setText( titles[pos] );
-        productHolder.subtitle.setText( subtitles[pos] );
-        productHolder.image.setImageResource( images[pos] );
-        productHolder.fav.setOnClickListener( new View.OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                implode = AnimationUtils.loadAnimation( mContext, R.anim.implode );
-                explode = AnimationUtils.loadAnimation( mContext, R.anim.explode );
-                explode.setFillAfter( true );
-
-                productHolder.fav.startAnimation( implode );
-                implode.setAnimationListener( new Animation.AnimationListener()
-                {
-                    @Override
-                    public void onAnimationStart( Animation animation ) {}
-
-                    @Override
-                    public void onAnimationEnd( Animation animation )
-                    {
-                        if ( ! fav[i] )
-                            productHolder.fav.setBackgroundResource( R.drawable.ic_favorite_white );
-
-                        else
-                            productHolder.fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
-
-                        fav[i] = !fav[i];
-                        productHolder.fav.startAnimation( explode );
-                    }
-
-                    @Override
-                    public void onAnimationRepeat( Animation animation ) {}
-                });
-            }
-        });
+        productHolder.bindProduct( mProductList.get( pos ) );
     }
 
     @Override
     public int getItemCount()
     {
-        return titles.length;
+        return mProductList.size();
     }
 }

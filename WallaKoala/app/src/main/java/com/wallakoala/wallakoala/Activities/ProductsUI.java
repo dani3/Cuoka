@@ -1,6 +1,8 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -26,7 +28,6 @@ import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.Size;
-import com.wallakoala.wallakoala.Decorators.ProductDecorator;
 import com.wallakoala.wallakoala.R;
 
 import org.json.JSONArray;
@@ -34,7 +35,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
@@ -53,7 +58,8 @@ import java.util.Map;
 public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
-    private final int NUM_PRODUCTS_DISPLAYED = 20;
+    protected final String serverURL = "http://cuoka.cloudapp.net";
+    private final int NUM_PRODUCTS_DISPLAYED = 30;
     private enum STATE
     {
         ERROR,
@@ -67,7 +73,7 @@ public class ProductsUI extends AppCompatActivity
     protected Map<String, List<Product>> mProductsNonFilteredMap;
     protected Map<String, ?> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
-    protected Product[] mProductsDisplayedArray;
+    protected List<Product> mProductsDisplayedList;
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
@@ -122,7 +128,7 @@ public class ProductsUI extends AppCompatActivity
         mProductsMap             = new HashMap<>();
         mFilterMap               = _initFilterMap();
         mProductsNonFilteredMap  = new HashMap<>();
-        mProductsDisplayedArray  = new Product[NUM_PRODUCTS_DISPLAYED];
+        mProductsDisplayedList = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
     }
 
@@ -178,7 +184,7 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
         mProductsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        mProductAdapter = new ProductAdapter(this);
+        mProductAdapter = new ProductAdapter(this, mProductsDisplayedList);
 
         mProductsRecyclerView.setAdapter(mProductAdapter);
 
@@ -328,8 +334,8 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.NORMAL;
 
         } else {
-            mRubberLoader.setVisibility(View.VISIBLE);
             mRubberLoader.startLoading();
+            mRubberLoader.setVisibility(View.VISIBLE);
             mDarkenScreenView.setVisibility(View.VISIBLE);
 
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -434,7 +440,7 @@ public class ProductsUI extends AppCompatActivity
             itemView.startAnimation(hideToRight);
         }
 
-        return super.onPrepareOptionsMenu( menu );
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -549,12 +555,20 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Metodo que inserta los productos en la cola ordenados.
-     * @return: Cola con todos los productos ordenados para ser mostrados en el RecyclerView.
      */
-    protected Deque<Product> getNextProductsToBeDisplayed()
+    protected void getNextProductsToBeDisplayed()
     {
+        int MAX = NUM_PRODUCTS_DISPLAYED;
 
-        return null;
+        if ( NUM_PRODUCTS_DISPLAYED > mProductsCandidatesDeque.size() )
+            MAX = mProductsCandidatesDeque.size();
+
+        for ( int i = 0; i < MAX; i++ )
+        {
+            mProductsDisplayedList.add(mProductsCandidatesDeque.getFirst());
+
+            mProductsCandidatesDeque.removeFirst();
+        }
     }
 
     /**
@@ -660,15 +674,44 @@ public class ProductsUI extends AppCompatActivity
                     content.add(sb.toString());
                 }
 
+                JSONArray jsonResponse;
+                for( int i = 0; i < content.size(); i++ )
+                {
+                    jsonResponse = new JSONArray(content.get(i));
+
+                    for (int j = 0; j < jsonResponse.length(); j++)
+                    {
+                        JSONObject js = jsonResponse.getJSONObject(j);
+
+                        jsonList.add(js);
+                    }
+
+                    convertJSONtoProduct(jsonList);
+
+                    jsonList.clear();
+                }
+
+                // Una vez cargados los productos, actualizamos la cola de candidatos
+                updateCandidates();
+                getNextProductsToBeDisplayed();
+
+                for ( Product product : mProductsDisplayedList )
+                    product.setMainImage( getBitmapFromURL(serverURL + product.getColors()
+                            .get(0).getImages()
+                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20") ) );
+
+                Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
+                Log.e("CUCU", "Lista de HyM: " + mProductsMap.get("HyM").size());
+                Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
+
             } catch( Exception ex )  {
                 error = ex.getMessage();
 
             } finally {
                 try {
                     reader.close();
-                }
 
-                catch( Exception ex ) {
+                } catch( Exception ex ) {
                     error = ex.getMessage();
                 }
             }
@@ -685,44 +728,32 @@ public class ProductsUI extends AppCompatActivity
                 _error(true);
 
             } else {
-                JSONArray jsonResponse;
+                _initRecyclerView();
 
-                try {
-                    for( int i = 0; i < content.size(); i++ )
-                    {
-                        jsonResponse = new JSONArray(content.get(i));
-
-                        for (int j = 0; j < jsonResponse.length(); j++)
-                        {
-                            JSONObject js = jsonResponse.getJSONObject(j);
-
-                            jsonList.add(js);
-                        }
-
-                        convertJSONtoProduct(jsonList);
-                        
-                        jsonList.clear();
-                    }
-
-                    // Deshabilitamos la pantalla de carga
-                    _loading(false);
-
-                    // Una vez cargados los productos, actualizamos la cola de candidatos
-                    updateCandidates();
-
-                    Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
-                    Log.e("CUCU", "Lista de HyM: " + mProductsMap.get("HyM").size());
-                    Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
-
-                    _initRecyclerView();
-
-                } catch ( JSONException e ) {
-                    e.printStackTrace();
-                }
+                // Deshabilitamos la pantalla de carga
+                _loading(false);
 
             } // else
 
         } // onPostExecute
+
+        protected Bitmap getBitmapFromURL( String src ) throws Exception
+        {
+                URL url = new URL(src);
+
+                Log.e("CUCU", src);
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setDoInput(true);
+                connection.connect();
+
+                InputStream input = connection.getInputStream();
+
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+                return myBitmap;
+        }
 
     } // Products
 
