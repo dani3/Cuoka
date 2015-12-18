@@ -22,7 +22,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
-import com.greenfrvr.rubberloader.RubberLoaderView;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
@@ -87,7 +86,7 @@ public class ProductsUI extends AppCompatActivity
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
-    protected View mLoadingView;
+    protected View mLoadingView, mLoadingScrollView;
     protected View mDarkenScreenView;
     protected TextView mNoDataTextView, mErrorTextView;
 
@@ -95,7 +94,9 @@ public class ProductsUI extends AppCompatActivity
     protected ProductAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation hideToRight, showFromRight;
+    protected Animation hideToRight, showFromRight
+                , implode, explode
+                , showLoadingViewFromBottom, hideLoadingViewToBottom;
 
     /* Toolbar */
     protected Toolbar mToolbar;
@@ -119,6 +120,7 @@ public class ProductsUI extends AppCompatActivity
         _initAuxViews();
         _initToolbar();
         _initNavigationDrawers();
+        _initAnimations();
 
         new Products().execute("Blanco", "HyM");
     }
@@ -163,6 +165,7 @@ public class ProductsUI extends AppCompatActivity
     {
         // LoaderView
         mLoadingView = findViewById(R.id.avloadingIndicatorView);
+        mLoadingScrollView = findViewById(R.id.avloadingscroll);
 
         // ImageView que oscurece la pantalla
         mDarkenScreenView = findViewById(R.id.darken_screen);
@@ -193,16 +196,16 @@ public class ProductsUI extends AppCompatActivity
         mGridLayoutManager    = new GridLayoutManager(this, 2);
         mProductAdapter       = new ProductAdapter(this, mProductsDisplayedList);
 
+        mProductsRecyclerView.setVisibility( View.GONE );
+
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     if (scrollingUp)
                         if (verticalOffset > mToolbar.getHeight())
@@ -228,8 +231,7 @@ public class ProductsUI extends AppCompatActivity
 
                 mToolbar.animate().cancel();
 
-                if ( scrollingUp )
-                {
+                if (scrollingUp) {
                     // Animacion de la toolbar
                     if (toolbarYOffset < mToolbar.getHeight())
                         mToolbar.setTranslationY(-toolbarYOffset);
@@ -238,17 +240,23 @@ public class ProductsUI extends AppCompatActivity
                         mToolbar.setTranslationY(-mToolbar.getHeight());
 
                     // Detectamos cuando llegamos abajo para cargar nuevos productos
-                    if ( mProductsDisplayedList.size() ==
-                            ( mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1 ) )
+                    if ( ! mProductsCandidatesDeque.isEmpty() )
                     {
-                        // Sacamos los siguientes productos
-                        getNextProductsToBeDisplayed();
+                        if (mProductsDisplayedList.size() ==
+                                (mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1))
+                        {
+                            mLoadingScrollView.startAnimation(showLoadingViewFromBottom);
+                            mLoadingScrollView.setVisibility(View.VISIBLE);
 
-                        // Sacamos el indice del primer producto a insertar
-                        start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
-                        count = mProductsInsertedPreviously;
+                            // Sacamos los siguientes productos
+                            getNextProductsToBeDisplayed();
 
-                        new DownloadImages().execute( mProductsDisplayedList );
+                            // Sacamos el indice del primer producto a insertar
+                            start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
+                            count = mProductsInsertedPreviously;
+
+                            new DownloadImages().execute(mProductsDisplayedList);
+                        }
                     }
 
 
@@ -259,6 +267,10 @@ public class ProductsUI extends AppCompatActivity
                     mToolbar.setTranslationY(-toolbarYOffset);
             }
         });
+
+        explode.setDuration( 250 );
+        mProductsRecyclerView.startAnimation(explode);
+        mProductsRecyclerView.setVisibility(View.VISIBLE);
     }
 
     protected void _toolbarAnimateShow( final int verticalOffset )
@@ -308,8 +320,6 @@ public class ProductsUI extends AppCompatActivity
                     final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
 
                     // Cargamos la animacion y decimos que mantenga el estado cuando termine
-                    showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
-                            , R.anim.show_translation_horizontal );
                     showFromRight.setFillAfter( true );
 
                     itemView.startAnimation( showFromRight );
@@ -344,7 +354,46 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inhabilita ciertos controles cuando está la pantalla de carga.
+     * Metodo que inicializa las animaciones.
+     */
+    protected void _initAnimations()
+    {
+        showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
+                , R.anim.show_translation_horizontal );
+
+        hideToRight = AnimationUtils.loadAnimation( ProductsUI.this
+            , R.anim.hide_translation_horizontal );
+
+        implode = AnimationUtils.loadAnimation( ProductsUI.this
+            , R.anim.implode );
+
+        explode = AnimationUtils.loadAnimation( ProductsUI.this
+                , R.anim.explode );
+
+        showLoadingViewFromBottom = AnimationUtils.loadAnimation( ProductsUI.this
+                , R.anim.show_from_bottom_translation );
+
+        hideLoadingViewToBottom = AnimationUtils.loadAnimation( ProductsUI.this
+                , R.anim.hide_to_bottom_translation );
+
+        hideLoadingViewToBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mLoadingScrollView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
+    /**
+     * Metodo que crea la pantalla de carga.
      * @param loading: true indica que se inicia la carga, false que ha terminado.
      */
     protected void _loading( boolean loading )
@@ -352,17 +401,11 @@ public class ProductsUI extends AppCompatActivity
         if ( ! loading )
         {
             mLoadingView.setVisibility(View.GONE);
-            mDarkenScreenView.setVisibility(View.GONE);
-
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
             mState = STATE.NORMAL;
 
         } else {
             mLoadingView.setVisibility(View.VISIBLE);
-            mDarkenScreenView.setVisibility(View.VISIBLE);
-
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
             mState = STATE.LOADING;
         }
@@ -483,6 +526,12 @@ public class ProductsUI extends AppCompatActivity
     public boolean onOptionsItemSelected( MenuItem item )
     {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
     }
 
     /**
@@ -826,7 +875,10 @@ public class ProductsUI extends AppCompatActivity
                 mProductAdapter.updateProductList(mProductsDisplayedList);
 
                 // Notificamos el cambio
-                mProductAdapter.notifyItemRangeInserted( start, count );
+                mProductAdapter.notifyItemRangeInserted(start, count);
+
+                mLoadingScrollView.startAnimation(hideLoadingViewToBottom);
+
             }
         }
 

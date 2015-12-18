@@ -6,7 +6,7 @@
     android:background="@drawable/left_navigation_header"
     android:gravity="bottom"
     android:padding="@dimen/header_left_padding"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark" >
 
     <!-- Imagen de perfil -->
     <de.hdodenhof.circleimageview.CircleImageView

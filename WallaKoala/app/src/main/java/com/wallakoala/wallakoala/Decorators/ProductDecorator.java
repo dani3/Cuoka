@@ -17,7 +17,7 @@ public class ProductDecorator extends RecyclerView.ItemDecoration
     public ProductDecorator( int verticalSpacing, int horizontalSpacing )
     {
         this.horizontalSpacing = horizontalSpacing;
-        this.verticalSpacing = verticalSpacing;
+        this.verticalSpacing   = verticalSpacing;
     }
 
     @Override
