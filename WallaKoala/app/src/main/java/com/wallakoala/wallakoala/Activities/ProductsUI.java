@@ -56,8 +56,8 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     protected int NUMBER_OF_CORES;
-    protected final String serverURL = "http://cuoka.cloudapp.net";
     private final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected final String serverURL = "http://cuoka.cloudapp.net";
     private enum STATE
     {
         ERROR,
@@ -87,7 +87,6 @@ public class ProductsUI extends AppCompatActivity
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
     protected View mLoadingView, mLoadingScrollView;
-    protected View mDarkenScreenView;
     protected TextView mNoDataTextView, mErrorTextView;
 
     /* Adapters */
@@ -166,9 +165,6 @@ public class ProductsUI extends AppCompatActivity
         // LoaderView
         mLoadingView = findViewById(R.id.avloadingIndicatorView);
         mLoadingScrollView = findViewById(R.id.avloadingscroll);
-
-        // ImageView que oscurece la pantalla
-        mDarkenScreenView = findViewById(R.id.darken_screen);
 
         // TextViews que muestran que no hay productos disponibles o se ha producido un error
         mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
@@ -391,94 +387,6 @@ public class ProductsUI extends AppCompatActivity
         });
     }
 
-    /**
-     * Metodo que crea la pantalla de carga.
-     * @param loading: true indica que se inicia la carga, false que ha terminado.
-     */
-    protected void _loading( boolean loading )
-    {
-        if ( ! loading )
-        {
-            mLoadingView.setVisibility(View.GONE);
-
-            mState = STATE.NORMAL;
-
-        } else {
-            mLoadingView.setVisibility(View.VISIBLE);
-
-            mState = STATE.LOADING;
-        }
-    }
-
-    /**
-     * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
-     * @param noData: true indica que no hay ningun producto que mostrar.
-     */
-    protected void _noData( boolean noData )
-    {
-        if ( ! noData )
-        {
-            if ( mProductsRecyclerView != null )
-                mProductsRecyclerView.setVisibility(View.VISIBLE);
-
-            mNoDataTextView.setVisibility(View.GONE);
-
-            mState = STATE.NORMAL;
-
-        } else {
-            if ( mProductsRecyclerView != null )
-                mProductsRecyclerView.setVisibility(View.GONE);
-
-            mNoDataTextView.setVisibility(View.VISIBLE);
-
-            mState = STATE.NODATA;
-        }
-    }
-
-    /**
-     * Metodo que muestra un mensaje cuando se ha producido un error.
-     * @param error: true si se ha producido un error.
-     */
-    protected void _error( boolean error )
-    {
-        if ( ! error )
-        {
-            if ( mProductsRecyclerView != null )
-                mProductsRecyclerView.setVisibility(View.VISIBLE);
-
-            mErrorTextView.setVisibility(View.GONE);
-
-            mState = STATE.NORMAL;
-
-        } else {
-            _noData(false);
-            _loading(false);
-
-            if ( mProductsRecyclerView != null )
-                mProductsRecyclerView.setVisibility(View.GONE);
-
-            mErrorTextView.setVisibility(View.VISIBLE);
-
-            mState = STATE.ERROR;
-        }
-    }
-
-    /**
-     * Metodo que muestra la vista de carga cuando se hace scroll.
-     * @param loading: true si se ha realizado scroll
-     */
-    protected void _loadingOnScroll( boolean loading )
-    {
-        if ( ! loading )
-        {
-            mLoadingScrollView.startAnimation(hideLoadingViewToBottom);
-
-        } else {
-            mLoadingScrollView.startAnimation(showLoadingViewFromBottom);
-            mLoadingScrollView.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     protected void onPostCreate( Bundle savedInstanceState )
     {
@@ -573,20 +481,6 @@ public class ProductsUI extends AppCompatActivity
         }
 
         return displayable;
-    }
-
-    protected boolean _checkIfFinished( Map<String, Integer> indexMap )
-    {
-        boolean finished = true;
-        Iterator<String> iterator = indexMap.keySet().iterator();
-        while ( ( iterator.hasNext() ) && ( finished ) )
-        {
-            String key = iterator.next();
-
-            finished = ( mProductsMap.get(key).size() == indexMap.get(key) );
-        }
-
-        return finished;
     }
 
     /**
@@ -786,9 +680,9 @@ public class ProductsUI extends AppCompatActivity
 
                 // Descargamos las imagenes, ya que no se puede hacer en el Thread UI
                 for ( Product product : mProductsDisplayedList )
-                    product.setMainImage( getBitmapFromURL(serverURL + product.getColors()
+                    product.setMainImage( _getBitmapFromURL(serverURL + product.getColors()
                             .get(0).getImages()
-                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20") ) );
+                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")) );
 
                 Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
                 Log.e("CUCU", "Lista de HyM: " + mProductsMap.get("HyM").size());
@@ -814,39 +708,18 @@ public class ProductsUI extends AppCompatActivity
         protected void onPostExecute( Void unused )
         {
             if ( error != null )
-            {
                 _error(true);
-
-            } else {
-                // Inicializamos el grid de productos
+            else
                 _initRecyclerView();
 
-                // Deshabilitamos la pantalla de carga
-                _loading(false);
+            if ( mProductsCandidatesDeque.isEmpty() )
+                _noData(true);
 
-            } // else
+            _loading(false);
 
         } // onPostExecute
 
     } // Products
-
-    protected Bitmap getBitmapFromURL( String src ) throws Exception
-    {
-        URL url = new URL(src);
-
-        Log.e("CUCU", src);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setDoInput(true);
-        connection.connect();
-
-        InputStream input = connection.getInputStream();
-
-        Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-        return myBitmap;
-    }
 
     private class DownloadImages extends AsyncTask<List<Product>, Void, Void>
     {
@@ -866,7 +739,7 @@ public class ProductsUI extends AppCompatActivity
                 {
                     Product product = productList.get(i);
 
-                    product.setMainImage(getBitmapFromURL(serverURL + product.getColors()
+                    product.setMainImage(_getBitmapFromURL(serverURL + product.getColors()
                             .get(0).getImages()
                             .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
                 }
@@ -891,12 +764,128 @@ public class ProductsUI extends AppCompatActivity
 
                 // Notificamos el cambio
                 mProductAdapter.notifyItemRangeInserted(start, count);
-
-                _loadingOnScroll(false);
-
             }
+
+            _loadingOnScroll(false);
         }
 
     } // DownloadImages
+
+    /**
+     * Metodo que crea la pantalla de carga.
+     * @param loading: true indica que se inicia la carga, false que ha terminado.
+     */
+    protected void _loading( boolean loading )
+    {
+        if ( ! loading )
+        {
+            mLoadingView.setVisibility(View.GONE);
+
+            mState = STATE.NORMAL;
+
+        } else {
+            mLoadingView.setVisibility(View.VISIBLE);
+
+            mState = STATE.LOADING;
+        }
+    }
+
+    /**
+     * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
+     * @param noData: true indica que no hay ningun producto que mostrar.
+     */
+    protected void _noData( boolean noData )
+    {
+        if ( ! noData )
+        {
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.VISIBLE);
+
+            mNoDataTextView.setVisibility(View.GONE);
+
+            mState = STATE.NORMAL;
+
+        } else {
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.GONE);
+
+            mNoDataTextView.setVisibility(View.VISIBLE);
+
+            mState = STATE.NODATA;
+        }
+    }
+
+    /**
+     * Metodo que muestra un mensaje cuando se ha producido un error.
+     * @param error: true si se ha producido un error.
+     */
+    protected void _error( boolean error )
+    {
+        if ( ! error )
+        {
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.VISIBLE);
+
+            mErrorTextView.setVisibility(View.GONE);
+
+            mState = STATE.NORMAL;
+
+        } else {
+            if ( mProductsRecyclerView != null )
+                mProductsRecyclerView.setVisibility(View.GONE);
+
+            mErrorTextView.setVisibility(View.VISIBLE);
+
+            mState = STATE.ERROR;
+        }
+    }
+
+    /**
+     * Metodo que muestra la vista de carga cuando se hace scroll.
+     * @param loading: true si se ha realizado scroll
+     */
+    protected void _loadingOnScroll( boolean loading )
+    {
+        if ( ! loading )
+        {
+            mLoadingScrollView.startAnimation(hideLoadingViewToBottom);
+
+        } else {
+            mLoadingScrollView.startAnimation(showLoadingViewFromBottom);
+            mLoadingScrollView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected Bitmap _getBitmapFromURL( String src ) throws Exception
+    {
+        URL url = new URL(src);
+
+        Log.e("CUCU", src);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setDoInput(true);
+        connection.connect();
+
+        InputStream input = connection.getInputStream();
+
+        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+        return myBitmap;
+    }
+
+    protected boolean _checkIfFinished( Map<String, Integer> indexMap )
+    {
+        boolean finished = true;
+        Iterator<String> iterator = indexMap.keySet().iterator();
+        while ( ( iterator.hasNext() ) && ( finished ) )
+        {
+            String key = iterator.next();
+
+            finished = ( mProductsMap.get(key).size() == indexMap.get(key) );
+        }
+
+        return finished;
+    }
 
 } // Activity

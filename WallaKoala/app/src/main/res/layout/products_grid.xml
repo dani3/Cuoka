@@ -31,15 +31,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <!-- Fondo para oscurecer la pantalla -->
-        <ImageView
-            android:id="@+id/darken_screen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/black"
-            android:visibility="gone"
-            android:alpha="0.2" />
-
         <!-- Loading View -->
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avloadingIndicatorView"
@@ -48,7 +39,6 @@
             android:layout_gravity="center"
             android:visibility="gone"
             app:indicator="BallClipRotate"
-            android:elevation="4dp"
             app:indicator_color="@color/colorAccent" />
 
         <!-- Texto de error -->
