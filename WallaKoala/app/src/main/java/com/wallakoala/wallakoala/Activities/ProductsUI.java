@@ -245,8 +245,7 @@ public class ProductsUI extends AppCompatActivity
                         if (mProductsDisplayedList.size() ==
                                 (mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1))
                         {
-                            mLoadingScrollView.startAnimation(showLoadingViewFromBottom);
-                            mLoadingScrollView.setVisibility(View.VISIBLE);
+                            _loadingOnScroll(true);
 
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
@@ -438,7 +437,7 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Metodo que muestra un mensaje cuando se ha producido un error.
-     * @param error: si se ha producido un error.
+     * @param error: true si se ha producido un error.
      */
     protected void _error( boolean error )
     {
@@ -461,6 +460,22 @@ public class ProductsUI extends AppCompatActivity
             mErrorTextView.setVisibility(View.VISIBLE);
 
             mState = STATE.ERROR;
+        }
+    }
+
+    /**
+     * Metodo que muestra la vista de carga cuando se hace scroll.
+     * @param loading: true si se ha realizado scroll
+     */
+    protected void _loadingOnScroll( boolean loading )
+    {
+        if ( ! loading )
+        {
+            mLoadingScrollView.startAnimation(hideLoadingViewToBottom);
+
+        } else {
+            mLoadingScrollView.startAnimation(showLoadingViewFromBottom);
+            mLoadingScrollView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -877,7 +892,7 @@ public class ProductsUI extends AppCompatActivity
                 // Notificamos el cambio
                 mProductAdapter.notifyItemRangeInserted(start, count);
 
-                mLoadingScrollView.startAnimation(hideLoadingViewToBottom);
+                _loadingOnScroll(false);
 
             }
         }
