@@ -5,7 +5,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,18 +69,9 @@ public class BlancoScraper implements ScraperInterface
                     first = false;
                 }
                 
-                // Sacamos las tallas de cada color.
-                Elements elements = document.select( "#custom-size ul.super-attribute-select-custom > li > span" );
-                List<Size> sizes = new ArrayList<>();
-                for ( Element e : elements )
-                {
-                    String size = e.text();                    
-                    boolean stock = ! size.contains( "agotado" );               
-                    
-                    sizes.add( new Size( size.replace( "(agotado)" , "" ).trim().toUpperCase(), stock ) );
-                }
                 
-                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
+                
+                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
             }
             
             // Creamos y añadimos el producto a la lista concurrente               

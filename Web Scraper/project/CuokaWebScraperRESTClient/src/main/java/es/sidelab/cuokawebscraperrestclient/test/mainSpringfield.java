@@ -3,7 +3,6 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
-import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,14 +104,8 @@ public class mainSpringfield {
                             for ( Element img : images )
                                 imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );
 
-                            // Sacamos los tamaños disponibles
-                            Elements elements = document.select( "ul.c02__size-list > li" );
-                            List<Size> sizes = new ArrayList<>();
-                            for( Element size : elements )
-                                sizes.add( new Size( size.select( "a" ).text(), size.hasClass( "available" ) ) );
-
                             // Añadimos un nuevo ColorVariant a la lista 
-                            variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
+                            variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                         }
 
                         productList.add( new Product( Double.parseDouble( price )
@@ -144,9 +137,6 @@ public class mainSpringfield {
             for ( Image image : cv.getImages() )
                 System.out.println( " - " + image.getUrl() );
             
-            System.out.print( " - Available sizes: " );
-            for( Size size : cv.getSizes() )
-                if ( size.isStock() ) System.out.print( size.getSize() + " | " );
             
             System.out.println( "\n" );            
         }

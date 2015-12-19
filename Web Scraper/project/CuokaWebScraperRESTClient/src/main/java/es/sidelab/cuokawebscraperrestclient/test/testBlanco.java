@@ -4,7 +4,6 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
-import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,19 +59,8 @@ public class testBlanco {
                     
                     first = false;
                 }
-                
-                Elements elements = document.select( "#custom-size ul.super-attribute-select-custom > li > span" );
-                List<Size> sizes = new ArrayList<>();
-                for ( Element e : elements )
-                {
-                    String size = e.text();               
-                    boolean stock = ! size.contains( "agotado" );               
-                   
-                    sizes.add( new Size( size.replace( "(agotado)" , "" ).trim().toUpperCase(), stock ) );
-                    System.out.println( size + " " + stock );
-                }
-                
-                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
+            
+                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
             }
             
             productList.add( new Product( Double.parseDouble( price )
@@ -100,11 +88,7 @@ public class testBlanco {
             System.out.println( " - Referencia: " + cv.getReference() );
             for ( Image image : cv.getImages() )
                 System.out.println( " - " + image.getUrl() );
-            
-            System.out.print( " - Available sizes: " );
-            for( Size size : cv.getSizes() )
-                if ( size.isStock() )
-                    System.out.print( size.getSize() + " | " );
+          
             
             System.out.println( "\n" );            
         }

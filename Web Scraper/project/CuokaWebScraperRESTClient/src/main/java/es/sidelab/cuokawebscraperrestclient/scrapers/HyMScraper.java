@@ -5,7 +5,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,20 +74,7 @@ public class HyMScraper implements ScraperInterface
                         for ( Element img : images )
                             imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
 
-                        // Sacamos los colores con cuidado de coger los del color correspondiente
-                        // Ya que estan todos en el HTML, no es posible sacar el stock, ya que eso se hace via JS
-                        Elements elements = document.select( "ul.inputlist.clearfix" );
-                        List<Size> sizes = new ArrayList<>();
-                        for ( Element sizeUl : elements )
-                            if ( sizeUl.attr( "data-sizelist" ).equals( colorReference ) )
-                                for ( Element size : sizeUl.select( "li" ) )
-                                {
-                                    String value = size.select( "input" ).attr( "value" );
-
-                                    sizes.add( new Size( value, true ) );
-                                }
-
-                        variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL, sizes ) );
+                          variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                     
                 }
                     
