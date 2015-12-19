@@ -3,7 +3,6 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
-import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,17 +81,8 @@ public class mainHyM {
                         imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
                     
                     Elements elements = document.select( "ul.inputlist.clearfix" );
-                    List<Size> sizes = new ArrayList<>();
-                    for ( Element sizeUl : elements )
-                        if ( sizeUl.attr( "data-sizelist" ).equals( colorReference ) )
-                            for ( Element size : sizeUl.select( "li" ) )
-                            {
-                                String value = size.select( "input" ).attr( "value" );
-                                
-                                sizes.add( new Size( value, true ) );
-                            }
-                    
-                    variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL, sizes ) );
+                             
+                    variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                 }
                                 
                 productList.add( new Product( Double.parseDouble( price )
@@ -120,11 +110,6 @@ public class mainHyM {
             System.out.println( " - Referencia: " + cv.getReference() );
             for ( Image image : cv.getImages() )
                 System.out.println( " - " + image.getUrl() );
-            
-            System.out.print( " - Available sizes: " );
-            for( Size size : cv.getSizes() )
-                if ( size.isStock() )
-                    System.out.print( size.getSize() + " | " );
             
             System.out.println( "\n" );            
         }

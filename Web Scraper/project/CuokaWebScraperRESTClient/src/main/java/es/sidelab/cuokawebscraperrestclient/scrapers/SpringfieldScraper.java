@@ -5,7 +5,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import es.sidelab.cuokawebscraperrestclient.beans.Size;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,14 +97,8 @@ public class SpringfieldScraper implements ScraperInterface
                             for ( Element img : images )
                                 imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );
 
-                            // Sacamos los tamaños disponibles
-                            Elements elements = document.select( "ul.c02__size-list > li" );
-                            List<Size> sizes = new ArrayList<>();
-                            for( Element size : elements )
-                                sizes.add( new Size( size.select( "a" ).text(), size.hasClass( "available" ) ) );
-
                             // Añadimos un nuevo ColorVariant a la lista 
-                            variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL, sizes ) );
+                            variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                         }
 
                         productList.add( new Product( Double.parseDouble( price )
