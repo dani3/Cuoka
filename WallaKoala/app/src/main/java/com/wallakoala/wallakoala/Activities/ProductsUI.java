@@ -41,6 +41,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -641,6 +642,7 @@ public class ProductsUI extends AppCompatActivity
                 for ( int i = 0; i < shops.length; i++ )
                 {
                     URL url = new URL("http://cuoka.cloudapp.net:8080/getProducts/" + shops[i]);
+
                     URLConnection conn = url.openConnection();
 
                     // Get the server response

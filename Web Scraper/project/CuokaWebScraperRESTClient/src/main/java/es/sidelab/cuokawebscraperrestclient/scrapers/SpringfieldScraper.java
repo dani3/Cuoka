@@ -110,8 +110,8 @@ public class SpringfieldScraper implements ScraperInterface
 
                         productList.add( new Product( Double.parseDouble( price )
                                             , name
-                                            , ""
-                                            , ""
+                                            , shop.getName()
+                                            , section.getName()
                                             , link 
                                             , true
                                             , variants ) );
