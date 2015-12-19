@@ -195,14 +195,15 @@ public class Controller
     /**
      * Metodo que devuelve una lista de productos de una tienda.
      * @param shop: Tienda de la que se quieren los productos.
+     * @param man: true si se quiere solo los products de hombre.
      * @return Lista de productos.
      */
     @Cacheable( value = "products", key = "#shop" )
-    @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
-    public List<Product> getProducts( @PathVariable String shop )
+    @RequestMapping( value = "/getProducts/{shop}/{man}", method = RequestMethod.GET )
+    public List<Product> getProducts( @PathVariable String shop, @PathVariable boolean man )
     {
         LOG.info( "Peticion GET para obtener todos los productos de " + shop );
-        return productsRepository.findByShop( shop );
+        return productsRepository.findByShopAndGender( shop, man );
     }
     
     /**
