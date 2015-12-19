@@ -26,7 +26,6 @@ import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
-import com.wallakoala.wallakoala.Beans.Size;
 import com.wallakoala.wallakoala.R;
 
 import org.json.JSONArray;
@@ -587,9 +586,7 @@ public class ProductsUI extends AppCompatActivity
                 String colorPath = jsColor.getString("colorPath");
 
                 List<Image> images = new ArrayList<>();
-                List<Size> sizes = new ArrayList<>();
                 JSONArray jsImages = jsColor.getJSONArray("images");
-                JSONArray jsSizes = jsColor.getJSONArray("sizes");
                 for ( int j = 0; j < jsImages.length(); j++ )
                 {
                     JSONObject jsImage = jsImages.getJSONObject(j);
@@ -601,17 +598,7 @@ public class ProductsUI extends AppCompatActivity
                     images.add( new Image( url, pathSmallSize, pathLargeSize ) );
                 }
 
-                for ( int j = 0; j < jsSizes.length(); j++ )
-                {
-                    JSONObject jsSize = jsSizes.getJSONObject(j);
-
-                    String size = jsSize.getString("size");
-                    boolean stock = jsSize.getBoolean("stock");
-
-                    sizes.add( new Size( size, stock ) );
-                }
-
-                colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images, sizes ) );
+                colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images ) );
             }
 
             productsList.add( new Product( name, shop, section, price, man, link, colors, newness, null ) );
