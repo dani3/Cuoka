@@ -58,7 +58,8 @@ public class ProductsUI extends AppCompatActivity
     /* Constants */
     protected int NUMBER_OF_CORES;
     private final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected final String serverURL = "http://cuoka.cloudapp.net";
+    protected final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected final String SERVER_SPRING_PORT = "8080";
     private enum STATE
     {
         ERROR,
@@ -641,7 +642,7 @@ public class ProductsUI extends AppCompatActivity
             {
                 for ( int i = 0; i < shops.length; i++ )
                 {
-                    URL url = new URL("http://cuoka.cloudapp.net:8080/getProducts/" + shops[i]);
+                    URL url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i]);
 
                     URLConnection conn = url.openConnection();
 
@@ -680,15 +681,21 @@ public class ProductsUI extends AppCompatActivity
                 // ... y actualizamos la lista de los que se van a mostrar
                 getNextProductsToBeDisplayed();
 
-                // Descargamos las imagenes, ya que no se puede hacer en el Thread UI
-                for ( Product product : mProductsDisplayedList )
-                    product.setMainImage( _getBitmapFromURL(serverURL + product.getColors()
-                            .get(0).getImages()
-                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")) );
-
                 Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
                 Log.e("CUCU", "Lista de HyM: " + mProductsMap.get("HyM").size());
                 Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
+
+                // Descargamos las imagenes, ya que no se puede hacer en el Thread UI
+                for ( Product product : mProductsDisplayedList )
+                {
+                    Log.e("CUCU", product.getColors()
+                            .get(0).getImages()
+                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20"));
+
+                    product.setMainImage( _getBitmapFromURL(SERVER_URL + product.getColors()
+                            .get(0).getImages()
+                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
+                }
 
             } catch( Exception ex )  {
                 error = ex.getMessage();
@@ -712,10 +719,15 @@ public class ProductsUI extends AppCompatActivity
             if ( error != null )
                 _error(true);
             else
-                _initRecyclerView();
+            {
+                if ( mProductsCandidatesDeque.isEmpty() )
+                    _noData(true);
 
-            if ( mProductsCandidatesDeque.isEmpty() )
-                _noData(true);
+                else
+                    _initRecyclerView();
+            }
+
+
 
             _loading(false);
 
@@ -741,7 +753,7 @@ public class ProductsUI extends AppCompatActivity
                 {
                     Product product = productList.get(i);
 
-                    product.setMainImage(_getBitmapFromURL(serverURL + product.getColors()
+                    product.setMainImage(_getBitmapFromURL(SERVER_URL + product.getColors()
                             .get(0).getImages()
                             .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
                 }
