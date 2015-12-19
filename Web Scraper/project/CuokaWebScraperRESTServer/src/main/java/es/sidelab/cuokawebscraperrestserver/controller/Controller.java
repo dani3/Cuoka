@@ -198,12 +198,12 @@ public class Controller
      * @param man: true si se quiere solo los products de hombre.
      * @return Lista de productos.
      */
-    @Cacheable( value = "products", key = "#shop" )
+    @Cacheable( value = "products", key = "#shop.toString() + #man.toString()" )
     @RequestMapping( value = "/getProducts/{shop}/{man}", method = RequestMethod.GET )
-    public List<Product> getProducts( @PathVariable String shop, @PathVariable boolean man )
+    public List<Product> getProducts( @PathVariable String shop, @PathVariable String man )
     {
         LOG.info( "Peticion GET para obtener todos los productos de " + shop );
-        return productsRepository.findByShopAndGender( shop, man );
+        return productsRepository.findByManAndShop(Boolean.valueOf(man), shop);
     }
     
     /**

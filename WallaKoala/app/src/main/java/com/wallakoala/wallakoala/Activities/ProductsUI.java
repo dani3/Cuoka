@@ -123,7 +123,7 @@ public class ProductsUI extends AppCompatActivity
         _initNavigationDrawers();
         _initAnimations();
 
-        new Products().execute("Blanco", "HyM");
+        new Products().execute("Blanco");
     }
 
     /**
@@ -642,7 +642,9 @@ public class ProductsUI extends AppCompatActivity
             {
                 for ( int i = 0; i < shops.length; i++ )
                 {
-                    URL url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i]);
+                    URL url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
+
+                    Log.e("TIME INI", Calendar.getInstance().toString());
 
                     URLConnection conn = url.openConnection();
 
@@ -657,7 +659,11 @@ public class ProductsUI extends AppCompatActivity
 
                     // Append Server Response To Content String
                     content.add(sb.toString());
+
+                    Log.e("TIME END", Calendar.getInstance().toString());
                 }
+
+                Log.e("TIME INI CONVERT", Calendar.getInstance().toString());
 
                 JSONArray jsonResponse;
                 for( int i = 0; i < content.size(); i++ )
@@ -676,26 +682,23 @@ public class ProductsUI extends AppCompatActivity
                     jsonList.clear();
                 }
 
+                Log.e("TIME INI CONVERT", Calendar.getInstance().toString());
+
                 // Una vez cargados los productos, actualizamos la cola de candidatos...
                 updateCandidates();
                 // ... y actualizamos la lista de los que se van a mostrar
                 getNextProductsToBeDisplayed();
 
                 Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
-                Log.e("CUCU", "Lista de HyM: " + mProductsMap.get("HyM").size());
+                //Log.e("CUCU", "Lista de Spf: " + mProductsMap.get("Springfield").size());
                 Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
 
                 // Descargamos las imagenes, ya que no se puede hacer en el Thread UI
                 for ( Product product : mProductsDisplayedList )
-                {
-                    Log.e("CUCU", product.getColors()
-                            .get(0).getImages()
-                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20"));
-
                     product.setMainImage( _getBitmapFromURL(SERVER_URL + product.getColors()
                             .get(0).getImages()
                             .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
-                }
+
 
             } catch( Exception ex )  {
                 error = ex.getMessage();

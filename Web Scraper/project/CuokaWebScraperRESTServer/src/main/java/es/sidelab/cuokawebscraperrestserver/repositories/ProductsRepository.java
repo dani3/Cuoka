@@ -20,7 +20,5 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     void deleteByShop( String shop );
     
     List<Product> findByShop( String shop );
-    
-    @Query( "SELECT * FROM Product WHERE shop = ?1 AND man = ?2" )
-    List<Product> findByShopAndGender( String shop, boolean man );
+    List<Product> findByManAndShop( boolean man, String shop );
 }
