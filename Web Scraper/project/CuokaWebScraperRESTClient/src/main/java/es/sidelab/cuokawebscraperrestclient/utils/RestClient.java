@@ -39,7 +39,7 @@ public class RestClient
      */
     public static synchronized void saveProducts( List<Product> products, Shop shop )
     {
-        LOG.info( "Enviando lista de productos de " + shop + " al servidor..." );
+        LOG.info( "Enviando lista de productos de " + shop.getName() + " al servidor..." );
         LOG.info( "Se envian " + products.size() + " products!" );
         restClient.postForObject( SERVER.toString() 
                 + "/addProducts/" + shop.getName(), products.toArray(), Product[].class );
