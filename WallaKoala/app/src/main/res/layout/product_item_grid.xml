@@ -22,6 +22,16 @@
             app:indicator_color="@color/colorAccent"
             android:layout_gravity="center"/>
 
+        <!-- Imagen no disponible -->
+        <ImageView
+            android:id="@+id/broken_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/broken_robot"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
         <com.wallakoala.wallakoala.Views.ProductImageView
             android:id="@+id/grid_image"
             android:layout_width="match_parent"

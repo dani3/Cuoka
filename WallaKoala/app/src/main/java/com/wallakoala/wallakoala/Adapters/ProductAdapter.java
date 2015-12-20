@@ -49,12 +49,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         private TextView title, subtitle;
         private ImageButton fav;
         private ImageView image;
+        private ImageView error;
         private View loading;
 
         public ProductHolder( View itemView )
         {
             super( itemView );
 
+            error    = ( ImageView )itemView.findViewById( R.id.broken_image );
             loading  = itemView.findViewById( R.id.avloadingitem );
             title    = ( TextView )itemView.findViewById( R.id.footer_title );
             subtitle = ( TextView )itemView.findViewById( R.id.footer_subtitle );
@@ -71,7 +73,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             title.setText( product.getShop() );
             subtitle.setText( product.getSection());
 
-            loading.setVisibility( View.VISIBLE );
+            loading.setVisibility(View.VISIBLE);
 
             Picasso.with( mContext )
                    .load( product.getColors().get( 0 ).getImages().get( 0 ).getPathSmallSize() )
@@ -86,11 +88,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                        @Override
                        public void onError()
                        {
-
+                           loading.setVisibility(View.GONE);
+                           error.setVisibility(View.VISIBLE);
                        }
                    });
 
-            fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
+            fav.setBackgroundResource(R.drawable.ic_favorite_border_white);
         }
     }
 
