@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 
@@ -30,7 +32,7 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
 {
     /* Context */
-    private Context mContext;
+    private static Context mContext;
 
     /* Data */
     private List<Product> mProductList;
@@ -64,8 +66,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public void bindProduct( Product product )
         {
             title.setText( product.getShop() );
-            subtitle.setText( product.getSection() );
-            image.setImageBitmap( product.getMainImage() );
+            subtitle.setText( product.getSection());
+            Picasso.with(mContext)
+                   .load(product.getColors().get(0).getImages().get(0).getPathSmallSize())
+                   .into(image);
             fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
         }
     }

@@ -242,8 +242,6 @@ public class ProductsUI extends AppCompatActivity
                         if (mProductsDisplayedList.size() ==
                                 (mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1))
                         {
-                            _loadingOnScroll(true);
-
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
 
@@ -251,7 +249,11 @@ public class ProductsUI extends AppCompatActivity
                             start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
                             count = mProductsInsertedPreviously;
 
-                            new DownloadImages().execute(mProductsDisplayedList);
+                            // Actualizamos la lista de productos del adapter
+                            mProductAdapter.updateProductList(mProductsDisplayedList);
+
+                            // Notificamos el cambio
+                            mProductAdapter.notifyItemRangeInserted(start, count);
                         }
                     }
 
@@ -592,10 +594,10 @@ public class ProductsUI extends AppCompatActivity
                     JSONObject jsImage = jsImages.getJSONObject(j);
 
                     String url = jsImage.getString("url");
-                    String pathLargeSize = jsImage.getString("pathLargeSize")
+                    String pathLargeSize = SERVER_URL + jsImage.getString("pathLargeSize")
                                                         .replaceAll("var/www/html/", "")
                                                         .replace(" ", "%20");
-                    String pathSmallSize = jsImage.getString("pathSmallSize")
+                    String pathSmallSize = SERVER_URL + jsImage.getString("pathSmallSize")
                                                         .replaceAll("var/www/html/", "")
                                                         .replace(" ", "%20");
 
@@ -686,12 +688,6 @@ public class ProductsUI extends AppCompatActivity
                 //Log.e("CUCU", "Lista de Spf: " + mProductsMap.get("Springfield").size());
                 Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
 
-                // Descargamos las imagenes, ya que no se puede hacer en el Thread UI
-                for ( Product product : mProductsDisplayedList )
-                    product.setMainImage( _getBitmapFromURL(SERVER_URL + product.getColors()
-                            .get(0).getImages()
-                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
-
 
             } catch( Exception ex )  {
                 error = ex.getMessage();
@@ -723,63 +719,11 @@ public class ProductsUI extends AppCompatActivity
                     _initRecyclerView();
             }
 
-
-
             _loading(false);
 
         } // onPostExecute
 
     } // Products
-
-    private class DownloadImages extends AsyncTask<List<Product>, Void, Void>
-    {
-        private String error = null;
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected Void doInBackground( List<Product>... products )
-        {
-            List<Product> productList = products[0];
-
-            try {
-                // Descargamos las imagenes solo de los nuevos productos
-                for ( int i = start; i < mProductsDisplayedList.size(); i++ )
-                {
-                    Product product = productList.get(i);
-
-                    product.setMainImage(_getBitmapFromURL(SERVER_URL + product.getColors()
-                            .get(0).getImages()
-                            .get(0).getPathSmallSize().replaceAll("var/www/html/", "").replace(" ", "%20")));
-                }
-
-            } catch (Exception e) {
-                error = e.getMessage();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute( Void unused )
-        {
-            if ( error != null )
-            {
-                _error(true);
-
-            } else {
-                // Actualizamos la lista de productos del adapter
-                mProductAdapter.updateProductList(mProductsDisplayedList);
-
-                // Notificamos el cambio
-                mProductAdapter.notifyItemRangeInserted(start, count);
-            }
-
-            _loadingOnScroll(false);
-        }
-
-    } // DownloadImages
 
     /**
      * Metodo que crea la pantalla de carga.
