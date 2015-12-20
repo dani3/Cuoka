@@ -228,7 +228,8 @@ public class ProductsUI extends AppCompatActivity
 
                 mToolbar.animate().cancel();
 
-                if (scrollingUp) {
+                if ( scrollingUp )
+                {
                     // Animacion de la toolbar
                     if (toolbarYOffset < mToolbar.getHeight())
                         mToolbar.setTranslationY(-toolbarYOffset);
@@ -266,6 +267,7 @@ public class ProductsUI extends AppCompatActivity
             }
         });
 
+        // Iniciamos una animacion para hacer aparecer el recycler view
         explode.setDuration( 250 );
         mProductsRecyclerView.startAnimation(explode);
         mProductsRecyclerView.setVisibility(View.VISIBLE);
@@ -813,8 +815,6 @@ public class ProductsUI extends AppCompatActivity
     protected Bitmap _getBitmapFromURL( String src ) throws Exception
     {
         URL url = new URL(src);
-
-        Log.e("CUCU", src);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 

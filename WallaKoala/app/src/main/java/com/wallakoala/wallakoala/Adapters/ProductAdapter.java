@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
@@ -48,11 +49,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         private TextView title, subtitle;
         private ImageButton fav;
         private ImageView image;
+        private View loading;
 
         public ProductHolder( View itemView )
         {
             super( itemView );
 
+            loading  = itemView.findViewById( R.id.avloadingitem );
             title    = ( TextView )itemView.findViewById( R.id.footer_title );
             subtitle = ( TextView )itemView.findViewById( R.id.footer_subtitle );
             image    = ( ImageView )itemView.findViewById( R.id.grid_image );
@@ -67,9 +70,26 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         {
             title.setText( product.getShop() );
             subtitle.setText( product.getSection());
-            Picasso.with(mContext)
-                   .load(product.getColors().get(0).getImages().get(0).getPathSmallSize())
-                   .into(image);
+
+            loading.setVisibility( View.VISIBLE );
+
+            Picasso.with( mContext )
+                   .load( product.getColors().get( 0 ).getImages().get( 0 ).getPathSmallSize() )
+                   .into(image, new Callback()
+                   {
+                       @Override
+                       public void onSuccess()
+                       {
+                           loading.setVisibility(View.GONE);
+                       }
+
+                       @Override
+                       public void onError()
+                       {
+
+                       }
+                   });
+
             fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
         }
     }

@@ -12,8 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include android:id="@+id/avloadingitem"
-            layout="@layout/loading_view"/>
+        <!-- Loading View -->
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingitem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            app:indicator="BallClipRotate"
+            app:indicator_color="@color/colorAccent"
+            android:layout_gravity="center"/>
 
         <com.wallakoala.wallakoala.Views.ProductImageView
             android:id="@+id/grid_image"
