@@ -65,15 +65,6 @@
             android:textSize="20sp"
             android:textColor="@color/colorText" />
 
-        <!-- Loading View cuando se hace scroll -->
-        <include android:id="@+id/avloadingscroll"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal|bottom"
-            layout="@layout/loading_onscroll" />
-
     </FrameLayout>
 
     <include layout="@layout/left_navigation_drawer"/>

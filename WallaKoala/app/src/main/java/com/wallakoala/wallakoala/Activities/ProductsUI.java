@@ -87,7 +87,7 @@ public class ProductsUI extends AppCompatActivity
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
-    protected View mLoadingView, mLoadingScrollView, mLoadingItemView;
+    protected View mLoadingView;
     protected TextView mNoDataTextView, mErrorTextView;
 
     /* Adapters */
@@ -95,8 +95,7 @@ public class ProductsUI extends AppCompatActivity
 
     /* Animations */
     protected Animation hideToRight, showFromRight
-                , implode, explode
-                , showLoadingViewFromBottom, hideLoadingViewToBottom;
+                , implode, explode;
 
     /* Toolbar */
     protected Toolbar mToolbar;
@@ -150,7 +149,7 @@ public class ProductsUI extends AppCompatActivity
     {
         Map<String, Object> map = new HashMap<>();
 
-        map.put(getResources().getString(R.string.filter_newness), true);
+        map.put(getResources().getString(R.string.filter_newness), false);
         map.put(getResources().getString(R.string.filter_colors), new ArrayList<String>());
         map.put(getResources().getString(R.string.filter_sections), new ArrayList<String>());
         map.put(getResources().getString(R.string.filter_sizes), new ArrayList<String>());
@@ -165,7 +164,6 @@ public class ProductsUI extends AppCompatActivity
     {
         // LoaderView
         mLoadingView = findViewById(R.id.avloadingIndicatorView);
-        mLoadingScrollView = findViewById(R.id.avloadingscroll);
 
         // TextViews que muestran que no hay productos disponibles o se ha producido un error
         mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
@@ -369,27 +367,6 @@ public class ProductsUI extends AppCompatActivity
 
         explode = AnimationUtils.loadAnimation( ProductsUI.this
                 , R.anim.explode );
-
-        showLoadingViewFromBottom = AnimationUtils.loadAnimation( ProductsUI.this
-                , R.anim.show_from_bottom_translation );
-
-        hideLoadingViewToBottom = AnimationUtils.loadAnimation( ProductsUI.this
-                , R.anim.hide_to_bottom_translation );
-
-        hideLoadingViewToBottom.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mLoadingScrollView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
     }
 
     @Override
@@ -664,6 +641,8 @@ public class ProductsUI extends AppCompatActivity
                     Log.e("TIME END", Calendar.getInstance().toString());
                 }
 
+                Log.e("CONVERT INI", Calendar.getInstance().toString());
+
                 JSONArray jsonResponse;
                 for( int i = 0; i < content.size(); i++ )
                 {
@@ -680,6 +659,8 @@ public class ProductsUI extends AppCompatActivity
 
                     jsonList.clear();
                 }
+
+                Log.e("CONVERT END", Calendar.getInstance().toString());
 
                 // Una vez cargados los productos, actualizamos la cola de candidatos...
                 updateCandidates();
@@ -793,22 +774,6 @@ public class ProductsUI extends AppCompatActivity
             mErrorTextView.setVisibility(View.VISIBLE);
 
             mState = STATE.ERROR;
-        }
-    }
-
-    /**
-     * Metodo que muestra la vista de carga cuando se hace scroll.
-     * @param loading: true si se ha realizado scroll
-     */
-    protected void _loadingOnScroll( boolean loading )
-    {
-        if ( ! loading )
-        {
-            mLoadingScrollView.startAnimation(hideLoadingViewToBottom);
-
-        } else {
-            mLoadingScrollView.startAnimation(showLoadingViewFromBottom);
-            mLoadingScrollView.setVisibility(View.VISIBLE);
         }
     }
 
