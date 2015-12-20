@@ -87,7 +87,7 @@ public class ProductsUI extends AppCompatActivity
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
-    protected View mLoadingView, mLoadingScrollView;
+    protected View mLoadingView, mLoadingScrollView, mLoadingItemView;
     protected TextView mNoDataTextView, mErrorTextView;
 
     /* Adapters */

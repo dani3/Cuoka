@@ -6,29 +6,26 @@
     android:layout_height="match_parent"
     app:cardElevation="4dp"
     app:cardCornerRadius="4dp"
-    app:cardUseCompatPadding="true" >
+    app:cardUseCompatPadding="true">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="match_parent">
 
         <include android:id="@+id/avloadingitem"
-            layout="@layout/loading_onscroll"/>
+            layout="@layout/loading_view"/>
 
         <com.wallakoala.wallakoala.Views.ProductImageView
             android:id="@+id/grid_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
         <include android:id="@+id/footer"
             layout="@layout/product_footer"
             android:layout_height="@dimen/footer_height"
             android:layout_width="match_parent"
-            android:layout_gravity="bottom" >
-
-        </include>
+            android:layout_gravity="bottom"/>
 
     </FrameLayout>
 
