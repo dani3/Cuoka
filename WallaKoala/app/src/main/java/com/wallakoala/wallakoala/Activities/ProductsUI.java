@@ -122,7 +122,7 @@ public class ProductsUI extends AppCompatActivity
         _initNavigationDrawers();
         _initAnimations();
 
-        new Products().execute("Blanco");
+        new Products().execute("Springfield", "Blanco", "HyM");
     }
 
     /**
@@ -629,7 +629,13 @@ public class ProductsUI extends AppCompatActivity
             {
                 for ( int i = 0; i < shops.length; i++ )
                 {
-                    URL url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
+                    URL url = null;
+                    if ( i == 0 )
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/true");
+                    if ( i == 1 )
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
+                    if ( i == 2 )
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
 
                     Log.e("TIME INI", Calendar.getInstance().toString());
 
@@ -650,8 +656,6 @@ public class ProductsUI extends AppCompatActivity
                     Log.e("TIME END", Calendar.getInstance().toString());
                 }
 
-                Log.e("TIME INI CONVERT", Calendar.getInstance().toString());
-
                 JSONArray jsonResponse;
                 for( int i = 0; i < content.size(); i++ )
                 {
@@ -669,14 +673,12 @@ public class ProductsUI extends AppCompatActivity
                     jsonList.clear();
                 }
 
-                Log.e("TIME INI CONVERT", Calendar.getInstance().toString());
-
                 // Una vez cargados los productos, actualizamos la cola de candidatos...
                 updateCandidates();
                 // ... y actualizamos la lista de los que se van a mostrar
                 getNextProductsToBeDisplayed();
 
-                Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Blanco").size());
+                //Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Springfield").size());
                 //Log.e("CUCU", "Lista de Spf: " + mProductsMap.get("Springfield").size());
                 Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
 

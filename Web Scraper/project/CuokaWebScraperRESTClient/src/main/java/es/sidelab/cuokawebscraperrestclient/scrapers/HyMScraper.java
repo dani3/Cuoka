@@ -74,7 +74,7 @@ public class HyMScraper implements ScraperInterface
                         for ( Element img : images )
                             imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
 
-                          variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
+                        variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                     
                 }
                     

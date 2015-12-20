@@ -69,8 +69,6 @@ public class BlancoScraper implements ScraperInterface
                     first = false;
                 }
                 
-                
-                
                 variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
             }
             
