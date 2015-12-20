@@ -592,8 +592,12 @@ public class ProductsUI extends AppCompatActivity
                     JSONObject jsImage = jsImages.getJSONObject(j);
 
                     String url = jsImage.getString("url");
-                    String pathLargeSize = jsImage.getString("pathLargeSize");
-                    String pathSmallSize = jsImage.getString("pathSmallSize");
+                    String pathLargeSize = jsImage.getString("pathLargeSize")
+                                                        .replaceAll("var/www/html/", "")
+                                                        .replace(" ", "%20");
+                    String pathSmallSize = jsImage.getString("pathSmallSize")
+                                                        .replaceAll("var/www/html/", "")
+                                                        .replace(" ", "%20");
 
                     images.add( new Image( url, pathSmallSize, pathLargeSize ) );
                 }

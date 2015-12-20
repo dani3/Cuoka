@@ -162,7 +162,7 @@ public class ImageManager
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "~/cuoka_01/bin/resizeProducts.py"
-                        , Properties.IMAGE_PATH + shop + "/"
+                        , Properties.IMAGE_PATH + shop
                         , Integer.toString( Properties.IMAGE_WIDTH_L )
                         , Integer.toString( Properties.IMAGE_HEIGHT_L )
                         , Integer.toString( Properties.IMAGE_WIDTH_S )
@@ -185,7 +185,7 @@ public class ImageManager
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "~/cuoka_01/bin/resizeColors.py"
-                        , Properties.COLOR_PATH + shop + "/"
+                        , Properties.COLOR_PATH + shop
                         , Integer.toString( Properties.ICON_WIDTH )
                         , Integer.toString( Properties.ICON_HEIGHT ) } );
             
