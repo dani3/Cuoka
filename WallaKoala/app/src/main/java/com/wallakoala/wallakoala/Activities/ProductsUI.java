@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -75,7 +76,7 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /* Data */
-    protected Map<String, List<Product>> mProductsMap;
+    protected ConcurrentMap<String, List<Product>> mProductsMap;
     protected Map<String, List<Product>> mProductsNonFilteredMap;
     protected Map<String, ?> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
@@ -101,8 +102,8 @@ public class ProductsUI extends AppCompatActivity
     protected ProductAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation hideToRight, showFromRight
-                , implode, explode;
+    protected Animation hideToRight, showFromRight;
+    protected Animation implode, explode;
 
     /* Toolbar */
     protected Toolbar mToolbar;
@@ -170,11 +171,11 @@ public class ProductsUI extends AppCompatActivity
     protected void _initAuxViews()
     {
         // LoaderView
-        mLoadingView = findViewById(R.id.avloadingIndicatorView);
+        mLoadingView = findViewById( R.id.avloadingIndicatorView );
 
         // TextViews que muestran que no hay productos disponibles o se ha producido un error
-        mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
-        mErrorTextView  = (TextView)findViewById(R.id.error_textview);
+        mNoDataTextView = ( TextView )findViewById( R.id.nodata_textview );
+        mErrorTextView  = ( TextView )findViewById( R.id.error_textview );
     }
 
     /**
@@ -185,8 +186,8 @@ public class ProductsUI extends AppCompatActivity
         mToolbar = ( Toolbar )findViewById( R.id.appbar );
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setSupportActionBar( mToolbar );
+        getSupportActionBar().setDisplayShowTitleEnabled( false );
     }
 
     /**

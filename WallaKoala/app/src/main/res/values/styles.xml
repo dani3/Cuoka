@@ -8,6 +8,12 @@
         <item name="android:windowBackground">@color/colorBackground</item>
 
         <item name="android:listDivider">@color/colorDividerList</item>
+
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+    </style>
+
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
     </style>
 
 </resources>
