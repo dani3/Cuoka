@@ -46,6 +46,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @class Pantalla principal de la app, donde se muestran los productos
@@ -121,7 +128,7 @@ public class ProductsUI extends AppCompatActivity
         _initNavigationDrawers();
         _initAnimations();
 
-        new Products().execute("Springfield", "Blanco", "HyM");
+        new ConnectToServer().execute("Springfield", "Blanco", "HyM");
     }
 
     /**
@@ -129,7 +136,7 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initData()
     {
-        mProductsMap             = new HashMap<>();
+        mProductsMap             = new ConcurrentHashMap<>();
         mFilterMap               = _initFilterMap();
         mProductsNonFilteredMap  = new HashMap<>();
         mProductsDisplayedList   = new ArrayList<>();
@@ -243,6 +250,8 @@ public class ProductsUI extends AppCompatActivity
                         {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
+
+                            Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
 
                             // Sacamos el indice del primer producto a insertar
                             start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
@@ -537,13 +546,21 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's.
-     * @param jsonList: lista de JSON a convertir.
+     * @param jsonArray: lista de JSON a convertir.
      * @throws JSONException
      */
-    protected void convertJSONtoProduct( List<JSONObject> jsonList ) throws JSONException
+    protected void convertJSONtoProduct( JSONArray jsonArray ) throws JSONException
     {
         List<Product> productsList = new ArrayList<>();
+        List<JSONObject> jsonList = new ArrayList<>();
         String key = null;
+
+        for (int j = 0; j < jsonArray.length(); j++)
+        {
+            JSONObject js = jsonArray.getJSONObject(j);
+
+            jsonList.add(js);
+        }
 
         for( JSONObject jsonObject : jsonList )
         {
@@ -593,10 +610,12 @@ public class ProductsUI extends AppCompatActivity
         mProductsMap.put(key, productsList);
     }
 
-    private class Products extends AsyncTask<String, Void, Void>
+    /**
+     * Tarea en segundo plano que descargara la lista de JSON del servidor.
+     */
+    private class ConnectToServer extends AsyncTask<String, Void, Void>
     {
         private List<String> content = new ArrayList<>();
-        private List<JSONObject> jsonList = new ArrayList<>();
         private String error = null;
 
         @Override
@@ -641,37 +660,6 @@ public class ProductsUI extends AppCompatActivity
                     Log.e("TIME END", Calendar.getInstance().toString());
                 }
 
-                Log.e("CONVERT INI", Calendar.getInstance().toString());
-
-                JSONArray jsonResponse;
-                for( int i = 0; i < content.size(); i++ )
-                {
-                    jsonResponse = new JSONArray(content.get(i));
-
-                    for (int j = 0; j < jsonResponse.length(); j++)
-                    {
-                        JSONObject js = jsonResponse.getJSONObject(j);
-
-                        jsonList.add(js);
-                    }
-
-                    convertJSONtoProduct(jsonList);
-
-                    jsonList.clear();
-                }
-
-                Log.e("CONVERT END", Calendar.getInstance().toString());
-
-                // Una vez cargados los productos, actualizamos la cola de candidatos...
-                updateCandidates();
-                // ... y actualizamos la lista de los que se van a mostrar
-                getNextProductsToBeDisplayed();
-
-                //Log.e("CUCU", "Lista de Blanco: " + mProductsMap.get("Springfield").size());
-                //Log.e("CUCU", "Lista de Spf: " + mProductsMap.get("Springfield").size());
-                Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
-
-
             } catch( Exception ex )  {
                 error = ex.getMessage();
 
@@ -693,9 +681,81 @@ public class ProductsUI extends AppCompatActivity
         {
             if ( error != null )
                 _error(true);
+
+            else
+                new MultithreadConversion().execute( content );
+
+        } // onPostExecute
+
+    } // ConnectToServer
+
+    /**
+     * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
+     */
+    private class MultithreadConversion extends AsyncTask<List<String>, Void, Void>
+    {
+        private ThreadPoolExecutor executor;
+        private CompletionService<Boolean> completionService;
+
+        private String error = null;
+
+        @Override
+        protected void onPreExecute()
+        {
+            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
+            executor = new ThreadPoolExecutor( NUMBER_OF_CORES * 4
+                    , NUMBER_OF_CORES * 4
+                    , 60L
+                    , TimeUnit.SECONDS
+                    , new LinkedBlockingQueue<Runnable>() );
+
+            completionService = new ExecutorCompletionService<>( executor );
+        }
+
+        @Override
+        protected Void doInBackground( List<String>... params )
+        {
+            List<String> content = params[0];
+
+            try
+            {
+                // Creamos un callable por cada tienda
+                for (int i = 0; i < content.size(); i++)
+                {
+                    ConversionTask task = new ConversionTask( new JSONArray( content.get(i) ) );
+
+                    completionService.submit( task );
+                }
+
+                // Nos quedamos esperando a que terminen los threads
+                for (int i = 0; i < content.size(); i++)
+                    completionService.take();
+
+                // Liberamos el executor ya que no hara falta.
+                executor.shutdown();
+
+                // Una vez cargados los productos, actualizamos la cola de candidatos...
+                updateCandidates();
+                // ... y actualizamos la lista de los que se van a mostrar
+                getNextProductsToBeDisplayed();
+
+            } catch ( Exception e ) {
+                error = e.getMessage();
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute( Void unused )
+        {
+            if ( error != null )
+                _error(true);
+
             else
             {
-                if ( mProductsCandidatesDeque.isEmpty() )
+                if (mProductsCandidatesDeque.isEmpty())
                     _noData(true);
 
                 else
@@ -703,10 +763,36 @@ public class ProductsUI extends AppCompatActivity
             }
 
             _loading(false);
+        }
 
-        } // onPostExecute
+    } // MultithreadConversion
 
-    } // Products
+    /**
+     * Task que convierte una array de JSON en una lista de productos.
+     */
+    private class ConversionTask implements Callable<Boolean>
+    {
+        private JSONArray mJsonArray;
+
+        public ConversionTask( JSONArray jsonArray )
+        {
+            mJsonArray = jsonArray;
+        }
+
+        @Override
+        public Boolean call()
+        {
+            try
+            {
+                convertJSONtoProduct( mJsonArray );
+
+            } catch ( Exception e ) {
+                return false;
+            }
+
+            return true;
+        }
+    }
 
     /**
      * Metodo que crea la pantalla de carga.
