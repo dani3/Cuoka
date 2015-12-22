@@ -57,11 +57,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             super( itemView );
 
             error    = ( ImageView )itemView.findViewById( R.id.broken_image );
-            loading  = itemView.findViewById( R.id.avloadingitem );
             title    = ( TextView )itemView.findViewById( R.id.footer_title );
             subtitle = ( TextView )itemView.findViewById( R.id.footer_subtitle );
             image    = ( ImageView )itemView.findViewById( R.id.grid_image );
             fav      = ( ImageButton )itemView.findViewById( R.id.footer_fav_button );
+            loading  = itemView.findViewById( R.id.avloadingitem );
         }
 
         /**
