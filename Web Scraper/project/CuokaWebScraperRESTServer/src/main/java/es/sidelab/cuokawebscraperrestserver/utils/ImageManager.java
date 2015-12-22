@@ -8,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -158,10 +157,10 @@ public class ImageManager
     private static void resizeImages( String shop )
     {
         try 
-        {                      
+        {                            
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
-                        , "~/cuoka_01/bin/resizeProducts.py"
+                        , "resizeProducts.py"
                         , Properties.IMAGE_PATH + shop
                         , Integer.toString( Properties.IMAGE_WIDTH_L )
                         , Integer.toString( Properties.IMAGE_HEIGHT_L )
@@ -170,8 +169,7 @@ public class ImageManager
             
         } catch ( IOException ex ) {
             LOG.error( "ERROR: Error al ejecutar el script 'resizeProducts.py'" );
-            LOG.error( ex.getMessage() );
-            
+            LOG.error( ex.getMessage() );            
         }
     }
     
@@ -184,15 +182,14 @@ public class ImageManager
         {            
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
-                        , "~/cuoka_01/bin/resizeColors.py"
+                        , "resizeColors.py"
                         , Properties.COLOR_PATH + shop
                         , Integer.toString( Properties.ICON_WIDTH )
                         , Integer.toString( Properties.ICON_HEIGHT ) } );
             
         } catch ( IOException ex ) {
             LOG.error( "ERROR: Error al ejecutar el script 'resizeColors.py'" );
-            LOG.error( ex.getMessage() );
-            
+            LOG.error( ex.getMessage() );            
         }
     }
 }

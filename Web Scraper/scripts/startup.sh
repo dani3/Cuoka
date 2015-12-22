@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -jar CuokaRESTServer.jar &
+sudo java -jar CuokaRESTServer.jar &

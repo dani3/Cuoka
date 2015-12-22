@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
@@ -157,7 +158,7 @@ public class ProductsUI extends AppCompatActivity
     {
         Map<String, Object> map = new HashMap<>();
 
-        map.put(getResources().getString(R.string.filter_newness), false);
+        map.put(getResources().getString(R.string.filter_newness), true);
         map.put(getResources().getString(R.string.filter_colors), new ArrayList<String>());
         map.put(getResources().getString(R.string.filter_sections), new ArrayList<String>());
         map.put(getResources().getString(R.string.filter_sizes), new ArrayList<String>());
@@ -251,8 +252,6 @@ public class ProductsUI extends AppCompatActivity
                         {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
-
-                            Log.e("CUCU", "Lista de candidatos: " + mProductsCandidatesDeque.size());
 
                             // Sacamos el indice del primer producto a insertar
                             start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
@@ -525,6 +524,8 @@ public class ProductsUI extends AppCompatActivity
             finished = _checkIfFinished( indexMap );
 
         } // while #1
+
+        Log.e("INFO", "Lista de candidatos: " + mProductsCandidatesDeque.size());
     }
 
     /**
@@ -543,6 +544,8 @@ public class ProductsUI extends AppCompatActivity
 
             mProductsCandidatesDeque.removeFirst();
         }
+
+        Log.e("INFO", "Lista de mostrados: " + mProductsDisplayedList.size());
     }
 
     /**
@@ -862,22 +865,6 @@ public class ProductsUI extends AppCompatActivity
 
             mState = STATE.ERROR;
         }
-    }
-
-    protected Bitmap _getBitmapFromURL( String src ) throws Exception
-    {
-        URL url = new URL(src);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setDoInput(true);
-        connection.connect();
-
-        InputStream input = connection.getInputStream();
-
-        Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-        return myBitmap;
     }
 
     protected boolean _checkIfFinished( Map<String, Integer> indexMap )
