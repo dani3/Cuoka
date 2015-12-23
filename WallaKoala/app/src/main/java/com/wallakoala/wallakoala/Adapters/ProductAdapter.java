@@ -75,8 +75,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
             loading.setVisibility(View.VISIBLE);
 
-            Picasso.with( mContext ).setIndicatorsEnabled( true );
-
             Picasso.with( mContext )
                    .load( product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ) )
                    .into(image, new Callback() {

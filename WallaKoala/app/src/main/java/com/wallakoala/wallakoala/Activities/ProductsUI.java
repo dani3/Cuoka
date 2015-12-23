@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -61,10 +62,10 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     protected static final int TIME_INTERVAL = 2000;
-    protected static int NUMBER_OF_CORES;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
+    protected static int NUMBER_OF_CORES;
     protected static enum STATE
     {
         ERROR,
@@ -109,6 +110,7 @@ public class ProductsUI extends AppCompatActivity
     /* Others */
     protected Menu mMenu;
     protected STATE mState;
+    protected ItemTouchHelper mItemTouchHelper;
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
 
@@ -200,7 +202,7 @@ public class ProductsUI extends AppCompatActivity
         mGridLayoutManager    = new GridLayoutManager(this, 2);
         mProductAdapter       = new ProductAdapter(this, mProductsDisplayedList);
 
-        mProductsRecyclerView.setVisibility( View.GONE );
+        mProductsRecyclerView.setVisibility(View.GONE);
 
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
@@ -273,6 +275,30 @@ public class ProductsUI extends AppCompatActivity
                     mToolbar.setTranslationY(-toolbarYOffset);
             }
         });
+
+        /* Listener para detectar cuando un swipe horizontal. */
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT )
+        {
+            @Override
+            public boolean onMove( RecyclerView recyclerView
+                            , RecyclerView.ViewHolder viewHolder
+                            , RecyclerView.ViewHolder target)
+            {
+                return false;
+            }
+
+            @Override
+            public void onSwiped( RecyclerView.ViewHolder viewHolder, int swipeDir )
+            {
+                mProductsDisplayedList.remove( viewHolder.getAdapterPosition() );
+                mProductAdapter.updateProductList( mProductsDisplayedList );
+                mProductAdapter.notifyItemRemoved( viewHolder.getAdapterPosition() );
+            }
+        };
+
+        mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        mItemTouchHelper.attachToRecyclerView( mProductsRecyclerView );
 
         // Iniciamos una animacion para hacer aparecer el recycler view
         explode.setDuration( 250 );
@@ -451,7 +477,7 @@ public class ProductsUI extends AppCompatActivity
             return;
         }
         else {
-            Toast.makeText(getBaseContext(), "Pulsa otra vez para SALIR", Toast.LENGTH_SHORT).show();
+            Toast.makeText( getBaseContext(), "Pulsa otra vez para SALIR", Toast.LENGTH_SHORT ).show();
         }
 
         mBackPressed = System.currentTimeMillis();
@@ -702,7 +728,7 @@ public class ProductsUI extends AppCompatActivity
 
         } // onPostExecute
 
-    } // ConnectToServer
+    } /* [END ConnectToServer] */
 
     /**
      * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
@@ -780,7 +806,7 @@ public class ProductsUI extends AppCompatActivity
             _loading(false);
         }
 
-    } // MultithreadConversion
+    } /* [END MultithreadConversion] */
 
     /**
      * Task que convierte una array de JSON en una lista de productos.
