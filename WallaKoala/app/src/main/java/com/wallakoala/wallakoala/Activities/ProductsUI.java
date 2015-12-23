@@ -594,20 +594,16 @@ public class ProductsUI extends AppCompatActivity
                     JSONObject jsImage = jsImages.getJSONObject(j);
 
                     String url = jsImage.getString("url");
-                    String pathLargeSize = SERVER_URL + jsImage.getString("pathLargeSize")
-                                                        .replaceAll("var/www/html/", "")
-                                                        .replace(" ", "%20");
-                    String pathSmallSize = SERVER_URL + jsImage.getString("pathSmallSize")
-                                                        .replaceAll("var/www/html/", "")
-                                                        .replace(" ", "%20");
+                    String path = SERVER_URL + jsImage.getString("path")
+                                                      .replace(" ", "%20");
 
-                    images.add( new Image( url, pathSmallSize, pathLargeSize ) );
+                    images.add( new Image( url, path ) );
                 }
 
                 colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images ) );
             }
 
-            productsList.add( new Product( name, shop, section, price, man, link, colors, newness, null ) );
+            productsList.add( new Product( name, shop, section, price, man, link, colors, newness ) );
 
         }
 

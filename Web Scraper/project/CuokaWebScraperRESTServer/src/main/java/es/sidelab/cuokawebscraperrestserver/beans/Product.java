@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -52,6 +53,7 @@ public class Product
     @Column( name = "NEWNESS" )
     private boolean newness;
     
+    @JsonIgnore
     @Column( name = "INSERT_DATE" )
     private Calendar insertDate;
     
@@ -69,7 +71,7 @@ public class Product
     
     public boolean isOkay()
     {
-        if ( ( price <= 0.0f ) || ( this.name == null ) || ( this.name.isEmpty() ) || ( this.shop == null ) ||
+        if ( ( this.price <= 0.0f ) || ( this.name == null ) || ( this.name.isEmpty() ) || ( this.shop == null ) ||
              ( this.shop.isEmpty() ) || ( this.section == null ) || ( this.section.isEmpty() ) || ( this.link == null ) ||
              ( this.link.isEmpty() ) || ( this.colors == null ) || ( this.colors.isEmpty() ) )
         {
@@ -97,6 +99,8 @@ public class Product
     public void setMan( boolean man ) { this.man = man; }
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
     public void setNewness( boolean newness ) { this.newness = newness; }
+    
+    @JsonIgnore
     public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
     
     public double getPrice() { return this.price; }
@@ -108,5 +112,7 @@ public class Product
     public List<ColorVariant> getColors() { return this.colors; }
     public long getId() { return this.id; }
     public boolean isNewness() { return this.newness; }
+    
+    @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
 }

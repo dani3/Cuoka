@@ -47,49 +47,46 @@ public class ImageManager
                 {
                     for ( int k = 0; k < cv.getImages().size(); k++ )
                     {
-                        String path = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
+                        String path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + ".jpg";
                         String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Small.jpg";
-                        String pathLarge = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Large.jpg";
                         LOG.info( "Comprobando la imagen: " + path );
 
                         if ( ! FileManager.existsFile( pathSmall ) )
                         {
                             LOG.info( "La imagen no existe, descargando" );
-                            boolean ok = downloadImage( cv.getImages().get( k ).getUrl(), path );
+                            boolean ok = downloadImage( cv.getImages().get( k ).getUrl(), pathSmall.replaceAll( "_Small" , "" ) );
 
                             if ( ok )
                             {
                                 LOG.info( "Imagen descargada correctamente" );
                                 product.getColors().get( j )
-                                        .getImages().get( k ).setPathLargeSize( pathLarge );
-                                product.getColors().get( j )
-                                        .getImages().get( k ).setPathSmallSize( pathSmall );
+                                        .getImages().get( k ).setPath( path );
                             } 
                             
                         } else {
                             LOG.info( "La imagen ya existe" );
                             product.getColors().get( j )
-                                        .getImages().get( k ).setPathLargeSize( pathLarge );
-                            product.getColors().get( j )
-                                        .getImages().get( k ).setPathSmallSize( pathSmall );                            
+                                        .getImages().get( k ).setPath( path );                        
                         }   
                         
                     } // for images
                 } // if images != null
                 
                 // Descargar los iconos si es necesario
+                String color_path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
+                                + "_" + cv.getReference() + "_" + cv.getColorName().replaceAll( " " , "_" ) + "_ICON.jpg";
                 String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getColorName().replaceAll( " " , "_" ) + "_ICON.jpg";
                 if ( ! FileManager.existsFile( path ) )
                 {
                     boolean ok = downloadImage( cv.getColorURL(), path );
                     if ( ok )
-                        product.getColors().get( j ).setColorPath( path );
+                        product.getColors().get( j ).setColorPath( color_path );
+                    
                 } else
-                    product.getColors().get( j ).setColorPath( path );
+                    product.getColors().get( j ).setColorPath( color_path );
                 
             } // for colors      
             
@@ -107,7 +104,7 @@ public class ImageManager
     }
     
     /*
-     * Metodo que descarga la imagen del producto y le baja la resolucion.
+     * Metodo que descarga la imagen del producto en la ruta especificada.
      */
     private static boolean downloadImage( String imageURL, String path )
     {
@@ -157,7 +154,8 @@ public class ImageManager
     private static void resizeImages( String shop )
     {
         try 
-        {                            
+        {                   
+            // El script tiene que estar en el mismo path que el jar
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "resizeProducts.py"
@@ -179,7 +177,8 @@ public class ImageManager
     private static void resizeColors( String shop )
     {
         try 
-        {            
+        {      
+            // El script tiene que estar en el mismo path que el jar
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "resizeColors.py"
