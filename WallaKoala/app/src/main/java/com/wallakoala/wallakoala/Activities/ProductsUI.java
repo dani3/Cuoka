@@ -1,8 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -21,8 +19,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
@@ -34,9 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
@@ -64,11 +60,12 @@ import java.util.concurrent.TimeUnit;
 public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
-    protected int NUMBER_OF_CORES;
-    private final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    protected final String SERVER_SPRING_PORT = "8080";
-    private enum STATE
+    protected static final int TIME_INTERVAL = 2000;
+    protected static int NUMBER_OF_CORES;
+    protected static final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String SERVER_SPRING_PORT = "8080";
+    protected static enum STATE
     {
         ERROR,
         LOADING,
@@ -113,6 +110,7 @@ public class ProductsUI extends AppCompatActivity
     protected Menu mMenu;
     protected STATE mState;
     protected int mProductsInsertedPreviously, start, count;
+    protected long mBackPressed;
 
     /* Temp */
 
@@ -146,6 +144,8 @@ public class ProductsUI extends AppCompatActivity
 
         start = 0;
         count = 0;
+
+        mBackPressed = 0;
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
     }
@@ -440,6 +440,21 @@ public class ProductsUI extends AppCompatActivity
     public boolean onOptionsItemSelected( MenuItem item )
     {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if ( mBackPressed + TIME_INTERVAL > System.currentTimeMillis() )
+        {
+            super.onBackPressed();
+            return;
+        }
+        else {
+            Toast.makeText(getBaseContext(), "Pulsa otra vez para SALIR", Toast.LENGTH_SHORT).show();
+        }
+
+        mBackPressed = System.currentTimeMillis();
     }
 
     @Override
