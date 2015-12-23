@@ -1,73 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/shop_background_bw">
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@drawable/shop_background_bw">
 
-        <!-- Toolbar -->
-        <include android:id="@+id/appbar"
-            layout="@layout/toolbar"></include>
-
-        <!-- Recylcer Grid -->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/grid_recycler"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:clipToPadding="false"
-            android:paddingTop="?attr/actionBarSize"/>
+            android:layout_height="wrap_content">
 
-    </FrameLayout>
+            <!-- Toolbar -->
+            <include android:id="@+id/appbar"
+                layout="@layout/toolbar"></include>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <!-- Recylcer Grid -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/grid_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                android:paddingTop="?attr/actionBarSize"/>
 
-        <!-- Loading View -->
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/avloadingIndicatorView"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:indicator="BallClipRotate"
-            app:indicator_color="@color/colorAccent"/>
+        </FrameLayout>
 
-        <!-- Texto de error -->
-        <TextView
-            android:id="@+id/error_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/error_message"
-            android:textSize="20sp"
-            android:textColor="@color/colorText"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <!-- Texto de no prductos -->
-        <TextView
-            android:id="@+id/nodata_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/action_bar_height"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            android:paddingTop="@dimen/action_bar_height"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/nodata_message"
-            android:textSize="20sp"
-            android:textColor="@color/colorText"/>
+            <!-- Loading View -->
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/avloadingIndicatorView"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:indicator="BallClipRotate"
+                app:indicator_color="@color/colorAccent"/>
 
-    </FrameLayout>
+            <!-- Texto de no prductos -->
+            <TextView
+                android:id="@+id/nodata_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/action_bar_height"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                android:paddingTop="@dimen/action_bar_height"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/nodata_message"
+                android:textSize="20sp"
+                android:textColor="@color/colorText"/>
 
-    <include layout="@layout/left_navigation_drawer"/>
+        </FrameLayout>
 
-</android.support.v4.widget.DrawerLayout>
+        <include layout="@layout/left_navigation_drawer"/>
+
+    </android.support.v4.widget.DrawerLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -3,7 +3,9 @@ package com.wallakoala.wallakoala.Activities;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -87,6 +89,7 @@ public class ProductsUI extends AppCompatActivity
 
     /* Layouts */
     protected DrawerLayout mDrawerLayout;
+    protected CoordinatorLayout mCoordinatorLayout;
 
     /* LayoutManagers */
     protected GridLayoutManager mGridLayoutManager;
@@ -95,7 +98,7 @@ public class ProductsUI extends AppCompatActivity
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
     protected View mLoadingView;
-    protected TextView mNoDataTextView, mErrorTextView;
+    protected TextView mNoDataTextView;
 
     /* Adapters */
     protected ProductAdapter mProductAdapter;
@@ -103,6 +106,9 @@ public class ProductsUI extends AppCompatActivity
     /* Animations */
     protected Animation hideToRight, showFromRight;
     protected Animation implode, explode;
+
+    /* Snackbar */
+    protected Snackbar mSnackbar;
 
     /* Toolbar */
     protected Toolbar mToolbar;
@@ -173,12 +179,14 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initAuxViews()
     {
+        // CoordinatorLayout
+        mCoordinatorLayout = ( CoordinatorLayout )findViewById( R.id.coordinator_layout );
+
         // LoaderView
         mLoadingView = findViewById( R.id.avloadingIndicatorView );
 
         // TextViews que muestran que no hay productos disponibles o se ha producido un error
         mNoDataTextView = ( TextView )findViewById( R.id.nodata_textview );
-        mErrorTextView  = ( TextView )findViewById( R.id.error_textview );
     }
 
     /**
@@ -283,7 +291,7 @@ public class ProductsUI extends AppCompatActivity
             @Override
             public boolean onMove( RecyclerView recyclerView
                             , RecyclerView.ViewHolder viewHolder
-                            , RecyclerView.ViewHolder target)
+                            , RecyclerView.ViewHolder target )
             {
                 return false;
             }
@@ -297,29 +305,29 @@ public class ProductsUI extends AppCompatActivity
             }
         };
 
-        mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        mItemTouchHelper = new ItemTouchHelper( simpleItemTouchCallback );
         mItemTouchHelper.attachToRecyclerView( mProductsRecyclerView );
 
         // Iniciamos una animacion para hacer aparecer el recycler view
         explode.setDuration( 250 );
-        mProductsRecyclerView.startAnimation(explode);
-        mProductsRecyclerView.setVisibility(View.VISIBLE);
+        mProductsRecyclerView.startAnimation( explode );
+        mProductsRecyclerView.setVisibility( View.VISIBLE );
     }
 
     protected void _toolbarAnimateShow( final int verticalOffset )
     {
         mToolbar.animate()
-                .translationY(0)
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180);
+                .translationY( 0 )
+                .setInterpolator( new LinearInterpolator() )
+                .setDuration( 180 );
     }
 
     protected void _toolbarAnimateHide()
     {
         mToolbar.animate()
-                .translationY(-mToolbar.getHeight())
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180);
+                .translationY( -mToolbar.getHeight() )
+                .setInterpolator( new LinearInterpolator() )
+                .setDuration( 180 );
     }
 
     /**
@@ -662,7 +670,7 @@ public class ProductsUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            _loading(true);
+            _loading( true );
         }
 
         @Override
@@ -721,9 +729,12 @@ public class ProductsUI extends AppCompatActivity
         protected void onPostExecute( Void unused )
         {
             if ( error != null )
-                _error(true);
+            {
+                _loading( false );
 
-            else
+                _errorConnectingToServer();
+
+            } else
                 new MultithreadConversion().execute( content );
 
         } // onPostExecute
@@ -792,10 +803,10 @@ public class ProductsUI extends AppCompatActivity
         protected void onPostExecute( Void unused )
         {
             if ( error != null )
-                _error(true);
-
-            else
             {
+
+            } else {
+
                 if (mProductsCandidatesDeque.isEmpty())
                     _noData(true);
 
@@ -809,7 +820,7 @@ public class ProductsUI extends AppCompatActivity
     } /* [END MultithreadConversion] */
 
     /**
-     * Task que convierte una array de JSON en una lista de productos.
+     * Task que convierte una array de JSON en una lista de productos. Devuelve true cuando ha terminado.
      */
     private class ConversionTask implements Callable<Boolean>
     {
@@ -880,28 +891,27 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que muestra un mensaje cuando se ha producido un error.
-     * @param error: true si se ha producido un error.
+     * Metodo que muestra un mensaje cuando se ha producido un error al conectar con el server.
      */
-    protected void _error( boolean error )
+    protected void _errorConnectingToServer()
     {
-        if ( ! error )
+        mSnackbar = Snackbar.make( mCoordinatorLayout
+                , getResources().getString( R.string.error_message )
+                , Snackbar.LENGTH_INDEFINITE ).setAction( "Reintentar", new View.OnClickListener()
         {
-            if ( mProductsRecyclerView != null )
-                mProductsRecyclerView.setVisibility(View.VISIBLE);
+            @Override
+            public void onClick( View view )
+            {
+                new ConnectToServer().execute( "Springfield", "Blanco", "HyM" );
 
-            mErrorTextView.setVisibility(View.GONE);
+                mSnackbar.dismiss();
+            }
+        });
 
-            mState = STATE.NORMAL;
+        mSnackbar.show();
 
-        } else {
-            if ( mProductsRecyclerView != null )
-                mProductsRecyclerView.setVisibility(View.GONE);
+        mState = STATE.ERROR;
 
-            mErrorTextView.setVisibility(View.VISIBLE);
-
-            mState = STATE.ERROR;
-        }
     }
 
     protected boolean _checkIfFinished( Map<String, Integer> indexMap )

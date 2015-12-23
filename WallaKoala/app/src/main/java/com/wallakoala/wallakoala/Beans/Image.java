@@ -19,9 +19,9 @@ public class Image
 		this.path = path;
 	}
 
-	public String getUrl()           { return url; }
+	public String getUrl()  { return url; }
     public String getPath() { return path; }
 
-    public void setUrl( String url )            { this.url = url; }
+    public void setUrl( String url )   { this.url = url; }
     public void setPath( String path ) { this.path = path; }
 }
