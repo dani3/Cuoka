@@ -64,6 +64,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
+    protected static final String TAG = "CUOKA";
     protected static final int TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
@@ -208,19 +209,19 @@ public class ProductsUI extends AppCompatActivity
     protected void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
-        mGridLayoutManager    = new GridLayoutManager(this, 2);
-        mProductAdapter       = new ProductAdapter(this, mProductsDisplayedList);
+        mGridLayoutManager    = new GridLayoutManager( this, 2 );
+        mProductAdapter       = new ProductAdapter( this, mProductsDisplayedList );
 
-        mProductsRecyclerView.setVisibility(View.GONE);
+        mProductsRecyclerView.setVisibility( View.GONE );
 
-        mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
-        mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mProductsRecyclerView.setLayoutManager( mGridLayoutManager );
+        mProductsRecyclerView.setAdapter( mProductAdapter );
+        mProductsRecyclerView.setOnScrollListener( new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged( RecyclerView recyclerView, int newState ) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
                     if (scrollingUp)
                         if (verticalOffset > mToolbar.getHeight())
@@ -238,7 +239,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled( RecyclerView recyclerView, int dx, int dy ) {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
 
@@ -361,9 +362,6 @@ public class ProductsUI extends AppCompatActivity
                     // Sacamos la vista del item
                     final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
 
-                    // Cargamos la animacion y decimos que mantenga el estado cuando termine
-                    showFromRight.setFillAfter( true );
-
                     itemView.startAnimation( showFromRight );
 
                     // Habilitamos de nuevo el item
@@ -417,14 +415,16 @@ public class ProductsUI extends AppCompatActivity
     protected void onPostCreate( Bundle savedInstanceState )
     {
         super.onPostCreate(savedInstanceState);
-        mLeftDrawerToggle.syncState();
+        if( mLeftDrawerToggle != null )
+            mLeftDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged( Configuration newConfig )
     {
         super.onConfigurationChanged(newConfig);
-        mLeftDrawerToggle.onConfigurationChanged(newConfig);
+        if( mLeftDrawerToggle != null )
+            mLeftDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -435,8 +435,6 @@ public class ProductsUI extends AppCompatActivity
         {
             final View itemView = findViewById( menu.getItem( 0 ).getItemId() );
 
-            hideToRight = AnimationUtils.loadAnimation( this
-                    , R.anim.hide_translation_horizontal );
             hideToRight.setFillAfter(true);
             hideToRight.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -493,7 +491,8 @@ public class ProductsUI extends AppCompatActivity
 
             } else {
                 mSnackbar = Snackbar.make( mCoordinatorLayout
-                                        , getResources().getString( R.string.exit_message ), Snackbar.LENGTH_SHORT );
+                                        , getResources().getString( R.string.exit_message )
+                                        , Snackbar.LENGTH_SHORT );
 
                 mSnackbar.show();
             }
@@ -512,7 +511,7 @@ public class ProductsUI extends AppCompatActivity
     /**
      * Metodo que determina si un producto pasa el filtro o no.
      * @param product: Producto a comprobar.
-     * @return: true si el producto ha pasado el filtro.
+     * @return: true si el producto ha pasado el filtro y, por tanto, se puede mostrar.
      */
     protected boolean _isDisplayable( Product product )
     {
@@ -548,7 +547,7 @@ public class ProductsUI extends AppCompatActivity
 
         // Inicializar mapa de indices con todos a 0.
         for ( String key : mProductsMap.keySet() )
-            indexMap.put(key, 0);
+            indexMap.put( key, 0 );
 
         Iterator<String> iterator = mProductsMap.keySet().iterator();
 
@@ -558,16 +557,16 @@ public class ProductsUI extends AppCompatActivity
             String key = iterator.next();
 
             // Sacamos el indice de donde nos quedamos y la lista de productos.
-            int index = indexMap.get(key);
-            List<Product> list = mProductsMap.get(key);
+            int index = indexMap.get( key );
+            List<Product> list = mProductsMap.get( key );
 
             // Mientras queden productos y no encontremos un producto mostrable.
             while( ( index < list.size() ) && ( turn ) )
             {
                 // Si el producto pasa el filtro, se añade a la cola
-                if ( _isDisplayable( list.get(index) ) )
+                if ( _isDisplayable( list.get( index ) ) )
                 {
-                    mProductsCandidatesDeque.addLast( list.get(index) );
+                    mProductsCandidatesDeque.addLast( list.get( index ) );
                     turn = false;
                 }
 
@@ -586,7 +585,7 @@ public class ProductsUI extends AppCompatActivity
 
         } // while #1
 
-        Log.e("INFO", "Lista de candidatos: " + mProductsCandidatesDeque.size());
+        Log.e( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
     }
 
     /**
@@ -601,12 +600,13 @@ public class ProductsUI extends AppCompatActivity
 
         for ( int i = 0; i < mProductsInsertedPreviously; i++ )
         {
-            mProductsDisplayedList.add(mProductsCandidatesDeque.getFirst());
+            mProductsDisplayedList.add( mProductsCandidatesDeque.getFirst() );
 
             mProductsCandidatesDeque.removeFirst();
         }
 
-        Log.e("INFO", "Lista de mostrados: " + mProductsDisplayedList.size());
+        Log.e( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
+        Log.e( TAG, "Lista de mostrados: " + mProductsDisplayedList.size() );
     }
 
     /**
@@ -815,9 +815,9 @@ public class ProductsUI extends AppCompatActivity
         protected void onPostExecute( Void unused )
         {
             if ( error != null )
-            {
+                _errorConnectingToServer();
 
-            } else {
+            else {
 
                 if (mProductsCandidatesDeque.isEmpty())
                     _noData(true);
@@ -856,7 +856,7 @@ public class ProductsUI extends AppCompatActivity
 
             return true;
         }
-    }
+    } /* [END ConversionTask] */
 
     /**
      * Metodo que crea la pantalla de carga.
@@ -914,16 +914,13 @@ public class ProductsUI extends AppCompatActivity
             @Override
             public void onClick( View view )
             {
-                new ConnectToServer().execute( "Springfield", "Blanco", "HyM" );
-
-                mSnackbar.dismiss();
+                new ConnectToServer().execute("Springfield", "Blanco", "HyM");
             }
         });
 
         mSnackbar.show();
 
         mState = STATE.ERROR;
-
     }
 
     protected boolean _checkIfFinished( Map<String, Integer> indexMap )

@@ -71,24 +71,26 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public void bindProduct( Product product )
         {
             title.setText( product.getShop() );
-            subtitle.setText(product.getSection());
+            subtitle.setText( product.getSection() );
 
-            loading.setVisibility(View.VISIBLE);
+            loading.setVisibility( View.VISIBLE );
 
             Picasso.with( mContext )
                    .load( product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ) )
-                   .into(image, new Callback() {
+                   .into( image, new Callback() {
                        @Override
-                       public void onSuccess() {
+                       public void onSuccess()
+                       {
                            loading.setVisibility(View.GONE);
                        }
 
                        @Override
-                       public void onError() {
+                       public void onError()
+                       {
                            loading.setVisibility(View.GONE);
                            error.setVisibility(View.VISIBLE);
                        }
-                   });
+                   } );
 
             fav.setBackgroundResource(R.drawable.ic_favorite_border_white);
         }
