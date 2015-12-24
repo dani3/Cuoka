@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -125,10 +126,10 @@ public class ProductsUI extends AppCompatActivity
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'products_grid.xml'
-        setContentView(R.layout.products_grid);
+        setContentView( R.layout.products_grid );
 
         _initData();
         _initAuxViews();
@@ -136,7 +137,7 @@ public class ProductsUI extends AppCompatActivity
         _initNavigationDrawers();
         _initAnimations();
 
-        new ConnectToServer().execute("Springfield", "Blanco", "HyM");
+        new ConnectToServer().execute( "Springfield", "Blanco", "HyM" );
     }
 
     /**
@@ -327,7 +328,7 @@ public class ProductsUI extends AppCompatActivity
         mToolbar.animate()
                 .translationY( -mToolbar.getHeight() )
                 .setInterpolator( new LinearInterpolator() )
-                .setDuration( 180 );
+                .setDuration(180);
     }
 
     /**
@@ -479,16 +480,27 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        if ( mBackPressed + TIME_INTERVAL > System.currentTimeMillis() )
+        // Si el navigation drawer esta abierto, lo cerramos.
+        if ( mDrawerLayout.isDrawerOpen( GravityCompat.START ) )
         {
-            super.onBackPressed();
-            return;
-        }
-        else {
-            Toast.makeText( getBaseContext(), "Pulsa otra vez para SALIR", Toast.LENGTH_SHORT ).show();
-        }
+            mDrawerLayout.closeDrawer( GravityCompat.START );
 
-        mBackPressed = System.currentTimeMillis();
+        } else {
+            if ( mBackPressed + TIME_INTERVAL > System.currentTimeMillis() )
+            {
+                super.onBackPressed();
+                return;
+
+            } else {
+                mSnackbar = Snackbar.make( mCoordinatorLayout
+                                        , getResources().getString( R.string.exit_message ), Snackbar.LENGTH_SHORT );
+
+                mSnackbar.show();
+            }
+
+            mBackPressed = System.currentTimeMillis();
+
+        }
     }
 
     @Override
