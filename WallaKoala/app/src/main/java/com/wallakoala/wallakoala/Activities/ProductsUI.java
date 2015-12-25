@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -208,7 +209,7 @@ public class ProductsUI extends AppCompatActivity
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
         setSupportActionBar( mToolbar );
-        getSupportActionBar().setDisplayShowTitleEnabled( false );
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     /**
@@ -691,7 +692,7 @@ public class ProductsUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            _loading( true );
+            _loading( true, true );
         }
 
         @Override
@@ -754,7 +755,7 @@ public class ProductsUI extends AppCompatActivity
         {
             if ( error != null )
             {
-                _loading( false );
+                mLoadingView.setVisibility( View.GONE );
 
                 _errorConnectingToServer();
 
@@ -827,18 +828,18 @@ public class ProductsUI extends AppCompatActivity
         protected void onPostExecute( Void unused )
         {
             if ( error != null )
+            {
+                _loading( false, false );
+
                 _errorConnectingToServer();
 
-            else {
+            } else {
 
-                if (mProductsCandidatesDeque.isEmpty())
-                    _noData(true);
+                if ( mProductsCandidatesDeque.isEmpty() )
+                    _noData( true );
 
-                else
-                    _initRecyclerView();
+                _loading( false, true );
             }
-
-            _loading(false);
         }
 
     } /* [END MultithreadConversion] */
@@ -871,39 +872,52 @@ public class ProductsUI extends AppCompatActivity
     } /* [END ConversionTask] */
 
     /**
-     * Metodo que crea la pantalla de carga.
+     * Metodo que crea maneja la interfaz en funcion de si esta cargando o no los productos.
      * @param loading: true indica que se inicia la carga, false que ha terminado.
      */
-    protected void _loading( boolean loading )
+    protected void _loading( boolean loading, boolean ok )
     {
+        // Si hemos terminado de cargar los productos
         if ( ! loading )
         {
-            moveAndFade.setAnimationListener( new Animation.AnimationListener()
+            if ( ok )
             {
-                @Override
-                public void onAnimationStart( Animation animation ) {}
-
-                @Override
-                public void onAnimationEnd( Animation animation )
-                {
-                    mLoadingView.setVisibility( View.GONE );
-
-                    if ( mProductsRecyclerView != null )
-                    {
-                        mProductsRecyclerView.startAnimation( showFromBottom );
+                // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
+                moveAndFade.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
                     }
-                }
 
-                @Override
-                public void onAnimationRepeat( Animation animation ) {}
-            });
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mLoadingView.setVisibility(View.GONE);
 
-            mLoadingView.startAnimation( moveAndFade );
+                        // La animacion de cada item solo esta disponible para 5.0+
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                            _initRecyclerView();
+                            mProductsRecyclerView.startAnimation(showFromBottom);
 
-            mState = STATE.NORMAL;
+                        } else {
+                            _initRecyclerView();
+                            mProductsRecyclerView.scheduleLayoutAnimation();
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+
+                mLoadingView.startAnimation(moveAndFade);
+
+                mState = STATE.NORMAL;
+
+            } else
+                mLoadingView.setVisibility( View.GONE );
+
 
         } else {
-            mLoadingView.setVisibility(View.VISIBLE);
+            mLoadingView.setVisibility( View.VISIBLE );
 
             mState = STATE.LOADING;
         }
