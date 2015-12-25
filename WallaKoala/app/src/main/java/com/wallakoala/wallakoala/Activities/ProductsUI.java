@@ -23,7 +23,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
@@ -65,17 +64,29 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     protected static final String TAG = "CUOKA";
-    protected static final int TIME_INTERVAL = 2000;
+    protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String SERVER_URL = "http://192.168.1.131";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static int NUMBER_OF_CORES;
-    protected static enum STATE
+    protected enum STATE
     {
-        ERROR,
-        LOADING,
-        NODATA,
+        ERROR
+                { @Override
+                  public String toString() { return "ERROR"; }
+                },
+        LOADING
+                { @Override
+                  public String toString() { return "LOADING"; }
+                },
+        NODATA
+                { @Override
+                  public String toString() { return "NO_DATA"; }
+                },
         NORMAL
+                { @Override
+                  public String toString() { return "NORMAL"; }
+                },
     }
 
     /* Data */
@@ -122,8 +133,6 @@ public class ProductsUI extends AppCompatActivity
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
 
-    /* Temp */
-
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
@@ -152,9 +161,7 @@ public class ProductsUI extends AppCompatActivity
         mProductsDisplayedList   = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
 
-        start = 0;
-        count = 0;
-
+        start = count = 0;
         mBackPressed = 0;
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
@@ -484,7 +491,7 @@ public class ProductsUI extends AppCompatActivity
             mDrawerLayout.closeDrawer( GravityCompat.START );
 
         } else {
-            if ( mBackPressed + TIME_INTERVAL > System.currentTimeMillis() )
+            if ( mBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis() )
             {
                 super.onBackPressed();
                 return;
@@ -585,7 +592,7 @@ public class ProductsUI extends AppCompatActivity
 
         } // while #1
 
-        Log.e( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
+        Log.d( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
     }
 
     /**
@@ -595,6 +602,7 @@ public class ProductsUI extends AppCompatActivity
     {
         mProductsInsertedPreviously = NUM_PRODUCTS_DISPLAYED;
 
+        // Si no hay tantos suficientes productos en la cola...
         if ( NUM_PRODUCTS_DISPLAYED > mProductsCandidatesDeque.size() )
             mProductsInsertedPreviously = mProductsCandidatesDeque.size();
 
@@ -605,8 +613,8 @@ public class ProductsUI extends AppCompatActivity
             mProductsCandidatesDeque.removeFirst();
         }
 
-        Log.e( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
-        Log.e( TAG, "Lista de mostrados: " + mProductsDisplayedList.size() );
+        Log.d( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
+        Log.d( TAG, "Lista de mostrados: " + mProductsDisplayedList.size() );
     }
 
     /**
@@ -700,25 +708,28 @@ public class ProductsUI extends AppCompatActivity
                     if ( i == 1 )
                         url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
                     if ( i == 2 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/true");
 
-                    Log.e("TIME INI", Calendar.getInstance().toString());
+                    Log.d( TAG, "Time INI: " + Calendar.getInstance().toString());
 
-                    URLConnection conn = url.openConnection();
+                    if ( url != null )
+                    {
+                        URLConnection conn = url.openConnection();
 
-                    // Get the server response
-                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line = "";
+                        // Get the server response
+                        reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        StringBuilder sb = new StringBuilder();
+                        String line = "";
 
-                    // Read Server Response
-                    while ((line = reader.readLine()) != null)
-                        sb.append(line + "");
+                        // Read Server Response
+                        while ((line = reader.readLine()) != null)
+                            sb.append(line + "");
 
-                    // Append Server Response To Content String
-                    content.add(sb.toString());
+                        // Append Server Response To Content String
+                        content.add(sb.toString());
+                    }
 
-                    Log.e("TIME END", Calendar.getInstance().toString());
+                    Log.d( TAG, "Time FIN: " + Calendar.getInstance().toString());
                 }
 
             } catch( Exception ex )  {
@@ -875,6 +886,8 @@ public class ProductsUI extends AppCompatActivity
 
             mState = STATE.LOADING;
         }
+
+        Log.d( TAG, "Estado = " + mState.toString() );
     }
 
     /**
@@ -900,6 +913,8 @@ public class ProductsUI extends AppCompatActivity
 
             mState = STATE.NODATA;
         }
+
+        Log.d( TAG, "Estado = " + mState.toString() );
     }
 
     /**
@@ -921,8 +936,15 @@ public class ProductsUI extends AppCompatActivity
         mSnackbar.show();
 
         mState = STATE.ERROR;
+
+        Log.d( TAG, "Estado = " + mState.toString() );
     }
 
+    /**
+     * Metodo que comprueba si se han recorrido todos los productos del mapa de productos.
+     * @param indexMap: Mapa de indices donde guardamos el indice de la ultima iteracion.
+     * @return: true si se han recorrido todos los productos.
+     */
     protected boolean _checkIfFinished( Map<String, Integer> indexMap )
     {
         boolean finished = true;
@@ -931,7 +953,7 @@ public class ProductsUI extends AppCompatActivity
         {
             String key = iterator.next();
 
-            finished = ( mProductsMap.get(key).size() == indexMap.get(key) );
+            finished = ( mProductsMap.get( key ).size() == indexMap.get( key ) );
         }
 
         return finished;
