@@ -66,7 +66,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String TAG = "CUOKA";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final String SERVER_URL = "http://192.168.1.131";
+    protected static final String SERVER_URL = "http://192.168.1.51";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static int NUMBER_OF_CORES;
     protected enum STATE
@@ -117,8 +117,9 @@ public class ProductsUI extends AppCompatActivity
     protected ProductAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation hideToRight, showFromRight;
+    protected Animation hideToRight, showFromRight, showFromBottom;
     protected Animation implode, explode;
+    protected Animation moveAndFade;
 
     /* Snackbar */
     protected Snackbar mSnackbar;
@@ -219,8 +220,6 @@ public class ProductsUI extends AppCompatActivity
         mGridLayoutManager    = new GridLayoutManager( this, 2 );
         mProductAdapter       = new ProductAdapter( this, mProductsDisplayedList );
 
-        mProductsRecyclerView.setVisibility( View.GONE );
-
         mProductsRecyclerView.setLayoutManager( mGridLayoutManager );
         mProductsRecyclerView.setAdapter( mProductAdapter );
         mProductsRecyclerView.setOnScrollListener( new RecyclerView.OnScrollListener() {
@@ -315,12 +314,7 @@ public class ProductsUI extends AppCompatActivity
         };
 
         mItemTouchHelper = new ItemTouchHelper( simpleItemTouchCallback );
-        mItemTouchHelper.attachToRecyclerView( mProductsRecyclerView );
-
-        // Iniciamos una animacion para hacer aparecer el recycler view
-        explode.setDuration( 250 );
-        mProductsRecyclerView.startAnimation( explode );
-        mProductsRecyclerView.setVisibility( View.VISIBLE );
+        mItemTouchHelper.attachToRecyclerView(mProductsRecyclerView);
     }
 
     protected void _toolbarAnimateShow( final int verticalOffset )
@@ -415,7 +409,14 @@ public class ProductsUI extends AppCompatActivity
             , R.anim.implode );
 
         explode = AnimationUtils.loadAnimation( ProductsUI.this
-                , R.anim.explode );
+            , R.anim.explode );
+
+        showFromBottom = AnimationUtils.loadAnimation( ProductsUI.this
+                , R.anim.show_from_bottom_translation );
+
+        moveAndFade = AnimationUtils.loadAnimation( ProductsUI.this
+                , R.anim.translate_and_fade );
+
     }
 
     @Override
@@ -877,7 +878,27 @@ public class ProductsUI extends AppCompatActivity
     {
         if ( ! loading )
         {
-            mLoadingView.setVisibility(View.GONE);
+            moveAndFade.setAnimationListener( new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart( Animation animation ) {}
+
+                @Override
+                public void onAnimationEnd( Animation animation )
+                {
+                    mLoadingView.setVisibility( View.GONE );
+
+                    if ( mProductsRecyclerView != null )
+                    {
+                        mProductsRecyclerView.startAnimation( showFromBottom );
+                    }
+                }
+
+                @Override
+                public void onAnimationRepeat( Animation animation ) {}
+            });
+
+            mLoadingView.startAnimation( moveAndFade );
 
             mState = STATE.NORMAL;
 
