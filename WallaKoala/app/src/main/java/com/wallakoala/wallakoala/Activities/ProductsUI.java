@@ -67,7 +67,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String TAG = "CUOKA";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final String SERVER_URL = "http://192.168.1.132";
+    protected static final String SERVER_URL = "http://192.168.1.51";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static int NUMBER_OF_CORES;
     protected enum STATE
@@ -429,7 +429,7 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu( Menu menu )
     {
-        // Si el Navigation Drawer izquierdo esta abierto, ocultamos los expandableItems de la action bar
+        // Si el Navigation Drawer izquierdo esta abierto, ocultamos el item de la toolbar.
         if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
         {
             final View itemView = findViewById( menu.getItem( 0 ).getItemId() );

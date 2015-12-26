@@ -39,11 +39,26 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"/>
 
-        <include android:id="@+id/footer"
-            layout="@layout/product_footer"
-            android:layout_height="@dimen/footer_height"
+        <RelativeLayout
+            android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_gravity="bottom"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:alpha="0.75">
+
+            <include android:id="@+id/extraInfo"
+                layout="@layout/product_footer_extra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <include android:id="@+id/mainFooter"
+                layout="@layout/product_footer"
+                android:layout_height="@dimen/footer_height"
+                android:layout_width="match_parent"
+                android:layout_below="@id/extraInfo"/>
+
+        </RelativeLayout>
 
     </FrameLayout>
 
