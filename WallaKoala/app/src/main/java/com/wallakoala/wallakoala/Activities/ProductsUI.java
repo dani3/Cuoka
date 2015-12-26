@@ -873,10 +873,10 @@ public class ProductsUI extends AppCompatActivity
             if ( ok )
             {
                 // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
-                moveAndFade.setAnimationListener( new Animation.AnimationListener() {
+                moveAndFade.setAnimationListener( new Animation.AnimationListener()
+                {
                     @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+                    public void onAnimationStart(Animation animation) {}
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
@@ -896,8 +896,7 @@ public class ProductsUI extends AppCompatActivity
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
+                    public void onAnimationRepeat(Animation animation) {}
                 } );
 
                 mLoadingView.startAnimation( moveAndFade );
@@ -905,10 +904,10 @@ public class ProductsUI extends AppCompatActivity
                 mState = STATE.NORMAL;
 
             } else
-                mLoadingView.setVisibility( View.GONE );
-
+                mLoadingView.setVisibility(View.GONE);
 
         } else {
+            // Pantalla de carga
             mLoadingView.setVisibility( View.VISIBLE );
 
             mState = STATE.LOADING;

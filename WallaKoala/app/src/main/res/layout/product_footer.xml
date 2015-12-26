@@ -7,14 +7,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:background="@color/colorText"
-    android:weightSum="1" >
+    android:weightSum="1">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.85"
-        android:weightSum="1" >
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/footer_title"
@@ -25,7 +25,7 @@
             android:text="TIENDA"
             android:textSize="16sp"
             android:textColor="@android:color/white"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"/>
 
         <TextView
             android:id="@+id/footer_subtitle"
@@ -36,7 +36,7 @@
             android:text="Seccion"
             android:textSize="12sp"
             android:textColor="@android:color/white"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"/>
 
     </LinearLayout>
 
@@ -47,6 +47,6 @@
         android:layout_gravity="center"
         android:layout_weight="0.15"
         android:scaleType="centerCrop"
-        android:background="@drawable/ic_favorite_border_white" />
+        android:background="@drawable/ic_favorite_border_white"/>
 
 </LinearLayout>

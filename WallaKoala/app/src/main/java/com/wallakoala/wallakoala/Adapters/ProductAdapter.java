@@ -46,6 +46,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         private ImageView error;
         private View loading;
         private View footer, footerExtra;
+
         private Animation scaleUpFooterExtra, scaleDownFooterExtra;
 
         private CardView container;
@@ -71,20 +72,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
             scaleUpFooterExtra = AnimationUtils.loadAnimation( mContext, R.anim.scale_up );
             scaleDownFooterExtra = AnimationUtils.loadAnimation( mContext, R.anim.scale_down );
-            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener() {
+            scaleDownFooterExtra.setAnimationListener( new Animation.AnimationListener()
+            {
                 @Override
-                public void onAnimationStart(Animation animation) {
-                }
+                public void onAnimationStart( Animation animation ) {}
 
                 @Override
-                public void onAnimationEnd(Animation animation)
+                public void onAnimationEnd( Animation animation )
                 {
-                    footerExtra.setVisibility(View.GONE);
+                    footerExtra.setVisibility( View.GONE );
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
+                public void onAnimationRepeat( Animation animation ) {}
             });
         }
 
@@ -94,17 +94,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          */
         public void bindProduct( Product product )
         {
+            // Establecemos todos los textViews
             title.setText( product.getShop() );
-            subtitle.setText(product.getSection());
-            name.setText(product.getName());
-            price.setText(Double.toString(product.getPrice()) + "€");
+            subtitle.setText( product.getSection() );
+            name.setText( product.getName() );
+            price.setText( Double.toString(product.getPrice()) + "€" );
 
-            footerExtra.setVisibility(View.GONE);
-            loading.setVisibility(View.VISIBLE);
+            // Ocultamos la info extra, IMPORTANTE. Cosas raras pasan si no se pone.
+            footerExtra.setVisibility( View.GONE );
+            // Mostramos la view de carga
+            loading.setVisibility( View.VISIBLE );
 
+            // Cargamos la imagen utilizando Picasso.
             Picasso.with( mContext )
                    .load( product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ) )
-                   .into(image, new Callback() {
+                   .into( image, new Callback() {
                        @Override
                        public void onSuccess() {
                            loading.setVisibility(View.GONE);
@@ -115,16 +119,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                            loading.setVisibility(View.GONE);
                            error.setVisibility(View.VISIBLE);
                        }
-                   });
+                   } );
 
-            fav.setBackgroundResource(R.drawable.ic_favorite_border_white);
+            // Ponemos el icono del corazon.
+            fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
         }
 
         @Override
         public void onClick( View view )
         {
+            // Si se pulsa en el pie de foto
             if ( view.getId() == footer.getId() )
             {
+                // Abrimos la info extra si esta oculta
                 if ( footerExtra.getVisibility() == View.GONE )
                 {
                     footerExtra.setVisibility(View.VISIBLE);
