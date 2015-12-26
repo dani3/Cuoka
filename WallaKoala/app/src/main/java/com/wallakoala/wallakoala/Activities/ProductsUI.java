@@ -67,7 +67,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String TAG = "CUOKA";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final String SERVER_URL = "http://192.168.1.51";
+    protected static final String SERVER_URL = "http://192.168.1.132";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static int NUMBER_OF_CORES;
     protected enum STATE
@@ -118,8 +118,7 @@ public class ProductsUI extends AppCompatActivity
     protected ProductAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation hideToRight, showFromRight, showFromBottom;
-    protected Animation implode, explode;
+    protected Animation hideToRight, showFromRight;
     protected Animation moveAndFade;
 
     /* Snackbar */
@@ -293,7 +292,7 @@ public class ProductsUI extends AppCompatActivity
             }
         });
 
-        /* Listener para detectar cuando un swipe horizontal. */
+        /* Listener para detectar cuando se produce un swipe horizontal en un item. */
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
                 0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT )
         {
@@ -315,7 +314,7 @@ public class ProductsUI extends AppCompatActivity
         };
 
         mItemTouchHelper = new ItemTouchHelper( simpleItemTouchCallback );
-        mItemTouchHelper.attachToRecyclerView(mProductsRecyclerView);
+        mItemTouchHelper.attachToRecyclerView( mProductsRecyclerView );
     }
 
     protected void _toolbarAnimateShow( final int verticalOffset )
@@ -405,15 +404,6 @@ public class ProductsUI extends AppCompatActivity
 
         hideToRight = AnimationUtils.loadAnimation( ProductsUI.this
             , R.anim.hide_translation_horizontal );
-
-        implode = AnimationUtils.loadAnimation( ProductsUI.this
-            , R.anim.implode );
-
-        explode = AnimationUtils.loadAnimation( ProductsUI.this
-            , R.anim.explode );
-
-        showFromBottom = AnimationUtils.loadAnimation( ProductsUI.this
-                , R.anim.show_from_bottom_translation );
 
         moveAndFade = AnimationUtils.loadAnimation( ProductsUI.this
                 , R.anim.translate_and_fade );
@@ -883,7 +873,7 @@ public class ProductsUI extends AppCompatActivity
             if ( ok )
             {
                 // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
-                moveAndFade.setAnimationListener(new Animation.AnimationListener() {
+                moveAndFade.setAnimationListener( new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
                     }
@@ -893,9 +883,11 @@ public class ProductsUI extends AppCompatActivity
                         mLoadingView.setVisibility(View.GONE);
 
                         // La animacion de cada item solo esta disponible para 5.0+
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP )
+                        {
                             _initRecyclerView();
-                            mProductsRecyclerView.startAnimation(showFromBottom);
+                            mProductsRecyclerView.startAnimation( AnimationUtils.loadAnimation( ProductsUI.this
+                                                                            , android.R.anim.fade_in ) );
 
                         } else {
                             _initRecyclerView();
@@ -906,9 +898,9 @@ public class ProductsUI extends AppCompatActivity
                     @Override
                     public void onAnimationRepeat(Animation animation) {
                     }
-                });
+                } );
 
-                mLoadingView.startAnimation(moveAndFade);
+                mLoadingView.startAnimation( moveAndFade );
 
                 mState = STATE.NORMAL;
 
