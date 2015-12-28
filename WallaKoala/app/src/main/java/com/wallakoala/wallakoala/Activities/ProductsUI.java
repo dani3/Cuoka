@@ -208,7 +208,8 @@ public class ProductsUI extends AppCompatActivity
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
         setSupportActionBar( mToolbar );
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if ( getSupportActionBar() != null )
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     /**
@@ -310,6 +311,12 @@ public class ProductsUI extends AppCompatActivity
                 mProductsDisplayedList.remove( viewHolder.getAdapterPosition() );
                 mProductAdapter.updateProductList( mProductsDisplayedList );
                 mProductAdapter.notifyItemRemoved( viewHolder.getAdapterPosition() );
+
+                mSnackbar = Snackbar.make( mCoordinatorLayout
+                                , getResources().getString( R.string.product_deleted_message )
+                                , Snackbar.LENGTH_SHORT );
+
+                mSnackbar.show();
             }
         };
 

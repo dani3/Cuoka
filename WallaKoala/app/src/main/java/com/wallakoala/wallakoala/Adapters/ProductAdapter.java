@@ -98,9 +98,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             title.setText( product.getShop() );
             subtitle.setText( product.getSection() );
             name.setText( product.getName() );
-            price.setText( Double.toString(product.getPrice()) + "€" );
+            price.setText( Double.toString(product.getPrice()).replaceAll( ".0", "" ) + "€" );
 
-            // Ocultamos la info extra, IMPORTANTE. Cosas raras pasan si no se pone.
+            // Ocultamos la info extra, IMPORTANTE. Cosas malas pasan si no se pone.
             footerExtra.setVisibility( View.GONE );
             // Mostramos la view de carga
             loading.setVisibility( View.VISIBLE );
