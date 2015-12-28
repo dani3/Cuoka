@@ -703,11 +703,11 @@ public class ProductsUI extends AppCompatActivity
                 {
                     URL url = null;
                     if ( i == 0 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/true");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getNewness/" + shops[i] + "/true");
                     if ( i == 1 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/false");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getNewness/" + shops[i] + "/false");
                     if ( i == 2 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getProducts/" + shops[i] + "/true");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getNewness/" + shops[i] + "/true");
 
                     Log.d( TAG, "Time INI: " + Calendar.getInstance().toString());
 
