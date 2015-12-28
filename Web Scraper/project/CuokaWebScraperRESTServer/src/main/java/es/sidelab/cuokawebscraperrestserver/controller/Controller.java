@@ -217,15 +217,4 @@ public class Controller
         LOG.info( "Peticion GET para obtener las novedades de " + shop );
         return productsRepository.findByManAndNewnessAndShop( Boolean.valueOf( man ), true, shop) ;
     }
-    
-    /**
-     * Metodo que devuelve una lista de todos los productos.
-     * @return Lista de todos los productos de todas las tiendas.
-     */
-    @RequestMapping( value = "/getProducts", method = RequestMethod.GET )
-    public List<Product> getProducts()
-    {
-        LOG.info( "Peticion GET para obtener todos los productos" );
-        return productsRepository.findAll();
-    }
 }
