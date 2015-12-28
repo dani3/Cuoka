@@ -215,6 +215,6 @@ public class Controller
     public List<Product> getNewness( @PathVariable String shop, @PathVariable String man )
     {
         LOG.info( "Peticion GET para obtener las novedades de " + shop );
-        return productsRepository.findByManAndNewnessAndShop( Boolean.valueOf( man ), true, shop) ;
+        return productsRepository.findByManAndNewnessAndShop( Boolean.valueOf( man ), true, shop ) ;
     }
 }
