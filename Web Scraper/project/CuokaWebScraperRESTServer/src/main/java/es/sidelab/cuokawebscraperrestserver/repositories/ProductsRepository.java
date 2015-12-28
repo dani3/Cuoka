@@ -21,5 +21,6 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     
     List<Product> findByShop( String shop );
     List<Product> findByManAndShop( boolean man, String shop );
+    List<Product> findBySectionAndShop( String section, String shop );
     List<Product> findByManAndNewnessAndShop( boolean man, boolean newness, String shop );
 }

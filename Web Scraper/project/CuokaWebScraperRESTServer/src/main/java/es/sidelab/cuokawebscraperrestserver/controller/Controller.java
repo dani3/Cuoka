@@ -52,7 +52,7 @@ public class Controller
      * @param shop: Tienda a anadir.
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
-    @RequestMapping( value = "/addShop", method = RequestMethod.POST )
+    @RequestMapping( value = "/shop", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
     {      
         LOG.info( "Peticion POST recibida para anadir una nueva tienda..." );
@@ -83,7 +83,7 @@ public class Controller
     /*
      * Metodo que devuelve una tienda dado su nombre.
      */
-    @RequestMapping( value = "/getShop/{name}", method = RequestMethod.GET )
+    @RequestMapping( value = "/shop/{name}", method = RequestMethod.GET )
     public Shop getShop( @PathVariable String name )
     {
         LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida"  );
@@ -101,7 +101,7 @@ public class Controller
      * Metodo que devuelve una lista con todas las tiendas.
      * @return Lista con todas las tiendas.
      */
-    @RequestMapping( value = "/getShops", method = RequestMethod.GET )
+    @RequestMapping( value = "/shops", method = RequestMethod.GET )
     public List<Shop> getShops()
     {
         LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
@@ -127,7 +127,7 @@ public class Controller
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @CacheEvict( value = "products", key = "#shop" )
-    @RequestMapping( value = "/addProducts/{shop}", method = RequestMethod.POST )
+    @RequestMapping( value = "/products/{shop}", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addProducts( @RequestBody List<Product> products
                                         , @PathVariable String shop )
     {
@@ -197,7 +197,7 @@ public class Controller
      * @param shop: Tienda de la que se quieren los productos.
      * @return Lista de productos.
      */
-    @RequestMapping( value = "/getProducts/{shop}", method = RequestMethod.GET )
+    @RequestMapping( value = "/products/{shop}", method = RequestMethod.GET )
     public List<Product> getProducts( @PathVariable String shop )
     {
         LOG.info( "Peticion GET para obtener todos los productos de " + shop );
@@ -211,10 +211,27 @@ public class Controller
      * @return Lista de productos.
      */
     @Cacheable( value = "products", key = "#shop.toString() + #man.toString()" )
-    @RequestMapping( value = "/getNewness/{shop}/{man}", method = RequestMethod.GET )
-    public List<Product> getNewness( @PathVariable String shop, @PathVariable String man )
+    @RequestMapping( value = "/newness/{shop}/{man}", method = RequestMethod.GET )
+    public List<Product> getNewness( @PathVariable String shop
+                            , @PathVariable String man )
     {
         LOG.info( "Peticion GET para obtener las novedades de " + shop );
         return productsRepository.findByManAndNewnessAndShop( Boolean.valueOf( man ), true, shop ) ;
+    }
+    
+    /**
+     * Metodo que devuelve una lista de productos de una seccion de una tienda.
+     * @param shop: Tienda a la que pertenece la seccion.
+     * @param section: Seccion de la que se quieren los productos.
+     * @return Lista de productos.
+     */
+    @Cacheable( value = "products", key = "#shop.toString() + #section.toString()" )
+    @RequestMapping( value = "/products/{shop}/{section}", method = RequestMethod.GET )
+    public List<Product> getProductsBySection( @PathVariable String shop
+                                , @PathVariable String section )
+    {
+        LOG.info( "Peticion GET para obtener los productos de la seccion de " 
+                        + section + " de la tienda " + shop );
+        return productsRepository.findBySectionAndShop( section, shop ) ;
     }
 }
