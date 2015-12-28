@@ -796,6 +796,8 @@ public class ProductsUI extends AppCompatActivity
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
+                    Log.d( TAG, "Tamano en bytes: " + ( content.get(i).getBytes().length / 1000 ) + "kB" );
+
                     ConversionTask task = new ConversionTask( new JSONArray( content.get(i) ) );
 
                     completionService.submit( task );
