@@ -166,6 +166,8 @@ public class ProductsUI extends AppCompatActivity
         mBackPressed = 0;
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+        Log.d( TAG, "Numero de procesadores: " + NUMBER_OF_CORES );
     }
 
     /**
@@ -529,12 +531,13 @@ public class ProductsUI extends AppCompatActivity
             // Si es el filtro de novedades
             if ( key.equals("newness") )
             {
-                if (mFilterMap.get(key) == null)
-                    displayable = true;
-
-                else
-                    displayable = ( (Boolean)mFilterMap.get(key) == product.isNewness() );
+                if ( mFilterMap.get(key) != null )
+                    displayable =  ( ( Boolean )mFilterMap.get( key ) == product.isNewness() );
             }
+
+            // Rompemos el bucle cuando el producto no pase algun filtro.
+            if ( ! displayable )
+                break;
         }
 
         return displayable;
@@ -703,11 +706,11 @@ public class ProductsUI extends AppCompatActivity
                 {
                     URL url = null;
                     if ( i == 0 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getNewness/" + shops[i] + "/true");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + shops[i] + "/true");
                     if ( i == 1 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getNewness/" + shops[i] + "/false");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + shops[i] + "/false");
                     if ( i == 2 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/getNewness/" + shops[i] + "/true");
+                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + shops[i] + "/true");
 
                     Log.d( TAG, "Time INI: " + Calendar.getInstance().toString());
 
