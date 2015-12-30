@@ -20,7 +20,7 @@ import org.jsoup.select.Elements;
  * @author Daniel Mancebo Aldea
  */
 
-public class BlancoScraper implements ScraperInterface
+public class BlancoScraper implements Scraper
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();

@@ -20,7 +20,7 @@ import org.jsoup.select.Elements;
  * @author Daniel Mancebo
  */
 
-public class HyMScraper implements ScraperInterface
+public class HyMScraper implements Scraper
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();

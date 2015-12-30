@@ -2,7 +2,7 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import org.apache.log4j.Logger;
-import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperInterface;
+import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 
 /**
  * @Class Clase que gestiona los distintos scrapers, actua de middleware.
@@ -16,10 +16,10 @@ public class ScraperManager
     /*
      * Metodo que dada una tienda devuelve su scraper.
      */
-    public static ScraperInterface getScraper( Shop shop ) 
+    public static Scraper getScraper( Shop shop ) 
     {
         try {
-            return ( ScraperInterface ) Class.forName( "es.sidelab.cuokawebscraperrestclient.scrapers." 
+            return ( Scraper ) Class.forName( "es.sidelab.cuokawebscraperrestclient.scrapers." 
                                         + shop.getName() + "Scraper" ).newInstance();
             
         } catch ( ClassNotFoundException ex ) {

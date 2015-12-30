@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
-import es.sidelab.cuokawebscraperrestclient.scrapers.ScraperInterface;
+import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 
 /**
  * @class Clase que gestiona todas las tareas que se realicen en paralelo.
@@ -44,7 +44,7 @@ public class MultithreadManager
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
                 LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );
-                ScraperInterface scraper = ScraperManager.getScraper( shop );
+                Scraper scraper = ScraperManager.getScraper( shop );
                 LOG.info( "Scraper de " + shop.getName() + " obtenido" );
                  
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda

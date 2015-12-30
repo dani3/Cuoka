@@ -20,7 +20,7 @@ import org.jsoup.select.Elements;
  * @author Daniel Mancebo Aldea
  */
 
-public class SpringfieldScraper implements ScraperInterface 
+public class SpringfieldScraper implements Scraper 
 {
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();

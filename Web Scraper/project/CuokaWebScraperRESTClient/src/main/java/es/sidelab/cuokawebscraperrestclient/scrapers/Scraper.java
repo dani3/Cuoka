@@ -11,7 +11,7 @@ import java.util.List;
  * @author Daniel Mancebo Aldea
  */
 
-public interface ScraperInterface 
+public interface Scraper 
 {
     public List<Product> scrap( Shop shop, Section section ) throws IOException;    
     public String fixURL( String url );
