@@ -15,9 +15,9 @@ import android.view.animation.GridLayoutAnimationController;
  * {@code <grid_layout_animation>} as long as you provide it a
  * {@link android.support.v7.widget.GridLayoutManager} in
  * {@code setLayoutManager(LayoutManager layout)}.
- * <p/>
  * Created by Freddie (Musenkishi) Lust-Hed.
  */
+
 public class GridRecyclerView extends RecyclerView {
 
     public GridRecyclerView(Context context) {
@@ -33,9 +33,11 @@ public class GridRecyclerView extends RecyclerView {
     }
 
     @Override
-    public void setLayoutManager(LayoutManager layout) {
+    public void setLayoutManager(LayoutManager layout)
+    {
         if (layout instanceof GridLayoutManager) {
             super.setLayoutManager(layout);
+
         } else {
             throw new ClassCastException("You should only use a GridLayoutManager with GridRecyclerView.");
         }

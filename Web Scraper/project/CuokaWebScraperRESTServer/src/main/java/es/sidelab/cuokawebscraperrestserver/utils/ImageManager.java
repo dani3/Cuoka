@@ -24,8 +24,12 @@ public class ImageManager
 {
     private static final Log LOG = LogFactory.getLog( ImageManager.class );
     
-    /*
-     * Metodo que descarga si es necesario las imagenes del producto y los iconos de los colores.
+    /**
+     * Metodo que descarga las imagenes de los productos, las deja en la ruta predefinida
+     * y actualiza los paths de los productos.
+     * @param products: Lista de productos de la que se quieren descargar las imagenes.
+     * @param shop: Tienda a la que pertenecen los productos.
+     * @return Lista de productos con los paths actualizados.
      */
     public static List<Product> downloadImages( List<Product> products, String shop )
     {
@@ -103,8 +107,11 @@ public class ImageManager
         return productsUpdated;
     }
     
-    /*
-     * Metodo que descarga la imagen del producto en la ruta especificada.
+    /**
+     * Metodo que descarga una imagen y la almacena en la ruta especificada.
+     * @param imageURL: url de la imagen a descargar.
+     * @param path: path donde se quiere dejar la imagen.
+     * @return true si todo ha ido correctamente.
      */
     private static boolean downloadImage( String imageURL, String path )
     {
@@ -148,8 +155,9 @@ public class ImageManager
         return true;
     }
     
-    /*
-     * Metodo que ejecuta un script en python para reescalar las imagenes de una tienda.
+    /**
+     * Metodo que llama a un script de python para reescalar las imagenes de una tienda.
+     * @param shop: Nombre de la tienda de la que se quieren reescalar las imagenes.
      */
     private static void resizeImages( String shop )
     {
@@ -171,8 +179,9 @@ public class ImageManager
         }
     }
     
-    /*
-     * Metodo que ejecuta un script en python que reescala todos los iconos de los colores.
+    /**
+     * Metodo que llama a un script de python para reescalar los iconos de los colores.
+     * @param shop: Nombre de la tienda de la que se quieren reescalar los iconos.
      */
     private static void resizeColors( String shop )
     {

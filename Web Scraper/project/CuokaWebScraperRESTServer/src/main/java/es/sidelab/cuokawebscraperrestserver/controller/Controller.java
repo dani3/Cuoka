@@ -80,8 +80,10 @@ public class Controller
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
     
-    /*
-     * Metodo que devuelve una tienda dado su nombre.
+    /**
+     * Metodo que devuelve los datos de una tienda.
+     * @param name: nombre de la tienda.
+     * @return La tienda con su informacion.
      */
     @RequestMapping( value = "/shop/{name}", method = RequestMethod.GET )
     public Shop getShop( @PathVariable String name )

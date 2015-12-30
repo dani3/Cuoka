@@ -14,8 +14,9 @@ public class FileManager
 {
     private static final Log LOG = LogFactory.getLog( FileManager.class );
     
-    /*
-     * Metodo que crea el directorio para almacenar los productos de una tienda.
+    /**
+     * Metodo que crea el directorio de una tienda si no existe.
+     * @param shop: nombre de la tienda.
      */
     public static void createProductsDirectory( String shop )
     {
@@ -31,33 +32,20 @@ public class FileManager
             LOG.info( "El directorio '" + Properties.IMAGE_PATH + shop + "' ya existe" );
     }
     
-    /*
-     * Metodo que crea el directorio para almacenar los iconos de los colores.
-     */
-    public static void createColorsDirectory()
-    {
-        LOG.info( "Comprobamos que el directorio '" + Properties.COLOR_PATH + "' existe" );
-        File folder = new File( Properties.COLOR_PATH );
-        
-        if ( ! folder.exists() )
-        {   
-            LOG.info( "El directorio no existe, se crea" );
-            folder.mkdirs();
-            
-        } else        
-            LOG.info( "El directorio '" + Properties.COLOR_PATH + "' ya existe" );
-    }
-    
-    /*
+    /**
      * Metodo que comprueba si existe un fichero.
+     * @param file: nombre del fichero que se quiere comprobar.
+     * @return true si el ficher existe.
      */
     public static boolean existsFile( String file )
     {
         return ( new File( file ).exists() );
     }
     
-    /*
-     * Metodo que elimina un fichero.
+    /**
+     * Metodo que borra un fichero.
+     * @param file: nombre del fichero a borrar.
+     * @return true si se ha borrado correctamente.
      */
     public static boolean deleteFile( String file )
     {

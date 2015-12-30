@@ -6,8 +6,6 @@
     <string name="left_drawer_title">Preferencias</string>
     <string name="right_drawer_title">Buscar</string>
 
-    <string name="search_background_text">Tiendas, secciones, etc.</string>
-
     <string name="profile_item">Mi Cuenta</string>
     <string name="shops_item">Mis Tiendas</string>
     <string name="favorites_item">Mis Favoritos</string>
