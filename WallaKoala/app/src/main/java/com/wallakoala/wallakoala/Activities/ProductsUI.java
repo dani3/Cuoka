@@ -15,6 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -51,7 +52,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -69,6 +72,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
     protected static final String SERVER_URL = "http://192.168.1.51";
     protected static final String SERVER_SPRING_PORT = "8080";
+    protected static final boolean MAN = true;
     protected static int NUMBER_OF_CORES;
     protected enum STATE
     {
@@ -96,6 +100,7 @@ public class ProductsUI extends AppCompatActivity
     protected Map<String, ?> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
     protected List<Product> mProductsDisplayedList;
+    protected List<String> mShopsList;
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
@@ -148,7 +153,7 @@ public class ProductsUI extends AppCompatActivity
         _initNavigationDrawers();
         _initAnimations();
 
-        new ConnectToServer().execute( "Springfield", "Blanco", "HyM" );
+        new ConnectToServer().execute();
     }
 
     /**
@@ -161,13 +166,18 @@ public class ProductsUI extends AppCompatActivity
         mProductsNonFilteredMap  = new HashMap<>();
         mProductsDisplayedList   = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
+        mShopsList               = new ArrayList<>();
+
+        mShopsList.add( "HyM" );
+        mShopsList.add( "dfsd" );
+        mShopsList.add( "Springfield" );
 
         start = count = 0;
         mBackPressed = 0;
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
-        Log.d( TAG, "Numero de procesadores: " + NUMBER_OF_CORES );
+        Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
     /**
@@ -679,68 +689,63 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Tarea en segundo plano que descargara la lista de JSON del servidor.
+     * Tarea en segundo plano que descargara la lista de JSON del servidor en paralelo.
      */
     private class ConnectToServer extends AsyncTask<String, Void, Void>
     {
-        private List<String> content = new ArrayList<>();
+        private ThreadPoolExecutor executor;
+        private CompletionService<String> completionService;
+        private List<String> content = new CopyOnWriteArrayList<>();
         private String error = null;
 
         @Override
         protected void onPreExecute()
         {
             _loading( true, true );
+
+            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
+            executor = new ThreadPoolExecutor( NUMBER_OF_CORES * 4
+                    , NUMBER_OF_CORES * 4
+                    , 60L
+                    , TimeUnit.SECONDS
+                    , new LinkedBlockingQueue<Runnable>() );
+
+            completionService = new ExecutorCompletionService<>( executor );
         }
 
         @Override
         protected Void doInBackground( String... shops )
         {
-            BufferedReader reader = null;
-
             try
             {
-                for ( int i = 0; i < shops.length; i++ )
+                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
+                for ( int i = 0; i < mShopsList.size(); i++ )
                 {
-                    URL url = null;
-                    if ( i == 0 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + shops[i] + "/true");
-                    if ( i == 1 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + shops[i] + "/false");
-                    if ( i == 2 )
-                        url = new URL( SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + shops[i] + "/true");
+                    ConnectionTask connectionTask = new ConnectionTask( i );
 
-                    Log.d( TAG, "Time INI: " + Calendar.getInstance().toString());
+                    completionService.submit( connectionTask );
+                }
 
-                    if ( url != null )
-                    {
-                        URLConnection conn = url.openConnection();
+                // Metemos en content el resultado de cada uno
+                for ( int i = 0; i < mShopsList.size(); i++ )
+                {
+                    String future = completionService.take().get();
+                    if ( future != null )
+                        content.add(future);
+                }
 
-                        // Get the server response
-                        reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        StringBuilder sb = new StringBuilder();
-                        String line = "";
-
-                        // Read Server Response
-                        while ((line = reader.readLine()) != null)
-                            sb.append(line + "");
-
-                        // Append Server Response To Content String
-                        content.add(sb.toString());
-                    }
-
-                    Log.d( TAG, "Time FIN: " + Calendar.getInstance().toString());
+                // Si content es vacio, es que han fallado todas las conexiones.
+                if ( content.isEmpty() )
+                {
+                    Log.d( TAG, "Error conectando con el servidor" );
+                    error = "Error conectando con el servidor";
                 }
 
             } catch( Exception ex )  {
                 error = ex.getMessage();
 
             } finally {
-                try {
-                    reader.close();
-
-                } catch( Exception ex ) {
-                    error = ex.getMessage();
-                }
+                executor.shutdown();
             }
 
             return null;
@@ -762,6 +767,56 @@ public class ProductsUI extends AppCompatActivity
         } // onPostExecute
 
     } /* [END ConnectToServer] */
+
+    /**
+     * Task que se conecta al servidor y trae una tienda determinada. Devuelve un string si ha ido bien, null EOC.
+     */
+    private class ConnectionTask implements Callable<String>
+    {
+        private int myPos;
+
+        public ConnectionTask( int pos )
+        {
+            myPos = pos;
+        }
+
+        @Override
+        public String call()
+        {
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + mShopsList.get(myPos) + "/" + MAN);
+
+                Log.d(TAG, "Time INI: " + Calendar.getInstance().toString());
+
+                if (url != null) {
+                    URLConnection conn = url.openConnection();
+
+                    // Get the server response
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
+
+                    // Read Server Response
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
+
+                    reader.close();
+
+                    Log.d(TAG, "Time FIN: " + Calendar.getInstance().toString());
+
+                    // Append Server Response To Content String
+                    return sb.toString();
+                }
+
+            } catch ( Exception e ) {
+                Log.d( TAG, "Error conectando con " + mShopsList.get(myPos) );
+            }
+
+            return null;
+        }
+    } /* [END ConnectionTask] */
 
     /**
      * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
