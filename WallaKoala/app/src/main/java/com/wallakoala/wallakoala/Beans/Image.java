@@ -7,21 +7,16 @@ package com.wallakoala.wallakoala.Beans;
 
 public class Image
 {
-    private String url;
     private String path;
     
     public Image() {}
 
-    public Image( String url
-            , String path )
+    public Image(  String path )
     {
-		this.url = url;
 		this.path = path;
 	}
 
-	public String getUrl()  { return url; }
     public String getPath() { return path; }
 
-    public void setUrl( String url )   { this.url = url; }
     public void setPath( String path ) { this.path = path; }
 }

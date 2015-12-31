@@ -27,7 +27,6 @@ public class Product
 			 , String shop
 			 , String section
 			 , double price
-			 , boolean man
 			 , String link
 			 , List<ColorVariant> colors
 			 , boolean newness )
@@ -36,7 +35,6 @@ public class Product
 		this.shop = shop;
 		this.section = section;
 		this.price = price;
-		this.man = man;
 		this.link = link;
 		this.colors = colors;
 		this.newness = newness;
@@ -47,7 +45,6 @@ public class Product
 	public String getSection()            { return this.section; }
 	public double getPrice()              { return this.price; }
 	public List<ColorVariant> getColors() { return this.colors; }
-	public boolean isMan()          	  { return this.man; }
 	public String getLink()               { return this.link; }
 	public boolean isNewness()            { return this.newness; }
 
@@ -56,7 +53,6 @@ public class Product
 	public void setSection( String section )           { this.section = section; }
 	public void setPrice( double price )               { this.price = price; }
 	public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
-	public void setMan( boolean man )                  { this.man = man; }
 	public void setLink( String link )                 { this.link = link; }
 	public void setNewness( boolean newness )          { this.newness = newness; }
 }

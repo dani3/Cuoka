@@ -20,22 +20,28 @@ public class testBlanco {
         List<Product> productList = new ArrayList<>();
         
         // Obtener el HTML
-        Document document = Jsoup.connect( "http://www.suiteblanco.com/es/es_es/partes-de-abajo/faldas.html" )
+        Document document = Jsoup.connect( "https://www.blanco.com/es-es/category/17/abrigos" )
                                     .timeout( Properties.TIMEOUT ).get();
         
         // Guardamos los links de los productos
-        Elements products = document.select( "h2.product-name > a" );
+        Elements products = document.select( "div.cell-1 a.cell-link" );
             
         for ( Element element : products )
         {
-            document = Jsoup.connect( element.attr( "href" ) )
+            document = Jsoup.connect( "https://www.blanco.com/es-es" +  element.attr( "href" ) )
                                .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
-            String link = element.attr( "href" );
-            String name = document.select( "div.product-name span" ).first().ownText().toUpperCase(); 
-            String price = document.select( "span.price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = document.select( "#reference span" ).first().ownText();
+            String link = "https://www.blanco.com/es-es" + element.attr( "href" );
+            System.out.println( link );
+            String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
+            String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "");
+            
+            System.out.println( link );
+            System.out.println( name );
+            System.out.println( price );
+            System.out.println( reference );
             
             // Obtenemos los colores del producto
             boolean first = true;

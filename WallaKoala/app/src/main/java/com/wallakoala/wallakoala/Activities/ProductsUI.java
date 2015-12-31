@@ -643,7 +643,6 @@ public class ProductsUI extends AppCompatActivity
             String shop = key = jsonObject.getString("shop");
             String section = jsonObject.getString("section");
             double price = jsonObject.getDouble("price");
-            boolean man = jsonObject.getBoolean("man");
             String link = jsonObject.getString("link");
             boolean newness = jsonObject.getBoolean("newness");
 
@@ -655,7 +654,6 @@ public class ProductsUI extends AppCompatActivity
 
                 String reference = jsColor.getString("reference");
                 String colorName = jsColor.getString("colorName");
-                String colorURL = jsColor.getString("colorURL");
                 String colorPath = jsColor.getString("colorPath");
 
                 List<Image> images = new ArrayList<>();
@@ -664,17 +662,16 @@ public class ProductsUI extends AppCompatActivity
                 {
                     JSONObject jsImage = jsImages.getJSONObject(j);
 
-                    String url = jsImage.getString("url");
                     String path = SERVER_URL + jsImage.getString("path")
                                                       .replace(" ", "%20");
 
-                    images.add( new Image( url, path ) );
+                    images.add( new Image( path ) );
                 }
 
-                colors.add( new ColorVariant( reference, colorName, colorURL, colorPath, images ) );
+                colors.add( new ColorVariant( reference, colorName, colorPath, images ) );
             }
 
-            productsList.add( new Product( name, shop, section, price, man, link, colors, newness ) );
+            productsList.add( new Product( name, shop, section, price, link, colors, newness ) );
 
         }
 

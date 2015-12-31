@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ public class Image
     @Column( name = "ID" )
     private long id;
     
+    @JsonIgnore
     @Column( name = "URL" )
     private String url;
     
@@ -29,9 +31,11 @@ public class Image
     
     public Image() {}
 
+    @JsonIgnore
     public String getUrl() { return url; }
     public String getPath() { return path; }
 
+    @JsonIgnore
     public void setUrl( String url ) { this.url = url; }
     public void setPath( String path ) { this.path = path; }
 }
