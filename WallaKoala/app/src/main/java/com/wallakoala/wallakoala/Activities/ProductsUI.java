@@ -37,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -737,8 +738,8 @@ public class ProductsUI extends AppCompatActivity
                 // Si content es vacio, es que han fallado todas las conexiones.
                 if ( content.isEmpty() )
                 {
-                    Log.d( TAG, "Error conectando con el servidor" );
-                    error = "Error conectando con el servidor";
+                    error = "Imposible conectar con el servidor";
+                    Log.d( TAG, error );
                 }
 
             } catch( Exception ex )  {
@@ -784,34 +785,45 @@ public class ProductsUI extends AppCompatActivity
         public String call()
         {
             BufferedReader reader = null;
+            URL url = null;
 
             try {
-                URL url = new URL(SERVER_URL + ":" + SERVER_SPRING_PORT + "/newness/" + mShopsList.get(myPos) + "/" + MAN);
+                url = new URL(SERVER_URL + ":" + SERVER_SPRING_PORT
+                                    + "/newness/" + mShopsList.get(myPos) + "/" + MAN);
 
-                Log.d(TAG, "Time INI: " + Calendar.getInstance().toString());
+                Log.d(TAG, "Time INI (" + mShopsList.get(myPos) + "): " + Calendar.getInstance().toString());
 
-                if (url != null) {
+                if (url != null)
+                {
                     URLConnection conn = url.openConnection();
 
-                    // Get the server response
+                    // Obtenemos la respuesta del servidor
                     reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     StringBuilder sb = new StringBuilder();
                     String line = "";
 
-                    // Read Server Response
+                    // Leemos la respuesta
                     while ((line = reader.readLine()) != null)
                         sb.append(line + "");
 
-                    reader.close();
+                    Log.d(TAG, "Time FIN (" + mShopsList.get(myPos) + "): " + Calendar.getInstance().toString());
 
-                    Log.d(TAG, "Time FIN: " + Calendar.getInstance().toString());
-
-                    // Append Server Response To Content String
+                    // Devolvemos la respuesta
                     return sb.toString();
                 }
 
             } catch ( Exception e ) {
                 Log.d( TAG, "Error conectando con " + mShopsList.get(myPos) );
+
+            } finally {
+                try {
+                    if ( reader != null )
+                        reader.close();
+
+                } catch ( IOException e ) {
+                    Log.d(TAG, "Error cerrando conexion con " + mShopsList.get(myPos));
+
+                }
             }
 
             return null;
