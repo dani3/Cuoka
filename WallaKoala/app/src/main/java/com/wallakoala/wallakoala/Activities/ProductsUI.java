@@ -696,7 +696,7 @@ public class ProductsUI extends AppCompatActivity
     {
         private ThreadPoolExecutor executor;
         private CompletionService<String> completionService;
-        private List<String> content = new CopyOnWriteArrayList<>();
+        private List<String> content = new ArrayList<>();
         private String error = null;
 
         @Override
@@ -771,6 +771,8 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Task que se conecta al servidor y trae una tienda determinada. Devuelve un string si ha ido bien, null EOC.
+     * En caso de que falle, se captura la excepcion y se devuelve null. El hecho de que falle una conexion no deberia
+     * parar el flujo entero.
      */
     private class ConnectionTask implements Callable<String>
     {
