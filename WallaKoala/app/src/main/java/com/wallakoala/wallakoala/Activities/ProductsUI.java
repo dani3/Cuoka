@@ -170,7 +170,7 @@ public class ProductsUI extends AppCompatActivity
         mShopsList               = new ArrayList<>();
 
         mShopsList.add( "HyM" );
-        mShopsList.add( "dfsd" );
+        mShopsList.add( "Blanco" );
         mShopsList.add( "Springfield" );
 
         start = count = 0;
@@ -691,6 +691,8 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Tarea en segundo plano que descargara la lista de JSON del servidor en paralelo.
+     * Si falla alguna conexion no pasa nada ya que se ignora, sin embargo, si fallan
+     * todas las conexiones, se muestra la SnackBar para reintentar.
      */
     private class ConnectToServer extends AsyncTask<String, Void, Void>
     {
@@ -793,10 +795,10 @@ public class ProductsUI extends AppCompatActivity
                 url = new URL(SERVER_URL + ":" + SERVER_SPRING_PORT
                                     + "/newness/" + mShopsList.get(myPos) + "/" + MAN);
 
-                Log.d(TAG, "Time INI (" + mShopsList.get(myPos) + "): " + Calendar.getInstance().toString());
-
                 if (url != null)
                 {
+                    Log.d(TAG, "Time INI (" + mShopsList.get(myPos) + "): " + Calendar.getInstance().toString());
+
                     URLConnection conn = url.openConnection();
 
                     // Obtenemos la respuesta del servidor
@@ -826,10 +828,12 @@ public class ProductsUI extends AppCompatActivity
                     Log.d(TAG, "Error cerrando conexion con " + mShopsList.get(myPos));
 
                 }
+
             }
 
             return null;
         }
+
     } /* [END ConnectionTask] */
 
     /**
@@ -904,9 +908,13 @@ public class ProductsUI extends AppCompatActivity
             } else {
 
                 if ( mProductsCandidatesDeque.isEmpty() )
+                {
                     _noData( true );
+                    mLoadingView.setVisibility( View.GONE );
 
-                _loading( false, true );
+                } else {
+                    _loading( false, true );
+                }
             }
         }
 
