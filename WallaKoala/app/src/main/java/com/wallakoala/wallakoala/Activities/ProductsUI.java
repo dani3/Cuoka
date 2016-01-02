@@ -1,5 +1,7 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,6 +23,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -71,7 +74,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String TAG = "CUOKA";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final String SERVER_URL = "http://192.168.1.51";
+    protected static final String SERVER_URL = "http://192.168.1.131";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static final boolean MAN = true;
     protected static int NUMBER_OF_CORES;
@@ -124,7 +127,6 @@ public class ProductsUI extends AppCompatActivity
     protected ProductAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation hideToRight, showFromRight;
     protected Animation moveAndFade;
 
     /* Snackbar */
@@ -206,7 +208,7 @@ public class ProductsUI extends AppCompatActivity
         mCoordinatorLayout = ( CoordinatorLayout )findViewById( R.id.coordinator_layout );
 
         // LoaderView
-        mLoadingView = findViewById( R.id.avloadingIndicatorView );
+        mLoadingView = findViewById(R.id.avloadingIndicatorView);
 
         // TextViews que muestran que no hay productos disponibles o se ha producido un error
         mNoDataTextView = ( TextView )findViewById( R.id.nodata_textview );
@@ -220,7 +222,7 @@ public class ProductsUI extends AppCompatActivity
         mToolbar = ( Toolbar )findViewById( R.id.appbar );
         mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
 
-        setSupportActionBar( mToolbar );
+        setSupportActionBar(mToolbar);
         if ( getSupportActionBar() != null )
             getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
@@ -342,7 +344,7 @@ public class ProductsUI extends AppCompatActivity
         mToolbar.animate()
                 .translationY( 0 )
                 .setInterpolator( new LinearInterpolator() )
-                .setDuration( 180 );
+                .setDuration(180);
     }
 
     protected void _toolbarAnimateHide()
@@ -376,21 +378,7 @@ public class ProductsUI extends AppCompatActivity
         {
             // Metodo llamado cuando el drawer esta completamente cerrado
             @Override
-            public void onDrawerClosed( View drawerView )
-            {
-                if( drawerView == findViewById( R.id.leftDrawerLayout ) )
-                {
-                    // Sacamos la vista del item
-                    final View itemView = findViewById( mMenu.getItem( 0 ).getItemId() );
-
-                    itemView.startAnimation( showFromRight );
-
-                    // Habilitamos de nuevo el item
-                    itemView.setEnabled( true );
-
-                    mLeftDrawerToggle.syncState();
-                }
-            }
+            public void onDrawerClosed( View drawerView ) {}
 
             // Metodo llamado cuando el drawer esta completamente abierto
             @Override
@@ -419,15 +407,8 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initAnimations()
     {
-        showFromRight = AnimationUtils.loadAnimation( ProductsUI.this
-                , R.anim.show_translation_horizontal );
-
-        hideToRight = AnimationUtils.loadAnimation( ProductsUI.this
-            , R.anim.hide_translation_horizontal );
-
         moveAndFade = AnimationUtils.loadAnimation( ProductsUI.this
                 , R.anim.translate_and_fade );
-
     }
 
     @Override
@@ -449,30 +430,6 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu( Menu menu )
     {
-        // Si el Navigation Drawer izquierdo esta abierto, ocultamos el item de la toolbar.
-        if ( mDrawerLayout.isDrawerOpen( Gravity.LEFT ) )
-        {
-            final View itemView = findViewById( menu.getItem( 0 ).getItemId() );
-
-            hideToRight.setFillAfter(true);
-            hideToRight.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    itemView.setEnabled(false);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-
-            itemView.startAnimation(hideToRight);
-        }
-
         return super.onPrepareOptionsMenu(menu);
     }
 

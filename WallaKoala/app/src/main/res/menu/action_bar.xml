@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProductsUI">
 
-    <item android:id="@+id/right_drawer"
+    <item android:id="@+id/menu_filter"
         android:title="Filter"
         android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom"/>

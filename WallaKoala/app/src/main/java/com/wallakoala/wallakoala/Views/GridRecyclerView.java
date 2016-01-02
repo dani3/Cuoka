@@ -35,12 +35,8 @@ public class GridRecyclerView extends RecyclerView {
     @Override
     public void setLayoutManager(LayoutManager layout)
     {
-        if (layout instanceof GridLayoutManager) {
+        if (layout instanceof GridLayoutManager)
             super.setLayoutManager(layout);
-
-        } else {
-            throw new ClassCastException("You should only use a GridLayoutManager with GridRecyclerView.");
-        }
     }
 
     @Override
