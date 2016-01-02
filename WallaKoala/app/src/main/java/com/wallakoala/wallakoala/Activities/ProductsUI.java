@@ -250,14 +250,14 @@ public class ProductsUI extends AppCompatActivity
                             _toolbarAnimateHide();
 
                         else
-                            _toolbarAnimateShow(verticalOffset);
+                            _toolbarAnimateShow();
 
                     else if (mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
                             (verticalOffset > mToolbar.getHeight()))
                         _toolbarAnimateHide();
 
                     else
-                        _toolbarAnimateShow(verticalOffset);
+                        _toolbarAnimateShow();
             }
 
             @Override
@@ -339,7 +339,7 @@ public class ProductsUI extends AppCompatActivity
         mItemTouchHelper.attachToRecyclerView( mProductsRecyclerView );
     }
 
-    protected void _toolbarAnimateShow( final int verticalOffset )
+    protected void _toolbarAnimateShow()
     {
         mToolbar.animate()
                 .translationY( 0 )
