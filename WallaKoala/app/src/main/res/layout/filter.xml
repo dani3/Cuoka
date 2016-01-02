@@ -40,7 +40,6 @@
                 android:layout_centerHorizontal="true"/>
 
             <TextView
-                android:id="@+id/filter_text_shop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -70,7 +69,6 @@
                 android:layout_centerHorizontal="true"/>
 
             <TextView
-                android:id="@+id/filter_text_section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -100,7 +98,6 @@
                 android:layout_centerHorizontal="true"/>
 
             <TextView
-                android:id="@+id/filter_text_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
