@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,15 +96,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public void bindProduct( Product product )
         {
             // Establecemos todos los textViews
-            title.setText( product.getShop() );
-            subtitle.setText( product.getSection() );
-            name.setText( product.getName() );
-            price.setText( Double.toString(product.getPrice()).replaceAll( ".0", "" ) + "€" );
+            title.setText(product.getShop());
+            subtitle.setText(product.getSection());
+            name.setText(product.getName());
+            price.setText(Double.toString(product.getPrice()).replaceAll(".0", "") + "€");
 
             // Ocultamos la info extra, IMPORTANTE. Cosas malas pasan si no se pone.
             footerExtra.setVisibility( View.GONE );
+            // Ocultamos la imagen de error.
+            error.setVisibility( View.GONE );
             // Mostramos la view de carga
             loading.setVisibility( View.VISIBLE );
+
+            Log.d(TAG, "Image URL: "
+                    + product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ));
 
             // Cargamos la imagen utilizando Picasso.
             Picasso.with( mContext )

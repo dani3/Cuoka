@@ -4,12 +4,15 @@ import PIL
 import os
 import sys
 from PIL import Image
+from PIL import ImageFile
 
 path = sys.argv[1]
 width_l = int(sys.argv[2])
 height_l = int(sys.argv[3])
 width_s = int(sys.argv[4])
 height_s = int(sys.argv[5])
+
+ImageFile.LOAD_TRUNCATED_FILES = True
 
 for fname in os.listdir(path):
     if 'Small' not in fname and 'ICON' not in fname and 'Large' not in fname:

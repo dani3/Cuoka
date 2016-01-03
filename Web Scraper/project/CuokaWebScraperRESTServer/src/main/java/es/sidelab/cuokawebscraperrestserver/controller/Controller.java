@@ -128,7 +128,7 @@ public class Controller
      * @param shop: Tienda a la que pertenecen los productos.
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
-    @CacheEvict( value = "products", key = "#shop" )
+    @CacheEvict( value = "products", allEntries = true )
     @RequestMapping( value = "/products/{shop}", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addProducts( @RequestBody List<Product> products
                                         , @PathVariable String shop )
