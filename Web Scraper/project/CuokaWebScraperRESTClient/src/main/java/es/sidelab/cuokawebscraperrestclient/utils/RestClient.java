@@ -31,7 +31,7 @@ public class RestClient
     public Shop[] getArrayOfShops()
     {
         LOG.info( "Obteniendo lista de tiendas del servidor..." );
-        return deleteShopsOffline( restClient.getForObject( SERVER.toString() + "/getShops" , Shop[].class ) );
+        return deleteShopsOffline( restClient.getForObject( SERVER.toString() + "/shops" , Shop[].class ) );
     } 
     
     /*
@@ -42,7 +42,7 @@ public class RestClient
         LOG.info( "Enviando lista de productos de " + shop.getName() + " al servidor..." );
         LOG.info( "Se envian " + products.size() + " products!" );
         restClient.postForObject( SERVER.toString() 
-                + "/addProducts/" + shop.getName(), products.toArray(), Product[].class );
+                + "/products/" + shop.getName(), products.toArray(), Product[].class );
         LOG.info( "Procuctos enviados correctamente" );
     }
     
