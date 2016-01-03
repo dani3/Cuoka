@@ -141,13 +141,14 @@ public class ImageManager
                         
         } catch ( MalformedURLException ex ) {
             LOG.error( "ERROR: Error al formar la URL de la imagen" );
-            LOG.error( ex.getMessage() );
+            LOG.error( "URL: " + imageURL );
+            LOG.error( ex.toString() );
             
             return false;
             
         } catch ( IOException ex ) {
             LOG.error( "ERROR: Error en la conexion" );
-            LOG.error( ex.getMessage() );
+            LOG.error( ex.toString() );
             
             return false;
         }

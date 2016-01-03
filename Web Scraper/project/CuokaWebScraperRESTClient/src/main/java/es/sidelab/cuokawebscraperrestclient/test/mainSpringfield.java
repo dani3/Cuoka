@@ -38,9 +38,9 @@ public class mainSpringfield {
         List<String> pages = new ArrayList<>();
         
         // Añadimos la primera página
-        pages.add( "http://myspringfield.com/es/es/man/abrigos" );
+        pages.add( "http://myspringfield.com/es/es/man/camisas" );
         
-        Document document = Jsoup.connect( "http://myspringfield.com/es/es/man/abrigos" )
+        Document document = Jsoup.connect( "http://myspringfield.com/es/es/man/camisas" )
                                         .timeout( Properties.TIMEOUT ).get();    
         
         // Sacamos las páginas, si las hay
@@ -101,8 +101,10 @@ public class mainSpringfield {
 
                             // Sacamos las URLs de las imagenes anteriores
                             List<Image> imagesURL = new ArrayList<>();
-                            for ( Element img : images )
+                            for ( Element img : images ){
                                 imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );
+                                System.out.println( img.select( "img" ).first().attr( "src" ) );
+                            }
 
                             // Añadimos un nuevo ColorVariant a la lista 
                             variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );

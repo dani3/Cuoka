@@ -67,7 +67,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String TAG = "CUOKA";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final String SERVER_URL = "http://192.168.1.131";
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static final boolean MAN = true;
     protected static int NUMBER_OF_CORES;

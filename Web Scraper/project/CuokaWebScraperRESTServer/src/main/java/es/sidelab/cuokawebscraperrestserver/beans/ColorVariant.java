@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,7 +59,7 @@ public class ColorVariant
     public void setReference( String reference ) { this.reference = reference; }
     public void setColorName( String colorName ) { this.colorName = colorName; }
     
-    @JsonIgnore
+    @JsonProperty
     public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
     public void setColorPath( String colorPath ) { this.colorPath = colorPath; }
     public void setImages( List<Image> images ) { this.images = images; }

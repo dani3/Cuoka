@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -76,7 +77,7 @@ public class Product
     public void setSection( String section ) { this.section = section; }
     public void setLink( String link ) { this.link = link; }
     
-    @JsonIgnore
+    @JsonProperty
     public void setMan( boolean man ) { this.man = man; }
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
     public void setNewness( boolean newness ) { this.newness = newness; }

@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ public class Image
     public String getUrl() { return url; }
     public String getPath() { return path; }
 
-    @JsonIgnore
+    @JsonProperty
     public void setUrl( String url ) { this.url = url; }
     public void setPath( String path ) { this.path = path; }
 }
