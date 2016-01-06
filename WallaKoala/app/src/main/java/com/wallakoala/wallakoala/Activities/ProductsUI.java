@@ -141,7 +141,7 @@ public class ProductsUI extends AppCompatActivity
         super.onCreate( savedInstanceState );
 
         // Especificamos el layout 'products_grid.xml'
-        setContentView( R.layout.products_grid );
+        setContentView(R.layout.products_grid);
 
         _initData();
         _initAuxViews();
@@ -316,13 +316,25 @@ public class ProductsUI extends AppCompatActivity
             @Override
             public void onSwiped( RecyclerView.ViewHolder viewHolder, int swipeDir )
             {
+                // Eliminamos el producto
                 mProductsDisplayedList.remove( viewHolder.getAdapterPosition() );
                 mProductAdapter.updateProductList( mProductsDisplayedList );
                 mProductAdapter.notifyItemRemoved( viewHolder.getAdapterPosition() );
 
+                // Insertamos uno al final para que la lista no se vacie
+                if ( ! mProductsCandidatesDeque.isEmpty() )
+                {
+                    mProductsDisplayedList.add(mProductsCandidatesDeque.getFirst());
+
+                    mProductsCandidatesDeque.removeFirst();
+                    
+                    mProductAdapter.updateProductList( mProductsDisplayedList );
+                    mProductAdapter.notifyItemInserted( mProductsDisplayedList.size() - 1 );
+                }
+
                 mSnackbar = Snackbar.make( mCoordinatorLayout
                                 , getResources().getString( R.string.product_deleted_message )
-                                , Snackbar.LENGTH_SHORT );
+                                , Snackbar.LENGTH_SHORT);
 
                 mSnackbar.show();
             }
@@ -408,16 +420,14 @@ public class ProductsUI extends AppCompatActivity
     protected void onPostCreate( Bundle savedInstanceState )
     {
         super.onPostCreate(savedInstanceState);
-        if( mLeftDrawerToggle != null )
-            mLeftDrawerToggle.syncState();
+        mLeftDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged( Configuration newConfig )
     {
         super.onConfigurationChanged(newConfig);
-        if( mLeftDrawerToggle != null )
-            mLeftDrawerToggle.onConfigurationChanged(newConfig);
+        mLeftDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
