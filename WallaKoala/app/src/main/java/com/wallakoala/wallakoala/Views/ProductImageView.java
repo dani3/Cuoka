@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
+
 /**
  * @class Vista que muestra la imagen del producto en el grid manteniendo su aspect ratio.
  * Created by Daniel Mancebo Aldea on 11/11/2015.
  */
 
-public class ProductImageView extends ImageView
+public class ProductImageView extends RoundedImageView
 {
     public ProductImageView(Context context)
     {

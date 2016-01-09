@@ -383,13 +383,17 @@ public class ProductsUI extends AppCompatActivity
         {
             // Metodo llamado cuando el drawer esta completamente cerrado
             @Override
-            public void onDrawerClosed( View drawerView ) {}
+            public void onDrawerClosed( View drawerView )
+            {
+                if ( drawerView == findViewById( R.id.leftDrawerLayout ) )
+                    mLeftDrawerToggle.syncState();
+            }
 
             // Metodo llamado cuando el drawer esta completamente abierto
             @Override
             public void onDrawerOpened( View drawerView )
             {
-                if (drawerView == findViewById( R.id.leftDrawerLayout ) )
+                if ( drawerView == findViewById( R.id.leftDrawerLayout ) )
                 {
                     // Crea la llamada a onPrepareOptionsMenu()
                     supportInvalidateOptionsMenu();
@@ -420,14 +424,16 @@ public class ProductsUI extends AppCompatActivity
     protected void onPostCreate( Bundle savedInstanceState )
     {
         super.onPostCreate(savedInstanceState);
-        mLeftDrawerToggle.syncState();
+        if( mLeftDrawerToggle != null )
+            mLeftDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged( Configuration newConfig )
     {
         super.onConfigurationChanged(newConfig);
-        mLeftDrawerToggle.onConfigurationChanged(newConfig);
+        if( mLeftDrawerToggle != null )
+            mLeftDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

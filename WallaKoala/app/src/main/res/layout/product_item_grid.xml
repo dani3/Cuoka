@@ -5,6 +5,7 @@
     android:id="@+id/card_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:cardPreventCornerOverlap="false"
     app:cardElevation="4dp"
     app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true">
@@ -18,19 +19,19 @@
             android:id="@+id/avloadingitem"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center"
             android:visibility="gone"
             app:indicator="BallClipRotate"
-            app:indicator_color="@color/colorAccent"
-            android:layout_gravity="center"/>
+            app:indicator_color="@color/colorAccent"/>
 
         <!-- Imagen no disponible -->
         <ImageView
             android:id="@+id/broken_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="15dp"
             android:background="@drawable/broken_robot"
-            android:layout_gravity="center"
             android:visibility="gone"/>
 
         <!-- Imagen -->
@@ -38,7 +39,11 @@
             android:id="@+id/grid_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            app:riv_corner_radius_bottom_left="4dp"
+            app:riv_corner_radius_bottom_right="4dp"
+            app:riv_corner_radius_top_left="4dp"
+            app:riv_corner_radius_top_right="4dp"/>
 
         <!-- Pie de foto -->
         <RelativeLayout
