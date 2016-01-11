@@ -187,7 +187,6 @@ public class ProductsUI extends AppCompatActivity
         map.put(getResources().getString(R.string.filter_newness), true);
         map.put(getResources().getString(R.string.filter_colors), new ArrayList<String>());
         map.put(getResources().getString(R.string.filter_sections), new ArrayList<String>());
-        map.put(getResources().getString(R.string.filter_sizes), new ArrayList<String>());
 
         return map;
     }

@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @class Pantalla de introduccion de la app.
@@ -15,6 +19,9 @@ import com.wallakoala.wallakoala.R;
 
 public class IntroUI extends AppCompatActivity
 {
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferencesManager;
+
     /* Views */
     protected Button enter;
 
@@ -26,8 +33,20 @@ public class IntroUI extends AppCompatActivity
         // Especificamos el layout 'intro.xml'
         setContentView( R.layout.intro );
 
+        Set<String> shops = new HashSet<>();
+        shops.add( "Blanco" );
+        shops.add( "HyM" );
+        shops.add( "Springfield" );
+        shops.add( "Pedro del Hierro" );
+
+        mSharedPreferencesManager = new SharedPreferencesManager( this );
+        mSharedPreferencesManager.insertMan( true );
+        mSharedPreferencesManager.insertShops( shops );
+        mSharedPreferencesManager.insertNewness( true );
+
         enter = ( Button )findViewById( R.id.enter );
-        enter.setOnClickListener(new View.OnClickListener() {
+        enter.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick( View v )
             {
