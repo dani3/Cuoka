@@ -29,6 +29,7 @@ import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +70,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
-    protected static final boolean MAN = true;
+    protected static boolean MAN;
     protected static int NUMBER_OF_CORES;
     protected enum STATE
     {
@@ -128,6 +129,9 @@ public class ProductsUI extends AppCompatActivity
     /* Toolbar */
     protected Toolbar mToolbar;
 
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferences;
+
     /* Others */
     protected Menu mMenu;
     protected STATE mState;
@@ -157,6 +161,8 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initData()
     {
+        mSharedPreferences = new SharedPreferencesManager( this );
+
         mProductsMap             = new ConcurrentHashMap<>();
         mFilterMap               = _initFilterMap();
         mProductsNonFilteredMap  = new HashMap<>();
@@ -164,12 +170,13 @@ public class ProductsUI extends AppCompatActivity
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
 
-        mShopsList.add( "HyM" );
-        mShopsList.add( "Blanco" );
-        mShopsList.add( "Springfield" );
+        for ( String shop : mSharedPreferences.retreiveShops() )
+            mShopsList.add( shop );
 
         start = count = 0;
         mBackPressed = 0;
+
+        MAN = mSharedPreferences.retreiveMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
@@ -184,9 +191,9 @@ public class ProductsUI extends AppCompatActivity
     {
         Map<String, Object> map = new HashMap<>();
 
-        map.put(getResources().getString(R.string.filter_newness), true);
-        map.put(getResources().getString(R.string.filter_colors), new ArrayList<String>());
-        map.put(getResources().getString(R.string.filter_sections), new ArrayList<String>());
+        map.put(getResources().getString(R.string.filter_newness), mSharedPreferences.retreiveNewness());
+        map.put(getResources().getString(R.string.filter_colors), null);
+        map.put(getResources().getString(R.string.filter_sections), null);
 
         return map;
     }

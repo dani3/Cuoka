@@ -25,9 +25,8 @@ public class SharedPreferencesManager
     public SharedPreferencesManager( Context context )
     {
         mContext = context;
-        mSharedPreferences = mContext.getSharedPreferences( "cuoka_preferences", Context.MODE_PRIVATE );
-        mEditor = mSharedPreferences.edit();
-    }
+        mSharedPreferences = mContext.getSharedPreferences("cuoka_preferences", Context.MODE_PRIVATE);
+}
 
     /**
      * Metodo que inserta un conjunto de tiendas en las preferencias.
@@ -36,6 +35,7 @@ public class SharedPreferencesManager
      */
     public boolean insertShops( Set<String> shops )
     {
+        mEditor = mSharedPreferences.edit();
         mEditor.putStringSet( KEY_SHOPS, shops );
 
         return mEditor.commit();
@@ -57,6 +57,7 @@ public class SharedPreferencesManager
      */
     public boolean insertMan( boolean man )
     {
+        mEditor = mSharedPreferences.edit();
         mEditor.putBoolean( KEY_MAN, man );
 
         return mEditor.commit();
@@ -78,7 +79,8 @@ public class SharedPreferencesManager
      */
     public boolean insertNewness( boolean newness )
     {
-        mEditor.putBoolean( KEY_MAN, newness );
+        mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean( KEY_NEWNESS, newness );
 
         return mEditor.commit();
     }
