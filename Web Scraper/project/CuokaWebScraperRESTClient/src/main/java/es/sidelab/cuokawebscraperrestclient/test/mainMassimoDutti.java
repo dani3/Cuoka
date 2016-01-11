@@ -25,15 +25,29 @@ public class mainMassimoDutti
 {
     public static void main(String[] args) throws Exception 
     {
+<<<<<<< HEAD
         File html = new File("C:\\Python27/dutti.html");
         Document document = Jsoup.parse(html, "UTF-8");
+=======
+        File html = new File( "C:\\Python27/dutti.html" );
+        
+        Document document = Jsoup.parse( html, "UTF-8" );
+>>>>>>> android_1
         
         Elements products = document.select( "#product-list > li > a" );
         
+<<<<<<< HEAD
         System.out.println( products.size() );
         
         for ( Element product : products )
             System.out.println( product.attr( "href" ) );
         
+=======
+        for ( Element product : products )
+        {
+            document = Jsoup.connect( product.attr("href") )
+                                   .timeout( Properties.TIMEOUT ).get();
+        }
+>>>>>>> android_1
     }
 }
