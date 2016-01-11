@@ -37,7 +37,7 @@ public class IntroUI extends AppCompatActivity
         shops.add( "Blanco" );
         shops.add( "HyM" );
         shops.add( "Springfield" );
-        shops.add( "Pedro del Hierro" );
+        shops.add( "PedroDelHierro" );
 
         mSharedPreferencesManager = new SharedPreferencesManager( this );
         mSharedPreferencesManager.insertMan( true );
@@ -52,6 +52,11 @@ public class IntroUI extends AppCompatActivity
             {
                 Intent intent = new Intent( IntroUI.this, ProductsUI.class );
                 startActivity( intent );
+
+                // Animacion de transicion para pasar de una activity a otra.
+                overridePendingTransition( R.anim.push_down_in, R.anim.push_down_out );
+
+                // Terminamos la activity, si se comenta, se da la posibilidad de volver a esta pantalla.
                 finish();
             }
         });

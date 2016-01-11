@@ -11,6 +11,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,18 @@ public class mainMassimoDutti
 {
     public static void main(String[] args) throws Exception 
     {
-        Document document = Jsoup.connect( "http://www.massimodutti.com/es/es/men/chaquetas-c680512.html" )
-                                   .timeout( Properties.TIMEOUT ).get();
+        File html = new File( "C:\\Python27/dutti.html" );
+        
+        Document document = Jsoup.parse( html, "UTF-8" );
         
         System.out.println( document.html() );
         
         Elements products = document.select( "#product-list.clearfix li" );
         
-        System.out.println( products.size() );
+        for ( Element product : products )
+        {
+            document = Jsoup.connect( product.attr("href") )
+                                   .timeout( Properties.TIMEOUT ).get();
+        }
     }
 }
