@@ -13,9 +13,11 @@ class WebPage(QtWebKit.QWebPage):
     def fetchNext(self):
         try:
             self._url, self._path, self._shop, self._section, self._man, self._func = next(self._items)
+            #Establecemos el idioma preferido
             self.request = QtNetwork.QNetworkRequest() 
             self.request.setUrl(QtCore.QUrl(self._url)) 
             self.request.setRawHeader("Accept-Language", QtCore.QByteArray ("es ,*")) 
+
             self.mainFrame().load(self.request)
         except StopIteration:
             return False
