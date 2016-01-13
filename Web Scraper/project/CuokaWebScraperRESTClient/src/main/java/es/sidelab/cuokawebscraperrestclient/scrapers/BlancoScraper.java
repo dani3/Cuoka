@@ -6,6 +6,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,25 +27,26 @@ public class BlancoScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String html ) throws IOException
+    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
     {        
-        // Obtener el HTML
-        Document document = Jsoup.connect( "" )
-                                    .timeout( Properties.TIMEOUT ).get();
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
         
         // Guardamos los links de los productos
-        Elements products = document.select( "h2.product-name > a" );
+        Elements products = document.select( "div.cell-1 a.cell-link" );
             
         for ( Element element : products )
         {
-            document = Jsoup.connect( element.attr( "href" ) )
-                               .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+            document = Jsoup.connect( shop.getURL().toString() +  element.attr( "href" ) )
+                                .header( "Accept-Language", "es" )
+                                .timeout( Properties.TIMEOUT )
+                                .ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
-            String link = element.attr( "href" );
-            String name = document.select( "div.product-name span" ).first().ownText().toUpperCase(); 
-            String price = document.select( "span.price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = document.select( "#reference span" ).first().ownText();
+            String link = shop.getURL().toString() + element.attr( "href" );
+            String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
+            String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
             
             // Obtenemos los colores del producto
             boolean first = true;
@@ -68,7 +70,7 @@ public class BlancoScraper implements Scraper
                     
                     first = false;
                 }
-                
+            
                 variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
             }
             

@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -19,24 +20,25 @@ public class testBlanco {
         // Lista preparada para la concurrencia donde escribiran todos los scrapers
         List<Product> productList = new ArrayList<>();
         
-        // Obtener el HTML
-        Document document = Jsoup.connect( "https://www.blanco.com/es-es/category/17/abrigos" )
-                                    .timeout( Properties.TIMEOUT ).get();
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Blanco_true\\false\\Blanco_Shorts_false.html" );
+        
+        Document document = Jsoup.parse( html, "UTF-8" );
         
         // Guardamos los links de los productos
         Elements products = document.select( "div.cell-1 a.cell-link" );
             
         for ( Element element : products )
         {
-            document = Jsoup.connect( "https://www.blanco.com/es-es" +  element.attr( "href" ) )
-                               .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+            document = Jsoup.connect( "https://www.blanco.com/" +  element.attr( "href" ) )
+                                .header( "Accept-Language", "es" )
+                                .timeout( Properties.TIMEOUT )
+                                .ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
-            String link = "https://www.blanco.com/es-es" + element.attr( "href" );
-            System.out.println( link );
+            String link = "https://www.blanco.com/" + element.attr( "href" );
             String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
             String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "");
+            String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
             
             System.out.println( link );
             System.out.println( name );
