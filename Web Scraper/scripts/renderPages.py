@@ -53,18 +53,19 @@ if __name__ == '__main__':
           #Recorremos los dos generos
           for manAux in os.listdir(path_shop):
               man = manAux
-              path_shop_gender = path_shop + '\\' + man
-              
-              #Recorremos cada seccion para cada genero
-              for section in os.listdir(path_shop_gender):
+              if (".txt" not in man):
+                  path_shop_gender = path_shop + '\\' + man
                   
-                #Si es archivo .txt, asi ignoramos los htmls que se van creando
-                if ".txt" in section: 
-                    file = open(path_shop_gender + '\\' + section, 'r')
-                  
-                    url = file.readline().rstrip()
+                  #Recorremos cada seccion para cada genero
+                  for section in os.listdir(path_shop_gender):
+                      
+                    #Si es archivo .txt, asi ignoramos los htmls que se van creando
+                    if ".txt" in section: 
+                        file = open(path_shop_gender + '\\' + section, 'r')
+                      
+                        url = file.readline().rstrip()
 
-                    items.extend([(url, path_shop_gender, shop, section, man, funcA)])                          
+                        items.extend([(url, path_shop_gender, shop, section, man, funcA)])                          
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     print('Press Ctrl+C to quit\n')
