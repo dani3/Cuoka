@@ -4,6 +4,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -37,30 +38,25 @@ public class mainSpringfield {
         List<Product> productList = new ArrayList<>();
         List<String> pages = new ArrayList<>();
         
-        // Añadimos la primera página
-        pages.add( "http://myspringfield.com/es/es/man/camisetas?sz=30&start=0&format=ajax" );
+        boolean finished = false;
+        int i = 0;
         
-        Document document = Jsoup.connect( "http://myspringfield.com/es/es/man/camisetas?sz=30&start=0&format=ajax" )
-                                        .timeout( Properties.TIMEOUT ).get();    
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Springfield_true\\true\\Springfield_Abrigos_true.html" );
         
-        // Sacamos las páginas, si las hay
-        Elements pageElements = document.select( "ul.pagination__list > li.pagination__list-item" );
+        Document document = Jsoup.parse( html, "UTF-8" );
         
-        // En el caso de que haya paginas, las metemos en la lista
-        if ( ! pageElements.isEmpty() )
+        Elements pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
+        
+        // Si hay varias paginas...
+        for ( Element page : pagesElements )
         {
-            pageElements.remove( pageElements.size() - 1 );
-            for ( Element page : pageElements )
-                if ( ! page.hasClass( "pagination__list-item--current" ) & ! page.hasClass( "first-last" ) )
-                    if ( ! page.select("a").text().equals("") )
-                        pages.add( page.select("a").attr("href").concat( "&format=ajax" ) );
+            pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
+            System.out.println( page.attr( "href" ).concat( "&format=ajax" ) );
         }
+            
         
-        for ( String page : pages )
+        while ( ! finished )
         {
-            // Obtener el HTML
-            document = Jsoup.connect( page ).timeout( Properties.TIMEOUT ).get();           
-
             // Obtener el campo info de todos los productos
             Elements products = document.select( "div.product-name > a.name-link" );
 
@@ -117,10 +113,40 @@ public class mainSpringfield {
                                             , variants ) );
                     }
 
-                } catch ( Exception e ) {}
+                } catch ( Exception e ) { e.printStackTrace(); }
 
             } // for products
-        } // for paginas
+            
+            // Si hay varias paginas, nos conectamos a la que toque
+            if ( ! pagesElements.isEmpty() )
+            {
+                document = Jsoup.connect( pages.get( i++ ) ).timeout( Properties.TIMEOUT ).get();
+                
+                // Sacamos nuevas paginas si las hay
+                pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
+                for ( Element page : pagesElements )
+                {
+                    // Anadimos solo las que no esten ya
+                    if ( ! pages.contains( page.attr( "href" ).concat( "&format=ajax" ) ) && 
+                       ( ! page.ownText().equals( "1" ) ) )
+                    {
+                        pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
+                        System.out.println( page.attr( "href" ).concat( "&format=ajax" ) );
+                    }
+                }
+                
+                finished = ( i >= pages.size() );
+                
+            } else 
+                finished = true;
+            
+        } // while
+        
+        
+        for ( Product p : productList )
+        {
+            System.out.println( p.getName() );
+        }
         
         Product p = productList.get( 5 );
         
