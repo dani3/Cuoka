@@ -34,7 +34,7 @@ public class MultithreadManager
         LOG.info( "Iniciando proceso de scraping concurrentemente..." );
         
         // Creamos un executor que creara un thread por cada tienda que haya.
-        ExecutorService executorShops = Executors.newFixedThreadPool( 8 );
+        ExecutorService executorShops = Executors.newFixedThreadPool( Properties.MAX_THREADS_SHOP );
         
         for ( int i = 0; i < shops.size(); i++ )
         {
@@ -48,7 +48,7 @@ public class MultithreadManager
                 LOG.info( "Scraper de " + shop.getName() + " obtenido" );
                  
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
-                ExecutorService executorSections = Executors.newFixedThreadPool( 4 );
+                ExecutorService executorSections = Executors.newFixedThreadPool( Properties.MAX_THREADS_SECTIONS );
                 CompletionService< List<Product> > completionSections =
                         new ExecutorCompletionService<> ( executorSections );
                 
