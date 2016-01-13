@@ -3,15 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.sidelab.cuokawebscraperrestclient.test;
+package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import static es.sidelab.cuokawebscraperrestclient.test.mainPdH.fixURL;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,27 +26,14 @@ import org.jsoup.select.Elements;
  *
  * @author lux_f
  */
-public class mainPdH {
+public class PdHScraper implements Scraper {
     
-
-    private static boolean containsProduct( List<Product> productList, String reference )
-    {
-        for ( Product p : productList )
-            for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
-                    return true;
-        
-        return false;
-    }
+    private static List<Product> productList = new CopyOnWriteArrayList<>();
     
-    public static void main(String[] args) throws Exception 
+    @Override
+    public List<Product> scrap( Shop shop, Section section ) throws IOException 
     {
-        String shop = "http://pedrodelhierro.com";
-        // Lista de productos
-        List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        Document document = Jsoup.connect( "http://pedrodelhierro.com/es/tienda/mujer/camisetas/s?per_page=18&page=1&taxon=229" )
+    Document document = Jsoup.connect( section.getURL().toString() )
                                     .timeout( Properties.TIMEOUT ).get();
           
         // Obtener los links a todos los productos. 
@@ -73,11 +65,11 @@ public class mainPdH {
             Document doc = Jsoup.connect(link).timeout(Properties.TIMEOUT).ignoreHttpErrors(true).get();
             
            
-                Elements prueba1 = doc.select("ul.product_colors ");
-                Elements prueba2 = prueba1.select("li");
-                Elements colors = prueba2.select("a img");
-                System.out.println("Numero de colores disponibles" + colors.size());
-                
+            Elements prueba1 = doc.select("ul.product_colors ");
+            Elements prueba2 = prueba1.select("li");
+            Elements colors = prueba2.select("a img");
+            
+            List<ColorVariant> variants = new ArrayList<>();
                 if(colors.size()>1){
                     int index = link.lastIndexOf("=");
                     String colorCode = link.substring(index+1);
@@ -100,36 +92,54 @@ public class mainPdH {
                                 }
                             }
                         }
-                        System.out.println(imagesURL.size());
+                        variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                     }
                 }
                 /*Si solo hay un color se trata de forma distinta*/
                 else{
                     List<Image> imagesURL = new ArrayList();
                     Elements images = doc.select("#product_image_list li");
+                    String colorName = colors.attr("alt").toUpperCase();
+                    String colorURL = fixURL(colors.attr("src"));
                     for(Element img : images){
-                        imagesURL.add(new Image( fixURL(img.select("a img").first().attr("src"))));
-                        System.out.println(fixURL(img.select("a img").first().attr("src")));
-                          
+                        imagesURL.add(new Image( fixURL(img.select("a img").first().attr("src"))));  
                     }
-                    System.out.println(imagesURL.size());
+                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                 }
-            ;
-                         
-            System.out.println(link);
-            System.out.println(name);
-            System.out.println(price);
-            System.out.println(reference);
-           // System.out.println(colorName);      
-            System.out.println("------------------------FINALizado ------------------------------");
+            productList.add( new Product( Double.parseDouble( price )
+                                    , name
+                                    , ""
+                                    , ""
+                                    , link 
+                                    , true
+                                    , variants ) );
         }
-    }        
+        return productList;
+    }
     
-     public static String fixURL( String url )
+    
+    
+    
+    
+    
+    public String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
-        return url;
-    }     
+        return url.replace( " " , "%20" );
+    }    
+    
+    /*
+     * Metodo que devuelve true si el producto esta ya en la lista
+     */
+    private boolean containsProduct( List<Product> productList, String reference )
+    {
+        for ( Product p : productList )
+            for ( ColorVariant cv : p.getColors() )
+                if ( cv.getReference().equals( reference ) )
+                    return true;
+        
+        return false;
+    }
 }
