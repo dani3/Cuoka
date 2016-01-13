@@ -40,22 +40,31 @@ if __name__ == '__main__':
 
     path = 'C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files'
     items = []
-
+    
+    #Recorremos las tiendas
     for folder in os.listdir(path):
         shop = folder[:folder.index('_')]
         online = folder[folder.index('_')+1:]
-
+        
+        #Si la tienda esta activa...
         if (online == 'true'):
           path_shop = path + '\\' + folder
-
-          for section in os.listdir(path_shop):
-            if ".txt" in section: 
-                file = open(path_shop + '\\' + section, 'r')
+          
+          #Recorremos los dos generos
+          for manAux in os.listdir(path_shop):
+              man = manAux
+              path_shop_gender = path_shop + '\\' + man
               
-                man = file.readline().rstrip()
-                url = file.readline().rstrip()
+              #Recorremos cada seccion para cada genero
+              for section in os.listdir(path_shop_gender):
+                  
+                #Si es archivo .txt, asi ignoramos los htmls que se van creando
+                if ".txt" in section: 
+                    file = open(path_shop_gender + '\\' + section, 'r')
+                  
+                    url = file.readline().rstrip()
 
-                items.extend([(url, path_shop, shop, section, man, funcA)])                          
+                    items.extend([(url, path_shop_gender, shop, section, man, funcA)])                          
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     print('Press Ctrl+C to quit\n')
