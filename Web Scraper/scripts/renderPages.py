@@ -1,5 +1,5 @@
 import sys, signal, os
-from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 
 class WebPage(QtWebKit.QWebPage):
     def __init__(self):
@@ -13,7 +13,10 @@ class WebPage(QtWebKit.QWebPage):
     def fetchNext(self):
         try:
             self._url, self._path, self._shop, self._section, self._man, self._func = next(self._items)
-            self.mainFrame().load(QtCore.QUrl(self._url))
+            self.request = QtNetwork.QNetworkRequest() 
+            self.request.setUrl(QtCore.QUrl(self._url)) 
+            self.request.setRawHeader("Accept-Language", QtCore.QByteArray ("es ,*")) 
+            self.mainFrame().load(self.request)
         except StopIteration:
             return False
         return True

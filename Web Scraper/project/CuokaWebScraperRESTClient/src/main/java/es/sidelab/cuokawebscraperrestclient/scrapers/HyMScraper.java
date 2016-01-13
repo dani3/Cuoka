@@ -6,6 +6,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,10 @@ public class HyMScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String html ) throws IOException 
-    {      
-        // Obtener el HTML
-        Document document = Jsoup.connect( "" )
-                                    .timeout( Properties.TIMEOUT ).get();
+    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException 
+    {    
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
           
         // Obtener los links a todos los productos
         Elements products = document.select( "h3.product-item-headline > a" );
