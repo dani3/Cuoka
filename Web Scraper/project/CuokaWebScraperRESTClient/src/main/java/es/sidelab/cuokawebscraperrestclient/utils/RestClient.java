@@ -26,15 +26,6 @@ public class RestClient
     }
     
     /*
-     * Metodo que conecta con el servidor REST y devuelve la lista de tiendas online.
-     */
-    public Shop[] getArrayOfShops()
-    {
-        LOG.info( "Obteniendo lista de tiendas del servidor..." );
-        return deleteShopsOffline( restClient.getForObject( SERVER.toString() + "/shops" , Shop[].class ) );
-    } 
-    
-    /*
      * Metodo que envia una lista de productos al servidor REST.
      */
     public static synchronized void saveProducts( List<Product> products, Shop shop )
@@ -44,37 +35,5 @@ public class RestClient
         restClient.postForObject( SERVER.toString() 
                 + "/products/" + shop.getName(), products.toArray(), Product[].class );
         LOG.info( "Procuctos enviados correctamente" );
-    }
-    
-    /*
-     * Metodo que elimina del vector todas las tiendas que no esten online.
-     */
-    private static Shop[] deleteShopsOffline( Shop[] shops )
-    {
-        LOG.info( "Filtramos las tiendas que no estan disponibles" );
-        
-        int cont = 0;
-        for ( Shop shop : shops )
-            if ( ! shop.isOffline() )
-                cont++;
-        
-        Shop[] aux = new Shop[ cont ];
-        
-        int j = 0;
-        for ( Shop shop : shops )
-        {
-            if ( ! shop.isOffline() )
-            {
-                LOG.info( "La tienda " + shop.getName() + " esta ONLINE" );
-                aux[ j++ ] = shop;
-                
-            } else {
-                LOG.info( "La tienda " + shop.getName() + " NO esta online" );
-            }
-        }
-        
-        LOG.info( "Filtro completado" );
-        
-        return aux;
     }
 }

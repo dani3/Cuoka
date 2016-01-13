@@ -1,9 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
-import java.net.URL;
-
 /**
- * @class Clase que representa una sección de una tienda, contendrá su URL,
+ * @class Clase que representa una sección de una tienda, contendrá su path,
  *        el nombre y el sexo.
  * 
  * @author Daniel Mancebo Aldea
@@ -12,16 +10,16 @@ import java.net.URL;
 public class Section 
 {
     private String name;
-    private URL url;
+    private String path;
     private boolean man;
     
     public Section() {}
 
     public void setName( String name ) { this.name = name; }
-    public void setUrl( URL url ) { this.url = url; }
+    public void setPath( String path ) { this.path = path; }
     public void setMan( boolean man ) { this.man = man; }
     
     public String getName() { return this.name; }
-    public URL getURL() { return this.url; }
+    public String getPath() { return this.path; }
     public boolean isMan() { return this.man; }
 }

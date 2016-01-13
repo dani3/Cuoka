@@ -6,6 +6,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,34 +27,28 @@ public class SpringfieldScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section ) throws IOException
+    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
     {        
         List<String> pages = new ArrayList<>();
         
-        // Añadimos la primera página
-        pages.add( section.getURL().toString() );
+        boolean finished = false;
+        int i = 0;
         
-        Document document = Jsoup.connect( section.getURL().toString() )
-                                        .timeout( Properties.TIMEOUT ).get();    
+        File html = new File( htmlPath );
         
-        // Sacamos las páginas, si las hay
-        Elements pageElements = document.select( "ul.pagination__list > li.pagination__list-item" );
+        // Parseamos el html producido por python
+        Document document = Jsoup.parse( html, "UTF-8" );
         
-        // En el caso de que haya paginas, las metemos en la lista
-        if ( ! pageElements.isEmpty() )
+        // Nos quedamos con las paginas si las hay
+        Elements pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
+        
+        // Si hay varias paginas...
+        for ( Element page : pagesElements )
+            pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
+            
+        // Si solo hay una pagina, solo se iterara una vez
+        while ( ! finished )
         {
-            pageElements.remove( pageElements.size() - 1 );
-            for ( Element page : pageElements )
-                if ( ! page.hasClass( "pagination__list-item--current" ) & ! page.hasClass( "first-last" ) )
-                    if ( ! page.select("a").text().equals("") )
-                        pages.add( page.select("a").attr("href").concat( "&format=ajax" ) );
-        }
-        
-        for ( String page : pages )
-        {
-            // Obtener el HTML
-            document = Jsoup.connect( page ).timeout( Properties.TIMEOUT ).get();           
-
             // Obtener el campo info de todos los productos
             Elements products = document.select( "div.product-name > a.name-link" );
 
@@ -95,7 +90,7 @@ public class SpringfieldScraper implements Scraper
                             // Sacamos las URLs de las imagenes anteriores
                             List<Image> imagesURL = new ArrayList<>();
                             for ( Element img : images )
-                                imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );
+                                imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );                            
 
                             // Añadimos un nuevo ColorVariant a la lista 
                             variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
@@ -106,14 +101,37 @@ public class SpringfieldScraper implements Scraper
                                             , shop.getName()
                                             , section.getName()
                                             , link 
-                                            , true
+                                            , section.isMan()
                                             , variants ) );
                     }
 
                 } catch ( Exception e ) {}
 
             } // for products
-        } // for paginas
+            
+            // Si hay varias paginas, nos conectamos a la que toque
+            if ( ! pagesElements.isEmpty() )
+            {
+                document = Jsoup.connect( pages.get( i++ ) ).timeout( Properties.TIMEOUT ).get();
+                
+                // Sacamos nuevas paginas si las hay
+                pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
+                for ( Element page : pagesElements )
+                {
+                    // Anadimos solo las que no esten ya, siempre que no sea la primera
+                    if ( ! pages.contains( page.attr( "href" ).concat( "&format=ajax" ) ) && 
+                       ( ! page.ownText().equals( "1" ) ) )
+                    {
+                        pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
+                    }
+                }
+                
+                finished = ( i >= pages.size() );
+                
+            } else 
+                finished = true;
+            
+        } // while
             
         return productList;
     }

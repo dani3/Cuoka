@@ -3,10 +3,8 @@ package es.sidelab.cuokawebscraperrestserver.controller;
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
-import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
-import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import java.util.Calendar;
 import java.util.List;
@@ -39,88 +37,10 @@ public class Controller
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool( 1 );
     
     @Autowired
-    ShopsRepository shopsRepository;
-    
-    @Autowired
     ProductsRepository productsRepository;
     
     @Autowired
     HistoricProductsRepository historicProductsRepository;
-    
-    /**
-     * Metodo que anade una nueva tienda, si ya existe se devuelve un error 400.
-     * @param shop: Tienda a anadir.
-     * @return Codigo HTTP con el resultado de la ejecucion.
-     */
-    @RequestMapping( value = "/shop", method = RequestMethod.POST )
-    public ResponseEntity<Boolean> addShop( @RequestBody Shop shop )
-    {      
-        LOG.info( "Peticion POST recibida para anadir una nueva tienda..." );
-        
-        // Se devuelve error 400 si hay algun atributo incorrecto
-        if ( ! shop.isOkay() )
-            return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
-        
-        LOG.info( "Comprobando si existe la tienda..." );
-        
-        // Si existe ya la tienda, anadimos solo las URLs que no existan
-        Shop currentShop = shopsRepository.findByName( shop.getName() );
-        if ( currentShop != null ) 
-        {
-            LOG.info( "La tienda existe, se elimina de la BD..." );            
-            shopsRepository.delete( currentShop );
-            LOG.info( "Tienda eliminada correctamente" );
-        }
-        
-        LOG.info( "Se anade la nueva tienda a la BD:\n" );  
-        LOG.info( shop.toString() );
-        shopsRepository.save( shop );          
-        LOG.info( "Tienda insertada correctamente, saliendo del metodo addShop" );
-        
-        return new ResponseEntity<>( HttpStatus.CREATED );
-    }
-    
-    /**
-     * Metodo que devuelve los datos de una tienda.
-     * @param name: nombre de la tienda.
-     * @return La tienda con su informacion.
-     */
-    @RequestMapping( value = "/shop/{name}", method = RequestMethod.GET )
-    public Shop getShop( @PathVariable String name )
-    {
-        LOG.info( "Peticion GET para obtener la tienda: '" + name + "' recibida"  );
-        Shop shop = shopsRepository.findByName( name );
-        
-        if ( shop != null )
-            LOG.info( "Tienda encontrada:\n" + shop.toString() );
-        else 
-            LOG.info( "No se ha encontrado la tienda " + name );
-        
-        return shop;
-    }
-    
-    /**
-     * Metodo que devuelve una lista con todas las tiendas.
-     * @return Lista con todas las tiendas.
-     */
-    @RequestMapping( value = "/shops", method = RequestMethod.GET )
-    public List<Shop> getShops()
-    {
-        LOG.info( "Peticion GET para obtener todas las tiendas recibida" );
-        List<Shop> shops = shopsRepository.findAll();
-        
-        if ( ! shops.isEmpty() )
-        {
-            LOG.info( "Lista de tiendas encontradas:\n" );
-            for ( Shop shop : shops )
-                LOG.info( shop.toString() );
-            
-        } else {
-            LOG.info( "No se ha encontrado ninguna tienda" );
-        }
-        
-        return shops;
-    }
     
     /**
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos.

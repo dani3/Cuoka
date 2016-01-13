@@ -29,18 +29,18 @@ public class MultithreadManager
     /*
      * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor.
      */
-    public static void parallelScrap( Shop[] shops )
+    public static void parallelScrap( List<Shop> shops )
     {
         LOG.info( "Iniciando proceso de scraping concurrentemente..." );
         
         // Creamos un executor que creara un thread por cada tienda que haya.
-        ExecutorService executorShops = Executors.newFixedThreadPool( shops.length );
+        ExecutorService executorShops = Executors.newFixedThreadPool( 8 );
         
-        for ( int i = 0; i < shops.length; i++ )
+        for ( int i = 0; i < shops.size(); i++ )
         {
             final int k = i;
             
-            final Shop shop = shops[i];
+            final Shop shop = shops.get(i);
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
                 LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );
@@ -48,7 +48,7 @@ public class MultithreadManager
                 LOG.info( "Scraper de " + shop.getName() + " obtenido" );
                  
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
-                ExecutorService executorSections = Executors.newFixedThreadPool( shop.getSections().size() );
+                ExecutorService executorSections = Executors.newFixedThreadPool( 4 );
                 CompletionService< List<Product> > completionSections =
                         new ExecutorCompletionService<> ( executorSections );
                 
@@ -60,7 +60,7 @@ public class MultithreadManager
                     final Section section = shop.getSections().get( j );
                     
                     // Tarea de cada scraper
-                    Callable< List<Product> > taskSection = () -> scraper.scrap( shop, section );
+                    Callable< List<Product> > taskSection = () -> scraper.scrap( shop, section, section.getPath() );
                     
                     // Ejecucion de cada tarea
                     LOG.info( "Se inicia el scraping de la seccion " 

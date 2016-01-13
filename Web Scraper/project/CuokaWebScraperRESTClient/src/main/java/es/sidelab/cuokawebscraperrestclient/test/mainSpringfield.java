@@ -142,12 +142,6 @@ public class mainSpringfield {
             
         } // while
         
-        
-        for ( Product p : productList )
-        {
-            System.out.println( p.getName() );
-        }
-        
         Product p = productList.get( 5 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );

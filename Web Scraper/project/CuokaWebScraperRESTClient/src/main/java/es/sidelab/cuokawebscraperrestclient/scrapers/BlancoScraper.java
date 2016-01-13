@@ -26,10 +26,10 @@ public class BlancoScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section ) throws IOException
+    public List<Product> scrap( Shop shop, Section section, String html ) throws IOException
     {        
         // Obtener el HTML
-        Document document = Jsoup.connect( section.getURL().toString() )
+        Document document = Jsoup.connect( "" )
                                     .timeout( Properties.TIMEOUT ).get();
         
         // Guardamos los links de los productos

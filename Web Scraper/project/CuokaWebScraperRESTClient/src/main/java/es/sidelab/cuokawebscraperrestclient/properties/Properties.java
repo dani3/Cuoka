@@ -8,5 +8,7 @@ package es.sidelab.cuokawebscraperrestclient.properties;
 public class Properties 
 {    
     public static final String SERVER = "http://cuoka-ws.cloudapp.net:8080";
-    public static final int TIMEOUT = 60000;    
+    public static final int TIMEOUT = 60000;   
+    
+    public static final String HTML_PATH = "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files";
 }
