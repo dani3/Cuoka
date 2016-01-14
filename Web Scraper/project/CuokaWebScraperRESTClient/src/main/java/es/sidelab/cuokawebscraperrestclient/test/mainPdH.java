@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.sidelab.cuokawebscraperrestclient.test;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
@@ -19,21 +14,11 @@ import org.jsoup.select.Elements;
 
 /**
  *
- * @author lux_f
+ * @author Lucia Fernandez Guzman
  */
-public class mainPdH {
-    
 
-    private static boolean containsProduct( List<Product> productList, String reference )
-    {
-        for ( Product p : productList )
-            for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
-                    return true;
-        
-        return false;
-    }
-    
+public class mainPdH 
+{    
     public static void main(String[] args) throws Exception 
     {
         String shop = "http://pedrodelhierro.com";
@@ -72,64 +57,77 @@ public class mainPdH {
             //Nos conectamos al link de cada producto
             Document doc = Jsoup.connect(link).timeout(Properties.TIMEOUT).ignoreHttpErrors(true).get();
             
-           
-                Elements prueba1 = doc.select("ul.product_colors ");
-                Elements prueba2 = prueba1.select("li");
-                Elements colors = prueba2.select("a img");
-                System.out.println("Numero de colores disponibles" + colors.size());
-                
-                if(colors.size()>1){
-                    int index = link.lastIndexOf("=");
-                    String colorCode = link.substring(index+1);
-                    colorCode = "color_".concat(colorCode);
-                    
-                    for(Element color : colors){
-                        String colorName = color.attr("alt").toUpperCase();
-                        String colorURL = fixURL(color.attr("src"));
+            Elements prueba1 = doc.select("ul.product_colors ");
+            Elements prueba2 = prueba1.select("li");
+            Elements colors = prueba2.select("a img");
+            System.out.println("Numero de colores disponibles" + colors.size());
 
-                        //sacamos las imagenes correspondientes a cada color
-                        List<Image> imagesURL = new ArrayList();
-                        Elements images = doc.select("#product_image_list li");
+            if (colors.size() > 1) 
+            {
+                int index = link.lastIndexOf("=");
+                String colorCode = link.substring(index + 1);
+                colorCode = "color_".concat(colorCode);
 
-                        for(Element img : images){
-                            Set<String> set = img.classNames();
-                            for(String classname : set){
-                                if(classname.equals(colorCode)){
-                                    imagesURL.add(new Image( fixURL(img.select("a img").first().attr("src"))));
-                                    System.out.println(fixURL(img.select("a img").first().attr("src")));
-                                }
-                            }
-                        }
-                        System.out.println(imagesURL.size());
-                    }
-                }
-                /*Si solo hay un color se trata de forma distinta*/
-                else{
+                for (Element color : colors) 
+                {
+                    String colorName = color.attr("alt").toUpperCase();
+                    String colorURL = fixURL(color.attr("src"));
+
+                    //sacamos las imagenes correspondientes a cada color
                     List<Image> imagesURL = new ArrayList();
                     Elements images = doc.select("#product_image_list li");
-                    for(Element img : images){
-                        imagesURL.add(new Image( fixURL(img.select("a img").first().attr("src"))));
-                        System.out.println(fixURL(img.select("a img").first().attr("src")));
-                          
+
+                    for (Element img : images) 
+                    {
+                        Set<String> set = img.classNames();
+                        for (String classname : set) 
+                        {
+                            if (classname.equals(colorCode)) 
+                            {
+                                imagesURL.add(new Image(fixURL(img.select("a img").first().attr("src"))));
+                                System.out.println(fixURL(img.select("a img").first().attr("src")));
+                            }
+                        }
                     }
+                    
                     System.out.println(imagesURL.size());
                 }
-            ;
-                         
+                
+            } else {
+                List<Image> imagesURL = new ArrayList();
+                Elements images = doc.select("#product_image_list li");
+                for (Element img : images) {
+                    imagesURL.add(new Image(fixURL(img.select("a img").first().attr("src"))));
+                    System.out.println(fixURL(img.select("a img").first().attr("src")));
+
+                }
+                System.out.println(imagesURL.size());
+            }
+
             System.out.println(link);
             System.out.println(name);
             System.out.println(price);
             System.out.println(reference);
-           // System.out.println(colorName);      
+            // System.out.println(colorName);      
             System.out.println("------------------------FINALizado ------------------------------");
         }
     }        
     
-     public static String fixURL( String url )
+    public static String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
     }     
+     
+    private static boolean containsProduct( List<Product> productList, String reference )
+    {
+        for ( Product p : productList )
+            for ( ColorVariant cv : p.getColors() )
+                if ( cv.getReference().equals( reference ) )
+                    return true;
+        
+        return false;
+    }
 }

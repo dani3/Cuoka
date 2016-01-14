@@ -60,11 +60,6 @@ if __name__ == '__main__':
               man = manAux
               if (".txt" not in man):
                   path_shop_gender = path_shop + '\\' + man
-
-                  #Recorremos cada seccion y borramos los htmls antiguos
-                  for section in os.listdir(path_shop_gender):
-                      if '.html' in section:
-                          os.remove(path_shop_gender + '\\' + section)
                   
                   #Recorremos cada seccion para cada genero
                   for section in os.listdir(path_shop_gender):

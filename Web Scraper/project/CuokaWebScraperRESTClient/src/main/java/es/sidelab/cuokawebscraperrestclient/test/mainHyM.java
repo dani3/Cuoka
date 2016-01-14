@@ -12,18 +12,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class mainHyM {
-
-    private static boolean containsProduct( List<Product> productList, String reference )
-    {
-        for ( Product p : productList )
-            for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
-                    return true;
-        
-        return false;
-    }
-    
+public class mainHyM 
+{    
     public static void main(String[] args) throws Exception {
         
         // Lista de productos
@@ -115,5 +105,15 @@ public class mainHyM {
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
-    }     
+    }   
+    
+    private static boolean containsProduct( List<Product> productList, String reference )
+    {
+        for ( Product p : productList )
+            for ( ColorVariant cv : p.getColors() )
+                if ( cv.getReference().equals( reference ) )
+                    return true;
+        
+        return false;
+    }
 }

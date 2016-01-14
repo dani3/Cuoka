@@ -12,13 +12,12 @@ public class main
     
     public static void main( String[] args ) throws Exception
     {          
-        LOG.info( "Sacamos la lista de tiendas" );
+        LOG.info( "Buscamos la lista de tiendas" );
         
         // Sacamos la lista de tiendas
         List<Shop> shops = ScraperManager.getArrayOfShops();        
         
-        LOG.info( "Lista de tiendas recibida y creada correctamente" );
-        LOG.info( "Se han recibido " + shops.size() + " tiendas" );
+        LOG.info( "Se han encontrado " + shops.size() + " tiendas" );
         
         // Ejecutamos concurrentemente los scrapers
         MultithreadManager.parallelScrap( shops );

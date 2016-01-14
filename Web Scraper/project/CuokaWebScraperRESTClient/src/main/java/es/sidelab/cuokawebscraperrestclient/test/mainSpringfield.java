@@ -12,26 +12,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class mainSpringfield {
-
-    private static boolean containsProduct( List<Product> productList, String reference )
-    {
-        for ( Product p : productList )
-            for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
-                    return true;
-        
-        return false;
-    }
-    
-    public static String fixURL( String url )
-    {
-        if ( url.startsWith( "//" ) )
-            return "http:".concat( url ).replace( " " , "%20" );
-        
-        return url;
-    }
-    
+public class mainSpringfield 
+{    
     public static void main(String[] args) throws Exception 
     {        
         // Lista preparada para la concurrencia donde escribiran todos los scrapers
@@ -165,4 +147,21 @@ public class mainSpringfield {
         
     }
     
+    private static boolean containsProduct( List<Product> productList, String reference )
+    {
+        for ( Product p : productList )
+            for ( ColorVariant cv : p.getColors() )
+                if ( cv.getReference().equals( reference ) )
+                    return true;
+        
+        return false;
+    }
+    
+    public static String fixURL( String url )
+    {
+        if ( url.startsWith( "//" ) )
+            return "http:".concat( url ).replace( " " , "%20" );
+        
+        return url;
+    }
 }

@@ -13,10 +13,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class testBlanco {
-
-    public static void main(String[] args) throws Exception {
-        
+public class mainBlanco 
+{
+    public static void main(String[] args) throws Exception 
+    {        
         // Lista preparada para la concurrencia donde escribiran todos los scrapers
         List<Product> productList = new ArrayList<>();
         
@@ -109,5 +109,4 @@ public class testBlanco {
         
         return url;
     }   
-    
 }

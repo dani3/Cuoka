@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Class Clase que gestiona los distintos scrapers, actua de middleware.
+ * @class Clase que gestiona los distintos scrapers, actua de middleware.
  * @author Daniel Mancebo Aldea
  */
 

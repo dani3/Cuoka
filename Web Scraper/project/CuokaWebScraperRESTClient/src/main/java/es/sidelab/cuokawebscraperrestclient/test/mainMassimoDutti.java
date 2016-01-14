@@ -25,12 +25,28 @@ public class mainMassimoDutti
 {
     public static void main(String[] args) throws Exception 
     {
-        File html = new File("C:\\Python27/dutti.html");
+        File html = new File("C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Massimo Dutti_true\\true\\Massimo Dutti_Camisas_true.html");
         Document document = Jsoup.parse(html, "UTF-8");
         
         Elements products = document.select( "#product-list > li > a" );
         
         for ( Element product : products )
-            System.out.println( product.attr( "href" ) );
+        {
+            document = Jsoup.connect( product.attr( "href" ) )
+                                .timeout( Properties.TIMEOUT )
+                                .ignoreHttpErrors( true ).get();
+            
+            System.out.println( document.html() );
+            
+            String link = product.attr( "href" );
+            String name = document.select( "h1.product-name" ).first().ownText().toUpperCase();
+            String price = document.select( "div.prices p.currentPrice" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String reference = document.select( "div.product-main-info #product-ref" ).first().ownText().replaceAll( "Ref. " , "" ).replaceAll( "/" , "" ).trim();
+        
+            System.out.println( link );
+            System.out.println( name );
+            System.out.println( price );
+            System.out.println( reference );
+        }
     }
 }
