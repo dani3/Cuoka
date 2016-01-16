@@ -14,4 +14,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="114dp" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hombre"
+        android:id="@+id/checkBox"
+        android:textColor="@color/colorText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="116dp"
+        android:checked="false" />
+
 </RelativeLayout>

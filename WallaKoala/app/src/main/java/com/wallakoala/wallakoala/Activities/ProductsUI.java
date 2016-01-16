@@ -764,8 +764,12 @@ public class ProductsUI extends AppCompatActivity
             URL url = null;
 
             try {
-                url = new URL(SERVER_URL + ":" + SERVER_SPRING_PORT
-                                    + "/newness/" + mShopsList.get(myPos) + "/" + MAN);
+                String fixedURL = SERVER_URL + ":" + SERVER_SPRING_PORT
+                        + "/newness/" + mShopsList.get(myPos).replaceAll(" ", "%20") + "/" + MAN;
+
+                Log.d(TAG, "Conectando con: " + fixedURL);
+
+                url = new URL(fixedURL);
 
                 if (url != null)
                 {
@@ -879,7 +883,7 @@ public class ProductsUI extends AppCompatActivity
 
             } else {
 
-                if ( mProductsCandidatesDeque.isEmpty() )
+                if ( mProductsDisplayedList.isEmpty() )
                 {
                     _noData( true );
                     mLoadingView.setVisibility( View.GONE );

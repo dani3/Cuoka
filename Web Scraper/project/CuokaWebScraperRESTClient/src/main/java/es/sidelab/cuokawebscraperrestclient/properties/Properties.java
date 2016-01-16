@@ -14,4 +14,5 @@ public class Properties
     public static final int TIMEOUT = 60000;   
     
     public static final String HTML_PATH = "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files";
+    public static final String RENDER_SCRIPT = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\Web Scraper\\scripts\\";
 }

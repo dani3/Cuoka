@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.scrapers.PdHScraper;
 import org.apache.log4j.Logger;
 import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 import java.io.BufferedReader;
@@ -31,8 +32,11 @@ public class ScraperManager
     public static Scraper getScraper( Shop shop ) 
     {
         try {
-            return ( Scraper ) Class.forName( "es.sidelab.cuokawebscraperrestclient.scrapers." 
-                                        + shop.getName() + "Scraper" ).newInstance();
+            if ( shop.getName().equals( "Pedro Del Hierro" ) )
+                return ( Scraper ) new PdHScraper();
+            else
+                return ( Scraper ) Class.forName( "es.sidelab.cuokawebscraperrestclient.scrapers." 
+                                            + shop.getName() + "Scraper" ).newInstance();
             
         } catch ( ClassNotFoundException ex ) {
             LOG.error( "ERROR: No se encontro la clase" );

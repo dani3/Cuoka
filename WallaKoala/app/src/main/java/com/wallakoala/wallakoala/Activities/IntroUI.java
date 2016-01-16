@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -24,32 +25,35 @@ public class IntroUI extends AppCompatActivity
 
     /* Views */
     protected Button enter;
+    protected CheckBox man;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate(savedInstanceState);
 
-        // Especificamos el layout 'intro.xml'
-        setContentView( R.layout.intro );
-
-        Set<String> shops = new HashSet<>();
-        shops.add( "Blanco" );
-        shops.add( "HyM" );
-        shops.add( "Springfield" );
-        shops.add( "PedroDelHierro" );
-
         mSharedPreferencesManager = new SharedPreferencesManager( this );
-        mSharedPreferencesManager.insertMan( true );
-        mSharedPreferencesManager.insertShops( shops );
-        mSharedPreferencesManager.insertNewness( true );
 
+        // Especificamos el layout 'intro.xml'
+        setContentView(R.layout.intro);
+
+        man = ( CheckBox )findViewById( R.id.checkBox );
         enter = ( Button )findViewById( R.id.enter );
         enter.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
             {
+                Set<String> shops = new HashSet<>();
+                //shops.add( "Blanco" );
+                shops.add( "HyM" );
+                shops.add( "Springfield" );
+                shops.add( "Pedro Del Hierro" );
+
+                mSharedPreferencesManager.insertMan( man.isChecked() );
+                mSharedPreferencesManager.insertShops( shops );
+                mSharedPreferencesManager.insertNewness( true );
+
                 Intent intent = new Intent( IntroUI.this, ProductsUI.class );
                 startActivity( intent );
 

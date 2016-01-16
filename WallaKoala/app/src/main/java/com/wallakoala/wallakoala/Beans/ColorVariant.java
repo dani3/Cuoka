@@ -11,7 +11,6 @@ public class ColorVariant
 {
     private String reference;
     private String colorName;
-    private String colorURL;
     private String colorPath;    
     private List<Image> images;
     

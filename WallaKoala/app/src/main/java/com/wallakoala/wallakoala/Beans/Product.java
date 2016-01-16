@@ -16,7 +16,6 @@ public class Product
 	private String shop;
 	private String section;
 	private double price;
-	private boolean man;
 	private String link;
 	private boolean newness;
 	private List<ColorVariant> colors;

@@ -1,37 +1,38 @@
-package es.sidelab.cuokawebscraperrestclient.test;
+package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *
- * @author Lucia Fernandez Guzman
+ * @class Scraper especifico para Pedro Del Hierro
+ * @author Daniel Mancebo Aldea
  */
 
-public class mainPdH 
-{    
-    public static void main(String[] args) throws Exception 
-    {
-        String shop = "http://pedrodelhierro.com";
-        List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Americanas_true.html" );
+public class PdHScraper implements Scraper
+{
+    // Lista preparada para la concurrencia donde escribiran todos los scrapers
+    private static List<Product> productList = new CopyOnWriteArrayList<>();
+    
+    @Override
+    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
+    {        
+        File html = new File( htmlPath );
         Document document = Jsoup.parse( html, "UTF-8" );
-                  
-        Elements products = document.select( "ul.product-listing li div.content_product > a" );
         
-        System.out.println( products.size() );
+        Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
         for ( Element element : products )
@@ -41,12 +42,12 @@ public class mainPdH
                 List<ColorVariant> variants = new ArrayList<>();
 
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                document = Jsoup.connect( shop 
+                document = Jsoup.connect( shop.getURL().toString()
                                 + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
                                                           .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
-                String link = shop + element.attr( "href" );
+                String link = shop.getURL().toString() + element.attr( "href" );
                 String name = document.select( "#product-information h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
@@ -106,10 +107,10 @@ public class mainPdH
                 {
                     productList.add( new Product( Double.parseDouble( price )
                                             , name
-                                            , ""
-                                            , ""
+                                            , shop.getName()
+                                            , section.getName()
                                             , link 
-                                            , true
+                                            , section.isMan()
                                             , variants ) );                
                 } else {
                     // Buscamos el producto
@@ -128,37 +129,22 @@ public class mainPdH
                     }
                 }
                 
-            } catch ( Exception ex ) { ex.printStackTrace(); }
+            } catch ( Exception ex ) {}
             
         } // for products
-        
-        Product p = productList.get( 0 );
-        
-        System.out.println( "-------- INFO PRODUCTO ----------" );
-        System.out.println( "Nombre: " + p.getName() );
-        System.out.println( "Link: " + p.getLink() );
-        System.out.println( "Precio: " + p.getPrice() + " €" );
-        System.out.println( "-------- INFO COLORES -----------" );
-        for ( ColorVariant cv : p.getColors() )
-        {
-            System.out.println( " - Color: " + cv.getColorName() );
-            System.out.println( " - Icono: " + cv.getColorURL() );
-            System.out.println( " - Referencia: " + cv.getReference() );
-            for ( Image image : cv.getImages() )
-                System.out.println( " - " + image.getUrl() );
             
-            System.out.println( "\n" );            
-        }
-    }        
+        return productList;
+    }
     
-    public static String fixURL( String url )
+    @Override
+    public String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
-    }     
-     
+    } 
+    
     private static boolean containsProduct( List<Product> productList, String reference )
     {
         for ( Product p : productList )

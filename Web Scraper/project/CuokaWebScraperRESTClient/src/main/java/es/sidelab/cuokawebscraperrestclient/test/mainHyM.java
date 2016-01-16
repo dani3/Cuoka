@@ -62,9 +62,7 @@ public class mainHyM
                     Elements images = document.select( "div.product-detail-thumbnails li img" );
                     for ( Element img : images )
                         imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
-                    
-                    Elements elements = document.select( "ul.inputlist.clearfix" );
-                             
+                                                 
                     variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                 }
                                 
