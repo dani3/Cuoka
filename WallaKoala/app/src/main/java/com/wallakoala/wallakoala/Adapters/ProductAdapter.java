@@ -99,7 +99,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             title.setText(product.getShop());
             subtitle.setText(product.getSection());
             name.setText(product.getName());
-            price.setText(Double.toString(product.getPrice()).replaceAll(".0", "") + "€");
+            price.setText(String.format( "%.2f", product.getPrice() ) + "€");
 
             // Ocultamos la info extra, IMPORTANTE. Cosas malas pasan si no se pone.
             footerExtra.setVisibility( View.GONE );

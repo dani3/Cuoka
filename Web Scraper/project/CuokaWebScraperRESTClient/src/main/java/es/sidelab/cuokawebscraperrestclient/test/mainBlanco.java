@@ -40,11 +40,6 @@ public class mainBlanco
             String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
             
-            System.out.println( link );
-            System.out.println( name );
-            System.out.println( price );
-            System.out.println( reference );
-            
             // Obtenemos los colores del producto
             boolean first = true;
             List<ColorVariant> variants = new ArrayList<>();
