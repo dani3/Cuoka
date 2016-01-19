@@ -105,13 +105,17 @@ public class PdHScraper implements Scraper
                 // Si el producto es nuevo, se inserta directamente, si no, se actualiza con el nuevo color
                 if ( ! containsProduct( productList, reference ) )
                 {
-                    productList.add( new Product( Double.parseDouble( price )
-                                            , name
-                                            , shop.getName()
-                                            , section.getName()
-                                            , link 
-                                            , section.isMan()
-                                            , variants ) );                
+                    if ( ! colors.isEmpty() )
+                    {
+                        productList.add( new Product( Double.parseDouble( price )
+                                                , name
+                                                , shop.getName()
+                                                , section.getName()
+                                                , link 
+                                                , section.isMan()
+                                                , variants ) );   
+                    }
+                    
                 } else {
                     // Buscamos el producto
                     for ( Product product : productList )

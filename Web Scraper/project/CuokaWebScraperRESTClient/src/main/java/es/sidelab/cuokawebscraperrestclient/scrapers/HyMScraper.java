@@ -76,15 +76,19 @@ public class HyMScraper implements Scraper
 
                         variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
                     
-                }
+                    }
                     
-                productList.add( new Product( Double.parseDouble( price )
-                                    , name
-                                    , shop.getName()
-                                    , section.getName()
-                                    , link 
-                                    , section.isMan()
-                                    , variants ) );
+                    if ( ! colors.isEmpty() )
+                    {    
+                        productList.add( new Product( Double.parseDouble( price )
+                                            , name
+                                            , shop.getName()
+                                            , section.getName()
+                                            , link 
+                                            , section.isMan()
+                                            , variants ) );
+                    }
+                    
                 } 
                 
             } catch ( Exception e ) {}

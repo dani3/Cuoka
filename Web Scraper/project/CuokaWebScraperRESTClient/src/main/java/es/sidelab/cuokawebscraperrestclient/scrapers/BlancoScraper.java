@@ -37,52 +37,59 @@ public class BlancoScraper implements Scraper
             
         for ( Element element : products )
         {
-            document = Jsoup.connect( shop.getURL().toString() +  element.attr( "href" ) )
-                                .header( "Accept-Language", "es" )
-                                .timeout( Properties.TIMEOUT )
-                                .ignoreHttpErrors( true ).get();
-            
-            // Obtener todos los atributos propios del producto
-            String link = shop.getURL().toString() + element.attr( "href" );
-            String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-            String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
-            
-            // Obtenemos los colores del producto
-            boolean first = true;
-            List<ColorVariant> variants = new ArrayList<>();
-            Elements colors = document.select( "ul.super-attribute-select-custom li span img" );
-            for ( Element color : colors )
+            try 
             {
-                List<Image> imagesURL = null;
-                
-                String colorName = color.attr( "title" ).toUpperCase();
-                String colorURL = fixURL( color.attr( "src" ) );
-                
-                // De Blanco no podemos acceder a las imagenes de los colores alternativos, solo las del color principal
-                if ( first )
+                document = Jsoup.connect( shop.getURL().toString() +  element.attr( "href" ) )
+                                    .header( "Accept-Language", "es" )
+                                    .timeout( Properties.TIMEOUT )
+                                    .ignoreHttpErrors( true ).get();
+
+                // Obtener todos los atributos propios del producto
+                String link = shop.getURL().toString() + element.attr( "href" );
+                String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
+                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+                String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
+
+                // Obtenemos los colores del producto
+                boolean first = true;
+                List<ColorVariant> variants = new ArrayList<>();
+                Elements colors = document.select( "ul.super-attribute-select-custom li span img" );
+                for ( Element color : colors )
                 {
-                    Elements images = document.select( "div.product-image-gallery img" );
-                    imagesURL = new ArrayList<>();
-                    for ( Element img : images )
-                        if ( ! img.attr( "id" ).equals( "image-main" ) )
-                            imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
-                    
-                    first = false;
+                    List<Image> imagesURL = null;
+
+                    String colorName = color.attr( "title" ).toUpperCase();
+                    String colorURL = fixURL( color.attr( "src" ) );
+
+                    // De Blanco no podemos acceder a las imagenes de los colores alternativos, solo las del color principal
+                    if ( first )
+                    {
+                        Elements images = document.select( "div.product-image-gallery img" );
+                        imagesURL = new ArrayList<>();
+                        for ( Element img : images )
+                            if ( ! img.attr( "id" ).equals( "image-main" ) )
+                                imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
+
+                        first = false;
+                    }
+
+                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                 }
+
+                if ( ! colors.isEmpty() )
+                {
+                    productList.add( new Product( Double.parseDouble( price )
+                                            , name
+                                            , shop.getName()
+                                            , section.getName()
+                                            , link 
+                                            , section.isMan()
+                                            , variants ) );
+                }
+                
+            } catch ( Exception e ) {}
             
-                variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
-            }
-            
-            // Creamos y añadimos el producto a la lista concurrente               
-            productList.add( new Product( Double.parseDouble( price )
-                                    , name
-                                    , shop.getName()
-                                    , section.getName()
-                                    , link
-                                    , section.isMan()
-                                    , variants ) );
-        }
+        } // for products
             
         return productList;
     }
