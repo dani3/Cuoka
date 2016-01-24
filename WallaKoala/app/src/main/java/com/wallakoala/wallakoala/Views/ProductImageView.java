@@ -2,7 +2,6 @@ package com.wallakoala.wallakoala.Views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -32,6 +31,6 @@ public class ProductImageView extends RoundedImageView
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec )
     {
         super.onMeasure( widthMeasureSpec, heightMeasureSpec );
-        setMeasuredDimension( getMeasuredWidth(), (int)(getMeasuredWidth() * 1.428f) );
+        setMeasuredDimension( getMeasuredWidth(), (int)(getMeasuredWidth() * 1.32f) );
     }
 }

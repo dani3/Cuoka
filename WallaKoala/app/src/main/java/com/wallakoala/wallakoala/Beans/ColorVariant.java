@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Beans;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * Created by Daniel Mancebo on 11/12/2015.
  */
 
-public class ColorVariant
+public class ColorVariant implements Serializable
 {
     private String reference;
     private String colorName;

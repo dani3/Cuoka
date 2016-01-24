@@ -24,7 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
-import com.wallakoala.wallakoala.Adapters.ProductAdapter;
+import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
@@ -118,7 +118,7 @@ public class ProductsUI extends AppCompatActivity
     protected TextView mNoDataTextView;
 
     /* Adapters */
-    protected ProductAdapter mProductAdapter;
+    protected ProductsGridAdapter mProductAdapter;
 
     /* Animations */
     protected Animation moveAndFade;
@@ -233,7 +233,7 @@ public class ProductsUI extends AppCompatActivity
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
         mGridLayoutManager    = new GridLayoutManager( this, 2 );
-        mProductAdapter       = new ProductAdapter( this, mProductsDisplayedList );
+        mProductAdapter       = new ProductsGridAdapter( this, mProductsDisplayedList );
 
         mProductsRecyclerView.setLayoutManager( mGridLayoutManager );
         mProductsRecyclerView.setAdapter( mProductAdapter );
