@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -32,6 +33,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 {
     /* Constants */
     private static final String TAG = "CUOKA";
+    private static final String PACKAGE = "com.wallakoala.wallakoala";
 
     /* Context */
     private static Context mContext;
@@ -114,7 +116,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             // Mostramos la view de carga
             loading.setVisibility( View.VISIBLE );
 
-            Log.d(TAG, "Image URL: "
+            Log.d( TAG, "Image URL: "
                     + product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ));
 
             // Cargamos la imagen utilizando Picasso.
@@ -156,14 +158,35 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             }
 
+            // Si se pulsa en la imagen
             if ( view.getId() == image.getId() )
             {
-                ColorVariant color = mProduct.getColors().get(0);
+                Activity activity = ( Activity )mContext;
+
+                // Sacamos las coordenadas de la imagen
+                int[] screenLocation = new int[2];
+                view.getLocationInWindow( screenLocation );
+
+                ColorVariant color = mProduct.getColors().get( 0 );
+
+                // Sacamos la orientacion de la pantalla
+                int orientation = activity.getResources().getConfiguration().orientation;
+
+                // Creamos el intent
                 Intent intent = new Intent( mContext, ProductUI.class );
 
-                intent.putExtra( "com.wallakoala.wallakoala.Beans.ColorVariant", color );
+                intent
+                    .putExtra( PACKAGE + ".Beans.ColorVariant", color )
+                    .putExtra( PACKAGE + ".orientation", orientation )
+                    .putExtra( PACKAGE + ".left", screenLocation[0] )
+                    .putExtra( PACKAGE + ".top", screenLocation[1] )
+                    .putExtra( PACKAGE + ".width", view.getWidth() )
+                    .putExtra( PACKAGE + ".height", view.getHeight() );
 
-                mContext.startActivity(intent);
+                mContext.startActivity( intent );
+
+                // Desactivamos las transiciones por defecto
+                activity.overridePendingTransition( 0, 0 );
             }
         }
 

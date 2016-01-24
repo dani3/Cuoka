@@ -7,16 +7,14 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/topLevelLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/product_recycler_view"
+        <com.wallakoala.wallakoala.Views.ProductImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
-
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
