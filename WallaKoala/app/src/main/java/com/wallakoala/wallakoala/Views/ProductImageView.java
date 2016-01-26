@@ -14,23 +14,24 @@ public class ProductImageView extends RoundedImageView
 {
     public ProductImageView(Context context)
     {
-        super( context );
+        super(context);
     }
 
     public ProductImageView(Context context, AttributeSet attrs)
     {
-        super( context, attrs );
+        super(context, attrs);
     }
 
     public ProductImageView(Context context, AttributeSet attrs, int defStyle)
     {
-        super( context, attrs, defStyle );
+        super(context, attrs, defStyle);
     }
 
     @Override
-    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec )
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
-        super.onMeasure( widthMeasureSpec, heightMeasureSpec );
-        setMeasuredDimension( getMeasuredWidth(), (int)(getMeasuredWidth() * 1.32f) );
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        setMeasuredDimension(getMeasuredWidth(), (int)(getMeasuredWidth() * 1.35f));
     }
 }

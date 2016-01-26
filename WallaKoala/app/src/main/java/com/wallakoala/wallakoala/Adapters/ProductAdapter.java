@@ -55,7 +55,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public void bindProduct( Image imageProduct )
         {
             error.setVisibility( View.GONE );
-            loading.setVisibility( View.VISIBLE );
+            loading.setVisibility(View.VISIBLE);
 
             Log.d( TAG, "Image URL: "
                     + imageProduct.getPath().replaceAll( ".jpg", "_Large.jpg" ) );

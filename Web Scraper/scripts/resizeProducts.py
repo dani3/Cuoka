@@ -7,10 +7,12 @@ from PIL import Image
 from PIL import ImageFile
 
 path = sys.argv[1]
-width_l = int(sys.argv[2])
+ratio = float(sys.argv[2])
 height_l = int(sys.argv[3])
-width_s = int(sys.argv[4])
-height_s = int(sys.argv[5])
+height_s = int(sys.argv[4])
+
+width_l = int(height_l / ratio)
+width_s = int(height_s / ratio)
 
 ImageFile.LOAD_TRUNCATED_FILES = True
 

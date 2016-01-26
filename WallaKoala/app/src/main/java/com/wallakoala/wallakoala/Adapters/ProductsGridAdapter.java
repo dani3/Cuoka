@@ -3,6 +3,10 @@ package com.wallakoala.wallakoala.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,11 +21,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -47,6 +53,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private Product mProduct;
+        private int mBitmapId;
 
         private TextView title, subtitle, name, price;
         private ImageButton fav;
@@ -101,38 +108,40 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param product: producto con el que se inicializa un item.
          */
-        public void bindProduct( Product product )
+        public void bindProduct(Product product)
         {
             // Establecemos todos los textViews
             title.setText(product.getShop());
             subtitle.setText(product.getSection());
             name.setText(product.getName());
-            price.setText(String.format( "%.2f", product.getPrice() ) + "€");
+            price.setText(String.format("%.2f", product.getPrice()) + "€");
 
             // Ocultamos la info extra, IMPORTANTE. Cosas malas pasan si no se pone.
-            footerExtra.setVisibility( View.GONE );
+            footerExtra.setVisibility(View.GONE);
             // Ocultamos la imagen de error.
-            error.setVisibility( View.GONE );
+            error.setVisibility(View.GONE);
             // Mostramos la view de carga
-            loading.setVisibility( View.VISIBLE );
+            loading.setVisibility(View.VISIBLE);
 
-            Log.d( TAG, "Image URL: "
-                    + product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ));
+            Log.d(TAG, "Image URL: "
+                    + product.getColors().get(0)
+                                         .getImages()
+                                         .get(0).getPath().replaceAll(".jpg", "_Small.jpg"));
 
             // Cargamos la imagen utilizando Picasso.
-            Picasso.with( mContext )
-                   .load( product.getColors().get( 0 ).getImages().get( 0 ).getPath().replaceAll( ".jpg", "_Small.jpg" ) )
-                   .into( image, new Callback() {
-                       @Override
-                       public void onSuccess() {
-                           loading.setVisibility(View.GONE);
-                       }
+            Picasso.with(mContext)
+                   .load(product.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg"))
+                   .into(image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            loading.setVisibility(View.GONE);
+                        }
 
-                       @Override
-                       public void onError() {
-                           loading.setVisibility(View.GONE);
-                           error.setVisibility(View.VISIBLE);
-                       }
+                        @Override
+                        public void onError() {
+                            loading.setVisibility(View.GONE);
+                            error.setVisibility(View.VISIBLE);
+                        }
                    } );
 
             // Ponemos el icono del corazon.
@@ -161,33 +170,71 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             // Si se pulsa en la imagen
             if ( view.getId() == image.getId() )
             {
-                Activity activity = ( Activity )mContext;
+                final View v = view;
 
-                // Sacamos las coordenadas de la imagen
-                int[] screenLocation = new int[2];
-                view.getLocationInWindow( screenLocation );
+                Target target = new Target()
+                {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                    {
+                        Activity activity = (Activity)mContext;
 
-                ColorVariant color = mProduct.getColors().get( 0 );
+                        // Sacamos las coordenadas de la imagen
+                        int[] screenLocation = new int[2];
+                        v.getLocationInWindow(screenLocation);
 
-                // Sacamos la orientacion de la pantalla
-                int orientation = activity.getResources().getConfiguration().orientation;
+                        ColorVariant color = mProduct.getColors().get(0);
 
-                // Creamos el intent
-                Intent intent = new Intent( mContext, ProductUI.class );
+                        // Sacamos la orientacion de la pantalla
+                        int orientation = activity.getResources().getConfiguration().orientation;
 
-                intent
-                    .putExtra( PACKAGE + ".Beans.ColorVariant", color )
-                    .putExtra( PACKAGE + ".orientation", orientation )
-                    .putExtra( PACKAGE + ".left", screenLocation[0] )
-                    .putExtra( PACKAGE + ".top", screenLocation[1] )
-                    .putExtra( PACKAGE + ".width", view.getWidth() )
-                    .putExtra( PACKAGE + ".height", view.getHeight() );
+                        // Creamos el intent
+                        Intent intent = new Intent(mContext, ProductUI.class);
 
-                mContext.startActivity( intent );
+                        // Enviamos toda la informacion necesaria para que la siguiente activity
+                        // realice la animacion
+                        intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
+                              .putExtra(PACKAGE + ".bitmap", getImageUri(mContext, bitmap).toString())
+                              .putExtra(PACKAGE + ".left", screenLocation[0])
+                              .putExtra(PACKAGE + ".top", screenLocation[1])
+                              .putExtra(PACKAGE + ".width", v.getWidth())
+                              .putExtra(PACKAGE + ".height", v.getHeight());
 
-                // Desactivamos las transiciones por defecto
-                activity.overridePendingTransition( 0, 0 );
+                        mContext.startActivity(intent);
+
+                        // Desactivamos las transiciones por defecto
+                        activity.overridePendingTransition(0, 0);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {}
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                };
+
+                // Descargamos la imagen en HQ y la guardamos en un bitmap
+                Picasso.with(mContext)
+                       .load(mProduct.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Large.jpg"))
+                       .into(target);
             }
+        }
+
+        /**
+         * Metodo que saca la Uri de un bitmap.
+         * @param inContext: contexto.
+         * @param inImage: bitmap de la que se quiere sacar la Uri.
+         * @return Uri del bitmap.
+         */
+        private Uri getImageUri(Context inContext, Bitmap inImage)
+        {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+
+            return Uri.parse(path);
         }
 
     } /* [END] ViewHolder */

@@ -35,11 +35,11 @@
             android:visibility="gone"/>
 
         <!-- Imagen -->
-        <com.wallakoala.wallakoala.Views.ProductImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/grid_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:adjustViewBounds="true"
             app:riv_corner_radius_bottom_left="4dp"
             app:riv_corner_radius_bottom_right="4dp"
             app:riv_corner_radius_top_left="4dp"

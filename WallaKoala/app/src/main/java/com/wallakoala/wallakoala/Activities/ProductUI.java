@@ -2,22 +2,24 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.R;
+
+import java.io.IOException;
 
 /**
  * @class Pantalla de un producto.
@@ -43,11 +45,12 @@ public class ProductUI extends AppCompatActivity
     protected ColorVariant mColor;
     protected int mLeftDelta;
     protected int mTopDelta;
-    protected int mOriginalOrientation;
+    protected String mBitmapUri;
     protected float mWidthScale;
     protected float mHeightScale;
     protected BitmapDrawable mBitmapDrawable;
     protected ColorDrawable mBackground;
+    protected boolean mExiting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,20 +60,29 @@ public class ProductUI extends AppCompatActivity
         // Especificamos el layout 'product.xml'
         setContentView(R.layout.product);
 
-        mImageView = (ImageView)findViewById(R.id.imageView);
+        mImageView      = (ImageView)findViewById(R.id.imageView);
         mTopLevelLayout = (FrameLayout)findViewById(R.id.topLevelLayout);
 
         Bundle bundle = getIntent().getExtras();
 
-        final int thumbnailTop = bundle.getInt(PACKAGE + ".top");
-        final int thumbnailLeft = bundle.getInt(PACKAGE + ".left");
-        final int thumbnailWidth = bundle.getInt(PACKAGE + ".width");
-        final int thumbnailHeight = bundle.getInt(PACKAGE + ".height");
-        mOriginalOrientation = bundle.getInt(PACKAGE + ".orientation");
-        mColor = (ColorVariant) bundle.getSerializable(PACKAGE + ".Beans.ColorVariant");
+        mExiting = false;
 
-        mBitmapDrawable = new BitmapDrawable(getResources()
-                                    , BitmapFactory.decodeResource(getResources(), R.drawable.producto));
+        final int thumbnailTop    = bundle.getInt(PACKAGE + ".top");
+        final int thumbnailLeft   = bundle.getInt(PACKAGE + ".left");
+        final int thumbnailWidth  = bundle.getInt(PACKAGE + ".width");
+        final int thumbnailHeight = bundle.getInt(PACKAGE + ".height");
+        mBitmapUri                = bundle.getString(PACKAGE + ".bitmap");
+        mColor                    = (ColorVariant)bundle.getSerializable(PACKAGE + ".Beans.ColorVariant");
+
+        try
+        {
+            mBitmapDrawable = new BitmapDrawable(getResources()
+                                        , MediaStore.Images.Media.getBitmap(this.getContentResolver()
+                                                                    , Uri.parse(mBitmapUri)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         mImageView.setImageDrawable(mBitmapDrawable);
 
         // Ponemos un fondo de pantalla para ir oscureciondola
@@ -89,14 +101,13 @@ public class ProductUI extends AppCompatActivity
                 {
                     mImageView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                    // Figure out where the thumbnail and full size versions are, relative
-                    // to the screen and each other
+                    // Sacamos donde esta la imagen pequeña y lo que hay que desplazarse hacia ella
                     int[] screenLocation = new int[2];
                     mImageView.getLocationOnScreen(screenLocation);
                     mLeftDelta = thumbnailLeft - screenLocation[0];
                     mTopDelta = thumbnailTop - screenLocation[1];
 
-                    // Scale factors to make the large version the same size as the thumbnail
+                    // Factores de escala para saber cuanto hay que encojer o agrandar la imagen
                     mWidthScale = (float) thumbnailWidth / mImageView.getWidth();
                     mHeightScale = (float) thumbnailHeight / mImageView.getHeight();
 
@@ -109,16 +120,16 @@ public class ProductUI extends AppCompatActivity
     }
 
     /**
-     * The enter animation scales the picture in from its previous thumbnail
-     * size/location. In parallel, the background of the activity is fading in.
+     * La animacion de entrada escala la imagen desde la pequeña hasta la posicion/tamaño de la grande.
+     * En paralelo, el fondo se va oscureciendo.
      */
     public void runEnterAnimation()
     {
-        final long duration = ANIM_DURATION * 2;
+        final long duration = ANIM_DURATION;
 
-        // Set starting values for properties we're going to animate. These
-        // values scale and position the full size version down to the thumbnail
-        // size/location, from which we'll animate it back up
+        // Establecemos las propiedades para las animaciones. Estos
+        // valores escalan y desplazan la imagen grande a la posicion/tamaño de la pequeña.
+        // Desde donde se va a iniciar la animacion.
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
         mImageView.setScaleX(mWidthScale);
@@ -126,88 +137,58 @@ public class ProductUI extends AppCompatActivity
         mImageView.setTranslationX(mLeftDelta);
         mImageView.setTranslationY(mTopDelta);
 
-        // Animate scale and translation to go from thumbnail to full size
-        mImageView.animate().setDuration(duration).
-                scaleX(1).scaleY(1).
-                translationX(0).translationY(0).
-                setInterpolator(sDecelerator).
-                withEndAction(new Runnable() {
-                    public void run() {
-                        // Animate the description in after the image animation
-                        // is done. Slide and fade the text in from underneath
-                        // the picture.
-                        //mTextView.setTranslationY(-mTextView.getHeight());
-                        //mTextView.animate().setDuration(duration/2).
-                        //translationY(0).alpha(1).
-                        //setInterpolator(sDecelerator);
-                    }
-                });
+        // Animacion de escalado y desplazamiento hasta el tamaño grande
+        mImageView.animate().setDuration(duration)
+                            .scaleX(1).scaleY(1)
+                            .translationX(0).translationY(0)
+                            .setInterpolator(sDecelerator);
 
-        // Fade in the black background
+        // Efecto fade para oscurecer la pantalla
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
         bgAnim.setDuration(duration);
         bgAnim.start();
     }
 
     /**
-     * The exit animation is basically a reverse of the enter animation, except that if
-     * the orientation has changed we simply scale the picture back into the center of
-     * the screen.
+     * La animacion de salida es la misma animacion de entrada pero al reves
      *
      * @param endAction This action gets run after the animation completes (this is
      * when we actually switch activities)
      */
     public void runExitAnimation(final Runnable endAction)
     {
-        final long duration = (long) (ANIM_DURATION * 2);
+        mExiting = true;
 
-        // No need to set initial values for the reverse animation; the image is at the
-        // starting size/location that we want to start from. Just animate to the
-        // thumbnail size/location that we retrieved earlier
+        final long duration = ANIM_DURATION;
 
-        final boolean fadeOut;
-        if (getResources().getConfiguration().orientation != mOriginalOrientation)
-        {
-            mImageView.setPivotX(mImageView.getWidth() / 2);
-            mImageView.setPivotY(mImageView.getHeight() / 2);
+        mImageView.animate().setDuration(duration)
+                            .scaleX(mWidthScale).scaleY(mHeightScale)
+                            .translationX(mLeftDelta).translationY(mTopDelta)
+                            .withEndAction(endAction);
 
-            mLeftDelta = 0;
-            mTopDelta = 0;
 
-            fadeOut = true;
-
-        } else {
-            fadeOut = false;
-        }
-
-        mImageView.animate().setDuration(duration).
-                scaleX(mWidthScale).scaleY(mHeightScale).
-                translationX(mLeftDelta).translationY(mTopDelta).
-                withEndAction(endAction);
-
-        if (fadeOut)
-            mImageView.animate().alpha(0);
-
-        // Fade out background
+        // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
         bgAnim.setDuration(duration);
         bgAnim.start();
     }
 
     /**
-     * Overriding this method allows us to run our exit animation first, then exiting
-     * the activity when it is complete.
+     * Sobreescribir este metodo nos permite ejecutar la animacion de salida
+     * y luego salir de la activity.
      */
     @Override
     public void onBackPressed()
     {
-        runExitAnimation(new Runnable()
+        if ( ! mExiting )
         {
-            public void run()
+            runExitAnimation(new Runnable()
             {
-                finish();
-            }
-        });
+                public void run() {
+                    finish();
+                }
+            });
+        }
     }
 
     @Override
@@ -215,6 +196,7 @@ public class ProductUI extends AppCompatActivity
     {
         super.finish();
 
+        // Deshabilitamos las animaciones de Android
         overridePendingTransition(0, 0);
     }
 }
