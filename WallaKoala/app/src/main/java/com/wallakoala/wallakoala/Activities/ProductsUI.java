@@ -11,7 +11,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -110,7 +109,7 @@ public class ProductsUI extends AppCompatActivity
     protected CoordinatorLayout mCoordinatorLayout;
 
     /* LayoutManagers */
-    protected GridLayoutManager mGridLayoutManager;
+    protected StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
@@ -233,10 +232,10 @@ public class ProductsUI extends AppCompatActivity
     protected void _initRecyclerView()
     {
         mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
-        mGridLayoutManager    = new GridLayoutManager( this, 2 );
+        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager( 2, 1 );
         mProductAdapter       = new ProductsGridAdapter( this, mProductsDisplayedList );
 
-        mProductsRecyclerView.setLayoutManager( mGridLayoutManager );
+        mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter( mProductAdapter );
         mProductsRecyclerView.setOnScrollListener( new RecyclerView.OnScrollListener() {
             int verticalOffset;
@@ -281,8 +280,11 @@ public class ProductsUI extends AppCompatActivity
                     // Detectamos cuando llegamos abajo para cargar nuevos productos
                     if ( ! mProductsCandidatesDeque.isEmpty() )
                     {
-                        if (mProductsDisplayedList.size() ==
-                                (mGridLayoutManager.findLastCompletelyVisibleItemPosition() + 1))
+                        int[] lastItemsPosition = new int[2];
+                        mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
+
+                        if ( ( lastItemsPosition[0] == mProductsDisplayedList.size() - 2 ) ||
+                             ( lastItemsPosition[1] == mProductsDisplayedList.size() - 1 ) )
                         {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();

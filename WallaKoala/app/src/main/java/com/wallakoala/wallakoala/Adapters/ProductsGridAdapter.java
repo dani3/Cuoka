@@ -84,7 +84,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             footerExtra = itemView.findViewById( R.id.extraInfo );
 
             footer.setOnClickListener( this );
-            image.setOnClickListener( this );
+            //image.setOnClickListener( this );
 
             scaleUpFooterExtra = AnimationUtils.loadAnimation( mContext, R.anim.scale_up );
             scaleDownFooterExtra = AnimationUtils.loadAnimation( mContext, R.anim.scale_down );
