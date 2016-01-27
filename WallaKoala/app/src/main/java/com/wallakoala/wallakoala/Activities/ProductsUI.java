@@ -140,12 +140,12 @@ public class ProductsUI extends AppCompatActivity
     protected long mBackPressed;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate( savedInstanceState );
+        super.onCreate(savedInstanceState);
 
         // Especificamos el layout 'products_grid.xml'
-        setContentView( R.layout.products_grid );
+        setContentView(R.layout.products_grid);
 
         _initData();
         _initAuxViews();
@@ -161,7 +161,7 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initData()
     {
-        mSharedPreferences = new SharedPreferencesManager( this );
+        mSharedPreferences = new SharedPreferencesManager(this);
 
         mProductsMap             = new ConcurrentHashMap<>();
         mFilterMap               = _initFilterMap();
@@ -170,8 +170,8 @@ public class ProductsUI extends AppCompatActivity
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
 
-        for ( String shop : mSharedPreferences.retreiveShops() )
-            mShopsList.add( shop );
+        for (String shop : mSharedPreferences.retreiveShops())
+            mShopsList.add(shop);
 
         start = count = 0;
         mBackPressed = 0;
@@ -204,13 +204,13 @@ public class ProductsUI extends AppCompatActivity
     protected void _initAuxViews()
     {
         // CoordinatorLayout
-        mCoordinatorLayout = ( CoordinatorLayout )findViewById( R.id.coordinator_layout );
+        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
 
         // LoaderView
         mLoadingView = findViewById(R.id.avloadingIndicatorView);
 
-        // TextViews que muestran que no hay productos disponibles o se ha producido un error
-        mNoDataTextView = ( TextView )findViewById( R.id.nodata_textview );
+        // TextView que muestran que no hay productos disponibles
+        mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
     }
 
     /**
@@ -218,11 +218,11 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initToolbar()
     {
-        mToolbar = ( Toolbar )findViewById( R.id.appbar );
-        mToolbarTextView = ( TextView )findViewById( R.id.toolbar_textview );
+        mToolbar = (Toolbar)findViewById(R.id.appbar);
+        mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
 
         setSupportActionBar(mToolbar);
-        if ( getSupportActionBar() != null )
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
@@ -231,36 +231,42 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initRecyclerView()
     {
-        mProductsRecyclerView = ( RecyclerView )findViewById( R.id.grid_recycler );
-        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager( 2, 1 );
-        mProductAdapter       = new ProductsGridAdapter( this, mProductsDisplayedList );
+        mProductsRecyclerView = (RecyclerView)findViewById(R.id.grid_recycler);
+        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mProductAdapter       = new ProductsGridAdapter(this, mProductsDisplayedList);
 
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-        mProductsRecyclerView.setAdapter( mProductAdapter );
-        mProductsRecyclerView.setOnScrollListener( new RecyclerView.OnScrollListener() {
+        mProductsRecyclerView.setAdapter(mProductAdapter);
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged( RecyclerView recyclerView, int newState ) {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                {
                     if (scrollingUp)
+                    {
                         if (verticalOffset > mToolbar.getHeight())
                             _toolbarAnimateHide();
 
                         else
                             _toolbarAnimateShow();
 
-                    else if (mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
-                            (verticalOffset > mToolbar.getHeight()))
+                    } else if ((mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
+                               (verticalOffset > mToolbar.getHeight())))
                         _toolbarAnimateHide();
 
                     else
                         _toolbarAnimateShow();
+                }
             }
 
             @Override
-            public void onScrolled( RecyclerView recyclerView, int dx, int dy ) {
+            public void onScrolled( RecyclerView recyclerView, int dx, int dy )
+            {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
 
@@ -268,23 +274,22 @@ public class ProductsUI extends AppCompatActivity
 
                 mToolbar.animate().cancel();
 
-                if ( scrollingUp )
+                if (scrollingUp)
                 {
                     // Animacion de la toolbar
                     if (toolbarYOffset < mToolbar.getHeight())
                         mToolbar.setTranslationY(-toolbarYOffset);
-
                     else
                         mToolbar.setTranslationY(-mToolbar.getHeight());
 
                     // Detectamos cuando llegamos abajo para cargar nuevos productos
-                    if ( ! mProductsCandidatesDeque.isEmpty() )
+                    if (!mProductsCandidatesDeque.isEmpty())
                     {
                         int[] lastItemsPosition = new int[2];
                         mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
 
-                        if ( ( lastItemsPosition[0] >= mProductsDisplayedList.size() - 2 ) ||
-                             ( lastItemsPosition[1] >= mProductsDisplayedList.size() - 1 ) )
+                        if ((lastItemsPosition[0] >= mProductsDisplayedList.size() - 2) ||
+                            (lastItemsPosition[1] >= mProductsDisplayedList.size() - 1))
                         {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
@@ -314,16 +319,16 @@ public class ProductsUI extends AppCompatActivity
     protected void _toolbarAnimateShow()
     {
         mToolbar.animate()
-                .translationY( 0 )
-                .setInterpolator( new LinearInterpolator() )
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
                 .setDuration(180);
     }
 
     protected void _toolbarAnimateHide()
     {
         mToolbar.animate()
-                .translationY( -mToolbar.getHeight() )
-                .setInterpolator( new LinearInterpolator() )
+                .translationY(-mToolbar.getHeight())
+                .setInterpolator(new LinearInterpolator())
                 .setDuration(180);
     }
 
@@ -332,8 +337,8 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initNavigationDrawers()
     {
-        mLeftNavigationVew = ( NavigationView )findViewById( R.id.nav_view );
-        mDrawerLayout      = ( DrawerLayout )findViewById( R.id.drawer_layout );
+        mLeftNavigationVew = (NavigationView)findViewById(R.id.nav_view);
+        mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
 
         _initDrawerToggle();
 
@@ -346,21 +351,21 @@ public class ProductsUI extends AppCompatActivity
     protected void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar
-        mLeftDrawerToggle = new ActionBarDrawerToggle( this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer )
+        mLeftDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         {
             // Metodo llamado cuando el drawer esta completamente cerrado
             @Override
-            public void onDrawerClosed( View drawerView )
+            public void onDrawerClosed(View drawerView)
             {
-                if ( drawerView == findViewById( R.id.leftDrawerLayout ) )
+                if (drawerView == findViewById(R.id.leftDrawerLayout))
                     mLeftDrawerToggle.syncState();
             }
 
             // Metodo llamado cuando el drawer esta completamente abierto
             @Override
-            public void onDrawerOpened( View drawerView )
+            public void onDrawerOpened(View drawerView)
             {
-                if ( drawerView == findViewById( R.id.leftDrawerLayout ) )
+                if (drawerView == findViewById(R.id.leftDrawerLayout))
                 {
                     // Crea la llamada a onPrepareOptionsMenu()
                     supportInvalidateOptionsMenu();
@@ -371,9 +376,9 @@ public class ProductsUI extends AppCompatActivity
 
             // Metodo para realizar la animacion del drawerToggle, solo se realiza con el drawer izquierdo
             @Override
-            public void onDrawerSlide( View drawerView, float slideOffset )
+            public void onDrawerSlide(View drawerView, float slideOffset)
             {
-                super.onDrawerSlide( drawerView, slideOffset );
+                super.onDrawerSlide(drawerView, slideOffset);
             }
         };
     }
@@ -383,34 +388,34 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initAnimations()
     {
-        moveAndFade = AnimationUtils.loadAnimation( ProductsUI.this
-                , R.anim.translate_and_fade );
+        moveAndFade = AnimationUtils.loadAnimation(ProductsUI.this
+                , R.anim.translate_and_fade);
     }
 
     @Override
-    protected void onPostCreate( Bundle savedInstanceState )
+    protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
-        if( mLeftDrawerToggle != null )
+        if(mLeftDrawerToggle != null)
             mLeftDrawerToggle.syncState();
     }
 
     @Override
-    public void onConfigurationChanged( Configuration newConfig )
+    public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        if( mLeftDrawerToggle != null )
+        if(mLeftDrawerToggle != null)
             mLeftDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu( Menu menu )
+    public boolean onPrepareOptionsMenu(Menu menu)
     {
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onCreateOptionsMenu( Menu menu )
+    public boolean onCreateOptionsMenu(Menu menu)
     {
         // Guardamos el menu para poder acceder a los expandableItems mas adelante
         this.mMenu = menu;
@@ -422,7 +427,7 @@ public class ProductsUI extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected( MenuItem item )
+    public boolean onOptionsItemSelected(MenuItem item)
     {
         return super.onOptionsItemSelected(item);
     }
@@ -431,20 +436,20 @@ public class ProductsUI extends AppCompatActivity
     public void onBackPressed()
     {
         // Si el navigation drawer esta abierto, lo cerramos.
-        if ( mDrawerLayout.isDrawerOpen( GravityCompat.START ) )
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
         {
-            mDrawerLayout.closeDrawer( GravityCompat.START );
+            mDrawerLayout.closeDrawer(GravityCompat.START);
 
         } else {
-            if ( mBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis() )
+            if (mBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis())
             {
                 super.onBackPressed();
                 return;
 
             } else {
-                mSnackbar = Snackbar.make( mCoordinatorLayout
+                mSnackbar = Snackbar.make(mCoordinatorLayout
                                         , getResources().getString( R.string.exit_message )
-                                        , Snackbar.LENGTH_SHORT );
+                                        , Snackbar.LENGTH_SHORT);
 
                 mSnackbar.show();
             }
@@ -465,22 +470,22 @@ public class ProductsUI extends AppCompatActivity
      * @param product: Producto a comprobar.
      * @return: true si el producto ha pasado el filtro y, por tanto, se puede mostrar.
      */
-    protected boolean _isDisplayable( Product product )
+    protected boolean _isDisplayable(Product product)
     {
         boolean displayable = true;
 
         // Recorremos el mapa de filtros
-        for ( String key : mFilterMap.keySet() )
+        for (String key : mFilterMap.keySet())
         {
             // Si es el filtro de novedades
-            if ( key.equals("newness") )
+            if (key.equals("newness"))
             {
-                if ( mFilterMap.get(key) != null )
-                    displayable =  ( ( Boolean )mFilterMap.get( key ) == product.isNewness() );
+                if (mFilterMap.get(key) != null)
+                    displayable =  ((Boolean)mFilterMap.get(key) == product.isNewness());
             }
 
             // Rompemos el bucle cuando el producto no pase algun filtro.
-            if ( ! displayable )
+            if (!displayable)
                 break;
         }
 
@@ -499,27 +504,27 @@ public class ProductsUI extends AppCompatActivity
         boolean turn = true;
 
         // Inicializar mapa de indices con todos a 0.
-        for ( String key : mProductsMap.keySet() )
-            indexMap.put( key, 0 );
+        for (String key : mProductsMap.keySet())
+            indexMap.put(key, 0);
 
         Iterator<String> iterator = mProductsMap.keySet().iterator();
 
         // Mientras queden productos pendientes.
-        while ( ! finished )
+        while (!finished)
         {
             String key = iterator.next();
 
             // Sacamos el indice de donde nos quedamos y la lista de productos.
-            int index = indexMap.get( key );
-            List<Product> list = mProductsMap.get( key );
+            int index = indexMap.get(key);
+            List<Product> list = mProductsMap.get(key);
 
             // Mientras queden productos y no encontremos un producto mostrable.
-            while( ( index < list.size() ) && ( turn ) )
+            while((index < list.size()) && (turn))
             {
                 // Si el producto pasa el filtro, se añade a la cola
-                if ( _isDisplayable( list.get( index ) ) )
+                if (_isDisplayable(list.get(index)))
                 {
-                    mProductsCandidatesDeque.addLast( list.get( index ) );
+                    mProductsCandidatesDeque.addLast(list.get(index));
                     turn = false;
                 }
 
@@ -531,14 +536,14 @@ public class ProductsUI extends AppCompatActivity
             turn = true;
 
             // Si se ha terminado el recorrido, lo iniciamos de nuevo.
-            if ( ! iterator.hasNext() )
+            if (!iterator.hasNext())
                 iterator = mProductsMap.keySet().iterator();
 
-            finished = _checkIfFinished( indexMap );
+            finished = _checkIfFinished(indexMap);
 
         } // while #1
 
-        Log.d( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
+        Log.d(TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
     }
 
     /**
@@ -549,18 +554,18 @@ public class ProductsUI extends AppCompatActivity
         mProductsInsertedPreviously = NUM_PRODUCTS_DISPLAYED;
 
         // Si no hay tantos suficientes productos en la cola...
-        if ( NUM_PRODUCTS_DISPLAYED > mProductsCandidatesDeque.size() )
+        if (NUM_PRODUCTS_DISPLAYED > mProductsCandidatesDeque.size())
             mProductsInsertedPreviously = mProductsCandidatesDeque.size();
 
-        for ( int i = 0; i < mProductsInsertedPreviously; i++ )
+        for (int i = 0; i < mProductsInsertedPreviously; i++)
         {
             mProductsDisplayedList.add( mProductsCandidatesDeque.getFirst() );
 
             mProductsCandidatesDeque.removeFirst();
         }
 
-        Log.d( TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size() );
-        Log.d( TAG, "Lista de mostrados: " + mProductsDisplayedList.size() );
+        Log.d(TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
+        Log.d(TAG, "Lista de mostrados: " + mProductsDisplayedList.size());
     }
 
     /**
@@ -568,7 +573,7 @@ public class ProductsUI extends AppCompatActivity
      * @param jsonArray: lista de JSON a convertir.
      * @throws JSONException
      */
-    protected void convertJSONtoProduct( JSONArray jsonArray ) throws JSONException
+    protected void convertJSONtoProduct(JSONArray jsonArray) throws JSONException
     {
         List<Product> productsList = new ArrayList<>();
         List<JSONObject> jsonList = new ArrayList<>();
@@ -637,47 +642,47 @@ public class ProductsUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            _loading( true, true );
+            _loading(true, true);
 
             // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
-            executor = new ThreadPoolExecutor( NUMBER_OF_CORES * 4
+            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
                     , NUMBER_OF_CORES * 4
                     , 60L
                     , TimeUnit.SECONDS
-                    , new LinkedBlockingQueue<Runnable>() );
+                    , new LinkedBlockingQueue<Runnable>());
 
-            completionService = new ExecutorCompletionService<>( executor );
+            completionService = new ExecutorCompletionService<>(executor);
         }
 
         @Override
-        protected Void doInBackground( String... shops )
+        protected Void doInBackground(String... shops)
         {
             try
             {
                 // Creamos un thread por cada tienda a la que tenemos que conectarnos.
-                for ( int i = 0; i < mShopsList.size(); i++ )
+                for (int i = 0; i < mShopsList.size(); i++)
                 {
-                    ConnectionTask connectionTask = new ConnectionTask( i );
+                    ConnectionTask connectionTask = new ConnectionTask(i);
 
-                    completionService.submit( connectionTask );
+                    completionService.submit(connectionTask);
                 }
 
                 // Metemos en content el resultado de cada uno
-                for ( int i = 0; i < mShopsList.size(); i++ )
+                for (int i = 0; i < mShopsList.size(); i++)
                 {
                     String future = completionService.take().get();
-                    if ( future != null )
+                    if (future != null)
                         content.add(future);
                 }
 
                 // Si content es vacio, es que han fallado todas las conexiones.
-                if ( content.isEmpty() )
+                if (content.isEmpty())
                 {
                     error = "Imposible conectar con el servidor";
-                    Log.d( TAG, error );
+                    Log.d(TAG, error);
                 }
 
-            } catch( Exception ex )  {
+            } catch(Exception ex)  {
                 error = ex.getMessage();
 
             } finally {
@@ -691,14 +696,14 @@ public class ProductsUI extends AppCompatActivity
         @Override
         protected void onPostExecute( Void unused )
         {
-            if ( error != null )
+            if (error != null)
             {
-                mLoadingView.setVisibility( View.GONE );
+                mLoadingView.setVisibility(View.GONE);
 
                 _errorConnectingToServer();
 
             } else
-                new MultithreadConversion().execute( content );
+                new MultithreadConversion().execute(content);
 
         } // onPostExecute
 
@@ -787,17 +792,17 @@ public class ProductsUI extends AppCompatActivity
         protected void onPreExecute()
         {
             // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
-            executor = new ThreadPoolExecutor( NUMBER_OF_CORES * 4
+            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
                     , NUMBER_OF_CORES * 4
                     , 60L
                     , TimeUnit.SECONDS
-                    , new LinkedBlockingQueue<Runnable>() );
+                    , new LinkedBlockingQueue<Runnable>());
 
             completionService = new ExecutorCompletionService<>( executor );
         }
 
         @Override
-        protected Void doInBackground( List<String>... params )
+        protected Void doInBackground(List<String>... params)
         {
             List<String> content = params[0];
 
@@ -806,11 +811,11 @@ public class ProductsUI extends AppCompatActivity
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
-                    Log.d( TAG, "Tamano en bytes: " + ( content.get(i).getBytes().length / 1000 ) + "kB" );
+                    Log.d(TAG, "Tamano en bytes: " + (content.get(i).getBytes().length / 1000 ) + "kB");
 
-                    ConversionTask task = new ConversionTask( new JSONArray( content.get(i) ) );
+                    ConversionTask task = new ConversionTask(new JSONArray(content.get(i)));
 
-                    completionService.submit( task );
+                    completionService.submit(task);
                 }
 
                 // Nos quedamos esperando a que terminen los threads
@@ -825,7 +830,7 @@ public class ProductsUI extends AppCompatActivity
                 // ... y actualizamos la lista de los que se van a mostrar
                 getNextProductsToBeDisplayed();
 
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 error = e.getMessage();
 
             }
@@ -834,23 +839,23 @@ public class ProductsUI extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute( Void unused )
+        protected void onPostExecute(Void unused)
         {
-            if ( error != null )
+            if (error != null)
             {
-                _loading( false, false );
+                _loading(false, false);
 
                 _errorConnectingToServer();
 
             } else {
 
-                if ( mProductsDisplayedList.isEmpty() )
+                if (mProductsDisplayedList.isEmpty())
                 {
-                    _noData( true );
-                    mLoadingView.setVisibility( View.GONE );
+                    _noData(true);
+                    mLoadingView.setVisibility(View.GONE);
 
                 } else {
-                    _loading( false, true );
+                    _loading(false, true);
                 }
             }
         }
@@ -864,7 +869,7 @@ public class ProductsUI extends AppCompatActivity
     {
         private JSONArray mJsonArray;
 
-        public ConversionTask( JSONArray jsonArray )
+        public ConversionTask(JSONArray jsonArray)
         {
             mJsonArray = jsonArray;
         }
@@ -874,9 +879,9 @@ public class ProductsUI extends AppCompatActivity
         {
             try
             {
-                convertJSONtoProduct( mJsonArray );
+                convertJSONtoProduct(mJsonArray);
 
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 return false;
             }
 
@@ -888,15 +893,15 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que crea maneja la interfaz en funcion de si esta cargando o no los productos.
      * @param loading: true indica que se inicia la carga, false que ha terminado.
      */
-    protected void _loading( boolean loading, boolean ok )
+    protected void _loading(boolean loading, boolean ok)
     {
         // Si hemos terminado de cargar los productos
-        if ( ! loading )
+        if (!loading)
         {
-            if ( ok )
+            if (ok)
             {
                 // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
-                moveAndFade.setAnimationListener( new Animation.AnimationListener()
+                moveAndFade.setAnimationListener(new Animation.AnimationListener()
                 {
                     @Override
                     public void onAnimationStart(Animation animation) {}
@@ -906,11 +911,11 @@ public class ProductsUI extends AppCompatActivity
                         mLoadingView.setVisibility(View.GONE);
 
                         // La animacion de cada item solo esta disponible para 5.0+
-                        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP )
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                         {
                             _initRecyclerView();
-                            mProductsRecyclerView.startAnimation( AnimationUtils.loadAnimation( ProductsUI.this
-                                                                            , android.R.anim.fade_in ) );
+                            mProductsRecyclerView.startAnimation(AnimationUtils.loadAnimation(ProductsUI.this
+                                                                            , android.R.anim.fade_in ));
 
                         } else {
                             _initRecyclerView();
@@ -922,7 +927,7 @@ public class ProductsUI extends AppCompatActivity
                     public void onAnimationRepeat(Animation animation) {}
                 } );
 
-                mLoadingView.startAnimation( moveAndFade );
+                mLoadingView.startAnimation(moveAndFade);
 
                 mState = STATE.NORMAL;
 
@@ -931,12 +936,12 @@ public class ProductsUI extends AppCompatActivity
 
         } else {
             // Pantalla de carga
-            mLoadingView.setVisibility( View.VISIBLE );
+            mLoadingView.setVisibility(View.VISIBLE);
 
             mState = STATE.LOADING;
         }
 
-        Log.d( TAG, "Estado = " + mState.toString() );
+        Log.d(TAG, "Estado = " + mState.toString());
     }
 
     /**
@@ -945,9 +950,9 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _noData( boolean noData )
     {
-        if ( ! noData )
+        if (!noData)
         {
-            if ( mProductsRecyclerView != null )
+            if (mProductsRecyclerView != null)
                 mProductsRecyclerView.setVisibility(View.VISIBLE);
 
             mNoDataTextView.setVisibility(View.GONE);
@@ -955,7 +960,7 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.NORMAL;
 
         } else {
-            if ( mProductsRecyclerView != null )
+            if (mProductsRecyclerView != null)
                 mProductsRecyclerView.setVisibility(View.GONE);
 
             mNoDataTextView.setVisibility(View.VISIBLE);
@@ -963,7 +968,7 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.NODATA;
         }
 
-        Log.d( TAG, "Estado = " + mState.toString() );
+        Log.d(TAG, "Estado = " + mState.toString());
     }
 
     /**
@@ -971,12 +976,12 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _errorConnectingToServer()
     {
-        mSnackbar = Snackbar.make( mCoordinatorLayout
+        mSnackbar = Snackbar.make(mCoordinatorLayout
                 , getResources().getString( R.string.error_message )
-                , Snackbar.LENGTH_INDEFINITE ).setAction( "Reintentar", new View.OnClickListener()
+                , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
         {
             @Override
-            public void onClick( View view )
+            public void onClick(View view)
             {
                 new ConnectToServer().execute("Springfield", "Blanco", "HyM");
             }
@@ -986,7 +991,7 @@ public class ProductsUI extends AppCompatActivity
 
         mState = STATE.ERROR;
 
-        Log.d( TAG, "Estado = " + mState.toString() );
+        Log.d(TAG, "Estado = " + mState.toString());
     }
 
     /**
@@ -994,15 +999,15 @@ public class ProductsUI extends AppCompatActivity
      * @param indexMap: Mapa de indices donde guardamos el indice de la ultima iteracion.
      * @return: true si se han recorrido todos los productos.
      */
-    protected boolean _checkIfFinished( Map<String, Integer> indexMap )
+    protected boolean _checkIfFinished(Map<String, Integer> indexMap)
     {
         boolean finished = true;
         Iterator<String> iterator = indexMap.keySet().iterator();
-        while ( ( iterator.hasNext() ) && ( finished ) )
+        while ((iterator.hasNext()) && (finished))
         {
             String key = iterator.next();
 
-            finished = ( mProductsMap.get( key ).size() == indexMap.get( key ) );
+            finished = (mProductsMap.get(key).size() == indexMap.get(key));
         }
 
         return finished;
