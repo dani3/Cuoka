@@ -127,11 +127,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             loading.setVisibility(View.VISIBLE);
             background.setVisibility(View.VISIBLE);
 
-            Log.d(TAG, "Image URL: "
-                    + product.getColors().get(0)
-                                         .getImages()
-                                         .get(0).getPath().replaceAll(".jpg", "_Small.jpg"));
-
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)
                    .load(product.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg"))

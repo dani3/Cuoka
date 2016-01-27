@@ -283,8 +283,8 @@ public class ProductsUI extends AppCompatActivity
                         int[] lastItemsPosition = new int[2];
                         mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
 
-                        if ( ( lastItemsPosition[0] == mProductsDisplayedList.size() - 2 ) ||
-                             ( lastItemsPosition[1] == mProductsDisplayedList.size() - 1 ) )
+                        if ( ( lastItemsPosition[0] >= mProductsDisplayedList.size() - 2 ) ||
+                             ( lastItemsPosition[1] >= mProductsDisplayedList.size() - 1 ) )
                         {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
@@ -309,48 +309,6 @@ public class ProductsUI extends AppCompatActivity
                     mToolbar.setTranslationY(-toolbarYOffset);
             }
         });
-
-        /* Listener para detectar cuando se produce un swipe horizontal en un item. */
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT )
-        {
-            @Override
-            public boolean onMove( RecyclerView recyclerView
-                            , RecyclerView.ViewHolder viewHolder
-                            , RecyclerView.ViewHolder target )
-            {
-                return false;
-            }
-
-            @Override
-            public void onSwiped( RecyclerView.ViewHolder viewHolder, int swipeDir )
-            {
-                // Eliminamos el producto
-                mProductsDisplayedList.remove( viewHolder.getAdapterPosition() );
-                mProductAdapter.updateProductList( mProductsDisplayedList );
-                mProductAdapter.notifyItemRemoved( viewHolder.getAdapterPosition() );
-
-                // Insertamos uno al final para que la lista no se vacie
-                if ( ! mProductsCandidatesDeque.isEmpty() )
-                {
-                    mProductsDisplayedList.add(mProductsCandidatesDeque.getFirst());
-
-                    mProductsCandidatesDeque.removeFirst();
-                    
-                    mProductAdapter.updateProductList( mProductsDisplayedList );
-                    mProductAdapter.notifyItemInserted( mProductsDisplayedList.size() - 1 );
-                }
-
-                mSnackbar = Snackbar.make( mCoordinatorLayout
-                                , getResources().getString( R.string.product_deleted_message )
-                                , Snackbar.LENGTH_SHORT);
-
-                mSnackbar.show();
-            }
-        };
-
-        mItemTouchHelper = new ItemTouchHelper( simpleItemTouchCallback );
-        mItemTouchHelper.attachToRecyclerView( mProductsRecyclerView );
     }
 
     protected void _toolbarAnimateShow()
