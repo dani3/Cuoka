@@ -24,6 +24,19 @@
             app:indicator="BallClipRotate"
             app:indicator_color="@color/colorAccent"/>
 
+        <!-- Fondo -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/grid_background"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/colorText"
+            android:alpha="0.1"
+            android:visibility="gone"
+            app:riv_corner_radius_bottom_left="4dp"
+            app:riv_corner_radius_bottom_right="4dp"
+            app:riv_corner_radius_top_left="4dp"
+            app:riv_corner_radius_top_right="4dp"/>
+
         <!-- Imagen no disponible -->
         <ImageView
             android:id="@+id/broken_image"
@@ -35,11 +48,11 @@
             android:visibility="gone"/>
 
         <!-- Imagen -->
-        <com.wallakoala.wallakoala.Views.ProductImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/grid_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:adjustViewBounds="true"
             app:riv_corner_radius_bottom_left="4dp"
             app:riv_corner_radius_bottom_right="4dp"
             app:riv_corner_radius_top_left="4dp"

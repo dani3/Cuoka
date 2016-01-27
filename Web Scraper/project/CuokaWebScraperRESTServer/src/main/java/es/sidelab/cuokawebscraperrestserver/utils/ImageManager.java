@@ -163,15 +163,25 @@ public class ImageManager
     private static void resizeImages( String shop )
     {
         try 
-        {                   
+        {   
+            double ASPECT_RATIO = 0.0f;
+            
+            if ( shop.equalsIgnoreCase( "Pedro Del Hierro" ) )
+                ASPECT_RATIO = Properties.PDH_ASPECT_RATIO;
+            
+            if ( shop.equalsIgnoreCase( "Springfield" ) )
+                ASPECT_RATIO = Properties.SPRINGFIELD_ASPECT_RATIO;
+            
+            if ( shop.equalsIgnoreCase( "HyM" ) )
+                ASPECT_RATIO = Properties.HYM_ASPECT_RATIO;
+            
             // El script tiene que estar en el mismo path que el jar
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "resizeProducts.py"
                         , Properties.IMAGE_PATH + shop
-                        , Integer.toString( Properties.IMAGE_WIDTH_L )
+                        , Double.toString( ASPECT_RATIO )
                         , Integer.toString( Properties.IMAGE_HEIGHT_L )
-                        , Integer.toString( Properties.IMAGE_WIDTH_S )
                         , Integer.toString( Properties.IMAGE_HEIGHT_S ) } );
             
         } catch ( IOException ex ) {

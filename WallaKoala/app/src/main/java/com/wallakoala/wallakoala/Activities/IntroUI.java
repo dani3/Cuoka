@@ -28,37 +28,38 @@ public class IntroUI extends AppCompatActivity
     protected CheckBox man;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        mSharedPreferencesManager = new SharedPreferencesManager( this );
+        mSharedPreferencesManager = new SharedPreferencesManager(this);
 
         // Especificamos el layout 'intro.xml'
         setContentView(R.layout.intro);
 
-        man = ( CheckBox )findViewById( R.id.checkBox );
-        enter = ( Button )findViewById( R.id.enter );
+        man   = (CheckBox)findViewById(R.id.checkBox);
+        enter = (Button)findViewById(R.id.enter);
+
         enter.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick( View v )
+            public void onClick(View v)
             {
                 Set<String> shops = new HashSet<>();
                 //shops.add( "Blanco" );
-                shops.add( "HyM" );
-                shops.add( "Springfield" );
-                shops.add( "Pedro Del Hierro" );
+                shops.add("HyM");
+                shops.add("Springfield");
+                shops.add("Pedro Del Hierro");
 
-                mSharedPreferencesManager.insertMan( man.isChecked() );
-                mSharedPreferencesManager.insertShops( shops );
-                mSharedPreferencesManager.insertNewness( true );
+                mSharedPreferencesManager.insertMan(man.isChecked());
+                mSharedPreferencesManager.insertShops(shops);
+                mSharedPreferencesManager.insertNewness(true);
 
-                Intent intent = new Intent( IntroUI.this, ProductsUI.class );
-                startActivity( intent );
+                Intent intent = new Intent(IntroUI.this, ProductsUI.class);
+                startActivity(intent);
 
                 // Animacion de transicion para pasar de una activity a otra.
-                overridePendingTransition( R.anim.push_down_in, R.anim.push_down_out );
+                overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
 
                 // Terminamos la activity, si se comenta, se da la posibilidad de volver a esta pantalla.
                 finish();

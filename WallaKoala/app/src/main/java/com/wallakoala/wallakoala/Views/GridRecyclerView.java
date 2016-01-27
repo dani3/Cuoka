@@ -2,8 +2,8 @@ package com.wallakoala.wallakoala.Views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,7 @@ import android.view.animation.GridLayoutAnimationController;
  * An extension of RecyclerView, focused more on resembling a GridView.
  * Unlike {@link android.support.v7.widget.RecyclerView}, this view can handle
  * {@code <grid_layout_animation>} as long as you provide it a
- * {@link android.support.v7.widget.GridLayoutManager} in
+ * {@link android.support.v7.widget.StaggeredGridLayoutManager} in
  * {@code setLayoutManager(LayoutManager layout)}.
  * Created by Freddie (Musenkishi) Lust-Hed.
  */
@@ -35,24 +35,26 @@ public class GridRecyclerView extends RecyclerView {
     @Override
     public void setLayoutManager(LayoutManager layout)
     {
-        if (layout instanceof GridLayoutManager)
+        if (layout instanceof StaggeredGridLayoutManager)
             super.setLayoutManager(layout);
     }
 
     @Override
-    protected void attachLayoutAnimationParameters(View child, @NonNull ViewGroup.LayoutParams params, int index, int count) {
-
-        if (getAdapter() != null && getLayoutManager() instanceof GridLayoutManager) {
+    protected void attachLayoutAnimationParameters(View child, @NonNull ViewGroup.LayoutParams params, int index, int count)
+    {
+        if (getAdapter() != null && getLayoutManager() instanceof StaggeredGridLayoutManager)
+        {
 
             GridLayoutAnimationController.AnimationParameters animationParams =
                     (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;
 
-            if (animationParams == null) {
+            if (animationParams == null)
+            {
                 animationParams = new GridLayoutAnimationController.AnimationParameters();
                 params.layoutAnimationParameters = animationParams;
             }
 
-            int columns = ((GridLayoutManager) getLayoutManager()).getSpanCount();
+            int columns = ((StaggeredGridLayoutManager) getLayoutManager()).getSpanCount();
 
             animationParams.count = count;
             animationParams.index = index;
@@ -65,6 +67,7 @@ public class GridRecyclerView extends RecyclerView {
 
         } else {
             super.attachLayoutAnimationParameters(child, params, index, count);
+
         }
     }
 }
