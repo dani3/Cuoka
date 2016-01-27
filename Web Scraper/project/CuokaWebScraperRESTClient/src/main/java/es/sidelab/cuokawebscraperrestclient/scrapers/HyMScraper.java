@@ -6,11 +6,13 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -31,7 +33,8 @@ public class HyMScraper implements Scraper
     {    
         File html = new File( htmlPath );
         Document document = Jsoup.parse( html, "UTF-8" );
-          
+        int prodOK = 0;
+        int prodNOK = 0;
         // Obtener los links a todos los productos
         Elements products = document.select( "h3.product-item-headline > a" );
           
@@ -80,6 +83,7 @@ public class HyMScraper implements Scraper
                     
                     if ( ! colors.isEmpty() )
                     {    
+                        prodOK++;
                         productList.add( new Product( Double.parseDouble( price )
                                             , name
                                             , shop.getName()
@@ -88,12 +92,16 @@ public class HyMScraper implements Scraper
                                             , section.isMan()
                                             , variants ) );
                     }
+                    else
+                        prodNOK++;
                     
                 } 
                 
-            } catch ( Exception e ) {}
+            } catch ( Exception e ) {prodNOK++;}
         }
-            
+        
+        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK ); 
+        
         return productList;
     }
     

@@ -6,6 +6,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class PdHScraper implements Scraper
     {        
         File html = new File( htmlPath );
         Document document = Jsoup.parse( html, "UTF-8" );
+        
+        int prodOK = 0;
+        int prodNOK = 0;
         
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
@@ -113,8 +117,11 @@ public class PdHScraper implements Scraper
                                                 , section.getName()
                                                 , link 
                                                 , section.isMan()
-                                                , variants ) );   
+                                                , variants ) );  
+                        prodOK++;
                     }
+                    else
+                        prodNOK++;
                     
                 } else {
                     // Buscamos el producto
@@ -133,9 +140,10 @@ public class PdHScraper implements Scraper
                     }
                 }
                 
-            } catch ( Exception ex ) {}
+            } catch ( Exception ex ) { prodNOK++; }
             
         } // for products
+        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );
             
         return productList;
     }

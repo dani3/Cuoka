@@ -120,8 +120,11 @@ public class MultithreadManager
             executorShops.execute( task );
         } // for 
         
+        /*Escribimos en fichero la info de como han ido los scrapers*/
+        ActivityStatsManager.writeOnFile();
+    
         // Detenemos el executor
-        executorShops.shutdown();
+        executorShops.shutdown();       
     }
     
     /*
