@@ -54,4 +54,32 @@ public class Product
 	public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
 	public void setLink( String link )                 { this.link = link; }
 	public void setNewness( boolean newness )          { this.newness = newness; }
+
+	public boolean isOkay()
+	{
+		if ((this.name == null) || (this.name.isEmpty()))
+			return false;
+
+		if ((this.shop == null) || (this.shop.isEmpty()))
+			return false;
+
+		if ((this.section == null) || (this.section.isEmpty()))
+			return false;
+
+		if (this.price <= 0.0f)
+			return false;
+
+		if ((this.link == null) || (this.link.isEmpty()))
+			return false;
+
+		if ((this.colors == null) || (this.colors.isEmpty()))
+			return false;
+
+		for (ColorVariant cv : this.colors)
+		{
+			// Comprobar cada color
+		}
+
+		return true;
+	}
 }

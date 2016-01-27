@@ -620,7 +620,10 @@ public class ProductsUI extends AppCompatActivity
                 colors.add( new ColorVariant( reference, colorName, colorPath, images ) );
             }
 
-            productsList.add( new Product( name, shop, section, price, link, colors, newness ) );
+            Product product = new Product( name, shop, section, price, link, colors, newness );
+
+            if (product.isOkay())
+                productsList.add( new Product( name, shop, section, price, link, colors, newness ) );
 
         }
 

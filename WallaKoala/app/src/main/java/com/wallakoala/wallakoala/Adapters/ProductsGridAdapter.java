@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,7 +124,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mBackgroundView.setVisibility(View.VISIBLE);
 
             /* Cargamos la imagen usando Picasso */
-            String url = product.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg");
+            ColorVariant cv = product.getColors().get(0);
+            String url = cv.getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg");
             Picasso.with(mContext)
                    .load(url)
                    .into(mProductImageView, new Callback()
