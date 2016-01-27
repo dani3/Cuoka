@@ -60,11 +60,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private ImageView image;
         private ImageView error;
         private View loading;
-        private View footer, footerExtra;
+        private View background;
+        private View footer, footerExtra, mainFooter;
 
         private Animation scaleUpFooterExtra, scaleDownFooterExtra;
-
-        private CardView container;
 
         public ProductHolder( View itemView )
         {
@@ -75,13 +74,14 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             subtitle    = ( TextView )itemView.findViewById( R.id.footer_subtitle );
             image       = ( ImageView )itemView.findViewById( R.id.grid_image );
             fav         = ( ImageButton )itemView.findViewById( R.id.footer_fav_button );
-            container   = ( CardView )itemView.findViewById( R.id.card_item );
             name        = ( TextView )itemView.findViewById( R.id.name );
             price       = ( TextView )itemView.findViewById( R.id.price );
 
+            background  = itemView.findViewById( R.id.grid_background );
             loading     = itemView.findViewById( R.id.avloadingitem );
             footer      = itemView.findViewById( R.id.footer );
             footerExtra = itemView.findViewById( R.id.extraInfo );
+            mainFooter  = itemView.findViewById( R.id.mainFooter );
 
             footer.setOnClickListener( this );
             //image.setOnClickListener( this );
@@ -116,12 +116,16 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             name.setText(product.getName());
             price.setText(String.format("%.2f", product.getPrice()) + "€");
 
-            // Ocultamos la info extra, IMPORTANTE. Cosas malas pasan si no se pone.
+            // Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone.
             footerExtra.setVisibility(View.GONE);
+            mainFooter.setVisibility(View.GONE);
+
             // Ocultamos la imagen de error.
             error.setVisibility(View.GONE);
-            // Mostramos la view de carga
+
+            // Mostramos la view de carga y el background
             loading.setVisibility(View.VISIBLE);
+            background.setVisibility(View.VISIBLE);
 
             Log.d(TAG, "Image URL: "
                     + product.getColors().get(0)
@@ -131,21 +135,26 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)
                    .load(product.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg"))
-                   .into(image, new Callback() {
+                   .into(image, new Callback()
+                   {
                         @Override
-                        public void onSuccess() {
+                        public void onSuccess()
+                        {
+                            background.setVisibility(View.GONE);
                             loading.setVisibility(View.GONE);
+                            mainFooter.setVisibility(View.VISIBLE);
                         }
 
                         @Override
-                        public void onError() {
+                        public void onError()
+                        {
                             loading.setVisibility(View.GONE);
                             error.setVisibility(View.VISIBLE);
                         }
                    } );
 
             // Ponemos el icono del corazon.
-            fav.setBackgroundResource( R.drawable.ic_favorite_border_white );
+            fav.setBackgroundResource(R.drawable.ic_favorite_border_white);
 
             mProduct = product;
         }
@@ -184,9 +193,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                         v.getLocationInWindow(screenLocation);
 
                         ColorVariant color = mProduct.getColors().get(0);
-
-                        // Sacamos la orientacion de la pantalla
-                        int orientation = activity.getResources().getConfiguration().orientation;
 
                         // Creamos el intent
                         Intent intent = new Intent(mContext, ProductUI.class);

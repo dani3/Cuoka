@@ -40,14 +40,16 @@ public class GridRecyclerView extends RecyclerView {
     }
 
     @Override
-    protected void attachLayoutAnimationParameters(View child, @NonNull ViewGroup.LayoutParams params, int index, int count) {
-
-        if (getAdapter() != null && getLayoutManager() instanceof StaggeredGridLayoutManager) {
+    protected void attachLayoutAnimationParameters(View child, @NonNull ViewGroup.LayoutParams params, int index, int count)
+    {
+        if (getAdapter() != null && getLayoutManager() instanceof StaggeredGridLayoutManager)
+        {
 
             GridLayoutAnimationController.AnimationParameters animationParams =
                     (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;
 
-            if (animationParams == null) {
+            if (animationParams == null)
+            {
                 animationParams = new GridLayoutAnimationController.AnimationParameters();
                 params.layoutAnimationParameters = animationParams;
             }
@@ -65,6 +67,7 @@ public class GridRecyclerView extends RecyclerView {
 
         } else {
             super.attachLayoutAnimationParameters(child, params, index, count);
+
         }
     }
 }
