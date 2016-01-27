@@ -1,5 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
+import es.sidelab.cuokawebscraperrestclient.activity.SectionActivityStats;
+import es.sidelab.cuokawebscraperrestclient.activity.ShopActivityStats;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
@@ -69,11 +71,16 @@ public class ScraperManager
         // Recorremos las tiendas
         for ( File folder : folders )
         {
+            List<SectionActivityStats> sectionsActivityList = new ArrayList<>();
+            
             // Sacamos el nombre de la tienda ('tienda_online')
             String folderName = folder.getName();
             
+            ShopActivityStats shopActivity = new ShopActivityStats(folderName.substring(0,folderName.indexOf("_")));
+            shopActivity.setOnline( folderName.contains( "true" ) );
+            
             if ( folderName.contains( "true" ) )
-            {
+            {               
                 LOG.info( folderName.replace( "_true" , "" ) + " esta ONLINE" );
                 // Recorremos hombre y mujer si esta online
                 File[] subFolders = new File( Properties.HTML_PATH + "\\" + folderName ).listFiles();
@@ -85,14 +92,21 @@ public class ScraperManager
                     {
                         // Sacamos si es hombre o mujer
                         String man = subFolder.getName();
-
+                        
+                        if ( man.equals( "true" ) )
+                            shopActivity.setMan( true );
+                        
+                        if ( man.equals( "false" ) )
+                            shopActivity.setWoman( true);
+                        
                         // Recorremos los htmls dentro
                         File[] sections = new File( Properties.HTML_PATH + "\\" + folderName + "\\" + man ).listFiles();
 
+                        
                         for ( File section : sections )
-                        {                        
+                        {      
                             if ( section.getName().contains( ".html" ) )
-                            {
+                            {                             
                                 Section s = new Section();
                                 String sectionName = section.getName()
                                                             .substring( section.getName().indexOf( "_" ) + 1
@@ -103,6 +117,27 @@ public class ScraperManager
                                 s.setPath( section.getAbsolutePath() );
 
                                 sectionsList.add( s );
+                                
+                            } else {
+                                SectionActivityStats sectionActivity = new SectionActivityStats(section.getName().replaceAll(".txt",""));
+                            
+                                boolean found = false;
+                                int i = 0;
+                                while ( !found && i<sections.length ){
+                                    String shopName = folderName.replace( "_true" , "" );
+                                    String aux = man;
+                                    String total = shopName + "_" + section.getName().replaceAll(".txt", "") + "_" + man + ".html";
+                                    if(total.equals(sections[i].getName())){
+                                        found = true;
+                                    }
+                                    i++;
+                                }
+                                
+                             
+                                sectionActivity.setHtmlOK( found );
+                                sectionActivity.setMan(Boolean.valueOf(man));
+                                
+                                sectionsActivityList.add( sectionActivity );
                             }
                         } // for htmls                    
                     }
@@ -116,14 +151,25 @@ public class ScraperManager
                     
                     shops.add( new Shop( folderName.substring( 0, folderName.indexOf( "_" ) ), new URL( url ), sectionsList, true ) );
                     
+                    shopActivity.setUrl(url);
+                    
                 } catch ( FileNotFoundException ex ) {
                     LOG.error( "Error abriendo el fichero de 'url.txt'" );
                     
                 } catch ( IOException ex ) {
                     LOG.error( "Error leyendo el fichero 'url.txt' o formando la URL" );
+                    shopActivity.setUrl( ex.getMessage() );
                     
-                }    
+                } finally {
+                    shopActivity.setListSectionStats( sectionsActivityList );
+                    
+                    ActivityStatsManager.addShopActivity( shopActivity );
+                }     
                 
+            }
+            else{
+                shopActivity.setOnline(false);
+                ActivityStatsManager.addShopActivity( shopActivity );
             }
             
         } // for shops

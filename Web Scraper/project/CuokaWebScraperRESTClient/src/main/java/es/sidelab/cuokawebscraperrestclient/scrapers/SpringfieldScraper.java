@@ -6,11 +6,13 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,10 +28,15 @@ public class SpringfieldScraper implements Scraper
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
+    private static final Logger LOG = Logger.getLogger( SpringfieldScraper.class );
+    
     @Override
     public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
     {        
         List<String> pages = new ArrayList<>();
+        
+        int prodOK = 0;
+        int prodNOK = 0;
         
         boolean finished = false;
         int i = 0;
@@ -105,10 +112,13 @@ public class SpringfieldScraper implements Scraper
                                                 , link 
                                                 , section.isMan()
                                                 , variants ) );
+                            prodOK++;
                         }
+                        else
+                            prodNOK++;
                     }
 
-                } catch ( Exception e ) {}
+                } catch ( Exception e ) {prodNOK++;}
 
             } // for products
             
@@ -135,7 +145,9 @@ public class SpringfieldScraper implements Scraper
                 finished = true;
             
         } // while
-            
+        LOG.info("prodOK: " + prodOK);
+        LOG.info("prodNOK: " + prodNOK);
+        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );   
         return productList;
     }
     
