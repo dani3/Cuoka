@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
@@ -51,6 +54,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      */
     public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private static Picasso mPicasso;
+
         private Product mProduct;
 
         private ImageButton mFavImageButton;
@@ -67,6 +72,17 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             super(itemView);
 
+            if (mPicasso == null)
+            {
+                mPicasso = new Picasso.Builder(mContext)
+                        .indicatorsEnabled(true)
+                        .memoryCache(new LruCache(24000))
+                        .build();
+
+                Picasso.setSingletonInstance(mPicasso);
+            }
+
+
             mErrorImageView   = (ImageView)itemView.findViewById(R.id.broken_image);
             mTitleTextView    = (TextView)itemView.findViewById(R.id.footer_title);
             mSubtitleTextView = (TextView)itemView.findViewById(R.id.footer_subtitle);
@@ -82,7 +98,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterMainView  = itemView.findViewById(R.id.mainFooter);
 
             mProductFooterView.setOnClickListener(this);
-            //mProductImageView.setOnClickListener( this );
+            //mProductImageView.setOnClickListener(this);
 
             scaleUpFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
@@ -110,7 +126,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             /* Inicializamos los TextViews */
             mTitleTextView.setText(product.getShop());
-            mSubtitleTextView.setText(product.getSection());
+            mSubtitleTextView.setText(product.getColors().get(0).getReference());
             mNameTextView.setText(product.getName());
             mPriceTextView.setText(String.format("%.2f", product.getPrice()) + "€");
 
@@ -121,39 +137,36 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             /* Mostramos la view de carga y el background */
             mLoadingView.setVisibility(View.VISIBLE);
+
             mBackgroundView.setVisibility(View.VISIBLE);
-
-            /* Cargamos la imagen usando Picasso */
-            ColorVariant cv = product.getColors().get(0);
-            String url = cv.getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg");
-            Picasso.with(mContext)
-                   .load(url)
-                   .into(mProductImageView, new Callback()
-                   {
-                        @Override
-                        public void onSuccess()
-                        {
-                            mBackgroundView.setVisibility(View.GONE);
-                            mLoadingView.setVisibility(View.GONE);
-                            mProductFooterMainView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError()
-                        {
-                            mLoadingView.setVisibility(View.GONE);
-                            mErrorImageView.setVisibility(View.VISIBLE);
-                        }
-                   } );
 
             /* Ponemos el icono del corazon. */
             mFavImageButton.setBackgroundResource(R.drawable.ic_favorite_border_white);
+
+            /* Cargamos la imagen usando Picasso */
+            String url = product.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg");
+            Picasso.with(mContext)
+                   .load(url)
+                   .into(mProductImageView, new Callback() {
+                       @Override
+                       public void onSuccess() {
+                           mBackgroundView.setVisibility(View.GONE);
+                           mLoadingView.setVisibility(View.GONE);
+                           mProductFooterMainView.setVisibility(View.VISIBLE);
+                       }
+
+                       @Override
+                       public void onError() {
+                           mLoadingView.setVisibility(View.GONE);
+                           mErrorImageView.setVisibility(View.VISIBLE);
+                       }
+                   });
 
             mProduct = product;
         }
 
         @Override
-        public void onClick( View view )
+        public void onClick(View view)
         {
             /* Si se pulsa en el pie de foto */
             if (view.getId() == mProductFooterView.getId())
