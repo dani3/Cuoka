@@ -70,6 +70,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static boolean MAN;
+    protected static boolean ON_CREATE_FLAG;
     protected static int NUMBER_OF_CORES;
     protected enum STATE
     {
@@ -177,6 +178,8 @@ public class ProductsUI extends AppCompatActivity
         MAN = mSharedPreferences.retreiveMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+        ON_CREATE_FLAG = true;
 
         Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
@@ -392,6 +395,14 @@ public class ProductsUI extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+
+        // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
+        // la pantalla de un producto, por lo que hay que restaurar el pie de foto.
+        if (!ON_CREATE_FLAG)
+            mProductAdapter.restoreProductFooter();
+
+        else
+            ON_CREATE_FLAG = false;
     }
 
     @Override

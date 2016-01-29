@@ -4,25 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
@@ -50,6 +45,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     /* Data */
     private static List<Product> mProductList;
     private static double[] mProductBitmapArray;
+    private static ProductHolder mProductClicked;
 
     /**
      * ViewHolder del producto con todos los componentes graficos necesarios
@@ -69,7 +65,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
         private CardView mCardView;
 
-        private Animation scaleUpFooterExtra, scaleDownFooterExtra, scaleDownFooter;
+        private Animation scaleUp, scaleDownFooterExtra, scaleDownFooter;
 
         public ProductHolder(View itemView)
         {
@@ -91,7 +87,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.setOnClickListener(this);
             mProductImageView.setOnClickListener(this);
 
-            scaleUpFooterExtra   = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+            scaleUp              = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
             scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
 
@@ -122,17 +118,17 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     Activity activity = (Activity)mContext;
 
-                    // Sacamos las coordenadas de la imagen
+                    /* Sacamos las coordenadas de la imagen */
                     int[] screenLocation = new int[2];
                     mProductImageView.getLocationInWindow(screenLocation);
 
                     ColorVariant color = mProduct.getColors().get(0);
 
-                    // Creamos el intent
+                    /* Creamos el intent */
                     Intent intent = new Intent(mContext, ProductUI.class);
 
-                    // Enviamos toda la informacion necesaria para que la siguiente activity
-                    // realice la animacion
+                    /* Enviamos toda la informacion necesaria para que la siguiente activity
+                    * realice la animacion */
                     intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
                             .putExtra(PACKAGE + ".bitmap", mBitmapUri)
                             .putExtra(PACKAGE + ".left", screenLocation[0])
@@ -142,7 +138,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     mContext.startActivity(intent);
 
-                    // Desactivamos las transiciones por defecto
+                    /* Desactivamos las transiciones por defecto */
                     activity.overridePendingTransition(0, 0);
                 }
 
@@ -253,7 +249,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 if (mProductFooterExtraView.getVisibility() == View.GONE)
                 {
                     mProductFooterExtraView.setVisibility(View.VISIBLE);
-                    mProductFooterExtraView.startAnimation(scaleUpFooterExtra);
+                    mProductFooterExtraView.startAnimation(scaleUp);
 
                 } else
                     mProductFooterExtraView.startAnimation(scaleDownFooterExtra);
@@ -266,8 +262,22 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
                 mBitmapUri = getImageUri(mContext, mBitmap).toString();
 
+                // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
+                mProductClicked = this;
+
                 mProductFooterView.startAnimation(scaleDownFooter);
             }
+        }
+
+        /**
+         * Metodo que inicia una animacion para restaurar el pie de foto
+         */
+        private void restoreFooter()
+        {
+            mProductFooterView.setVisibility(View.VISIBLE);
+            mProductFooterExtraView.setVisibility(View.GONE);
+
+            mProductFooterView.startAnimation(scaleUp);
         }
 
         /**
@@ -301,11 +311,26 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         mProductBitmapArray = new double[total];
         for (int i = 0; i < total; i++)
             mProductBitmapArray[i] = 0.0f;
+
+        mProductClicked = null;
     }
 
     public void updateProductList(List<Product> productList)
     {
         mProductList = productList;
+    }
+
+    /**
+     * Restauramos el pie de foto, comprobando que se haya clickado en algun producto.
+     */
+    public void restoreProductFooter()
+    {
+        if (mProductClicked != null)
+        {
+            mProductClicked.restoreFooter();
+
+            mProductClicked = null;
+        }
     }
 
     @Override
