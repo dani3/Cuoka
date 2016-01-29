@@ -36,7 +36,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
         private static ImageView image;
-        private static ImageView error;
         private View loading;
 
         public ProductHolder( View itemView )
@@ -44,7 +43,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             super( itemView );
 
             image = ( ImageView )itemView.findViewById( R.id.product_image );
-            error = ( ImageView )itemView.findViewById( R.id.product_broken_image );
             loading = itemView.findViewById( R.id.product_avloadingitem );
         }
 
@@ -54,7 +52,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          */
         public void bindProduct( Image imageProduct )
         {
-            error.setVisibility( View.GONE );
             loading.setVisibility(View.VISIBLE);
 
             Log.d( TAG, "Image URL: "
@@ -73,7 +70,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                         @Override
                         public void onError() {
                             loading.setVisibility( View.GONE );
-                            error.setVisibility( View.VISIBLE );
                         }
                     });
         }

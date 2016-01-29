@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -114,8 +113,8 @@ public class ProductsUI extends AppCompatActivity
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
-    protected View mLoadingView;
     protected TextView mNoDataTextView;
+    protected View mLoadingView;
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
@@ -135,7 +134,6 @@ public class ProductsUI extends AppCompatActivity
     /* Others */
     protected Menu mMenu;
     protected STATE mState;
-    protected ItemTouchHelper mItemTouchHelper;
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
 
@@ -192,8 +190,6 @@ public class ProductsUI extends AppCompatActivity
         Map<String, Object> map = new HashMap<>();
 
         map.put(getResources().getString(R.string.filter_newness), mSharedPreferences.retreiveNewness());
-        map.put(getResources().getString(R.string.filter_colors), null);
-        map.put(getResources().getString(R.string.filter_sections), null);
 
         return map;
     }
@@ -218,7 +214,7 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initToolbar()
     {
-        mToolbar = (Toolbar)findViewById(R.id.appbar);
+        mToolbar         = (Toolbar)findViewById(R.id.appbar);
         mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
 
         setSupportActionBar(mToolbar);
@@ -265,7 +261,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled( RecyclerView recyclerView, int dx, int dy )
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;

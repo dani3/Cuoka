@@ -32,9 +32,24 @@ public class ColorVariant implements Serializable
     public String getColorName()   { return this.colorName; }
     public String getColorPath()   { return this.colorPath; }
     public List<Image> getImages() { return this.images; }
-    
-    public void setReference( String reference ) { this.reference = reference; }
-    public void setColorName( String colorName ) { this.colorName = colorName; }
-    public void setColorPath( String colorPath ) { this.colorPath = colorPath; }
-    public void setImages( List<Image> images )  { this.images = images; }
+
+    public boolean isOkay()
+    {
+        if ((this.reference == null) || (this.reference.isEmpty()))
+            return false;
+
+        if ((this.colorName == null) || (this.colorName.isEmpty()))
+            return false;
+
+        if ((this.colorPath == null) || (this.colorPath.isEmpty()))
+            return false;
+
+        for (Image image : this.images)
+        {
+            if (!image.isOkay())
+                return false;
+        }
+
+        return true;
+    }
 }

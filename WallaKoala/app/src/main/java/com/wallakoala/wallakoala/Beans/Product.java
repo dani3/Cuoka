@@ -47,13 +47,7 @@ public class Product
 	public String getLink()               { return this.link; }
 	public boolean isNewness()            { return this.newness; }
 
-	public void setName( String name )                 { this.name = name; }
-	public void setShop( String shop )                 { this.shop = shop; }
-	public void setSection( String section )           { this.section = section; }
-	public void setPrice( double price )               { this.price = price; }
-	public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
-	public void setLink( String link )                 { this.link = link; }
-	public void setNewness( boolean newness )          { this.newness = newness; }
+	public void setName( String name ) { this.name = name; }
 
 	public boolean isOkay()
 	{
@@ -77,7 +71,8 @@ public class Product
 
 		for (ColorVariant cv : this.colors)
 		{
-			// Comprobar cada color
+			if (!cv.isOkay())
+				return false;
 		}
 
 		return true;

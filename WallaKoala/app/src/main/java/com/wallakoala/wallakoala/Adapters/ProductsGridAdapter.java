@@ -84,8 +84,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             mProductFooterView.setOnClickListener(this);
 
-            scaleUpFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+            scaleUpFooterExtra   = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
+
             scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
             {
                 @Override
@@ -105,6 +106,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         /**
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param product: producto con el que se inicializa un item.
+         * @param pos: posicion del producto en la lista.
          */
         public void bindProduct(Product product, int pos)
         {
