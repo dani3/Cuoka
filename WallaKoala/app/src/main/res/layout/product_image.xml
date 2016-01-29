@@ -15,16 +15,6 @@
         app:indicator="BallClipRotate"
         app:indicator_color="@color/colorAccent"/>
 
-    <!-- Imagen no disponible -->
-    <ImageView
-        android:id="@+id/product_broken_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/broken_robot"
-        android:visibility="gone"/>
-
     <!-- Imagen -->
     <com.wallakoala.wallakoala.Views.ProductImageView
         android:id="@+id/product_image"
