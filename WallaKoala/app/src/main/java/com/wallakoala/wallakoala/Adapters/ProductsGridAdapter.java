@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +58,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     {
         private Product mProduct;
         private Target mTarget;
+        private Bitmap mBitmap;
+        private String mBitmapUri;
 
         private ImageButton mFavImageButton;
         private ImageView mProductImageView;
@@ -64,7 +67,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
 
-        private Animation scaleUpFooterExtra, scaleDownFooterExtra;
+        private CardView mCardView;
+
+        private Animation scaleUpFooterExtra, scaleDownFooterExtra, scaleDownFooter;
 
         public ProductHolder(View itemView)
         {
@@ -76,6 +81,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mFavImageButton   = (ImageButton)itemView.findViewById(R.id.footer_fav_button);
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.price);
+            mCardView         = (CardView)itemView.findViewById(R.id.card_item);
 
             mLoadingView            = itemView.findViewById(R.id.avloadingitem);
             mProductFooterView      = itemView.findViewById(R.id.footer);
@@ -83,9 +89,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterMainView  = itemView.findViewById(R.id.mainFooter);
 
             mProductFooterView.setOnClickListener(this);
+            mProductImageView.setOnClickListener(this);
 
             scaleUpFooterExtra   = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
+            scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
 
             scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
             {
@@ -96,6 +104,46 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 public void onAnimationEnd(Animation animation)
                 {
                     mProductFooterExtraView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            scaleDownFooter.setAnimationListener(new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    mProductFooterView.setVisibility(View.GONE);
+
+                    Activity activity = (Activity)mContext;
+
+                    // Sacamos las coordenadas de la imagen
+                    int[] screenLocation = new int[2];
+                    mProductImageView.getLocationInWindow(screenLocation);
+
+                    ColorVariant color = mProduct.getColors().get(0);
+
+                    // Creamos el intent
+                    Intent intent = new Intent(mContext, ProductUI.class);
+
+                    // Enviamos toda la informacion necesaria para que la siguiente activity
+                    // realice la animacion
+                    intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
+                            .putExtra(PACKAGE + ".bitmap", mBitmapUri)
+                            .putExtra(PACKAGE + ".left", screenLocation[0])
+                            .putExtra(PACKAGE + ".top", screenLocation[1])
+                            .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
+                            .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
+
+                    mContext.startActivity(intent);
+
+                    // Desactivamos las transiciones por defecto
+                    activity.overridePendingTransition(0, 0);
                 }
 
                 @Override
@@ -146,6 +194,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     // Si la imagen es nueva, calculamos el aspect ratio y lo almacenamos el el array en la pos correspondiente.
                     if (mProductBitmapArray[position] == 0.0f)
                         mProductBitmapArray[position] = (double)bitmap.getHeight() / (double)bitmap.getWidth();
+
+                    // Guardamos el bitmap, para asi pasarlo a ProductUI.
+                    mBitmap = bitmap;
 
                     // Por ultimo, cargamos el Bitmap en la ImageView
                     mProductImageView.setImageBitmap(bitmap);
@@ -212,51 +263,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             /* Si se pulsa en la imagen */
             if (view.getId() == mProductImageView.getId())
             {
-                final View v = view;
+                // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
+                mBitmapUri = getImageUri(mContext, mBitmap).toString();
 
-                Target target = new Target()
-                {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
-                    {
-                        Activity activity = (Activity)mContext;
-
-                        /* Sacamos las coordenadas de la imagen */
-                        int[] screenLocation = new int[2];
-                        v.getLocationInWindow(screenLocation);
-
-                        ColorVariant color = mProduct.getColors().get(0);
-
-                        /* Creamos el intent */
-                        Intent intent = new Intent(mContext, ProductUI.class);
-
-                        /* Enviamos toda la informacion necesaria para que la siguiente activity
-                         * realice la animacion */
-                        intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
-                              .putExtra(PACKAGE + ".bitmap", getImageUri(mContext, bitmap).toString())
-                              .putExtra(PACKAGE + ".left", screenLocation[0])
-                              .putExtra(PACKAGE + ".top", screenLocation[1])
-                              .putExtra(PACKAGE + ".width", v.getWidth())
-                              .putExtra(PACKAGE + ".height", v.getHeight());
-
-                        mContext.startActivity(intent);
-
-                        /* Desactivamos las transiciones por defecto */
-                        activity.overridePendingTransition(0, 0);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {}
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                };
-
-                /* Descargamos la imagen en HQ y la guardamos en un bitmap */
-                String url = mProduct.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Large.jpg");
-                Picasso.with(mContext)
-                       .load(url)
-                       .into(target);
+                mProductFooterView.startAnimation(scaleDownFooter);
             }
         }
 
@@ -272,7 +282,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver()
+                                                                , inImage
+                                                                , "Title"
+                                                                , null);
 
             return Uri.parse(path);
         }

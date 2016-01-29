@@ -38,12 +38,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         private static ImageView image;
         private View loading;
 
-        public ProductHolder( View itemView )
+        public ProductHolder(View itemView)
         {
-            super( itemView );
+            super(itemView);
 
-            image = ( ImageView )itemView.findViewById( R.id.product_image );
-            loading = itemView.findViewById( R.id.product_avloadingitem );
+            image   = (ImageView)itemView.findViewById(R.id.product_image);
+            loading = itemView.findViewById(R.id.product_avloadingitem);
         }
 
         /**
