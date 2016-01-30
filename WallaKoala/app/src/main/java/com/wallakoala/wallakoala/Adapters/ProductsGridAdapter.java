@@ -63,8 +63,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
 
-        private CardView mCardView;
-
         private Animation scaleUp, scaleDownFooterExtra, scaleDownFooter;
 
         public ProductHolder(View itemView)
@@ -77,7 +75,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mFavImageButton   = (ImageButton)itemView.findViewById(R.id.footer_fav_button);
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.price);
-            mCardView         = (CardView)itemView.findViewById(R.id.card_item);
 
             mLoadingView            = itemView.findViewById(R.id.avloadingitem);
             mProductFooterView      = itemView.findViewById(R.id.footer);

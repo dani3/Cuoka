@@ -86,7 +86,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public ProductHolder onCreateViewHolder( ViewGroup viewGroup, int viewType )
     {
         View itemView = LayoutInflater.from( viewGroup.getContext() )
-                .inflate( R.layout.product_image
+                .inflate( R.layout.product
                         , viewGroup
                         , false );
 
