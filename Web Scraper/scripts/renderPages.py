@@ -4,8 +4,9 @@ from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 class WebPage(QtWebKit.QWebPage):
     def __init__(self):
         QtWebKit.QWebPage.__init__(self)
+        #Set timeout -> socket.setdefaulttimeout(20)
         self.mainFrame().loadFinished.connect(self.handleLoadFinished)
-
+    
     def process(self, items):
         self._items = iter(items)
         self.fetchNext()
