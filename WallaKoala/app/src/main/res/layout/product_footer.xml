@@ -47,6 +47,7 @@
         android:layout_gravity="center"
         android:layout_weight="0.15"
         android:scaleType="centerCrop"
-        android:background="@drawable/ic_favorite_border_white"/>
+        android:background="@drawable/ic_favorite_border_white"
+        android:contentDescription="@string/accesibility_favorite"/>
 
 </LinearLayout>

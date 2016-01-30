@@ -16,7 +16,7 @@ import com.wallakoala.wallakoala.R;
 
 /**
  * @class Adapter para la lista de imagenes de un producto.
- * Created by Dani on 23/01/2016.
+ * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
@@ -36,16 +36,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
         private static ImageView image;
-        private static ImageView error;
         private View loading;
 
-        public ProductHolder( View itemView )
+        public ProductHolder(View itemView)
         {
-            super( itemView );
-
-            image = ( ImageView )itemView.findViewById( R.id.product_image );
-            error = ( ImageView )itemView.findViewById( R.id.product_broken_image );
-            loading = itemView.findViewById( R.id.product_avloadingitem );
+            super(itemView);
         }
 
         /**
@@ -54,7 +49,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          */
         public void bindProduct( Image imageProduct )
         {
-            error.setVisibility( View.GONE );
             loading.setVisibility(View.VISIBLE);
 
             Log.d( TAG, "Image URL: "
@@ -73,7 +67,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                         @Override
                         public void onError() {
                             loading.setVisibility( View.GONE );
-                            error.setVisibility( View.VISIBLE );
                         }
                     });
         }
@@ -90,7 +83,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public ProductHolder onCreateViewHolder( ViewGroup viewGroup, int viewType )
     {
         View itemView = LayoutInflater.from( viewGroup.getContext() )
-                .inflate( R.layout.product_image
+                .inflate( R.layout.product
                         , viewGroup
                         , false );
 

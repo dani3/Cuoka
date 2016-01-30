@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * @class Clase que gestionara el fichero de preferencias.
- * Created by Dani on 11/01/2016.
+ * Created by Daniel Mancebo Aldea on 11/01/2016.
  */
 
 public class SharedPreferencesManager

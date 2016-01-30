@@ -90,7 +90,7 @@ public class ProductUI extends AppCompatActivity
         mTopLevelLayout.setBackground(mBackground);
 
         // Solo lo ejecutamos si venimos del activity padre
-        if ( savedInstanceState == null )
+        if (savedInstanceState == null)
         {
             // Listener global
             ViewTreeObserver observer = mImageView.getViewTreeObserver();

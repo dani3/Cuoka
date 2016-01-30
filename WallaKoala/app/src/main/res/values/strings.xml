@@ -22,4 +22,6 @@
     <string name="filter_colors">colors</string>
     <string name="filter_sections">sections</string>
 
+    <string name="accesibility_favorite">Favorito</string>
+
 </resources>

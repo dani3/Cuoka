@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
@@ -44,6 +44,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
     /* Data */
     private static List<Product> mProductList;
+    private static double[] mProductBitmapArray;
+    private static ProductHolder mProductClicked;
 
     /**
      * ViewHolder del producto con todos los componentes graficos necesarios
@@ -51,22 +53,22 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private Product mProduct;
+        private Target mTarget;
+        private Bitmap mBitmap;
+        private String mBitmapUri;
 
         private ImageButton mFavImageButton;
         private ImageView mProductImageView;
-        private ImageView mErrorImageView;
         private View mLoadingView;
-        private View mBackgroundView;
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
 
-        private Animation scaleUpFooterExtra, scaleDownFooterExtra;
+        private Animation scaleUp, scaleDownFooterExtra, scaleDownFooter;
 
         public ProductHolder(View itemView)
         {
             super(itemView);
 
-            mErrorImageView   = (ImageView)itemView.findViewById(R.id.broken_image);
             mTitleTextView    = (TextView)itemView.findViewById(R.id.footer_title);
             mSubtitleTextView = (TextView)itemView.findViewById(R.id.footer_subtitle);
             mProductImageView = (ImageView)itemView.findViewById(R.id.grid_image);
@@ -74,17 +76,18 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.price);
 
-            mBackgroundView         = itemView.findViewById(R.id.grid_background);
             mLoadingView            = itemView.findViewById(R.id.avloadingitem);
             mProductFooterView      = itemView.findViewById(R.id.footer);
             mProductFooterExtraView = itemView.findViewById(R.id.extraInfo);
             mProductFooterMainView  = itemView.findViewById(R.id.mainFooter);
 
             mProductFooterView.setOnClickListener(this);
-            //mProductImageView.setOnClickListener( this );
+            mProductImageView.setOnClickListener(this);
 
-            scaleUpFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+            scaleUp              = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
+            scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
+
             scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
             {
                 @Override
@@ -99,59 +102,142 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 @Override
                 public void onAnimationRepeat(Animation animation) {}
             });
+
+            scaleDownFooter.setAnimationListener(new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    mProductFooterView.setVisibility(View.GONE);
+
+                    Activity activity = (Activity)mContext;
+
+                    /* Sacamos las coordenadas de la imagen */
+                    int[] screenLocation = new int[2];
+                    mProductImageView.getLocationInWindow(screenLocation);
+
+                    ColorVariant color = mProduct.getColors().get(0);
+
+                    /* Creamos el intent */
+                    Intent intent = new Intent(mContext, ProductUI.class);
+
+                    /* Enviamos toda la informacion necesaria para que la siguiente activity
+                    * realice la animacion */
+                    intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
+                          .putExtra(PACKAGE + ".bitmap", mBitmapUri)
+                          .putExtra(PACKAGE + ".left", screenLocation[0])
+                          .putExtra(PACKAGE + ".top", screenLocation[1])
+                          .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
+                          .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
+
+                    mContext.startActivity(intent);
+
+                    /* Desactivamos las transiciones por defecto */
+                    activity.overridePendingTransition(0, 0);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
         }
 
         /**
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param product: producto con el que se inicializa un item.
+         * @param pos: posicion del producto en la lista.
          */
-        public void bindProduct(Product product)
+        public void bindProduct(Product product, int pos)
         {
+            final int position = pos;
+
             /* Inicializamos los TextViews */
             mTitleTextView.setText(product.getShop());
-            mSubtitleTextView.setText(product.getSection());
+            mSubtitleTextView.setText(product.getColors().get(0).getReference());
             mNameTextView.setText(product.getName());
             mPriceTextView.setText(String.format("%.2f", product.getPrice()) + "€");
 
-            /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone. Tambien la imagen de error. */
+            /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone */
             mProductFooterExtraView.setVisibility(View.GONE);
             mProductFooterMainView.setVisibility(View.GONE);
-            mErrorImageView.setVisibility(View.GONE);
 
-            /* Mostramos la view de carga y el background */
+            /* Mostramos la view de carga */
             mLoadingView.setVisibility(View.VISIBLE);
-            mBackgroundView.setVisibility(View.VISIBLE);
-
-            /* Cargamos la imagen usando Picasso */
-            String url = product.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Small.jpg");
-            Picasso.with(mContext)
-                   .load(url)
-                   .into(mProductImageView, new Callback()
-                   {
-                        @Override
-                        public void onSuccess()
-                        {
-                            mBackgroundView.setVisibility(View.GONE);
-                            mLoadingView.setVisibility(View.GONE);
-                            mProductFooterMainView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError()
-                        {
-                            mLoadingView.setVisibility(View.GONE);
-                            mErrorImageView.setVisibility(View.VISIBLE);
-                        }
-                   } );
 
             /* Ponemos el icono del corazon. */
             mFavImageButton.setBackgroundResource(R.drawable.ic_favorite_border_white);
+
+            /* Cargamos la imagen usando Picasso */
+            mTarget = new Target()
+            {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                {
+                    // Ocultamos la View de carga, y mostramos el pie de foto.
+                    mLoadingView.setVisibility(View.GONE);
+                    mProductFooterMainView.setVisibility(View.VISIBLE);
+
+                    // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
+                    mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mProductImageView.setBackgroundColor(-1);
+                    mProductImageView.setAlpha(1.0f);
+
+                    // Si la imagen es nueva, calculamos el aspect ratio y lo almacenamos el el array en la pos correspondiente.
+                    if (mProductBitmapArray[position] == 0.0f)
+                        mProductBitmapArray[position] = (double)bitmap.getHeight() / (double)bitmap.getWidth();
+
+                    // Guardamos el bitmap, para asi pasarlo a ProductUI.
+                    mBitmap = bitmap;
+
+                    // Por ultimo, cargamos el Bitmap en la ImageView
+                    mProductImageView.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable)
+                {
+                    mLoadingView.setVisibility(View.GONE);
+
+                    mProductImageView.setBackgroundColor(mContext.getResources()
+                                                                 .getColor(android.R.color.holo_red_dark));
+                    mProductImageView.setAlpha(0.2f);
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable)
+                {
+                    // Debido a que los ViewHolder se reciclan, eliminamos el Bitmap antiguo
+                    mProductImageView.setImageBitmap(null);
+
+                    // Si esta imagen ya se ha cargado, establecemos la altura de la ImageView
+                    // usando el aspect ratio almacenado en el array, si no, se carga un valor cualquiera
+                    if (mProductBitmapArray[position] != 0.0f)
+                        mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth()
+                                                                                * mProductBitmapArray[position]);
+                    else
+                        mProductImageView.getLayoutParams().height = 600;
+
+                    // Establecemos un color de fondo y un 10% de opacidad.
+                    mProductImageView.setBackgroundColor(mContext.getResources().getColor(R.color.colorText));
+                    mProductImageView.setAlpha(0.1f);
+                }
+            };
+
+            String url = product.getColors().get(0)
+                                            .getImages()
+                                            .get(0)
+                                            .getPath().replaceAll(".jpg", "_Small.jpg");
+            Picasso.with(mContext)
+                   .load(url)
+                   .into(mTarget);
 
             mProduct = product;
         }
 
         @Override
-        public void onClick( View view )
+        public void onClick(View view)
         {
             /* Si se pulsa en el pie de foto */
             if (view.getId() == mProductFooterView.getId())
@@ -160,7 +246,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 if (mProductFooterExtraView.getVisibility() == View.GONE)
                 {
                     mProductFooterExtraView.setVisibility(View.VISIBLE);
-                    mProductFooterExtraView.startAnimation(scaleUpFooterExtra);
+                    mProductFooterExtraView.startAnimation(scaleUp);
 
                 } else
                     mProductFooterExtraView.startAnimation(scaleDownFooterExtra);
@@ -170,52 +256,25 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             /* Si se pulsa en la imagen */
             if (view.getId() == mProductImageView.getId())
             {
-                final View v = view;
+                // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
+                mBitmapUri = getImageUri(mContext, mBitmap).toString();
 
-                Target target = new Target()
-                {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
-                    {
-                        Activity activity = (Activity)mContext;
+                // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
+                mProductClicked = this;
 
-                        /* Sacamos las coordenadas de la imagen */
-                        int[] screenLocation = new int[2];
-                        v.getLocationInWindow(screenLocation);
-
-                        ColorVariant color = mProduct.getColors().get(0);
-
-                        /* Creamos el intent */
-                        Intent intent = new Intent(mContext, ProductUI.class);
-
-                        /* Enviamos toda la informacion necesaria para que la siguiente activity
-                         * realice la animacion */
-                        intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
-                              .putExtra(PACKAGE + ".bitmap", getImageUri(mContext, bitmap).toString())
-                              .putExtra(PACKAGE + ".left", screenLocation[0])
-                              .putExtra(PACKAGE + ".top", screenLocation[1])
-                              .putExtra(PACKAGE + ".width", v.getWidth())
-                              .putExtra(PACKAGE + ".height", v.getHeight());
-
-                        mContext.startActivity(intent);
-
-                        /* Desactivamos las transiciones por defecto */
-                        activity.overridePendingTransition(0, 0);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {}
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                };
-
-                /* Descargamos la imagen en HQ y la guardamos en un bitmap */
-                String url = mProduct.getColors().get(0).getImages().get(0).getPath().replaceAll(".jpg", "_Large.jpg");
-                Picasso.with(mContext)
-                       .load(url)
-                       .into(target);
+                mProductFooterView.startAnimation(scaleDownFooter);
             }
+        }
+
+        /**
+         * Metodo que inicia una animacion para restaurar el pie de foto
+         */
+        private void restoreFooter()
+        {
+            mProductFooterView.setVisibility(View.VISIBLE);
+            mProductFooterExtraView.setVisibility(View.GONE);
+
+            mProductFooterView.startAnimation(scaleUp);
         }
 
         /**
@@ -230,7 +289,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver()
+                                                                , inImage
+                                                                , "Title"
+                                                                , null);
 
             return Uri.parse(path);
         }
@@ -238,15 +300,43 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     } /* [END] ViewHolder */
 
 
-    public ProductsGridAdapter(Context context, List<Product> productList)
+    public ProductsGridAdapter(Context context, List<Product> productList, int total)
     {
         mContext = context;
         mProductList = productList;
+
+        mProductBitmapArray = new double[total];
+        for (int i = 0; i < total; i++)
+            mProductBitmapArray[i] = 0.0f;
+
+        mProductClicked = null;
     }
 
+    /**
+     * Metodo que actualiza la lista de productos del adapter
+     * @param productList: lista con todos los productos
+     */
     public void updateProductList(List<Product> productList)
     {
         mProductList = productList;
+    }
+
+    /**
+     * Restauramos el pie de foto, comprobando que se haya clickado en algun producto.
+     */
+    public void restoreProductFooter()
+    {
+        if (mProductClicked != null)
+        {
+            mProductClicked.restoreFooter();
+
+            mProductClicked = null;
+        }
+    }
+
+    public boolean productClicked()
+    {
+        return (mProductClicked != null);
     }
 
     @Override
@@ -263,7 +353,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     @Override
     public void onBindViewHolder(final ProductHolder productHolder, int pos)
     {
-        productHolder.bindProduct(mProductList.get(pos));
+        productHolder.bindProduct(mProductList.get(pos), pos);
     }
 
     @Override

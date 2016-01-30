@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,6 +70,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static boolean MAN;
+    protected static boolean ON_CREATE_FLAG;
     protected static int NUMBER_OF_CORES;
     protected enum STATE
     {
@@ -114,8 +114,8 @@ public class ProductsUI extends AppCompatActivity
     /* Views */
     protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected TextView mToolbarTextView;
-    protected View mLoadingView;
     protected TextView mNoDataTextView;
+    protected View mLoadingView;
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
@@ -135,7 +135,6 @@ public class ProductsUI extends AppCompatActivity
     /* Others */
     protected Menu mMenu;
     protected STATE mState;
-    protected ItemTouchHelper mItemTouchHelper;
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
 
@@ -180,6 +179,8 @@ public class ProductsUI extends AppCompatActivity
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
+        ON_CREATE_FLAG = true;
+
         Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
@@ -192,8 +193,6 @@ public class ProductsUI extends AppCompatActivity
         Map<String, Object> map = new HashMap<>();
 
         map.put(getResources().getString(R.string.filter_newness), mSharedPreferences.retreiveNewness());
-        map.put(getResources().getString(R.string.filter_colors), null);
-        map.put(getResources().getString(R.string.filter_sections), null);
 
         return map;
     }
@@ -218,7 +217,7 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initToolbar()
     {
-        mToolbar = (Toolbar)findViewById(R.id.appbar);
+        mToolbar         = (Toolbar)findViewById(R.id.appbar);
         mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
 
         setSupportActionBar(mToolbar);
@@ -233,7 +232,7 @@ public class ProductsUI extends AppCompatActivity
     {
         mProductsRecyclerView = (RecyclerView)findViewById(R.id.grid_recycler);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mProductAdapter       = new ProductsGridAdapter(this, mProductsDisplayedList);
+        mProductAdapter = new ProductsGridAdapter(this, mProductsDisplayedList, mProductsCandidatesDeque.size());
 
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
@@ -265,7 +264,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled( RecyclerView recyclerView, int dx, int dy )
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
@@ -390,6 +389,24 @@ public class ProductsUI extends AppCompatActivity
     {
         moveAndFade = AnimationUtils.loadAnimation(ProductsUI.this
                 , R.anim.translate_and_fade);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
+        // la pantalla de un producto, por lo que hay que restaurar el pie de foto.
+        if ((!ON_CREATE_FLAG) && (mProductAdapter.productClicked()))
+        {
+            Log.d(TAG, "Volviendo de ProductUI");
+            mProductAdapter.restoreProductFooter();
+
+        } else if (ON_CREATE_FLAG) {
+            ON_CREATE_FLAG = false;
+
+        }
     }
 
     @Override
@@ -620,7 +637,10 @@ public class ProductsUI extends AppCompatActivity
                 colors.add( new ColorVariant( reference, colorName, colorPath, images ) );
             }
 
-            productsList.add( new Product( name, shop, section, price, link, colors, newness ) );
+            Product product = new Product( name, shop, section, price, link, colors, newness );
+
+            if (product.isOkay())
+                productsList.add( new Product( name, shop, section, price, link, colors, newness ) );
 
         }
 
