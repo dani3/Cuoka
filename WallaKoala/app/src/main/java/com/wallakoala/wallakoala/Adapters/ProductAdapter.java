@@ -16,7 +16,7 @@ import com.wallakoala.wallakoala.R;
 
 /**
  * @class Adapter para la lista de imagenes de un producto.
- * Created by Dani on 23/01/2016.
+ * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
@@ -41,9 +41,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public ProductHolder(View itemView)
         {
             super(itemView);
-
-            image   = (ImageView)itemView.findViewById(R.id.product_image);
-            loading = itemView.findViewById(R.id.product_avloadingitem);
         }
 
         /**

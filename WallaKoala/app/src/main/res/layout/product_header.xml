@@ -22,6 +22,4 @@
         android:textColor="@color/colorText"
         android:textSize="16dp"/>
 
-
-
 </LinearLayout>

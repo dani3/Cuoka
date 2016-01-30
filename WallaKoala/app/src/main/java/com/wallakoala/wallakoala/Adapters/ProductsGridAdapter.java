@@ -127,11 +127,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     /* Enviamos toda la informacion necesaria para que la siguiente activity
                     * realice la animacion */
                     intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
-                            .putExtra(PACKAGE + ".bitmap", mBitmapUri)
-                            .putExtra(PACKAGE + ".left", screenLocation[0])
-                            .putExtra(PACKAGE + ".top", screenLocation[1])
-                            .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
-                            .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
+                          .putExtra(PACKAGE + ".bitmap", mBitmapUri)
+                          .putExtra(PACKAGE + ".left", screenLocation[0])
+                          .putExtra(PACKAGE + ".top", screenLocation[1])
+                          .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
+                          .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
 
                     mContext.startActivity(intent);
 
@@ -159,11 +159,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mNameTextView.setText(product.getName());
             mPriceTextView.setText(String.format("%.2f", product.getPrice()) + "€");
 
-            /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone. Tambien la imagen de error. */
+            /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone */
             mProductFooterExtraView.setVisibility(View.GONE);
             mProductFooterMainView.setVisibility(View.GONE);
 
-            /* Mostramos la view de carga y el background */
+            /* Mostramos la view de carga */
             mLoadingView.setVisibility(View.VISIBLE);
 
             /* Ponemos el icono del corazon. */
@@ -213,7 +213,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     // Si esta imagen ya se ha cargado, establecemos la altura de la ImageView
                     // usando el aspect ratio almacenado en el array, si no, se carga un valor cualquiera
-                    if (mProductBitmapArray[position] != 0)
+                    if (mProductBitmapArray[position] != 0.0f)
                         mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth()
                                                                                 * mProductBitmapArray[position]);
                     else
@@ -312,6 +312,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         mProductClicked = null;
     }
 
+    /**
+     * Metodo que actualiza la lista de productos del adapter
+     * @param productList: lista con todos los productos
+     */
     public void updateProductList(List<Product> productList)
     {
         mProductList = productList;
@@ -328,6 +332,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             mProductClicked = null;
         }
+    }
+
+    public boolean productClicked()
+    {
+        return (mProductClicked != null);
     }
 
     @Override
