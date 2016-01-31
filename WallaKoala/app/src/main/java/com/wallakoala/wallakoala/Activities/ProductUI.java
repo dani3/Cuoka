@@ -12,10 +12,12 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -69,6 +71,7 @@ public class ProductUI extends AppCompatActivity
     protected int mThumbnailTop;
     protected float mThumbnailWidth;
     protected float mThumbnailHeight;
+    private float mTopOffset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -146,6 +149,8 @@ public class ProductUI extends AppCompatActivity
         mThumbnailHeight = bundle.getInt(PACKAGE + ".height");
         mBitmapUri       = bundle.getString(PACKAGE + ".bitmap");
         mProduct         = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
+
+        mTopOffset = 0.0f;
     }
 
     protected void _initRecyclerView()
@@ -161,6 +166,18 @@ public class ProductUI extends AppCompatActivity
         mImagesRecylcerView.setLayoutManager(mLinearLayoutManager);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mImagesRecylcerView.setAdapter(mImagesAdapter);
+
+        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                mTopOffset -= dy;
+            }
+        });
     }
 
     /**
@@ -220,15 +237,18 @@ public class ProductUI extends AppCompatActivity
     {
         final long duration = (int)(ANIM_DURATION * 0.6);
 
+        // Quitamos el recyclerView
         mImagesRecylcerView.setVisibility(View.GONE);
 
         EXITING = true;
+
+        // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
+        mImageView.setTranslationY(mTopOffset);
 
         mImageView.animate().setDuration(duration)
                             .scaleX(mWidthScale).scaleY(mHeightScale)
                             .translationX(mLeftDelta).translationY(mTopDelta)
                             .withEndAction(endAction);
-
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
