@@ -1,15 +1,16 @@
 package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.R;
@@ -37,6 +38,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
         private ImageView mProductImageView;
+        private Target mTarget;
 
         public ProductHolder(View itemView)
         {
@@ -49,29 +51,35 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param imageProduct: producto con el que se inicializa un item.
          */
-        public void bindProduct( Image imageProduct )
+        public void bindProduct(Image imageProduct)
         {
             String url = imageProduct.getPath().replaceAll(".jpg", "_Large.jpg");
-            Log.d(TAG, "Image URL: " + url);
 
-            // Establecemos la altura de la imagen utilizando el aspect ratio recibido
-            mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth() * mAspectRatio);
+            mTarget = new Target()
+            {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                {
+                    mProductImageView.setImageBitmap(bitmap);
+                    mProductImageView.setBackgroundColor(-1);
+                    mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {}
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable)
+                {
+                    mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth() * mAspectRatio);
+                    mProductImageView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+                }
+            };
 
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)
-                   .load(imageProduct.getPath().replaceAll(".jpg", "_Large.jpg"))
-                   .into(mProductImageView, new Callback()
-                   {
-                       @Override
-                       public void onSuccess() {
-                          mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                       }
-
-                       @Override
-                       public void onError() {
-
-                       }
-                   });
+                   .load(url)
+                   .into(mTarget);
         }
 
     } /* [END] ViewHolder */
