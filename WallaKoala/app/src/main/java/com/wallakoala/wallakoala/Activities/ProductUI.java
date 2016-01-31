@@ -6,6 +6,7 @@ import android.animation.TimeInterpolator;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -71,7 +72,7 @@ public class ProductUI extends AppCompatActivity
     protected int mThumbnailTop;
     protected float mThumbnailWidth;
     protected float mThumbnailHeight;
-    private float mTopOffset;
+    protected float mTopOffset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -120,15 +121,9 @@ public class ProductUI extends AppCompatActivity
         mImageView      = (ImageView)findViewById(R.id.imageView);
         mTopLevelLayout = (FrameLayout)findViewById(R.id.topLevelLayout);
 
-        try
-        {
-            mBitmapDrawable = new BitmapDrawable(getResources()
-                    , MediaStore.Images.Media.getBitmap(this.getContentResolver()
-                    , Uri.parse(mBitmapUri)));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Cargamos el bitmap a partir del fichero
+        File filePath = getFileStreamPath(mBitmapUri);
+        mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
 
         mImageView.setImageDrawable(mBitmapDrawable);
 
@@ -175,7 +170,7 @@ public class ProductUI extends AppCompatActivity
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                mTopOffset -= dy;
+                mTopOffset += dy;
             }
         });
     }
@@ -243,7 +238,7 @@ public class ProductUI extends AppCompatActivity
         EXITING = true;
 
         // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
-        mImageView.setTranslationY(mTopOffset);
+        mImageView.setTranslationY(-mTopOffset);
 
         mImageView.animate().setDuration(duration)
                             .scaleX(mWidthScale).scaleY(mHeightScale)

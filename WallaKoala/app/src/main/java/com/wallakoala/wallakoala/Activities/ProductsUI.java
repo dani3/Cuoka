@@ -232,7 +232,10 @@ public class ProductsUI extends AppCompatActivity
     {
         mProductsRecyclerView = (RecyclerView)findViewById(R.id.grid_recycler);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mProductAdapter = new ProductsGridAdapter(this, mProductsDisplayedList, mProductsCandidatesDeque.size());
+        mProductAdapter = new ProductsGridAdapter(this
+                                    , mProductsDisplayedList
+                                    , mProductsCandidatesDeque.size()
+                                    , mCoordinatorLayout);
 
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
