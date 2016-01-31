@@ -29,18 +29,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     /* Data */
     private static ColorVariant mColor;
+    private static double mAspectRatio;
 
     /**
      * ViewHolder de la imagen con todos los componentes graficos necesarios
      */
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
-        private static ImageView image;
-        private View loading;
+        private ImageView mProductImageView;
 
         public ProductHolder(View itemView)
         {
             super(itemView);
+
+            mProductImageView = (ImageView)itemView.findViewById(R.id.product_image);
         }
 
         /**
@@ -49,51 +51,53 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          */
         public void bindProduct( Image imageProduct )
         {
-            loading.setVisibility(View.VISIBLE);
+            String url = imageProduct.getPath().replaceAll(".jpg", "_Large.jpg");
+            Log.d(TAG, "Image URL: " + url);
 
-            Log.d( TAG, "Image URL: "
-                    + imageProduct.getPath().replaceAll( ".jpg", "_Large.jpg" ) );
+            // Establecemos la altura de la imagen utilizando el aspect ratio recibido
+            mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth() * mAspectRatio);
 
             // Cargamos la imagen utilizando Picasso.
-            Picasso.with( mContext )
-                    .load( imageProduct.getPath().replaceAll(".jpg", "_Large.jpg"))
-                    .into( image, new Callback()
-                    {
-                        @Override
-                        public void onSuccess() {
-                            loading.setVisibility( View.GONE );
-                        }
+            Picasso.with(mContext)
+                   .load(imageProduct.getPath().replaceAll(".jpg", "_Large.jpg"))
+                   .into(mProductImageView, new Callback()
+                   {
+                       @Override
+                       public void onSuccess() {
+                          mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                       }
 
-                        @Override
-                        public void onError() {
-                            loading.setVisibility( View.GONE );
-                        }
-                    });
+                       @Override
+                       public void onError() {
+
+                       }
+                   });
         }
 
     } /* [END] ViewHolder */
 
-    public ProductAdapter( Context context, ColorVariant color )
+    public ProductAdapter(Context context, ColorVariant color, double ratio)
     {
         mContext = context;
         mColor = color;
+        mAspectRatio = ratio;
     }
 
     @Override
-    public ProductHolder onCreateViewHolder( ViewGroup viewGroup, int viewType )
+    public ProductHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
     {
-        View itemView = LayoutInflater.from( viewGroup.getContext() )
-                .inflate( R.layout.product
-                        , viewGroup
-                        , false );
+        View itemView = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.product_image
+                    , viewGroup
+                    , false);
 
-        return new ProductHolder( itemView );
+        return new ProductHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder( ProductHolder holder, int position )
+    public void onBindViewHolder(ProductHolder holder, int position)
     {
-        holder.bindProduct( mColor.getImages().get( position ) );
+        holder.bindProduct(mColor.getImages().get(position));
     }
 
     @Override

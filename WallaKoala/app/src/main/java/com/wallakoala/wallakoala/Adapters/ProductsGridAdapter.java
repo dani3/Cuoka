@@ -119,14 +119,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     int[] screenLocation = new int[2];
                     mProductImageView.getLocationInWindow(screenLocation);
 
-                    ColorVariant color = mProduct.getColors().get(0);
-
                     /* Creamos el intent */
                     Intent intent = new Intent(mContext, ProductUI.class);
 
                     /* Enviamos toda la informacion necesaria para que la siguiente activity
                     * realice la animacion */
-                    intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
+                    intent.putExtra(PACKAGE + ".Beans.Product", mProduct)
                           .putExtra(PACKAGE + ".bitmap", mBitmapUri)
                           .putExtra(PACKAGE + ".left", screenLocation[0])
                           .putExtra(PACKAGE + ".top", screenLocation[1])
