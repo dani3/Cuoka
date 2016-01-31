@@ -321,7 +321,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
     } /* [END] ViewHolder */
 
-
+    /**
+     * Constructor del Adapter
+     * @param context: contexto (ProductsUI)
+     * @param productList: lista de productos
+     * @param total: total de productos, necesario para inicializar el array de ratios
+     * @param coordinatorLayout: layout necesario para animar la SnackBar
+     */
     public ProductsGridAdapter(Context context, List<Product> productList, int total, CoordinatorLayout coordinatorLayout)
     {
         mContext = context;
@@ -358,6 +364,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         }
     }
 
+    /**
+     * Metodo que indica si se ha clickado en algun producto
+     * @return true si se ha clickado en algun producto
+     */
     public boolean productClicked()
     {
         return (mProductClicked != null);
