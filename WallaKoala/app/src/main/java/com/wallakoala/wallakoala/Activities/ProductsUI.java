@@ -398,14 +398,13 @@ public class ProductsUI extends AppCompatActivity
 
         // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
         // la pantalla de un producto, por lo que hay que restaurar el pie de foto.
-        if ((!ON_CREATE_FLAG) && (mProductAdapter.productClicked()))
+        if ((!ON_CREATE_FLAG) && (mProductAdapter != null) && (mProductAdapter.productClicked()))
         {
             Log.d(TAG, "Volviendo de ProductUI");
             mProductAdapter.restoreProductFooter();
 
         } else if (ON_CREATE_FLAG) {
             ON_CREATE_FLAG = false;
-
         }
     }
 

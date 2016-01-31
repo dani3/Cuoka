@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Beans;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by Daniel Mancebo on 11/12/2015.
  */
 
-public class Product
+public class Product implements Serializable
 {
 	private String name;
 	private String shop;

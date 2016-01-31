@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
-import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 
@@ -119,14 +117,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     int[] screenLocation = new int[2];
                     mProductImageView.getLocationInWindow(screenLocation);
 
-                    ColorVariant color = mProduct.getColors().get(0);
-
                     /* Creamos el intent */
                     Intent intent = new Intent(mContext, ProductUI.class);
 
                     /* Enviamos toda la informacion necesaria para que la siguiente activity
                     * realice la animacion */
-                    intent.putExtra(PACKAGE + ".Beans.ColorVariant", color)
+                    intent.putExtra(PACKAGE + ".Beans.Product", mProduct)
                           .putExtra(PACKAGE + ".bitmap", mBitmapUri)
                           .putExtra(PACKAGE + ".left", screenLocation[0])
                           .putExtra(PACKAGE + ".top", screenLocation[1])
