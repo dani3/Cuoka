@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -290,10 +291,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.startAnimation(scaleUp);
         }
 
-        /**
-         * Metodo que saca la Uri de un bitmap.
-         * @return Nombre de la imagen.
-         */
+        @Nullable
         private String saveImage()
         {
             String fileName = "thumbnail_" + getAdapterPosition() + ".png";
@@ -304,7 +302,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
 
-                FileOutputStream fileOutStream = mContext.openFileOutput(fileName, mContext.MODE_PRIVATE);
+                FileOutputStream fileOutStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
                 fileOutStream.write(byteArray);
 
                 fileOutStream.close();

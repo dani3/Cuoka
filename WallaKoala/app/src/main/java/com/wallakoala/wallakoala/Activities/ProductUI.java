@@ -116,6 +116,9 @@ public class ProductUI extends AppCompatActivity
         }
     }
 
+    /**
+     * Metodo que inicializa todas las vistas
+     */
     protected void _initViews()
     {
         mImageView      = (ImageView)findViewById(R.id.imageView);
@@ -132,6 +135,9 @@ public class ProductUI extends AppCompatActivity
         mTopLevelLayout.setBackground(mBackground);
     }
 
+    /**
+     * Metodo que inicializa todos los datos
+     */
     protected void _initData()
     {
         EXITING = false;
@@ -148,6 +154,9 @@ public class ProductUI extends AppCompatActivity
         mTopOffset = 0.0f;
     }
 
+    /**
+     * Metodo que inicializa el RecyclerView
+     */
     protected void _initRecyclerView()
     {
         // Calculamos el aspect ratio de la imagen
@@ -197,24 +206,25 @@ public class ProductUI extends AppCompatActivity
         mImageView.animate().setDuration(duration)
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
-                            .setInterpolator(sDecelerator).setListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation) {}
+                            .setInterpolator(sDecelerator)
+                            .setListener(new Animator.AnimatorListener()
+                            {
+                                @Override
+                                public void onAnimationStart(Animator animation) {}
 
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                if (!EXITING)
-                    mImagesRecylcerView.setVisibility(View.VISIBLE);
-            }
+                                @Override
+                                public void onAnimationEnd(Animator animation)
+                                {
+                                    if (!EXITING)
+                                        mImagesRecylcerView.setVisibility(View.VISIBLE);
+                                }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {}
+                                @Override
+                                public void onAnimationCancel(Animator animation) {}
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {}
-        });
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {}
+                            });
 
         // Efecto fade para oscurecer la pantalla
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
@@ -225,8 +235,7 @@ public class ProductUI extends AppCompatActivity
     /**
      * La animacion de salida es la misma animacion de entrada pero al reves
      *
-     * @param endAction This action gets run after the animation completes (this is
-     * when we actually switch activities)
+     * @param endAction Accion que se ejecuta cuando termine la animacion.
      */
     public void runExitAnimation(final Runnable endAction)
     {
@@ -251,10 +260,6 @@ public class ProductUI extends AppCompatActivity
         bgAnim.start();
     }
 
-    /**
-     * Sobreescribir este metodo nos permite ejecutar la animacion de salida
-     * y luego salir de la activity.
-     */
     @Override
     public void onBackPressed()
     {
