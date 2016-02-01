@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -258,7 +256,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                 } else
                     mProductFooterExtraView.startAnimation(scaleDownFooterExtra);
-
             }
 
             /* Si se pulsa en la imagen */
@@ -275,7 +272,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductFooterView.startAnimation(scaleDownFooter);
 
                 } else {
-                    Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT);
+                    Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }

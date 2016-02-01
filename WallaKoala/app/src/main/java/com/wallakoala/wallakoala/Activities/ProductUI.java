@@ -10,6 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +20,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
@@ -47,6 +52,7 @@ public class ProductUI extends AppCompatActivity
     /* Container Views */
     protected FrameLayout mTopLevelLayout;
     protected RecyclerView mImagesRecylcerView;
+    protected CoordinatorLayout mCoordinatorLayout;
 
     /* Adapter */
     protected ProductAdapter mImagesAdapter;
@@ -56,6 +62,12 @@ public class ProductUI extends AppCompatActivity
 
     /* Views */
     protected ImageView mImageView;
+
+    /* Floating Button */
+    protected FloatingActionButton mFloatingActionButton;
+
+    /* Animations */
+    protected Animation mExplodeAnimation, mImplodeAnimation;
 
     /* Data */
     protected Product mProduct;
@@ -85,6 +97,7 @@ public class ProductUI extends AppCompatActivity
         _initData();
         _initViews();
         _initRecyclerView();
+        _initAnimations();
 
         // Solo lo ejecutamos si venimos del activity padre
         if (savedInstanceState == null)
@@ -121,8 +134,20 @@ public class ProductUI extends AppCompatActivity
      */
     protected void _initViews()
     {
-        mImageView      = (ImageView)findViewById(R.id.imageView);
-        mTopLevelLayout = (FrameLayout)findViewById(R.id.topLevelLayout);
+        mImageView            = (ImageView)findViewById(R.id.imageView);
+        mTopLevelLayout       = (FrameLayout)findViewById(R.id.topLevelLayout);
+        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.floatingButton);
+        mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
+
+        mFloatingActionButton.setVisibility(View.GONE);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Snackbar.make(mCoordinatorLayout, "Cucu", Snackbar.LENGTH_SHORT).show();
+            }
+        });
 
         // Cargamos el bitmap a partir del fichero
         File filePath = getFileStreamPath(mBitmapUri);
@@ -171,16 +196,36 @@ public class ProductUI extends AppCompatActivity
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mImagesRecylcerView.setAdapter(mImagesAdapter);
 
-        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mTopOffset += dy;
             }
+        });
+    }
+
+    protected void _initAnimations()
+    {
+        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
+        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
+
+        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                mFloatingActionButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 
@@ -192,9 +237,6 @@ public class ProductUI extends AppCompatActivity
     {
         final long duration = (int)(ANIM_DURATION * 0.5);
 
-        // Establecemos las propiedades para las animaciones. Estos
-        // valores escalan y desplazan la imagen grande a la posicion/tamaño de la pequeña.
-        // Desde donde se va a iniciar la animacion.
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
         mImageView.setScaleX(mWidthScale);
@@ -216,7 +258,13 @@ public class ProductUI extends AppCompatActivity
                                 public void onAnimationEnd(Animator animation)
                                 {
                                     if (!EXITING)
+                                    {
                                         mImagesRecylcerView.setVisibility(View.VISIBLE);
+
+                                        // Hacemos aparecer el FloatingButton
+                                        mFloatingActionButton.setVisibility(View.VISIBLE);
+                                        mFloatingActionButton.startAnimation(mExplodeAnimation);
+                                    }
                                 }
 
                                 @Override
@@ -235,7 +283,7 @@ public class ProductUI extends AppCompatActivity
     /**
      * La animacion de salida es la misma animacion de entrada pero al reves
      *
-     * @param endAction Accion que se ejecuta cuando termine la animacion.
+     * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
     public void runExitAnimation(final Runnable endAction)
     {
@@ -253,6 +301,8 @@ public class ProductUI extends AppCompatActivity
                             .scaleX(mWidthScale).scaleY(mHeightScale)
                             .translationX(mLeftDelta).translationY(mTopDelta)
                             .withEndAction(endAction);
+
+        mFloatingActionButton.startAnimation(mImplodeAnimation);
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
