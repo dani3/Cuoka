@@ -44,12 +44,6 @@ public class ColorVariant implements Serializable
         if ((this.colorPath == null) || (this.colorPath.isEmpty()))
             return false;
 
-        for (Image image : this.images)
-        {
-            if (!image.isOkay())
-                return false;
-        }
-
         return true;
     }
 }

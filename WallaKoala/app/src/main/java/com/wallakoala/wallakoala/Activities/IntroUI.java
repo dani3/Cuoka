@@ -50,6 +50,7 @@ public class IntroUI extends AppCompatActivity
                 shops.add("HyM");
                 shops.add("Springfield");
                 shops.add("Pedro Del Hierro");
+                shops.add("Blanco");
 
                 mSharedPreferencesManager.insertMan(man.isChecked());
                 mSharedPreferencesManager.insertShops(shops);
