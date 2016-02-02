@@ -86,7 +86,7 @@ public class mainHyM
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {
-            System.out.println( " - Color: " + cv.getColorName() );
+            System.out.println( " - Color: " + cv.getName() );
             System.out.println( " - Icono: " + cv.getColorURL() );
             System.out.println( " - Referencia: " + cv.getReference() );
             for ( Image image : cv.getImages() )
