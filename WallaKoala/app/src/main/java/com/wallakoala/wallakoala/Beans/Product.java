@@ -70,11 +70,8 @@ public class Product implements Serializable
 		if ((this.colors == null) || (this.colors.isEmpty()))
 			return false;
 
-		for (ColorVariant cv : this.colors)
-		{
-			if (!cv.isOkay())
-				return false;
-		}
+		if (!this.colors.get(0).isOkay())
+			return false;
 
 		return true;
 	}
