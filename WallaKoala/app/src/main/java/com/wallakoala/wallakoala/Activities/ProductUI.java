@@ -192,7 +192,11 @@ public class ProductUI extends AppCompatActivity
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
-        mImagesAdapter = new ProductAdapter(this, mProduct.getColors().get(0), ratio);
+        mImagesAdapter = new ProductAdapter(this
+                                , mProduct.getColors().get(0)
+                                , ratio
+                                , mProduct.getShop()
+                                , mProduct.getSection());
 
         mImagesRecylcerView.setLayoutManager(mLinearLayoutManager);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

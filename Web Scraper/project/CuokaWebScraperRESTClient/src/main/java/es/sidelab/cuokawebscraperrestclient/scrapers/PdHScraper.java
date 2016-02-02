@@ -143,6 +143,7 @@ public class PdHScraper implements Scraper
             } catch ( Exception ex ) { prodNOK++; }
             
         } // for products
+        
         ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );
             
         return productList;

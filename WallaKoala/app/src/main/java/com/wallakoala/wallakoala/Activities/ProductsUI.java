@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
-import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -623,20 +622,9 @@ public class ProductsUI extends AppCompatActivity
                 String reference = jsColor.getString("reference");
                 String colorName = jsColor.getString("name");
                 String colorPath = jsColor.getString("path");
+                short numerOfImages = (short)jsColor.getInt("numberOfImages");
 
-                List<Image> images = new ArrayList<>();
-                JSONArray jsImages = jsColor.getJSONArray("images");
-                for ( int j = 0; j < jsImages.length(); j++ )
-                {
-                    JSONObject jsImage = jsImages.getJSONObject(j);
-
-                    String path = SERVER_URL + jsImage.getString("path")
-                                                      .replace(" ", "%20");
-
-                    images.add( new Image( path ) );
-                }
-
-                colors.add( new ColorVariant( reference, colorName, colorPath, images ) );
+                colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
             }
 
             Product product = new Product( name, shop, section, price, link, colors, newness );

@@ -42,25 +42,35 @@ public class ColorVariant
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
+    @JsonIgnore
     @Column( name = "IMAGES" )
     private List<Image> images;
+    
+    @Column( name = "NUM_IMAGES" )
+    private short numberOfImages;
 
     
     public ColorVariant() {}
     
     public String getReference() { return this.reference; }
     public String getName() { return this.name; }
+    public short getNumberOfImages() { return this.numberOfImages; }
     
     @JsonIgnore
     public String getColorURL() { return this.colorURL; }
     public String getPath() { return this.path; }
+    
+    @JsonIgnore
     public List<Image> getImages() { return this.images; }
 
     public void setReference( String reference ) { this.reference = reference; }
     public void setName( String name ) { this.name = name; }
+    public void setNumberOfImages( short numberOfImages ) { this.numberOfImages = numberOfImages; }    
     
     @JsonProperty
     public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
     public void setPath( String path ) { this.path = path; }
+    
+    @JsonProperty
     public void setImages( List<Image> images ) { this.images = images; }
 }

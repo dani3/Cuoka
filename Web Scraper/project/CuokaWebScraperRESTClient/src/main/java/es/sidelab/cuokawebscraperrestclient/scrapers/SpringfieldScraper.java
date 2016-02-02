@@ -143,7 +143,6 @@ public class SpringfieldScraper implements Scraper
                            ( ! page.ownText().equals( "1" ) ) )
                         {
                             pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
-                            System.out.println( page.attr( "href" ).concat( "&format=ajax" ) );
                         }
                     }
                 }
@@ -154,9 +153,9 @@ public class SpringfieldScraper implements Scraper
                 finished = true;
             
         } // while
-        LOG.info("prodOK: " + prodOK);
-        LOG.info("prodNOK: " + prodNOK);
-        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );   
+        
+        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );  
+        
         return productList;
     }
     

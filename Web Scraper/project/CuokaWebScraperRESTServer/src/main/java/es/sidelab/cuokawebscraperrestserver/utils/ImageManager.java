@@ -78,6 +78,8 @@ public class ImageManager
                         
                     } // for images
                     
+                    cv.setNumberOfImages( (short)cv.getImages().size() );
+                    
                 } // if images != null
                 
                 // Comprobamos que el link del color no este vacio

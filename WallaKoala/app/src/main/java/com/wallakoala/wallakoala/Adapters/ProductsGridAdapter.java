@@ -24,6 +24,7 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -40,6 +41,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     /* Constants */
     private static final String TAG = "CUOKA";
     private static final String PACKAGE = "com.wallakoala.wallakoala";
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String IMAGES_PATH = "/images/products/";
 
     /* Context */
     private static Context mContext;
@@ -231,10 +234,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 }
             };
 
-            String url = product.getColors().get(0)
-                                            .getImages()
-                                            .get(0)
-                                            .getPath().replaceAll(".jpg", "_Small.jpg");
+            String imageFile = product.getShop() + "_"
+                        + product.getSection() + "_"
+                        + product.getColors().get(0).getReference() + "_"
+                        + product.getColors().get(0).getColorName() + "_0_Small.jpg";
+
+            String url = Utils.fixUrl(SERVER_URL + IMAGES_PATH + product.getShop() + "/" + imageFile);
+
             Picasso.with(mContext)
                    .load(url)
                    .into(mTarget);

@@ -13,25 +13,25 @@ public class ColorVariant implements Serializable
     private String reference;
     private String colorName;
     private String colorPath;    
-    private List<Image> images;
+    private short numberOfImages;
     
     public ColorVariant() {}
     
     public ColorVariant( String reference
     		, String colorName
     		, String colorPath
-    		, List<Image> images )
+    		, short numberOfImages )
     {
 		this.reference = reference;
 		this.colorName = colorName;
 		this.colorPath = colorPath;
-		this.images = images;
+		this.numberOfImages = numberOfImages;
 	}
 
-	public String getReference()   { return this.reference; }
-    public String getColorName()   { return this.colorName; }
-    public String getColorPath()   { return this.colorPath; }
-    public List<Image> getImages() { return this.images; }
+	public String getReference()     { return this.reference; }
+    public String getColorName()     { return this.colorName; }
+    public String getColorPath()     { return this.colorPath; }
+    public short getNumberOfImages() { return this.numberOfImages; }
 
     public boolean isOkay()
     {
@@ -44,11 +44,8 @@ public class ColorVariant implements Serializable
         if ((this.colorPath == null) || (this.colorPath.isEmpty()))
             return false;
 
-        for (Image image : this.images)
-        {
-            if (!image.isOkay())
-                return false;
-        }
+        if (this.numberOfImages <= 0)
+            return false;
 
         return true;
     }

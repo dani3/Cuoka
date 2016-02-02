@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
-import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 /**
  * @class Adapter para la lista de imagenes de un producto.
@@ -24,6 +24,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 {
     /* Constants */
     private static final String TAG = "CUOKA";
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String IMAGES_PATH = "/images/products/";
 
     /* Context */
     private static Context mContext;
@@ -31,6 +33,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     /* Data */
     private static ColorVariant mColor;
     private static double mAspectRatio;
+    private static String mShop;
+    private static String mSection;
 
     /**
      * ViewHolder de la imagen con todos los componentes graficos necesarios
@@ -49,12 +53,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
         /**
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
-         * @param imageProduct: producto con el que se inicializa un item.
+         * @param colorVariant: producto con el que se inicializa un item.
          */
-        public void bindProduct(Image imageProduct)
+        public void bindProduct(ColorVariant colorVariant)
         {
-            String url = imageProduct.getPath().replaceAll(".jpg", "_Large.jpg");
-
             mTarget = new Target()
             {
                 @Override
@@ -76,6 +78,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 }
             };
 
+            String imageFile = mShop + "_"
+                    + mSection + "_"
+                    + colorVariant.getReference() + "_"
+                    + colorVariant.getColorName() + "_" + getAdapterPosition() + "_Large.jpg";
+
+            String url = Utils.fixUrl(SERVER_URL + IMAGES_PATH + mShop + "/" + imageFile);
+
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)
                    .load(url)
@@ -84,11 +93,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     } /* [END] ViewHolder */
 
-    public ProductAdapter(Context context, ColorVariant color, double ratio)
+    public ProductAdapter(Context context, ColorVariant color, double ratio, String shop, String section)
     {
         mContext = context;
         mColor = color;
         mAspectRatio = ratio;
+        mShop = shop;
+        mSection = section;
     }
 
     @Override
@@ -105,12 +116,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     @Override
     public void onBindViewHolder(ProductHolder holder, int position)
     {
-        holder.bindProduct(mColor.getImages().get(position));
+        holder.bindProduct(mColor);
     }
 
     @Override
     public int getItemCount()
     {
-        return mColor.getImages().size();
+        return mColor.getNumberOfImages();
     }
 }
