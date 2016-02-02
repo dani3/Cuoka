@@ -1,9 +1,11 @@
 package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 /**
  * @class Adapter para la lista de imagenes de un producto.
@@ -30,6 +33,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     /* Context */
     private static Context mContext;
 
+    /* Views */
+    private static ImageView mImageView;
+
     /* Data */
     private static ColorVariant mColor;
     private static double mAspectRatio;
@@ -42,6 +48,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
         private ImageView mProductImageView;
+        private AVLoadingIndicatorView mLoadingView;
         private Target mTarget;
 
         public ProductHolder(View itemView)
@@ -49,6 +56,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             super(itemView);
 
             mProductImageView = (ImageView)itemView.findViewById(R.id.product_image);
+            mLoadingView      = (AVLoadingIndicatorView)itemView.findViewById(R.id.av_loading_image);
         }
 
         /**
@@ -57,11 +65,23 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          */
         public void bindProduct(ColorVariant colorVariant)
         {
+            mProductImageView.getLayoutParams().height = (int)(Resources.getSystem().getDisplayMetrics().widthPixels * mAspectRatio);
+
+            mProductImageView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+
+            if (getAdapterPosition() != 0)
+                mLoadingView.setVisibility(View.VISIBLE);
+
             mTarget = new Target()
             {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
+                    if (getAdapterPosition() != 0)
+                        mLoadingView.setVisibility(View.GONE);
+                    else
+                        mImageView.setVisibility(View.GONE);
+
                     mProductImageView.setImageBitmap(bitmap);
                     mProductImageView.setBackgroundColor(-1);
                     mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -71,11 +91,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 public void onBitmapFailed(Drawable errorDrawable) {}
 
                 @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable)
-                {
-                    mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth() * mAspectRatio);
-                    mProductImageView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
-                }
+                public void onPrepareLoad(Drawable placeHolderDrawable) {}
             };
 
             String imageFile = mShop + "_"
@@ -93,13 +109,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     } /* [END] ViewHolder */
 
-    public ProductAdapter(Context context, ColorVariant color, double ratio, String shop, String section)
+    public ProductAdapter(Context context
+                , ColorVariant color
+                , double ratio
+                , String shop
+                , String section
+                , ImageView image)
     {
         mContext = context;
         mColor = color;
         mAspectRatio = ratio;
         mShop = shop;
         mSection = section;
+        mImageView = image;
     }
 
     @Override

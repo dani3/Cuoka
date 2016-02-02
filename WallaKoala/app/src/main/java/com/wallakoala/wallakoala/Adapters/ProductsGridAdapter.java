@@ -268,7 +268,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             if (view.getId() == mProductImageView.getId())
             {
                 // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
-                mBitmapFileName = saveImage();
+                // y ralentiza la animacion
+                mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
 
                 if (mBitmapFileName != null)
                 {
@@ -292,32 +293,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterExtraView.setVisibility(View.GONE);
 
             mProductFooterView.startAnimation(scaleUp);
-        }
-
-        @Nullable
-        private String saveImage()
-        {
-            String fileName = "thumbnail_" + getAdapterPosition() + ".png";
-
-            try
-            {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-                FileOutputStream fileOutStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
-                fileOutStream.write(byteArray);
-
-                fileOutStream.close();
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-                Log.d(TAG, "Error guardando la imagen");
-
-                return null;
-            }
-
-            return fileName;
         }
 
     } /* [END] ViewHolder */

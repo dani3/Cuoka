@@ -26,7 +26,7 @@ public class Product
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     @JsonIgnore
-    @Column( name = "" )
+    @Column( name = "ID" )
     private long id;
     
     @Column( name = "PRICE" )

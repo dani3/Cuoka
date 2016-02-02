@@ -236,6 +236,7 @@ public class ProductsUI extends AppCompatActivity
                                     , mProductsCandidatesDeque.size()
                                     , mCoordinatorLayout);
 
+        mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()

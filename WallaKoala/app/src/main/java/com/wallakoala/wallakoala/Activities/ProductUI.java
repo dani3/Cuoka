@@ -196,7 +196,8 @@ public class ProductUI extends AppCompatActivity
                                 , mProduct.getColors().get(0)
                                 , ratio
                                 , mProduct.getShop()
-                                , mProduct.getSection());
+                                , mProduct.getSection()
+                                , mImageView);
 
         mImagesRecylcerView.setLayoutManager(mLinearLayoutManager);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -298,6 +299,8 @@ public class ProductUI extends AppCompatActivity
     public void runExitAnimation(final Runnable endAction)
     {
         final long duration = (int)(ANIM_DURATION * 0.6);
+
+        mImageView.setVisibility(View.VISIBLE);
 
         // Quitamos el recyclerView
         mImagesRecylcerView.setVisibility(View.GONE);
