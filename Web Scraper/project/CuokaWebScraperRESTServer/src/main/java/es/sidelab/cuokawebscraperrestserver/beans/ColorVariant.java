@@ -31,14 +31,14 @@ public class ColorVariant
     private String reference;
     
     @Column( name = "NAME" )
-    private String colorName;
+    private String name;
     
     @JsonIgnore
     @Column( name = "URL" )
     private String colorURL;
     
     @Column( name = "PATH" )
-    private String colorPath;
+    private String path;
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
@@ -49,18 +49,18 @@ public class ColorVariant
     public ColorVariant() {}
     
     public String getReference() { return this.reference; }
-    public String getColorName() { return this.colorName; }
+    public String getName() { return this.name; }
     
     @JsonIgnore
     public String getColorURL() { return this.colorURL; }
-    public String getColorPath() { return this.colorPath; }
+    public String getPath() { return this.path; }
     public List<Image> getImages() { return this.images; }
 
     public void setReference( String reference ) { this.reference = reference; }
-    public void setColorName( String colorName ) { this.colorName = colorName; }
+    public void setName( String name ) { this.name = name; }
     
     @JsonProperty
     public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
-    public void setColorPath( String colorPath ) { this.colorPath = colorPath; }
+    public void setPath( String path ) { this.path = path; }
     public void setImages( List<Image> images ) { this.images = images; }
 }

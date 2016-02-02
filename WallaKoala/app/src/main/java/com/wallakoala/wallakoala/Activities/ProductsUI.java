@@ -621,8 +621,8 @@ public class ProductsUI extends AppCompatActivity
                 JSONObject jsColor = jsColors.getJSONObject(i);
 
                 String reference = jsColor.getString("reference");
-                String colorName = jsColor.getString("colorName");
-                String colorPath = jsColor.getString("colorPath");
+                String colorName = jsColor.getString("name");
+                String colorPath = jsColor.getString("path");
 
                 List<Image> images = new ArrayList<>();
                 JSONArray jsImages = jsColor.getJSONArray("images");
