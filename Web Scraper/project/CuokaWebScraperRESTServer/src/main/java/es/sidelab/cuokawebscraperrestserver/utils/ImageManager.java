@@ -175,6 +175,9 @@ public class ImageManager
             if ( shop.equalsIgnoreCase( "HyM" ) )
                 ASPECT_RATIO = Properties.HYM_ASPECT_RATIO;
             
+            if ( shop.equalsIgnoreCase( "Blanco" ) )
+                ASPECT_RATIO = Properties.BLANCO_ASPECT_RATIO;
+            
             // El script tiene que estar en el mismo path que el jar
             Runtime.getRuntime().exec( new String[]{ "sudo"
                         , "/usr/bin/python"

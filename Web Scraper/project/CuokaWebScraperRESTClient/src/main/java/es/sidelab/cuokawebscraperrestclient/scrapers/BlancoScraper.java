@@ -34,8 +34,10 @@ public class BlancoScraper implements Scraper
     {        
         File html = new File( htmlPath );
         Document document = Jsoup.parse( html, "UTF-8" );
+        
         int prodOK = 0;
         int prodNOK = 0;
+        
         // Guardamos los links de los productos
         Elements products = document.select( "div.cell-1 a.cell-link" );
             
@@ -57,27 +59,28 @@ public class BlancoScraper implements Scraper
                 // Obtenemos los colores del producto
                 boolean first = true;
                 List<ColorVariant> variants = new ArrayList<>();
-                Elements colors = document.select( "ul.super-attribute-select-custom li span img" );
+                
+                // Hay dos product-color-selector repetidos, nos quedamos solo con uno
+                Element colorList = document.select( "div.product-color-selector" ).first();            
+                Elements colors = colorList.select( "span" );
                 for ( Element color : colors )
                 {
                     List<Image> imagesURL = null;
 
-                    String colorName = color.attr( "title" ).toUpperCase();
-                    String colorURL = fixURL( color.attr( "src" ) );
+                    String colorName = color.ownText().toUpperCase();
 
                     // De Blanco no podemos acceder a las imagenes de los colores alternativos, solo las del color principal
                     if ( first )
                     {
-                        Elements images = document.select( "div.product-image-gallery img" );
+                        Elements images = document.select( "#product-gallery-list img" );
                         imagesURL = new ArrayList<>();
                         for ( Element img : images )
-                            if ( ! img.attr( "id" ).equals( "image-main" ) )
-                                imagesURL.add( new Image( fixURL( img.attr( "src" ) ) ) );
+                            imagesURL.add( new Image( fixURL( shop.getURL().toString() + img.attr( "src" ) ) ) );
 
                         first = false;
                     }
 
-                    variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
+                    variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
                 }
 
                 if ( ! colors.isEmpty() )
@@ -94,9 +97,7 @@ public class BlancoScraper implements Scraper
                 } else
                     prodNOK++;
                 
-            } catch ( Exception e ) {
-                    prodNOK++;
-            }
+            } catch ( Exception e ) { prodNOK++; }
             
         } // for products
         

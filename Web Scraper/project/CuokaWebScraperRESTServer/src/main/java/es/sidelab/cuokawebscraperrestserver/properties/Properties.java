@@ -19,4 +19,5 @@ public class Properties
     public static final double PDH_ASPECT_RATIO = 1.5;
     public static final double SPRINGFIELD_ASPECT_RATIO = 1.12;
     public static final double HYM_ASPECT_RATIO = 1.5;
+    public static final double BLANCO_ASPECT_RATIO = 1.28;
 }

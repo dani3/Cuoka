@@ -17,7 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -62,12 +64,14 @@ public class ProductUI extends AppCompatActivity
 
     /* Views */
     protected ImageView mImageView;
+    protected View mProductInfo;
 
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButton;
 
     /* Animations */
     protected Animation mExplodeAnimation, mImplodeAnimation;
+    protected Animation mScaleUp, mScaleDown;
 
     /* Data */
     protected Product mProduct;
@@ -99,7 +103,7 @@ public class ProductUI extends AppCompatActivity
         _initRecyclerView();
         _initAnimations();
 
-        // Solo lo ejecutamos si venimos del activity padre
+        // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
         {
             // Listener global
@@ -130,7 +134,7 @@ public class ProductUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa todas las vistas
+     * Metodo que inicializa todas las vistas.
      */
     protected void _initViews()
     {
@@ -139,29 +143,27 @@ public class ProductUI extends AppCompatActivity
         mFloatingActionButton = (FloatingActionButton)findViewById(R.id.floatingButton);
         mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
 
+        /* Floatin Button */
         mFloatingActionButton.setVisibility(View.GONE);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                Snackbar.make(mCoordinatorLayout, "Cucu", Snackbar.LENGTH_SHORT).show();
+            public void onClick(View v) {
+
             }
         });
 
-        // Cargamos el bitmap a partir del fichero
+        /* Bitmap */
         File filePath = getFileStreamPath(mBitmapUri);
         mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
-
         mImageView.setImageDrawable(mBitmapDrawable);
 
-        // Ponemos un fondo de pantalla para ir oscureciondola
+        /* Background */
         mBackground = new ColorDrawable(Color.WHITE);
         mTopLevelLayout.setBackground(mBackground);
     }
 
     /**
-     * Metodo que inicializa todos los datos
+     * Metodo que inicializa todos los datos.
      */
     protected void _initData()
     {
@@ -180,7 +182,7 @@ public class ProductUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa el RecyclerView
+     * Metodo que inicializa el RecyclerView.
      */
     protected void _initRecyclerView()
     {
@@ -208,8 +210,13 @@ public class ProductUI extends AppCompatActivity
         });
     }
 
+    /**
+     * Metodo que inicializa todas las animaciones.
+     */
     protected void _initAnimations()
     {
+        mScaleUp          = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        mScaleDown        = AnimationUtils.loadAnimation(this, R.anim.scale_down);
         mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
         mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
 
@@ -282,7 +289,6 @@ public class ProductUI extends AppCompatActivity
 
     /**
      * La animacion de salida es la misma animacion de entrada pero al reves
-     *
      * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
     public void runExitAnimation(final Runnable endAction)

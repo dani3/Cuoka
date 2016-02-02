@@ -43,7 +43,7 @@ def funcA(url, path, shop, section, man, html):
 
 if __name__ == '__main__':
 
-    path = 'C:\\Users\\lux_f\\Dropbox\\Cuoka\\Cuoka\\scrapers_files'
+    path = 'C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files'
     items = []
     
     #Recorremos las tiendas

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,8 +32,10 @@ public class HyMScraper implements Scraper
     {    
         File html = new File( htmlPath );
         Document document = Jsoup.parse( html, "UTF-8" );
+        
         int prodOK = 0;
         int prodNOK = 0;
+        
         // Obtener los links a todos los productos
         Elements products = document.select( "h3.product-item-headline > a" );
           
@@ -68,6 +69,7 @@ public class HyMScraper implements Scraper
 
                         String colorReference = color.select( "input" ).attr( "data-articlecode" );
                         String colorName = color.attr( "title" ).toUpperCase().replaceAll( "/" , " " );
+                        // Esto no produce excepcion, se puede enviar la URL como null
                         String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
 
                         // Sacamos las imagenes, solo sacar la URL de las miniaturas, asi que tenemos
@@ -97,7 +99,7 @@ public class HyMScraper implements Scraper
                     
                 } 
                 
-            } catch ( Exception e ) {prodNOK++;}
+            } catch ( Exception e ) { prodNOK++; }
         }
         
         ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK ); 
