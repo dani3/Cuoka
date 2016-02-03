@@ -233,7 +233,7 @@ public class ProductsUI extends AppCompatActivity
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new ProductsGridAdapter(this
                                     , mProductsDisplayedList
-                                    , mProductsCandidatesDeque.size()
+                                    , mProductsCandidatesDeque.size() + mProductsDisplayedList.size()
                                     , mCoordinatorLayout);
 
         mProductsRecyclerView.setHasFixedSize(true);

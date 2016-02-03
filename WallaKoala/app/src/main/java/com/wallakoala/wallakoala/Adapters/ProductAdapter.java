@@ -65,7 +65,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          */
         public void bindProduct(ColorVariant colorVariant)
         {
-            mProductImageView.getLayoutParams().height = (int)(Resources.getSystem().getDisplayMetrics().widthPixels * mAspectRatio);
+            mProductImageView.getLayoutParams().height = (int)(Resources.getSystem()
+                                                                        .getDisplayMetrics().widthPixels * mAspectRatio);
 
             mProductImageView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
 
@@ -109,6 +110,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     } /* [END] ViewHolder */
 
+    /**
+     * Constructor del Adapter.
+     * @param context: contexto de la aplicacion.
+     * @param color: ColorVariant del que se van a mostrar las imagenes.
+     * @param ratio: aspect ratio de las imagenes.
+     * @param shop: tienda a la que pertenece el producto.
+     * @param section: seccion a la que pertenece el producto.
+     * @param image: imagen de baja calidad que se coloca debajo del RecyclerView.
+     */
     public ProductAdapter(Context context
                 , ColorVariant color
                 , double ratio

@@ -64,6 +64,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private Target mTarget;
         private Bitmap mBitmap;
         private String mBitmapFileName;
+        private boolean ERROR;
 
         private ImageButton mFavImageButton;
         private ImageView mProductImageView;
@@ -162,6 +163,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             final int position = pos;
 
+            mProductImageView.setImageBitmap(null);
+            ERROR = false;
+
             /* Inicializamos los TextViews */
             mTitleTextView.setText(product.getShop());
             mSubtitleTextView.setText(product.getSection());
@@ -208,6 +212,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 public void onBitmapFailed(Drawable errorDrawable)
                 {
                     mLoadingView.setVisibility(View.GONE);
+
+                    ERROR = true;
 
                     mProductImageView.setBackgroundColor(mContext.getResources()
                                                                  .getColor(android.R.color.holo_red_dark));
@@ -267,19 +273,22 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             /* Si se pulsa en la imagen */
             if (view.getId() == mProductImageView.getId())
             {
-                // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
-                // y ralentiza la animacion
-                mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
-
-                if (mBitmapFileName != null)
+                if (!ERROR)
                 {
-                    // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
-                    mProductClicked = this;
+                    // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
+                    // y ralentiza la animacion
+                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
 
-                    mProductFooterView.startAnimation(scaleDownFooter);
+                    if (mBitmapFileName != null)
+                    {
+                        // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
+                        mProductClicked = this;
 
-                } else {
-                    Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                        mProductFooterView.startAnimation(scaleDownFooter);
+
+                    } else {
+                        Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
