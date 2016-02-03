@@ -19,7 +19,7 @@ public class HistoricProduct
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
-    @Column( name = "" )
+    @Column( name = "ID" )
     private long id;
     
     @Column( name = "SHOP" )
@@ -36,6 +36,8 @@ public class HistoricProduct
     
     @Column( name = "INSERT_DATE" )
     private Calendar insertDate;
+
+    public HistoricProduct() {}
 
     public HistoricProduct( String shop
                 , String section

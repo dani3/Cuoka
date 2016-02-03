@@ -77,7 +77,7 @@ public class Controller
                     insertDate = historicProductsRepository.getInsertDateByReference( shop
                                                     , product.getSection()
                                                     , cv.getReference()
-                                                    , cv.getColorName() );
+                                                    , cv.getName() );
 
 
                     if ( insertDate == null )
@@ -85,7 +85,7 @@ public class Controller
                         historicProductsRepository.save( new HistoricProduct( shop
                                                                 , product.getSection()
                                                                 , cv.getReference() 
-                                                                , cv.getColorName() 
+                                                                , cv.getName() 
                                                                 , Calendar.getInstance() ) );
 
                         newness = true;

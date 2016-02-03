@@ -6,16 +6,24 @@ import android.animation.TimeInterpolator;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
@@ -46,6 +54,7 @@ public class ProductUI extends AppCompatActivity
     /* Container Views */
     protected FrameLayout mTopLevelLayout;
     protected RecyclerView mImagesRecylcerView;
+    protected CoordinatorLayout mCoordinatorLayout;
 
     /* Adapter */
     protected ProductAdapter mImagesAdapter;
@@ -55,6 +64,14 @@ public class ProductUI extends AppCompatActivity
 
     /* Views */
     protected ImageView mImageView;
+    protected View mProductInfo;
+
+    /* Floating Button */
+    protected FloatingActionButton mFloatingActionButton;
+
+    /* Animations */
+    protected Animation mExplodeAnimation, mImplodeAnimation;
+    protected Animation mScaleUp, mScaleDown;
 
     /* Data */
     protected Product mProduct;
@@ -71,7 +88,7 @@ public class ProductUI extends AppCompatActivity
     protected int mThumbnailTop;
     protected float mThumbnailWidth;
     protected float mThumbnailHeight;
-    private float mTopOffset;
+    protected float mTopOffset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -84,8 +101,9 @@ public class ProductUI extends AppCompatActivity
         _initData();
         _initViews();
         _initRecyclerView();
+        _initAnimations();
 
-        // Solo lo ejecutamos si venimos del activity padre
+        // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
         {
             // Listener global
@@ -115,28 +133,38 @@ public class ProductUI extends AppCompatActivity
         }
     }
 
+    /**
+     * Metodo que inicializa todas las vistas.
+     */
     protected void _initViews()
     {
-        mImageView      = (ImageView)findViewById(R.id.imageView);
-        mTopLevelLayout = (FrameLayout)findViewById(R.id.topLevelLayout);
+        mImageView            = (ImageView)findViewById(R.id.imageView);
+        mTopLevelLayout       = (FrameLayout)findViewById(R.id.topLevelLayout);
+        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.floatingButton);
+        mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
 
-        try
-        {
-            mBitmapDrawable = new BitmapDrawable(getResources()
-                    , MediaStore.Images.Media.getBitmap(this.getContentResolver()
-                    , Uri.parse(mBitmapUri)));
+        /* Floatin Button */
+        mFloatingActionButton.setVisibility(View.GONE);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }
+        });
 
+        /* Bitmap */
+        File filePath = getFileStreamPath(mBitmapUri);
+        mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
         mImageView.setImageDrawable(mBitmapDrawable);
 
-        // Ponemos un fondo de pantalla para ir oscureciondola
+        /* Background */
         mBackground = new ColorDrawable(Color.WHITE);
         mTopLevelLayout.setBackground(mBackground);
     }
 
+    /**
+     * Metodo que inicializa todos los datos.
+     */
     protected void _initData()
     {
         EXITING = false;
@@ -153,6 +181,9 @@ public class ProductUI extends AppCompatActivity
         mTopOffset = 0.0f;
     }
 
+    /**
+     * Metodo que inicializa el RecyclerView.
+     */
     protected void _initRecyclerView()
     {
         // Calculamos el aspect ratio de la imagen
@@ -161,22 +192,52 @@ public class ProductUI extends AppCompatActivity
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
-        mImagesAdapter = new ProductAdapter(this, mProduct.getColors().get(0), ratio);
+        mImagesAdapter = new ProductAdapter(this
+                                , mProduct.getColors().get(0)
+                                , ratio
+                                , mProduct.getShop()
+                                , mProduct.getSection()
+                                , mImageView);
 
         mImagesRecylcerView.setLayoutManager(mLinearLayoutManager);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mImagesRecylcerView.setAdapter(mImagesAdapter);
 
-        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                mTopOffset -= dy;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mTopOffset += dy;
             }
+        });
+    }
+
+    /**
+     * Metodo que inicializa todas las animaciones.
+     */
+    protected void _initAnimations()
+    {
+        mScaleUp          = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        mScaleDown        = AnimationUtils.loadAnimation(this, R.anim.scale_down);
+        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
+        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
+
+        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                mFloatingActionButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 
@@ -188,9 +249,6 @@ public class ProductUI extends AppCompatActivity
     {
         final long duration = (int)(ANIM_DURATION * 0.5);
 
-        // Establecemos las propiedades para las animaciones. Estos
-        // valores escalan y desplazan la imagen grande a la posicion/tamaño de la pequeña.
-        // Desde donde se va a iniciar la animacion.
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
         mImageView.setScaleX(mWidthScale);
@@ -202,24 +260,31 @@ public class ProductUI extends AppCompatActivity
         mImageView.animate().setDuration(duration)
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
-                            .setInterpolator(sDecelerator).setListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation) {}
+                            .setInterpolator(sDecelerator)
+                            .setListener(new Animator.AnimatorListener()
+                            {
+                                @Override
+                                public void onAnimationStart(Animator animation) {}
 
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                if (!EXITING)
-                    mImagesRecylcerView.setVisibility(View.VISIBLE);
-            }
+                                @Override
+                                public void onAnimationEnd(Animator animation)
+                                {
+                                    if (!EXITING)
+                                    {
+                                        mImagesRecylcerView.setVisibility(View.VISIBLE);
 
-            @Override
-            public void onAnimationCancel(Animator animation) {}
+                                        // Hacemos aparecer el FloatingButton
+                                        mFloatingActionButton.setVisibility(View.VISIBLE);
+                                        mFloatingActionButton.startAnimation(mExplodeAnimation);
+                                    }
+                                }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {}
-        });
+                                @Override
+                                public void onAnimationCancel(Animator animation) {}
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {}
+                            });
 
         // Efecto fade para oscurecer la pantalla
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
@@ -229,13 +294,13 @@ public class ProductUI extends AppCompatActivity
 
     /**
      * La animacion de salida es la misma animacion de entrada pero al reves
-     *
-     * @param endAction This action gets run after the animation completes (this is
-     * when we actually switch activities)
+     * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
     public void runExitAnimation(final Runnable endAction)
     {
         final long duration = (int)(ANIM_DURATION * 0.6);
+
+        mImageView.setVisibility(View.VISIBLE);
 
         // Quitamos el recyclerView
         mImagesRecylcerView.setVisibility(View.GONE);
@@ -243,12 +308,14 @@ public class ProductUI extends AppCompatActivity
         EXITING = true;
 
         // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
-        mImageView.setTranslationY(mTopOffset);
+        mImageView.setTranslationY(-mTopOffset);
 
         mImageView.animate().setDuration(duration)
                             .scaleX(mWidthScale).scaleY(mHeightScale)
                             .translationX(mLeftDelta).translationY(mTopDelta)
                             .withEndAction(endAction);
+
+        mFloatingActionButton.startAnimation(mImplodeAnimation);
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
@@ -256,10 +323,6 @@ public class ProductUI extends AppCompatActivity
         bgAnim.start();
     }
 
-    /**
-     * Sobreescribir este metodo nos permite ejecutar la animacion de salida
-     * y luego salir de la activity.
-     */
     @Override
     public void onBackPressed()
     {

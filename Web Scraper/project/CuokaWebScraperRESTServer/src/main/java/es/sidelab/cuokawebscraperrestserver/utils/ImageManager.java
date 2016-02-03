@@ -52,9 +52,9 @@ public class ImageManager
                     for ( int k = 0; k < cv.getImages().size(); k++ )
                     {
                         String path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + ".jpg";
+                                + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + ".jpg";
                         String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName() + "_" + k + "_" + "Small.jpg";
+                                + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + "_" + "Small.jpg";
                         LOG.info( "Comprobando la imagen: " + path );
 
                         if ( ! FileManager.existsFile( pathSmall ) )
@@ -67,7 +67,8 @@ public class ImageManager
                                 LOG.info( "Imagen descargada correctamente" );
                                 product.getColors().get( j )
                                         .getImages().get( k ).setPath( path );
-                            } 
+                                
+                            }                            
                             
                         } else {
                             LOG.info( "La imagen ya existe" );
@@ -76,21 +77,44 @@ public class ImageManager
                         }   
                         
                     } // for images
+                    
+                    cv.setNumberOfImages( (short)cv.getImages().size() );
+                    
                 } // if images != null
                 
-                // Descargar los iconos si es necesario
-                String color_path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName().replaceAll( " " , "_" ) + "_ICON.jpg";
-                String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                + "_" + cv.getReference() + "_" + cv.getColorName().replaceAll( " " , "_" ) + "_ICON.jpg";
-                if ( ! FileManager.existsFile( path ) )
+                // Comprobamos que el link del color no este vacio
+                if ( ( cv.getColorURL() != null ) && ( ! cv.getColorURL().isEmpty() ) )
                 {
-                    boolean ok = downloadImage( cv.getColorURL(), path );
-                    if ( ok )
-                        product.getColors().get( j ).setColorPath( color_path );
+                    // Descargar los iconos si es necesario
+                    String color_path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
+                                    + "_" + cv.getReference() + "_" + cv.getName().replaceAll( " " , "_" ) + "_ICON.jpg";
+                    String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
+                                    + "_" + cv.getReference() + "_" + cv.getName().replaceAll( " " , "_" ) + "_ICON.jpg";
+                    if ( ! FileManager.existsFile( path ) )
+                    {
+                        boolean ok = downloadImage( cv.getColorURL(), path );
+                        if ( ok )
+                            product.getColors().get( j ).setPath( color_path );
+                      
+                    } else
+                        product.getColors().get( j ).setPath( color_path );
                     
-                } else
-                    product.getColors().get( j ).setColorPath( color_path );
+                } else {
+                    LOG.info( "URL del icono vacio. Se intenta averiguar el color..." );
+                    
+                    String color_path = ColorManager.findOutColor( cv.getName() );
+                    
+                    if ( color_path != null )
+                    {
+                        LOG.info( "Color (" + cv.getName() +") encontrado!" );
+                        product.getColors().get( j ).setPath( Properties.PREDEFINED_COLORS_PATH + color_path );
+                        
+                    } else {
+                        LOG.info( "Color (" + cv.getName() +") no encontrado" );
+                        
+                    }                        
+                    
+                }
                 
             } // for colors      
             
@@ -174,6 +198,9 @@ public class ImageManager
             
             if ( shop.equalsIgnoreCase( "HyM" ) )
                 ASPECT_RATIO = Properties.HYM_ASPECT_RATIO;
+            
+            if ( shop.equalsIgnoreCase( "Blanco" ) )
+                ASPECT_RATIO = Properties.BLANCO_ASPECT_RATIO;
             
             // El script tiene que estar en el mismo path que el jar
             Runtime.getRuntime().exec( new String[]{ "sudo"

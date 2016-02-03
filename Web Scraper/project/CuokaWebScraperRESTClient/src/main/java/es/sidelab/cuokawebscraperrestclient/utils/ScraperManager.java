@@ -100,7 +100,8 @@ public class ScraperManager
                             shopActivity.setWoman( true);
                         
                         // Recorremos los htmls dentro
-                        File[] sections = new File( Properties.HTML_PATH + "\\" + folderName + "\\" + man ).listFiles();
+                        File[] sections = new File( Properties.HTML_PATH + "\\" 
+                                                + folderName + "\\" + man ).listFiles();
 
                         
                         for ( File section : sections )
@@ -119,23 +120,29 @@ public class ScraperManager
                                 sectionsList.add( s );
                                 
                             } else {
-                                SectionActivityStats sectionActivity = new SectionActivityStats(section.getName().replaceAll(".txt",""));
+                                SectionActivityStats sectionActivity = 
+                                                        new SectionActivityStats( 
+                                                                    section.getName().replaceAll( ".txt", "" ) );
                             
                                 boolean found = false;
                                 int i = 0;
-                                while ( !found && i<sections.length ){
+                                
+                                while ( ( ! found ) && ( i < sections.length ) )
+                                {
                                     String shopName = folderName.replace( "_true" , "" );
-                                    String aux = man;
-                                    String total = shopName + "_" + section.getName().replaceAll(".txt", "") + "_" + man + ".html";
-                                    if(total.equals(sections[i].getName())){
+                                    String total = shopName + "_" 
+                                                        + section.getName().replaceAll( ".txt", "" ) 
+                                                        + "_" + man + ".html";
+                                    
+                                    if( total.equals( sections[i++].getName() ) )
+                                    {
                                         found = true;
                                     }
-                                    i++;
                                 }
                                 
                              
                                 sectionActivity.setHtmlOK( found );
-                                sectionActivity.setMan(Boolean.valueOf(man));
+                                sectionActivity.setMan( Boolean.valueOf( man ) );
                                 
                                 sectionsActivityList.add( sectionActivity );
                             }
@@ -149,7 +156,10 @@ public class ScraperManager
                     BufferedReader br = new BufferedReader( new FileReader( new File( folder + "\\url.txt" ) ) );
                     String url = br.readLine();
                     
-                    shops.add( new Shop( folderName.substring( 0, folderName.indexOf( "_" ) ), new URL( url ), sectionsList, true ) );
+                    shops.add( new Shop( folderName.substring( 0, folderName.indexOf( "_" ) )
+                                    , new URL( url )
+                                    , sectionsList
+                                    , true ) );
                     
                     shopActivity.setUrl(url);
                     

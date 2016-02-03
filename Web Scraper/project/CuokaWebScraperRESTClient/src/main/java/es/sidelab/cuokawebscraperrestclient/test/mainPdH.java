@@ -7,7 +7,6 @@ import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -141,7 +140,7 @@ public class mainPdH
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {
-            System.out.println( " - Color: " + cv.getColorName() );
+            System.out.println( " - Color: " + cv.getName() );
             System.out.println( " - Icono: " + cv.getColorURL() );
             System.out.println( " - Referencia: " + cv.getReference() );
             for ( Image image : cv.getImages() )

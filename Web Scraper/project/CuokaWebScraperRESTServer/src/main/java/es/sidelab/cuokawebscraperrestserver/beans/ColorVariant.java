@@ -31,36 +31,46 @@ public class ColorVariant
     private String reference;
     
     @Column( name = "NAME" )
-    private String colorName;
+    private String name;
     
     @JsonIgnore
     @Column( name = "URL" )
     private String colorURL;
     
     @Column( name = "PATH" )
-    private String colorPath;
+    private String path;
     
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
+    @JsonIgnore
     @Column( name = "IMAGES" )
     private List<Image> images;
+    
+    @Column( name = "NUM_IMAGES" )
+    private short numberOfImages;
 
     
     public ColorVariant() {}
     
     public String getReference() { return this.reference; }
-    public String getColorName() { return this.colorName; }
+    public String getName() { return this.name; }
+    public short getNumberOfImages() { return this.numberOfImages; }
     
     @JsonIgnore
     public String getColorURL() { return this.colorURL; }
-    public String getColorPath() { return this.colorPath; }
+    public String getPath() { return this.path; }
+    
+    @JsonIgnore
     public List<Image> getImages() { return this.images; }
 
     public void setReference( String reference ) { this.reference = reference; }
-    public void setColorName( String colorName ) { this.colorName = colorName; }
+    public void setName( String name ) { this.name = name; }
+    public void setNumberOfImages( short numberOfImages ) { this.numberOfImages = numberOfImages; }    
     
     @JsonProperty
     public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
-    public void setColorPath( String colorPath ) { this.colorPath = colorPath; }
+    public void setPath( String path ) { this.path = path; }
+    
+    @JsonProperty
     public void setImages( List<Image> images ) { this.images = images; }
 }

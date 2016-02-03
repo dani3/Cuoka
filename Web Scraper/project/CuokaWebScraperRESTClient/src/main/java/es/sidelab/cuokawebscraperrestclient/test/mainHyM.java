@@ -20,7 +20,7 @@ public class mainHyM
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\HyM_false\\true\\HyM_Jerseis_true.html");
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\HyM_true\\true\\HyM_Jerseis_true.html");
         Document document = Jsoup.parse( html, "UTF-8" );
           
         // Obtener los links a todos los productos. 
@@ -86,7 +86,7 @@ public class mainHyM
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {
-            System.out.println( " - Color: " + cv.getColorName() );
+            System.out.println( " - Color: " + cv.getName() );
             System.out.println( " - Icono: " + cv.getColorURL() );
             System.out.println( " - Referencia: " + cv.getReference() );
             for ( Image image : cv.getImages() )

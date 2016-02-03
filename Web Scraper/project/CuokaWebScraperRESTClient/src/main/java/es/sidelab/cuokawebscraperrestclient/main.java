@@ -1,7 +1,6 @@
 package es.sidelab.cuokawebscraperrestclient;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
 import es.sidelab.cuokawebscraperrestclient.utils.MultithreadManager;
 import es.sidelab.cuokawebscraperrestclient.utils.ScraperManager;
 import java.util.List;

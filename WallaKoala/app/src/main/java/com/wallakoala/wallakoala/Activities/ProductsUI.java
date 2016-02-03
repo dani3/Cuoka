@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
-import com.wallakoala.wallakoala.Beans.Image;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -232,8 +231,12 @@ public class ProductsUI extends AppCompatActivity
     {
         mProductsRecyclerView = (RecyclerView)findViewById(R.id.grid_recycler);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mProductAdapter = new ProductsGridAdapter(this, mProductsDisplayedList, mProductsCandidatesDeque.size());
+        mProductAdapter = new ProductsGridAdapter(this
+                                    , mProductsDisplayedList
+                                    , mProductsCandidatesDeque.size() + mProductsDisplayedList.size()
+                                    , mCoordinatorLayout);
 
+        mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
@@ -618,22 +621,11 @@ public class ProductsUI extends AppCompatActivity
                 JSONObject jsColor = jsColors.getJSONObject(i);
 
                 String reference = jsColor.getString("reference");
-                String colorName = jsColor.getString("colorName");
-                String colorPath = jsColor.getString("colorPath");
+                String colorName = jsColor.getString("name");
+                String colorPath = jsColor.getString("path");
+                short numerOfImages = (short)jsColor.getInt("numberOfImages");
 
-                List<Image> images = new ArrayList<>();
-                JSONArray jsImages = jsColor.getJSONArray("images");
-                for ( int j = 0; j < jsImages.length(); j++ )
-                {
-                    JSONObject jsImage = jsImages.getJSONObject(j);
-
-                    String path = SERVER_URL + jsImage.getString("path")
-                                                      .replace(" ", "%20");
-
-                    images.add( new Image( path ) );
-                }
-
-                colors.add( new ColorVariant( reference, colorName, colorPath, images ) );
+                colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
             }
 
             Product product = new Product( name, shop, section, price, link, colors, newness );

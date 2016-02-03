@@ -89,7 +89,12 @@ public class SpringfieldScraper implements Scraper
 
                             // Obtenemos el nombre del color y la URL del icono 
                             String colorName = color.select("span.screen-reader-text").first().ownText().toUpperCase();
-                            String colorURL = color.select( "span.c02__square" ).attr( "style" ).replace( "background: url(" , "").replace( ")", "" );                      
+                            String colorURL = color.select( "span.c02__square" ).attr( "style" );
+                            
+                            if ( ( colorURL != null ) && ( ! colorURL.isEmpty() ) )
+                                colorURL = colorURL.replace( "background: url(" , "" ).replace( ")", "" );  
+                            else
+                                colorURL = null;                     
 
                             // Si hay varios colores, nos quedamos solo con las imagenes del color actual
                             Elements images = document.select( "div.c01--navdots div.c01__media" );
@@ -118,36 +123,39 @@ public class SpringfieldScraper implements Scraper
                             prodNOK++;
                     }
 
-                } catch ( Exception e ) {prodNOK++;}
+                } catch ( Exception e ) { prodNOK++; }
 
             } // for products
             
             // Si hay varias paginas, nos conectamos a la que toque
             if ( ! pagesElements.isEmpty() )
             {
-                document = Jsoup.connect( pages.get( i++ ) ).timeout( Properties.TIMEOUT ).get();
-                
-                // Sacamos nuevas paginas si las hay
-                pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
-                for ( Element page : pagesElements )
+                if ( i < pages.size() )
                 {
-                    // Anadimos solo las que no esten ya, siempre que no sea la primera
-                    if ( ! pages.contains( page.attr( "href" ).concat( "&format=ajax" ) ) && 
-                       ( ! page.ownText().equals( "1" ) ) )
+                    document = Jsoup.connect( pages.get( i ) ).timeout( Properties.TIMEOUT ).get();
+
+                    // Sacamos nuevas paginas si las hay
+                    pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
+                    for ( Element page : pagesElements )
                     {
-                        pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
+                        // Anadimos solo las que no esten ya
+                        if ( ! pages.contains( page.attr( "href" ).concat( "&format=ajax" ) ) && 
+                           ( ! page.ownText().equals( "1" ) ) )
+                        {
+                            pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
+                        }
                     }
                 }
                 
-                finished = ( i >= pages.size() );
+                finished = ( ++i > pages.size() );
                 
             } else 
                 finished = true;
             
         } // while
-        LOG.info("prodOK: " + prodOK);
-        LOG.info("prodNOK: " + prodNOK);
-        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );   
+        
+        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );  
+        
         return productList;
     }
     

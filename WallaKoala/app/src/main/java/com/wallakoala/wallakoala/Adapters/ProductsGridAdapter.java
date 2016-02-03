@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +24,11 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,9 +41,14 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     /* Constants */
     private static final String TAG = "CUOKA";
     private static final String PACKAGE = "com.wallakoala.wallakoala";
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String IMAGES_PATH = "/images/products/";
 
     /* Context */
     private static Context mContext;
+
+    /* Container Views */
+    private static CoordinatorLayout mCoordinatorLayout;
 
     /* Data */
     private static List<Product> mProductList;
@@ -53,7 +63,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private Product mProduct;
         private Target mTarget;
         private Bitmap mBitmap;
-        private String mBitmapUri;
+        private String mBitmapFileName;
+        private boolean ERROR;
 
         private ImageButton mFavImageButton;
         private ImageView mProductImageView;
@@ -86,19 +97,19 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
             scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
 
-            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
-            {
+            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {}
+                public void onAnimationStart(Animation animation) {
+                }
 
                 @Override
-                public void onAnimationEnd(Animation animation)
-                {
+                public void onAnimationEnd(Animation animation) {
                     mProductFooterExtraView.setVisibility(View.GONE);
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+                }
             });
 
             scaleDownFooter.setAnimationListener(new Animation.AnimationListener()
@@ -123,11 +134,14 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     /* Enviamos toda la informacion necesaria para que la siguiente activity
                     * realice la animacion */
                     intent.putExtra(PACKAGE + ".Beans.Product", mProduct)
-                          .putExtra(PACKAGE + ".bitmap", mBitmapUri)
+                          .putExtra(PACKAGE + ".bitmap", mBitmapFileName)
                           .putExtra(PACKAGE + ".left", screenLocation[0])
                           .putExtra(PACKAGE + ".top", screenLocation[1])
                           .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
                           .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
+
+                    /* Reseteamos el nombre del fichero */
+                    mBitmapFileName = null;
 
                     mContext.startActivity(intent);
 
@@ -149,9 +163,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             final int position = pos;
 
+            mProductImageView.setImageBitmap(null);
+            ERROR = false;
+
             /* Inicializamos los TextViews */
             mTitleTextView.setText(product.getShop());
-            mSubtitleTextView.setText(product.getColors().get(0).getReference());
+            mSubtitleTextView.setText(product.getSection());
             mNameTextView.setText(product.getName());
             mPriceTextView.setText(String.format("%.2f", product.getPrice()) + "€");
 
@@ -196,6 +213,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 {
                     mLoadingView.setVisibility(View.GONE);
 
+                    ERROR = true;
+
                     mProductImageView.setBackgroundColor(mContext.getResources()
                                                                  .getColor(android.R.color.holo_red_dark));
                     mProductImageView.setAlpha(0.2f);
@@ -221,10 +240,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 }
             };
 
-            String url = product.getColors().get(0)
-                                            .getImages()
-                                            .get(0)
-                                            .getPath().replaceAll(".jpg", "_Small.jpg");
+            String imageFile = product.getShop() + "_"
+                        + product.getSection() + "_"
+                        + product.getColors().get(0).getReference() + "_"
+                        + product.getColors().get(0).getColorName() + "_0_Small.jpg";
+
+            String url = Utils.fixUrl(SERVER_URL + IMAGES_PATH + product.getShop() + "/" + imageFile);
+
             Picasso.with(mContext)
                    .load(url)
                    .into(mTarget);
@@ -246,19 +268,28 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                 } else
                     mProductFooterExtraView.startAnimation(scaleDownFooterExtra);
-
             }
 
             /* Si se pulsa en la imagen */
             if (view.getId() == mProductImageView.getId())
             {
-                // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
-                mBitmapUri = getImageUri(mContext, mBitmap).toString();
+                if (!ERROR)
+                {
+                    // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
+                    // y ralentiza la animacion
+                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
 
-                // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
-                mProductClicked = this;
+                    if (mBitmapFileName != null)
+                    {
+                        // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
+                        mProductClicked = this;
 
-                mProductFooterView.startAnimation(scaleDownFooter);
+                        mProductFooterView.startAnimation(scaleDownFooter);
+
+                    } else {
+                        Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
 
@@ -273,33 +304,21 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.startAnimation(scaleUp);
         }
 
-        /**
-         * Metodo que saca la Uri de un bitmap.
-         * @param inContext: contexto.
-         * @param inImage: bitmap de la que se quiere sacar la Uri.
-         * @return Uri del bitmap.
-         */
-        private Uri getImageUri(Context inContext, Bitmap inImage)
-        {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
-            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-
-            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver()
-                                                                , inImage
-                                                                , "Title"
-                                                                , null);
-
-            return Uri.parse(path);
-        }
-
     } /* [END] ViewHolder */
 
-
-    public ProductsGridAdapter(Context context, List<Product> productList, int total)
+    /**
+     * Constructor del Adapter
+     * @param context: contexto (ProductsUI)
+     * @param productList: lista de productos
+     * @param total: total de productos, necesario para inicializar el array de ratios
+     * @param coordinatorLayout: layout necesario para animar la SnackBar
+     */
+    public ProductsGridAdapter(Context context, List<Product> productList, int total, CoordinatorLayout coordinatorLayout)
     {
         mContext = context;
         mProductList = productList;
+
+        mCoordinatorLayout = coordinatorLayout;
 
         mProductBitmapArray = new double[total];
         for (int i = 0; i < total; i++)
@@ -330,6 +349,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         }
     }
 
+    /**
+     * Metodo que indica si se ha clickado en algun producto
+     * @return true si se ha clickado en algun producto
+     */
     public boolean productClicked()
     {
         return (mProductClicked != null);
