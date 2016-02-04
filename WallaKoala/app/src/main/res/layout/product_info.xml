@@ -24,7 +24,7 @@
                 android:id="@+id/product_info_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NOMBRE DEL PRODUCTO"
+                android:text="@string/product_info_name"
                 android:textSize="16dp"
                 android:layout_margin="16dp"
                 android:textStyle="bold"/>
@@ -44,7 +44,7 @@
                 android:id="@+id/product_info_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="25,99E"
+                android:text="@string/product_info_price"
                 android:textSize="24dp"
                 android:layout_marginBottom="16dp"
                 android:layout_alignParentBottom="true"
