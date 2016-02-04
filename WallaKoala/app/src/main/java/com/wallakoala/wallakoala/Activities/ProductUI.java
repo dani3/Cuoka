@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -99,6 +100,7 @@ public class ProductUI extends AppCompatActivity
     protected String mBitmapUri;
     protected BitmapDrawable mBitmapDrawable;
     protected ColorDrawable mBackground;
+    protected int mCurrentColor;
 
     /* Others */
     protected int mLeftDelta;
@@ -114,6 +116,7 @@ public class ProductUI extends AppCompatActivity
     protected int mFloatingButtonY;
     protected int mFloatingButtonTop;
     protected int mRadiusReveal;
+    protected double mRatio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -176,6 +179,8 @@ public class ProductUI extends AppCompatActivity
         mProduct         = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
 
         mTopOffset = 0.0f;
+
+        mCurrentColor = 0;
     }
 
     /**
@@ -356,6 +361,28 @@ public class ProductUI extends AppCompatActivity
 
         mColorIconAdapter = new ColorIconListAdapter(this, mProduct.getColors());
         mColorIconListView.setAdapter(mColorIconAdapter);
+
+        mColorIconListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (mCurrentColor != position)
+                {
+                    mImagesAdapter = new ProductAdapter(ProductUI.this
+                            , mProduct.getColors().get(position)
+                            , mRatio
+                            , mProduct.getShop()
+                            , mProduct.getSection()
+                            , mImageView);
+
+                    mImagesRecylcerView.setAdapter(mImagesAdapter);
+
+                    mCurrentColor = position;
+                }
+
+            }
+        });
     }
 
     /**
@@ -364,15 +391,15 @@ public class ProductUI extends AppCompatActivity
     protected void _initRecyclerView()
     {
         // Calculamos el aspect ratio de la imagen
-        double ratio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
+        mRatio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
 
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
         mScrollDisabler = new RecyclerScrollDisabler();
         mLinearLayoutManager = new LinearLayoutManager(this);
         mImagesAdapter = new ProductAdapter(this
-                                , mProduct.getColors().get(0)
-                                , ratio
+                                , mProduct.getColors().get(mCurrentColor)
+                                , mRatio
                                 , mProduct.getShop()
                                 , mProduct.getSection()
                                 , mImageView);
