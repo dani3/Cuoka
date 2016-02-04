@@ -12,6 +12,9 @@
     <string name="settings_item">Preferencias</string>
     <string name="help_item">Ayuda</string>
 
+    <string name="footer_shop">TIENDA</string>
+    <string name="footer_section">Seccion</string>
+
     <string name="error_message">Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado...</string>
     <string name="exit_message">Pulsa otra vez para SALIR</string>

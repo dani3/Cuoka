@@ -8,25 +8,70 @@
     <LinearLayout
         android:id="@+id/product_info"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="275dp"
         android:weightSum="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.71"
             android:alpha="0.75"
-            android:background="@color/colorText">
+            android:background="@drawable/product_info_top_border">
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/product_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOMBRE DEL PRODUCTO"
+                android:textSize="16dp"
+                android:layout_margin="16dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/product_info_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:text="Descripcion larga del producto, pero larga larga eh, porque para que tenga que estar metiendo yo esto... Asi que nada, se ha quedado buena tarde no?"
+                android:layout_marginRight="16dp"
+                android:layout_below="@+id/product_info_name"
+                android:layout_alignLeft="@+id/product_info_name"
+                android:layout_alignStart="@+id/product_info_name"/>
+
+            <TextView
+                android:id="@+id/product_info_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25,99E"
+                android:textSize="24dp"
+                android:layout_marginBottom="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignLeft="@+id/product_info_description"
+                android:layout_alignStart="@+id/product_info_description"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.29"
-            android:alpha="0.25"
-            android:background="@color/colorText">
+            android:alpha="0.7"
+            android:background="@drawable/icon_list_left_border">
+
+            <ListView
+                android:alpha="1.0"
+                android:id="@+id/product_info_list_colors"
+                android:layout_marginTop="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:smoothScrollbar="true"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="20dp">
+
+            </ListView>
 
         </LinearLayout>
 
