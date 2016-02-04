@@ -3,38 +3,40 @@ package com.wallakoala.wallakoala.Activities;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 
 import java.io.File;
-import java.io.IOException;
+
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * @class Pantalla de un producto.
@@ -55,6 +57,7 @@ public class ProductUI extends AppCompatActivity
     protected FrameLayout mTopLevelLayout;
     protected RecyclerView mImagesRecylcerView;
     protected CoordinatorLayout mCoordinatorLayout;
+    protected LinearLayout mProductInfoLayout;
 
     /* Adapter */
     protected ProductAdapter mImagesAdapter;
@@ -64,7 +67,6 @@ public class ProductUI extends AppCompatActivity
 
     /* Views */
     protected ImageView mImageView;
-    protected View mProductInfo;
 
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButton;
@@ -89,6 +91,10 @@ public class ProductUI extends AppCompatActivity
     protected float mThumbnailWidth;
     protected float mThumbnailHeight;
     protected float mTopOffset;
+    protected int mFloatingButtonX;
+    protected int mFloatingButtonY;
+    protected int mFloatingButtonTop;
+    protected int mRadiusReveal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -142,12 +148,142 @@ public class ProductUI extends AppCompatActivity
         mTopLevelLayout       = (FrameLayout)findViewById(R.id.topLevelLayout);
         mFloatingActionButton = (FloatingActionButton)findViewById(R.id.floatingButton);
         mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
+        mProductInfoLayout    = (LinearLayout)findViewById(R.id.product_info);
 
-        /* Floatin Button */
+        mProductInfoLayout.setVisibility(View.INVISIBLE);
+
+        /* Floating Button */
         mFloatingActionButton.setVisibility(View.GONE);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                int screenHeight = Resources.getSystem()
+                        .getDisplayMetrics().heightPixels;
+                int aux = screenHeight - (mFloatingButtonTop + (mFloatingActionButton.getHeight()/2));
+                int offset = mProductInfoLayout.getHeight() - aux;
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
+                    SupportAnimator animator =
+                            ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                                    , mFloatingButtonX
+                                    , mFloatingButtonY
+                                    , 0
+                                    , mRadiusReveal);
+
+                    if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                    {
+                        mProductInfoLayout.setVisibility(View.VISIBLE);
+
+                        animator.setDuration(200);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                        mFloatingActionButton.animate()
+                                .translationYBy(-offset)
+                                .setDuration(400)
+                                .setStartDelay(75)
+                                .setInterpolator(new OvershootInterpolator()).start();
+
+                        animator.start();
+
+                    } else {
+                        SupportAnimator animator_reverse = animator.reverse();
+
+                        animator_reverse.setDuration(200);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart() {
+                            }
+
+                            @Override
+                            public void onAnimationEnd() {
+                                mProductInfoLayout.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel() {
+                            }
+
+                            @Override
+                            public void onAnimationRepeat() {
+                            }
+                        });
+
+                        mFloatingActionButton.animate()
+                                .translationYBy(offset)
+                                .setDuration(400)
+                                .setStartDelay(75)
+                                .setInterpolator(new OvershootInterpolator()).start();
+
+                        animator_reverse.start();
+                    }
+
+                } else {
+                    if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                    {
+                        mProductInfoLayout.setVisibility(View.VISIBLE);
+
+                        Animator animator =
+                                android.view.ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                                        , mFloatingButtonX
+                                        , mFloatingButtonY
+                                        , 0
+                                        , mRadiusReveal);
+
+                        animator.setDuration(200);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                        mFloatingActionButton.animate()
+                                .translationYBy(-offset)
+                                .setDuration(400)
+                                .setStartDelay(75)
+                                .setInterpolator(new OvershootInterpolator()).start();
+
+                        animator.start();
+
+                    } else {
+                        Animator animator =
+                                android.view.ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                                        , mFloatingButtonX
+                                        , mFloatingButtonY
+                                        , mRadiusReveal
+                                        , 0);
+
+                        animator.setDuration(200);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                mProductInfoLayout.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                            }
+                        });
+
+                        mFloatingActionButton.animate()
+                                .translationYBy(offset)
+                                .setDuration(400)
+                                .setStartDelay(75)
+                                .setInterpolator(new OvershootInterpolator()).start();
+
+                        animator.start();
+
+                    }
+
+                }
 
             }
         });
@@ -225,19 +361,19 @@ public class ProductUI extends AppCompatActivity
         mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
         mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
 
-        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener()
-        {
+        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
-            public void onAnimationEnd(Animation animation)
-            {
+            public void onAnimationEnd(Animation animation) {
                 mFloatingActionButton.setVisibility(View.GONE);
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
     }
 
@@ -245,7 +381,7 @@ public class ProductUI extends AppCompatActivity
      * La animacion de entrada escala la imagen desde la pequeña hasta la posicion/tamaño de la grande.
      * En paralelo, el fondo se va oscureciendo.
      */
-    public void runEnterAnimation()
+    private void runEnterAnimation()
     {
         final long duration = (int)(ANIM_DURATION * 0.5);
 
@@ -261,10 +397,10 @@ public class ProductUI extends AppCompatActivity
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
                             .setInterpolator(sDecelerator)
-                            .setListener(new Animator.AnimatorListener()
-                            {
+                            .setListener(new Animator.AnimatorListener() {
                                 @Override
-                                public void onAnimationStart(Animator animation) {}
+                                public void onAnimationStart(Animator animation) {
+                                }
 
                                 @Override
                                 public void onAnimationEnd(Animator animation)
@@ -276,14 +412,29 @@ public class ProductUI extends AppCompatActivity
                                         // Hacemos aparecer el FloatingButton
                                         mFloatingActionButton.setVisibility(View.VISIBLE);
                                         mFloatingActionButton.startAnimation(mExplodeAnimation);
+
+                                        mFloatingButtonX = (mFloatingActionButton.getLeft()
+                                                                    + mFloatingActionButton.getRight())/2;
+
+                                        int[] screenLocation = new int[2];
+                                        mFloatingActionButton.getLocationOnScreen(screenLocation);
+                                        mFloatingButtonTop = screenLocation[1];
+
+                                        mFloatingButtonY = ((int) mFloatingActionButton.getY()
+                                                                    + mFloatingActionButton.getHeight())/2;
+
+                                        mRadiusReveal = Math.max(mProductInfoLayout.getWidth()
+                                                            , mProductInfoLayout.getHeight());
                                     }
                                 }
 
                                 @Override
-                                public void onAnimationCancel(Animator animation) {}
+                                public void onAnimationCancel(Animator animation) {
+                                }
 
                                 @Override
-                                public void onAnimationRepeat(Animator animation) {}
+                                public void onAnimationRepeat(Animator animation) {
+                                }
                             });
 
         // Efecto fade para oscurecer la pantalla
@@ -296,7 +447,7 @@ public class ProductUI extends AppCompatActivity
      * La animacion de salida es la misma animacion de entrada pero al reves
      * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
-    public void runExitAnimation(final Runnable endAction)
+    private void runExitAnimation(final Runnable endAction)
     {
         final long duration = (int)(ANIM_DURATION * 0.6);
 
@@ -314,6 +465,67 @@ public class ProductUI extends AppCompatActivity
                             .scaleX(mWidthScale).scaleY(mHeightScale)
                             .translationX(mLeftDelta).translationY(mTopDelta)
                             .withEndAction(endAction);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            SupportAnimator animator =
+                    ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                            , mFloatingButtonX
+                            , mFloatingButtonY
+                            , 0
+                            , mRadiusReveal);
+
+            SupportAnimator animator_reverse = animator.reverse();
+
+            animator_reverse.setDuration(100);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+                @Override
+                public void onAnimationStart() {}
+
+                @Override
+                public void onAnimationEnd() {
+                    mProductInfoLayout.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel() {}
+
+                @Override
+                public void onAnimationRepeat() {}
+            });
+
+            animator_reverse.start();
+
+        } else {
+            Animator animator =
+                    android.view.ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                            , mFloatingButtonX
+                            , mFloatingButtonY
+                            , mRadiusReveal
+                            , 0);
+
+            animator.setDuration(100);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {}
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mProductInfoLayout.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {}
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {}
+            });
+
+            animator.start();
+        }
 
         mFloatingActionButton.startAnimation(mImplodeAnimation);
 
