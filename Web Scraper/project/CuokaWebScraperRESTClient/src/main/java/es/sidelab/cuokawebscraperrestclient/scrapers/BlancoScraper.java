@@ -65,7 +65,7 @@ public class BlancoScraper implements Scraper
                 Elements colors = colorList.select( "span" );
                 for ( Element color : colors )
                 {
-                    List<Image> imagesURL = null;
+                    List<Image> imagesURL = new ArrayList<>();
 
                     String colorName = color.ownText().toUpperCase();
 
@@ -73,7 +73,6 @@ public class BlancoScraper implements Scraper
                     if ( first )
                     {
                         Elements images = document.select( "#product-gallery-list img" );
-                        imagesURL = new ArrayList<>();
                         for ( Element img : images )
                             imagesURL.add( new Image( fixURL( shop.getURL().toString() + img.attr( "src" ) ) ) );
 

@@ -49,7 +49,7 @@ public class mainBlanco
             Elements colors = colorList.select( "span" );
             for ( Element color : colors )
             {
-                List<Image> imagesURL = null;
+                List<Image> imagesURL = new ArrayList<>();
                 
                 String colorName = color.ownText().toUpperCase();
                 
@@ -57,7 +57,6 @@ public class mainBlanco
                 if ( first )
                 {
                     Elements images = document.select( "#product-gallery-list img" );
-                    imagesURL = new ArrayList<>();
                     for ( Element img : images )
                     {
                         imagesURL.add( new Image( fixURL( "https://www.blanco.com/" + img.attr( "src" ) ) ) );

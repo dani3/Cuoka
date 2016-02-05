@@ -69,7 +69,11 @@ public class PdHScraper implements Scraper
                         if( color.className().equals( colorCode ) )
                         {
                             String colorReference = reference;
-                            String colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );
+                            String colorURL = null;
+                            
+                            if ( color.select( "img" ).first() != null )
+                                colorURL = fixURL( color.select( "img" ).first().attr( "src" ) ); 
+                            
                             String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
 
                             List<Image> imagesURL = new ArrayList<>();

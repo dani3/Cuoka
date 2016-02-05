@@ -25,12 +25,10 @@ public class mainPdH
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Americanas_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Camisas_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
-        
-        System.out.println( products.size() );
           
         // Recorremos todos los productos y sacamos sus atributos
         for ( Element element : products )
@@ -63,7 +61,11 @@ public class mainPdH
                         if( color.className().equals( colorCode ) )
                         {
                             String colorReference = reference;
-                            String colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );
+                            String colorURL = null;
+                            
+                            if ( color.select( "img" ).first() != null )
+                                colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );                                
+                            
                             String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
 
                             List<Image> imagesURL = new ArrayList<>();
