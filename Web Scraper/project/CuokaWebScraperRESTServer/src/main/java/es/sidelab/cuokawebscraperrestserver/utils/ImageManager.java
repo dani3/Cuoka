@@ -68,6 +68,10 @@ public class ImageManager
                                 product.getColors().get( j )
                                         .getImages().get( k ).setPath( path );
                                 
+                            } else {
+                                product.getColors().get( j )
+                                        .getImages().get( k ).setPath( null );
+                                
                             }                            
                             
                         } else {
@@ -94,8 +98,26 @@ public class ImageManager
                     {
                         boolean ok = downloadImage( cv.getColorURL(), path );
                         if ( ok )
+                        {
                             product.getColors().get( j ).setPath( color_path );
-                      
+                            
+                        } else {
+                            LOG.info( "URL del icono incorrecta. Se intenta averiguar el color..." );
+                    
+                            String color_found = ColorManager.findOutColor( cv.getName() );
+
+                            if ( color_found != null )
+                            {
+                                LOG.info( "Color (" + cv.getName() +") encontrado!" );
+                                product.getColors().get( j ).setPath( Properties.PREDEFINED_COLORS + color_found );
+
+                            } else {
+                                LOG.info( "Color (" + cv.getName() +") no encontrado" );
+
+                            }
+                            
+                        }
+                        
                     } else
                         product.getColors().get( j ).setPath( color_path );
                     
@@ -107,7 +129,7 @@ public class ImageManager
                     if ( color_path != null )
                     {
                         LOG.info( "Color (" + cv.getName() +") encontrado!" );
-                        product.getColors().get( j ).setPath( Properties.PREDEFINED_COLORS_PATH + color_path );
+                        product.getColors().get( j ).setPath( Properties.PREDEFINED_COLORS + color_path );
                         
                     } else {
                         LOG.info( "Color (" + cv.getName() +") no encontrado" );

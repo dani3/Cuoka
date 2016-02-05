@@ -8,6 +8,7 @@ package es.sidelab.cuokawebscraperrestserver.properties;
 public class Properties 
 {
     public static final String PATH = "/images/products/";
+    public static final String PREDEFINED_COLORS = "/images/colors/";
     public static final String IMAGE_PATH = "/var/www/html/images/products/";
     public static final String COLOR_PATH = "/var/www/html/images/products/";
     public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";
