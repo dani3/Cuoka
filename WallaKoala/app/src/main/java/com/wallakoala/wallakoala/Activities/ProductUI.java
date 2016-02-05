@@ -399,6 +399,9 @@ public class ProductUI extends AppCompatActivity
             {
                 if (mCurrentColor != position)
                 {
+                    mColorIconAdapter.setSelected(position);
+                    mColorIconAdapter.notifyDataSetChanged();
+
                     mImagesAdapter = new ProductAdapter(ProductUI.this
                             , mProduct.getColors().get(position)
                             , mRatio

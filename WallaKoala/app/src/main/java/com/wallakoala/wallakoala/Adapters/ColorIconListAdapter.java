@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.BaseAdapter;
 
 import com.squareup.picasso.Picasso;
@@ -43,6 +46,7 @@ public class ColorIconListAdapter extends BaseAdapter
     private List<ColorVariant> mColorList;
     private String mShop;
     private String mSection;
+    private int mIconSelected;
 
     /**
      * ViewHolder del icono.
@@ -50,6 +54,7 @@ public class ColorIconListAdapter extends BaseAdapter
     protected static class ColorIconHolder
     {
         CircleImageView mIconView;
+        CircleImageView mSelectedView;
     }
 
     /**
@@ -63,6 +68,7 @@ public class ColorIconListAdapter extends BaseAdapter
         mColorList = colorVariants;
         mSection = section;
         mShop = shop;
+        mIconSelected = 0;
     }
 
     @Override
@@ -100,7 +106,8 @@ public class ColorIconListAdapter extends BaseAdapter
 
             convertView = mLayoutInflater.inflate(R.layout.color_icon, null);
 
-            colorIconHolder.mIconView = (CircleImageView)convertView.findViewById(R.id.color_icon);
+            colorIconHolder.mIconView     = (CircleImageView)convertView.findViewById(R.id.color_icon);
+            colorIconHolder.mSelectedView = (CircleImageView)convertView.findViewById(R.id.color_selected);
 
             convertView.setTag(colorIconHolder);
 
@@ -125,6 +132,17 @@ public class ColorIconListAdapter extends BaseAdapter
             url = Utils.fixUrl(SERVER_URL + PREDEFINED_ICONS_PATH + imageFile);
         }
 
+        if (position == mIconSelected)
+        {
+            colorIconHolder.mSelectedView.setVisibility(View.VISIBLE);
+            colorIconHolder.mSelectedView.startAnimation(AnimationUtils.loadAnimation(mContext
+                                                                            , R.anim.explode));
+
+        } else {
+            colorIconHolder.mSelectedView.setVisibility(View.GONE);
+        }
+
+
         Log.d(TAG, url);
 
         Picasso.with(mContext)
@@ -132,5 +150,10 @@ public class ColorIconListAdapter extends BaseAdapter
                .into(colorIconHolder.mIconView);
 
         return convertView;
+    }
+
+    public void setSelected(int position)
+    {
+        mIconSelected = position;
     }
 }
