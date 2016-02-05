@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Activities;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -63,6 +64,9 @@ public class ProductUI extends AppCompatActivity
     protected static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
     protected static final int ANIM_DURATION = 500;
     protected static boolean EXITING;
+
+    /* Context */
+    protected static Context mContext;
 
     /* Container Views */
     protected FrameLayout mTopLevelLayout;
@@ -169,6 +173,8 @@ public class ProductUI extends AppCompatActivity
     {
         EXITING = false;
 
+        mContext = this;
+
         Bundle bundle = getIntent().getExtras();
 
         mThumbnailTop    = bundle.getInt(PACKAGE + ".top");
@@ -213,11 +219,30 @@ public class ProductUI extends AppCompatActivity
                 int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButton.getHeight()/2));
                 int offset = mProductInfoLayout.getHeight() - bottomHalf;
 
-                // Deshabilitamos el scroll si se abre la pantalla de info
+                // Deshabilitamos el scroll si se abre la pantalla de info y cambiamos el icono del FAB
                 if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                {
                     mImagesRecylcerView.addOnItemTouchListener(mScrollDisabler);
-                else
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        mFloatingActionButton.setImageDrawable(
+                                                    getResources().getDrawable(R.drawable.ic_remove_white
+                                                            , mContext.getTheme()));
+                    else
+                        mFloatingActionButton.setImageDrawable(
+                                getResources().getDrawable(R.drawable.ic_remove_white));
+
+                } else {
                     mImagesRecylcerView.removeOnItemTouchListener(mScrollDisabler);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        mFloatingActionButton.setImageDrawable(
+                                getResources().getDrawable(R.drawable.ic_add_white
+                                        , mContext.getTheme()));
+                    else
+                        mFloatingActionButton.setImageDrawable(
+                                getResources().getDrawable(R.drawable.ic_add_white));
+                }
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 {
