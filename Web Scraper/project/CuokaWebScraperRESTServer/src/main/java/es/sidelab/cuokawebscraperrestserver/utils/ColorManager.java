@@ -21,7 +21,7 @@ public class ColorManager
         
         for ( File file : colors )
         {
-            String fileName = file.getName().toUpperCase();
+            String fileName = file.getName();
             
             if ( fileName.contains( color_name.toUpperCase() ) )
                 return fileName;
