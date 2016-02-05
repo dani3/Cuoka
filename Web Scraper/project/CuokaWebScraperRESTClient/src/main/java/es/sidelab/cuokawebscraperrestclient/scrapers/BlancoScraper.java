@@ -78,9 +78,9 @@ public class BlancoScraper implements Scraper
                             imagesURL.add( new Image( fixURL( shop.getURL().toString() + img.attr( "src" ) ) ) );
 
                         first = false;
-                    }
 
-                    variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                        variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                    }
                 }
 
                 if ( ! colors.isEmpty() )

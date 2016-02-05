@@ -27,8 +27,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 {
     /* Constants */
     private static final String TAG = "CUOKA";
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    protected static final String IMAGES_PATH = "/images/products/";
+    private static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    private static final String IMAGES_PATH = "/images/products/";
 
     /* Context */
     private static Context mContext;

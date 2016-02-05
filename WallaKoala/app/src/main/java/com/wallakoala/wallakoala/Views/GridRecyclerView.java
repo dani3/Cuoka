@@ -44,7 +44,6 @@ public class GridRecyclerView extends RecyclerView {
     {
         if (getAdapter() != null && getLayoutManager() instanceof StaggeredGridLayoutManager)
         {
-
             GridLayoutAnimationController.AnimationParameters animationParams =
                     (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;
 

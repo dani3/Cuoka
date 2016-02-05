@@ -65,9 +65,9 @@ public class mainBlanco
                     }
                     
                     first = false;
-                }
             
-                variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                    variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                }
             }
             
             productList.add( new Product( Double.parseDouble( price )

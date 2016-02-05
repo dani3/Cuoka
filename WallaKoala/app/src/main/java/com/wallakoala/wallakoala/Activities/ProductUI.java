@@ -58,11 +58,11 @@ import io.codetail.animation.ViewAnimationUtils;
 public class ProductUI extends AppCompatActivity
 {
     /* Constants */
-    private static final String TAG = "CUOKA";
-    private static final String PACKAGE = "com.wallakoala.wallakoala";
-    private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
-    private static final int ANIM_DURATION = 500;
-    private static boolean EXITING;
+    protected static final String TAG = "CUOKA";
+    protected static final String PACKAGE = "com.wallakoala.wallakoala";
+    protected static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
+    protected static final int ANIM_DURATION = 500;
+    protected static boolean EXITING;
 
     /* Container Views */
     protected FrameLayout mTopLevelLayout;
@@ -196,7 +196,7 @@ public class ProductUI extends AppCompatActivity
         mProductNameTextView  = (TextView)findViewById(R.id.product_info_name);
         mProductPriceTextView = (TextView)findViewById(R.id.product_info_price);
 
-        /* Info del producto */
+        /* Inicializamos la info del producto */
         mProductNameTextView.setText(mProduct.getName());
         mProductPriceTextView.setText(String.format("%.2f", mProduct.getPrice()) + "€");
         mProductInfoLayout.setVisibility(View.INVISIBLE);
@@ -208,6 +208,7 @@ public class ProductUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
+                // Calculamos cuanto hay que desplazar el FAB hasta el borde del layout de info.
                 int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
                 int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButton.getHeight()/2));
                 int offset = mProductInfoLayout.getHeight() - bottomHalf;
@@ -342,10 +343,13 @@ public class ProductUI extends AppCompatActivity
             }
         });
 
-        /* Bitmap */
+        /* Cargamos el bitmap de la imagen en baja calidad */
         File filePath = getFileStreamPath(mBitmapUri);
         mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
         mImageView.setImageDrawable(mBitmapDrawable);
+
+        /* Calculamos el aspect ratio de la imagen */
+        mRatio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
 
         /* Background */
         mBackground = new ColorDrawable(Color.WHITE);
@@ -362,6 +366,7 @@ public class ProductUI extends AppCompatActivity
         mColorIconAdapter = new ColorIconListAdapter(this, mProduct.getColors());
         mColorIconListView.setAdapter(mColorIconAdapter);
 
+        // Listener para cambiar de color
         mColorIconListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -390,9 +395,6 @@ public class ProductUI extends AppCompatActivity
      */
     protected void _initRecyclerView()
     {
-        // Calculamos el aspect ratio de la imagen
-        mRatio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
-
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
         mScrollDisabler = new RecyclerScrollDisabler();
@@ -482,11 +484,12 @@ public class ProductUI extends AppCompatActivity
                                         mFloatingActionButton.setVisibility(View.VISIBLE);
                                         mFloatingActionButton.startAnimation(mExplodeAnimation);
 
+                                        // Una vez cargado, nos quedamos con las coordenadas del FAB
                                         mFloatingButtonX = (mFloatingActionButton.getLeft()
                                                                     + mFloatingActionButton.getRight())/2;
 
                                         mFloatingButtonY = ((int) mFloatingActionButton.getY()
-                                                + mFloatingActionButton.getHeight())/2;
+                                                                    + mFloatingActionButton.getHeight())/2;
 
                                         int[] screenLocation = new int[2];
                                         mFloatingActionButton.getLocationOnScreen(screenLocation);

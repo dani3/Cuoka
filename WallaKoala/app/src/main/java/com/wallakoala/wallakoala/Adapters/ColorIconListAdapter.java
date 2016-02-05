@@ -29,7 +29,7 @@ public class ColorIconListAdapter extends BaseAdapter
 {
     /* Constants */
     private static final String TAG = "CUOKA";
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    private static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
 
     /* Context */
     private Context mContext;
