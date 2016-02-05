@@ -45,6 +45,14 @@ public class ColorIconListAdapter extends BaseAdapter
     private String mSection;
 
     /**
+     * ViewHolder del icono.
+     */
+    protected static class ColorIconHolder
+    {
+        CircleImageView mIconView;
+    }
+
+    /**
      * Constructor del adapter.
      * @param context: contexto de la aplicacion.
      * @param colorVariants: lista de ColorVariants.
@@ -78,6 +86,8 @@ public class ColorIconListAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        ColorIconHolder colorIconHolder = null;
+
         // Creamos el inflater si no esta creado
         if (mLayoutInflater == null)
             mLayoutInflater = (LayoutInflater)mContext
@@ -85,25 +95,18 @@ public class ColorIconListAdapter extends BaseAdapter
 
         // Inflamos el item
         if (convertView == null)
+        {
+            colorIconHolder = new ColorIconHolder();
+
             convertView = mLayoutInflater.inflate(R.layout.color_icon, null);
 
-        final CircleImageView circleImageView = (CircleImageView)convertView.findViewById(R.id.color_icon);
+            colorIconHolder.mIconView = (CircleImageView)convertView.findViewById(R.id.color_icon);
 
-        final Target target = new Target()
-        {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
-            {
-                circleImageView.setImageBitmap(bitmap);
-            }
+            convertView.setTag(colorIconHolder);
 
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {}
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {}
-
-        };
+        } else {
+            colorIconHolder = (ColorIconHolder)convertView.getTag();
+        }
 
         // Path != 0 -> Color predefinido
         String url;
@@ -126,7 +129,7 @@ public class ColorIconListAdapter extends BaseAdapter
 
         Picasso.with(mContext)
                .load(url)
-               .into(target);
+               .into(colorIconHolder.mIconView);
 
         return convertView;
     }
