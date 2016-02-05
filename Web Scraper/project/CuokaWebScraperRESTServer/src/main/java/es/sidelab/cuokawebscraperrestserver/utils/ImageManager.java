@@ -90,16 +90,15 @@ public class ImageManager
                 if ( ( cv.getColorURL() != null ) && ( ! cv.getColorURL().isEmpty() ) )
                 {
                     // Descargar los iconos si es necesario
-                    String color_path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
-                                    + "_" + cv.getReference() + "_" + cv.getName().replaceAll( " " , "_" ) + "_ICON.jpg";
                     String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
                                     + "_" + cv.getReference() + "_" + cv.getName().replaceAll( " " , "_" ) + "_ICON.jpg";
+                    
                     if ( ! FileManager.existsFile( path ) )
                     {
                         boolean ok = downloadImage( cv.getColorURL(), path );
                         if ( ok )
                         {
-                            product.getColors().get( j ).setPath( color_path );
+                            product.getColors().get( j ).setPath( "0" );
                             
                         } else {
                             LOG.info( "URL del icono incorrecta. Se intenta averiguar el color..." );
@@ -109,7 +108,7 @@ public class ImageManager
                             if ( color_found != null )
                             {
                                 LOG.info( "Color (" + cv.getName() +") encontrado!" );
-                                product.getColors().get( j ).setPath( Properties.PREDEFINED_COLORS + color_found );
+                                product.getColors().get( j ).setPath( color_found );
 
                             } else {
                                 LOG.info( "Color (" + cv.getName() +") no encontrado" );
@@ -119,7 +118,7 @@ public class ImageManager
                         }
                         
                     } else
-                        product.getColors().get( j ).setPath( color_path );
+                        product.getColors().get( j ).setPath( "0" );
                     
                 } else {
                     LOG.info( "URL del icono vacio. Se intenta averiguar el color..." );
@@ -129,7 +128,7 @@ public class ImageManager
                     if ( color_path != null )
                     {
                         LOG.info( "Color (" + cv.getName() +") encontrado!" );
-                        product.getColors().get( j ).setPath( Properties.PREDEFINED_COLORS + color_path );
+                        product.getColors().get( j ).setPath( color_path );
                         
                     } else {
                         LOG.info( "Color (" + cv.getName() +") no encontrado" );

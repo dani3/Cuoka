@@ -30,6 +30,8 @@ public class ColorIconListAdapter extends BaseAdapter
     /* Constants */
     private static final String TAG = "CUOKA";
     private static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    private static final String PREDEFINED_ICONS_PATH = "/images/colors/";
+    private static final String ICONS_PATH = "/images/products/";
 
     /* Context */
     private Context mContext;
@@ -39,16 +41,20 @@ public class ColorIconListAdapter extends BaseAdapter
 
     /* Data */
     private List<ColorVariant> mColorList;
+    private String mShop;
+    private String mSection;
 
     /**
      * Constructor del adapter.
      * @param context: contexto de la aplicacion.
      * @param colorVariants: lista de ColorVariants.
      */
-    public ColorIconListAdapter(Context context, List<ColorVariant> colorVariants)
+    public ColorIconListAdapter(Context context, List<ColorVariant> colorVariants, String shop, String section)
     {
         this.mContext = context;
         mColorList = colorVariants;
+        mSection = section;
+        mShop = shop;
     }
 
     @Override
@@ -99,8 +105,22 @@ public class ColorIconListAdapter extends BaseAdapter
 
         };
 
-        final String url = Utils.fixUrl(SERVER_URL + mColorList.get(position).getColorPath()
-                                                               .replaceAll("/var/www/html", ""));
+        // Path != 0 -> Color predefinido
+        String url;
+        if (mColorList.get(position).getColorPath().equals("0"))
+        {
+            String imageFile = mShop + "_"
+                    + mSection + "_"
+                    + mColorList.get(position).getReference() + "_"
+                    + mColorList.get(position).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+            url = Utils.fixUrl(SERVER_URL + ICONS_PATH + mShop + "/" + imageFile);
+
+        } else {
+            String imageFile = mColorList.get(position).getColorPath();
+
+            url = Utils.fixUrl(SERVER_URL + PREDEFINED_ICONS_PATH + imageFile);
+        }
 
         Log.d(TAG, url);
 

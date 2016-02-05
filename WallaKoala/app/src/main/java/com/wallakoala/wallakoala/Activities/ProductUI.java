@@ -363,7 +363,7 @@ public class ProductUI extends AppCompatActivity
     {
         mColorIconListView = (ListView)findViewById(R.id.product_info_list_colors);
 
-        mColorIconAdapter = new ColorIconListAdapter(this, mProduct.getColors());
+        mColorIconAdapter = new ColorIconListAdapter(this, mProduct.getColors(), mProduct.getShop(), mProduct.getSection());
         mColorIconListView.setAdapter(mColorIconAdapter);
 
         // Listener para cambiar de color

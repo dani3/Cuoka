@@ -607,23 +607,23 @@ public class ProductsUI extends AppCompatActivity
 
         for( JSONObject jsonObject : jsonList )
         {
-            String name = jsonObject.getString("name");
-            String shop = key = jsonObject.getString("shop");
-            String section = jsonObject.getString("section");
-            double price = jsonObject.getDouble("price");
-            String link = jsonObject.getString("link");
-            boolean newness = jsonObject.getBoolean("newness");
+            String name = jsonObject.getString("2");
+            String shop = key = jsonObject.getString("3");
+            String section = jsonObject.getString("4");
+            double price = jsonObject.getDouble("1");
+            String link = jsonObject.getString("5");
+            boolean newness = jsonObject.getBoolean("7");
 
-            JSONArray jsColors = jsonObject.getJSONArray("colors");
+            JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
             for( int i = 0; i < jsColors.length(); i++ )
             {
                 JSONObject jsColor = jsColors.getJSONObject(i);
 
-                String reference = jsColor.getString("reference");
-                String colorName = jsColor.getString("name");
-                String colorPath = jsColor.getString("path");
-                short numerOfImages = (short)jsColor.getInt("numberOfImages");
+                String reference = jsColor.getString("1");
+                String colorName = jsColor.getString("2");
+                String colorPath = jsColor.getString("4");
+                short numerOfImages = (short)jsColor.getInt("3");
 
                 colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
             }

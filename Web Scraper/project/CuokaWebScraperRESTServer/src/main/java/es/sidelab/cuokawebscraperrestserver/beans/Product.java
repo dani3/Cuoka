@@ -72,32 +72,42 @@ public class Product
              + "\nNumero de colores: " + this.colors.size() );
     }
     
+    @JsonProperty( "price" )
     public void setPrice( double price ) { this.price = price; }
+    @JsonProperty( "name" )
     public void setName( String name ) { this.name = name; }
+    @JsonProperty( "shop" )
     public void setShop( String shop ) { this.shop = shop; }
+    @JsonProperty( "section" )
     public void setSection( String section ) { this.section = section; }
-    public void setLink( String link ) { this.link = link; }
-    
+    @JsonProperty( "link" )
+    public void setLink( String link ) { this.link = link; }    
     @JsonProperty
     public void setMan( boolean man ) { this.man = man; }
+    @JsonProperty( "colors" )
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
-    public void setNewness( boolean newness ) { this.newness = newness; }
-    
+    @JsonProperty( "newness" )
+    public void setNewness( boolean newness ) { this.newness = newness; }    
     @JsonIgnore
     public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
-    
+        
+    @JsonProperty( "1" )
     public double getPrice() { return this.price; }
+    @JsonProperty( "2" )
     public String getName() { return this.name; }
+    @JsonProperty( "3" )
     public String getShop() { return this.shop; }
+    @JsonProperty( "4" )
     public String getSection() { return this.section; }
-    public String getLink() { return this.link; }
-    
+    @JsonProperty( "5" )
+    public String getLink() { return this.link; }    
     @JsonIgnore
     public boolean isMan() { return this.man; }
+    @JsonProperty( "6" )
     public List<ColorVariant> getColors() { return this.colors; }
     public long getId() { return this.id; }
-    public boolean isNewness() { return this.newness; }
-    
+    @JsonProperty( "7" )
+    public boolean isNewness() { return this.newness; }    
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
 }
