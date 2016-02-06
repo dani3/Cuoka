@@ -17,13 +17,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.71"
-            android:alpha="0.75"
+            android:alpha="0.85"
             android:background="@drawable/product_info_top_border">
 
             <TextView
                 android:id="@+id/product_info_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
                 android:text="@string/product_info_name"
                 android:textSize="16dp"
                 android:singleLine="true"
@@ -35,6 +36,7 @@
                 android:id="@+id/product_info_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
                 android:textSize="14dp"
                 android:text="@string/product_info_description"
                 android:maxLines="6"
@@ -48,6 +50,7 @@
                 android:id="@+id/product_info_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
                 android:text="@string/product_info_price"
                 android:textSize="24dp"
                 android:layout_marginBottom="16dp"
@@ -60,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textColor="@android:color/white"
                 android:text="@string/product_info_reference"
                 android:textStyle="bold"
                 android:layout_below="@+id/product_info_description"
@@ -70,6 +74,7 @@
                 android:id="@+id/product_info_reference"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
                 android:layout_marginLeft="8dp"
                 android:text="123456789"
                 android:singleLine="true"
@@ -84,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.29"
-            android:alpha="0.7"
+            android:alpha="0.85"
             android:background="@drawable/icon_list_left_border">
 
             <ListView
