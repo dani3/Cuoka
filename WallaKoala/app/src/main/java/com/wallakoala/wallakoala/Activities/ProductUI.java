@@ -16,7 +16,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -35,7 +34,6 @@ import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
-import com.wallakoala.wallakoala.Utils.RecyclerScrollDisabler;
 
 import java.io.File;
 
@@ -73,9 +71,6 @@ public class ProductUI extends AppCompatActivity
     /* LayoutManager */
     protected LinearLayoutManager mLinearLayoutManager;
 
-    /* ScrollDisabler */
-    protected RecyclerView.OnItemTouchListener mScrollDisabler;
-
     /* Views */
     protected ImageView mImageView;
 
@@ -84,6 +79,7 @@ public class ProductUI extends AppCompatActivity
     protected TextView mProductPriceTextView;
     protected TextView mProductReferenceTextView;
     protected TextView mProductDescriptionTextView;
+    protected TextView mProductShopTextView;
 
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButtonPlus;
@@ -196,12 +192,14 @@ public class ProductUI extends AppCompatActivity
         mProductPriceTextView       = (TextView)findViewById(R.id.product_info_price);
         mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
         mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
+        mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
 
         /* Inicializamos la info del producto */
         mProductNameTextView.setText(mProduct.getName());
-        mProductPriceTextView.setText(String.format("%.2f", mProduct.getPrice()) + "€");
-        mProductReferenceTextView.setText(mProduct.getColors().get(0).getReference());
+        mProductShopTextView.setText(mProduct.getShop());
         mProductDescriptionTextView.setText(mProduct.getDescription());
+        mProductReferenceTextView.setText(mProduct.getColors().get(0).getReference());
+        mProductPriceTextView.setText(String.format("%.2f", mProduct.getPrice()) + "€");
 
         mProductInfoLayout.setVisibility(View.INVISIBLE);
 
@@ -215,10 +213,9 @@ public class ProductUI extends AppCompatActivity
                 int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButtonPlus.getHeight() / 2));
                 int offset = mProductInfoLayout.getHeight() - bottomHalf;
 
-                // Deshabilitamos el scroll si se abre la pantalla de info y cambiamos el icono del FAB
+                // Cambiamos el icono del FAB
                 if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
                 {
-                    mImagesRecylcerView.addOnItemTouchListener(mScrollDisabler);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         mFloatingActionButtonPlus.setImageDrawable(
@@ -229,7 +226,6 @@ public class ProductUI extends AppCompatActivity
                                 getResources().getDrawable(R.drawable.ic_remove_white));
 
                 } else {
-                    mImagesRecylcerView.removeOnItemTouchListener(mScrollDisabler);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         mFloatingActionButtonPlus.setImageDrawable(
@@ -427,7 +423,6 @@ public class ProductUI extends AppCompatActivity
     {
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
-        mScrollDisabler = new RecyclerScrollDisabler();
         mLinearLayoutManager = new LinearLayoutManager(this);
         mImagesAdapter = new ProductAdapter(this
                                 , mProduct.getColors().get(mCurrentColor)
