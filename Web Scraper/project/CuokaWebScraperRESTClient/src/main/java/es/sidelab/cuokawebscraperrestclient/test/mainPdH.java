@@ -40,6 +40,7 @@ public class mainPdH
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
                 document = Jsoup.connect( shop 
                                 + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
+                                                          .header( "Accept-Language", "es" )
                                                           .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto

@@ -48,6 +48,7 @@ public class PdHScraper implements Scraper
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
                 document = Jsoup.connect( shop.getURL().toString()
                                 + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
+                                                          .header( "Accept-Language", "es" )
                                                           .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto

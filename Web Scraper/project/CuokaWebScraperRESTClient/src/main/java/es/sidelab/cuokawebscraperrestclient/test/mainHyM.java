@@ -34,6 +34,7 @@ public class mainHyM
             // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
             document = Jsoup.connect( "http://www2.hm.com/"
                             + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
+                                                      .header( "Accept-Language", "es" )
                                                       .ignoreHttpErrors( true ).get();
 
             // Obtener los atributos propios del producto

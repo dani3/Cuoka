@@ -64,7 +64,9 @@ public class SpringfieldScraper implements Scraper
                 try {
                     // Obtener el HTML del producto
                     document = Jsoup.connect( element.attr( "href" ) )
-                                        .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+                                    .timeout( Properties.TIMEOUT )
+                                    .header( "Accept-Language", "es" )
+                                    .ignoreHttpErrors( true ).get();
 
                     // Obtener los atributos del producto
                     String link = element.attr( "href" );
