@@ -68,7 +68,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             mProductImageView.getLayoutParams().height = (int)(Resources.getSystem()
                                                                         .getDisplayMetrics().widthPixels * mAspectRatio);
 
-            mProductImageView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+            mProductImageView.setBackgroundColor(mContext.getResources()
+                                                         .getColor(android.R.color.transparent));
 
             if (getAdapterPosition() != 0)
                 mLoadingView.setVisibility(View.VISIBLE);

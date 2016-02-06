@@ -1,4 +1,3 @@
-
 package es.sidelab.cuokawebscraperrestclient.test;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
@@ -39,6 +38,7 @@ public class mainBlanco
             String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
             String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
+            String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
             
             // Obtenemos los colores del producto
             boolean first = true;
@@ -58,10 +58,7 @@ public class mainBlanco
                 {
                     Elements images = document.select( "#product-gallery-list img" );
                     for ( Element img : images )
-                    {
-                        imagesURL.add( new Image( fixURL( "https://www.blanco.com/" + img.attr( "src" ) ) ) );
-                        System.out.println( fixURL( "https://www.blanco.com/" + img.attr( "src" ) ) );
-                    }
+                        imagesURL.add( new Image( fixURL( "https://www.blanco.com/" + img.attr( "src" ) ) ) );                    
                     
                     first = false;
             
@@ -74,6 +71,7 @@ public class mainBlanco
                                     , ""
                                     , ""
                                     , link 
+                                    , description
                                     , true
                                     , variants ) );
             
@@ -85,6 +83,7 @@ public class mainBlanco
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
+        System.out.println( "Descripcion: " + p.getDescription());
         System.out.println( "Precio: " + p.getPrice() + " €" );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )

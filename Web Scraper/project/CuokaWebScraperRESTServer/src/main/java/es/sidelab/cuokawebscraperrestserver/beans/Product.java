@@ -41,6 +41,9 @@ public class Product
     @Column( name = "SECTION" )
     private String section;
     
+    @Column( name = "DESCRIPTION" )
+    private String description;
+    
     @Column( name = "LINK" )
     private String link;
     
@@ -80,6 +83,8 @@ public class Product
     public void setShop( String shop ) { this.shop = shop; }
     @JsonProperty( "section" )
     public void setSection( String section ) { this.section = section; }
+    @JsonProperty( "description" )
+    public void setDescription( String description ) { this.description = description; }
     @JsonProperty( "link" )
     public void setLink( String link ) { this.link = link; }    
     @JsonProperty
@@ -108,6 +113,8 @@ public class Product
     public long getId() { return this.id; }
     @JsonProperty( "7" )
     public boolean isNewness() { return this.newness; }    
+    @JsonProperty( "8" )
+    public String getDescription() { return this.description; }  
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
 }

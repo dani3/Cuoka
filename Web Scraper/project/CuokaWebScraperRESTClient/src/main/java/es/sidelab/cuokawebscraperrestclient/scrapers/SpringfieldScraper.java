@@ -71,7 +71,8 @@ public class SpringfieldScraper implements Scraper
                     String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
                     String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                     String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
-
+                    String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
+                    
                     // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
                     if ( ! containsProduct( productList, reference ) )
                     {
@@ -115,6 +116,7 @@ public class SpringfieldScraper implements Scraper
                                                 , shop.getName()
                                                 , section.getName()
                                                 , link 
+                                                , description
                                                 , section.isMan()
                                                 , variants ) );
                             prodOK++;

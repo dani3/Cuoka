@@ -47,7 +47,8 @@ public class mainPdH
                 String name = document.select( "#product-information h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
-
+                String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
+                
                 Elements colors = document.select( "ul.product_colors li" );
 
                 // Si hay varios colores
@@ -87,7 +88,7 @@ public class mainPdH
                     Element color = colors.first();
 
                     String colorReference = reference;
-                    String colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );
+                    String colorURL = fixURL( color.select( "img" ).attr( "src" ) );                    
                     String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
 
                     List<Image> imagesURL = new ArrayList<>();
@@ -110,6 +111,7 @@ public class mainPdH
                                             , ""
                                             , ""
                                             , link 
+                                            , description
                                             , true
                                             , variants ) );                
                 } else {
@@ -138,6 +140,7 @@ public class mainPdH
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
+        System.out.println( "Description: " + p.getDescription());
         System.out.println( "Precio: " + p.getPrice() + " €" );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )

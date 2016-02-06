@@ -54,7 +54,8 @@ public class HyMScraper implements Scraper
                 String name = document.select( "h1.product-item-headline" ).first().ownText().toUpperCase(); 
                 String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
-
+                String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
+                
                 if ( ! containsProduct( productList, reference ) )
                 {
                     // Obtener los colores
@@ -91,6 +92,7 @@ public class HyMScraper implements Scraper
                                             , shop.getName()
                                             , section.getName()
                                             , link 
+                                            , description
                                             , section.isMan()
                                             , variants ) );
                     }

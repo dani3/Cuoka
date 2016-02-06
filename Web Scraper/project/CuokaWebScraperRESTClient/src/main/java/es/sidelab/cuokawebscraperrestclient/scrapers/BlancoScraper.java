@@ -55,7 +55,8 @@ public class BlancoScraper implements Scraper
                 String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
                 String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
-
+                String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
+                
                 // Obtenemos los colores del producto
                 boolean first = true;
                 List<ColorVariant> variants = new ArrayList<>();
@@ -91,6 +92,7 @@ public class BlancoScraper implements Scraper
                                             , shop.getName()
                                             , section.getName()
                                             , link 
+                                            , description
                                             , section.isMan()
                                             , variants ) );
                 } else
