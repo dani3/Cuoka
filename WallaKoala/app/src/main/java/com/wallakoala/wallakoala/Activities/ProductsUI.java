@@ -613,6 +613,7 @@ public class ProductsUI extends AppCompatActivity
             double price = jsonObject.getDouble("1");
             String link = jsonObject.getString("5");
             boolean newness = jsonObject.getBoolean("7");
+            String description = jsonObject.getString("8");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -628,10 +629,10 @@ public class ProductsUI extends AppCompatActivity
                 colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
             }
 
-            Product product = new Product( name, shop, section, price, link, colors, newness );
+            Product product = new Product( name, shop, section, price, link, description, colors, newness );
 
             if (product.isOkay())
-                productsList.add( new Product( name, shop, section, price, link, colors, newness ) );
+                productsList.add( new Product( name, shop, section, price, link, description, colors, newness ) );
 
         }
 

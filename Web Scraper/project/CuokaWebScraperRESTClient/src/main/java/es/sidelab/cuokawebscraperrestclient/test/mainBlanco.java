@@ -40,6 +40,9 @@ public class mainBlanco
             String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
             String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
             
+            if ( description.length() > 255 )
+                description = description.substring(0, 255);
+            
             // Obtenemos los colores del producto
             boolean first = true;
             List<ColorVariant> variants = new ArrayList<>();

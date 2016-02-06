@@ -156,4 +156,5 @@ public class ColorIconListAdapter extends BaseAdapter
     {
         mIconSelected = position;
     }
+
 }

@@ -92,6 +92,7 @@ public class ProductUI extends AppCompatActivity
     protected TextView mProductNameTextView;
     protected TextView mProductPriceTextView;
     protected TextView mProductReferenceTextView;
+    protected TextView mProductDescriptionTextView;
 
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButton;
@@ -195,19 +196,21 @@ public class ProductUI extends AppCompatActivity
      */
     protected void _initViews()
     {
-        mImageView                = (ImageView)findViewById(R.id.imageView);
-        mTopLevelLayout           = (FrameLayout)findViewById(R.id.topLevelLayout);
-        mFloatingActionButton     = (FloatingActionButton)findViewById(R.id.floatingButton);
-        mCoordinatorLayout        = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
-        mProductInfoLayout        = (LinearLayout)findViewById(R.id.product_info);
-        mProductNameTextView      = (TextView)findViewById(R.id.product_info_name);
-        mProductPriceTextView     = (TextView)findViewById(R.id.product_info_price);
-        mProductReferenceTextView = (TextView)findViewById(R.id.product_info_reference);
+        mImageView                  = (ImageView)findViewById(R.id.imageView);
+        mTopLevelLayout             = (FrameLayout)findViewById(R.id.topLevelLayout);
+        mFloatingActionButton       = (FloatingActionButton)findViewById(R.id.floatingButton);
+        mCoordinatorLayout          = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
+        mProductInfoLayout          = (LinearLayout)findViewById(R.id.product_info);
+        mProductNameTextView        = (TextView)findViewById(R.id.product_info_name);
+        mProductPriceTextView       = (TextView)findViewById(R.id.product_info_price);
+        mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
+        mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
 
         /* Inicializamos la info del producto */
         mProductNameTextView.setText(mProduct.getName());
         mProductPriceTextView.setText(String.format("%.2f", mProduct.getPrice()) + "€");
         mProductReferenceTextView.setText(mProduct.getColors().get(0).getReference());
+        mProductDescriptionTextView.setText(mProduct.getDescription());
         mProductInfoLayout.setVisibility(View.INVISIBLE);
 
         /* Floating Button */
@@ -658,4 +661,5 @@ public class ProductUI extends AppCompatActivity
         // Deshabilitamos las animaciones de Android
         overridePendingTransition(0, 0);
     }
+
 }

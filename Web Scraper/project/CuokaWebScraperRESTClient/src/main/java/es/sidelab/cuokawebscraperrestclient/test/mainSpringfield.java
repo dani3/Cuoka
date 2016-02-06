@@ -56,6 +56,9 @@ public class mainSpringfield
                     String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
                     String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
 
+                    if ( description.length() > 255 )
+                        description = description.substring(0, 255);
+                    
                     // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
                     if ( ! containsProduct( productList, reference ) )
                     {

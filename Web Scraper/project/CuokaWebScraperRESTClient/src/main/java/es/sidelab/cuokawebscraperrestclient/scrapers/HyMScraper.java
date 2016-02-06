@@ -56,6 +56,9 @@ public class HyMScraper implements Scraper
                 String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
                 String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
                 
+                if ( description.length() > 255 )
+                    description = description.substring(0, 255);
+                
                 if ( ! containsProduct( productList, reference ) )
                 {
                     // Obtener los colores

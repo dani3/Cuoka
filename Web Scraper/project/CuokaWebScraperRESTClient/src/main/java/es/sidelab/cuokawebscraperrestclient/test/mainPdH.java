@@ -49,6 +49,9 @@ public class mainPdH
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
                 
+                if ( description.length() > 255 )
+                    description = description.substring(0, 255);
+                
                 Elements colors = document.select( "ul.product_colors li" );
 
                 // Si hay varios colores

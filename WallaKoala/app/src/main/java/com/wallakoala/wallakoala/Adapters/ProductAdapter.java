@@ -157,4 +157,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     {
         return mColor.getNumberOfImages();
     }
+
 }
