@@ -16,6 +16,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -201,6 +202,7 @@ public class ProductUI extends AppCompatActivity
         mProductPriceTextView.setText(String.format("%.2f", mProduct.getPrice()) + "€");
         mProductReferenceTextView.setText(mProduct.getColors().get(0).getReference());
         mProductDescriptionTextView.setText(mProduct.getDescription());
+
         mProductInfoLayout.setVisibility(View.INVISIBLE);
 
         /* Floating Button */
@@ -214,7 +216,8 @@ public class ProductUI extends AppCompatActivity
                 int offset = mProductInfoLayout.getHeight() - bottomHalf;
 
                 // Deshabilitamos el scroll si se abre la pantalla de info y cambiamos el icono del FAB
-                if (mProductInfoLayout.getVisibility() == View.INVISIBLE) {
+                if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                {
                     mImagesRecylcerView.addOnItemTouchListener(mScrollDisabler);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -237,7 +240,8 @@ public class ProductUI extends AppCompatActivity
                                 getResources().getDrawable(R.drawable.ic_add_white));
                 }
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
                     SupportAnimator animator =
                             ViewAnimationUtils.createCircularReveal(mProductInfoLayout
                                     , mFloatingButtonX
@@ -245,7 +249,8 @@ public class ProductUI extends AppCompatActivity
                                     , 0
                                     , mRadiusReveal);
 
-                    if (mProductInfoLayout.getVisibility() == View.INVISIBLE) {
+                    if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                    {
                         mProductInfoLayout.setVisibility(View.VISIBLE);
 
                         animator.setDuration(200);
@@ -293,7 +298,8 @@ public class ProductUI extends AppCompatActivity
                     }
 
                 } else {
-                    if (mProductInfoLayout.getVisibility() == View.INVISIBLE) {
+                    if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                    {
                         mProductInfoLayout.setVisibility(View.VISIBLE);
 
                         Animator animator =
@@ -378,7 +384,11 @@ public class ProductUI extends AppCompatActivity
     {
         mColorIconListView = (ListView)findViewById(R.id.product_info_list_colors);
 
-        mColorIconAdapter = new ColorIconListAdapter(this, mProduct.getColors(), mProduct.getShop(), mProduct.getSection());
+        mColorIconAdapter = new ColorIconListAdapter(this
+                                    , mProduct.getColors()
+                                    , mProduct.getShop()
+                                    , mProduct.getSection());
+
         mColorIconListView.setAdapter(mColorIconAdapter);
 
         // Listener para cambiar de color

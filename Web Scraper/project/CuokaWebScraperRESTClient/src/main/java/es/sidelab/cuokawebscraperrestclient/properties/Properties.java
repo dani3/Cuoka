@@ -18,5 +18,5 @@ public class Properties
     //public static final String HTML_PATH = "C:\\Users\\lux_f\\Dropbox\\Cuoka\\Cuoka\\scrapers_files";
     //public static final String RENDER_SCRIPT = "C:\\Users\\lux_f\\OneDrive\\Documentos\\GitHub\\Cuokka\\Web Scraper\\scripts";
     
-    public static final String ACTIVITY_PATH = "C:\\Users\\lux_f\\Dropbox\\Cuoka\\Cuoka\\Activity.txt";
+    public static final String ACTIVITY_PATH = "C:\\Users\\Dani\\Dropbox\\Cuoka\\Activity.txt";
 }

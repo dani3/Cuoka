@@ -25,12 +25,13 @@ public class mainPdH
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Camisas_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Polo_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
+        int colorId = 1;
         for ( Element element : products )
         {
             try 
@@ -46,7 +47,7 @@ public class mainPdH
                 // Obtener los atributos propios del producto
                 String link = shop + element.attr( "href" );
                 String name = document.select( "#product-information h1" ).first().ownText(); 
-                String price = document.select( "strong.product-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+                String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
                 
@@ -71,8 +72,16 @@ public class mainPdH
                             if ( color.select( "img" ).first() != null )
                                 colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );                                
                             
+                            // Por si acaso los colores se llaman igual, ponemos un numero al final del color para que no se repitan.
                             String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
-
+                            for ( Element sameColor : colors )
+                            {
+                                if ( sameColor.select( "img" ).first().attr( "alt" ).toUpperCase().equals( colorName ) )
+                                {
+                                    colorName = colorName.concat(Integer.toString(colorId++));
+                                }
+                            }
+                            
                             List<Image> imagesURL = new ArrayList<>();
                             Elements images = document.select( "#product_image_list li" );
                             for ( Element img : images )                                     

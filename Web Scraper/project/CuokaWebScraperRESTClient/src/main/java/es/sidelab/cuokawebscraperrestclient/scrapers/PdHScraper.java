@@ -39,6 +39,7 @@ public class PdHScraper implements Scraper
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
+        int colorId = 1;
         for ( Element element : products )
         {
             try 
@@ -79,7 +80,15 @@ public class PdHScraper implements Scraper
                             if ( color.select( "img" ).first() != null )
                                 colorURL = fixURL( color.select( "img" ).first().attr( "src" ) ); 
                             
+                            // Por si acaso los colores se llaman igual, ponemos un numero al final del color para que no se repitan.
                             String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
+                            for ( Element sameColor : colors )
+                            {
+                                if ( sameColor.select( "img" ).first().attr( "alt" ).toUpperCase().equals( colorName ) )
+                                {
+                                    colorName = colorName.concat(Integer.toString(colorId++));
+                                }
+                            }
 
                             List<Image> imagesURL = new ArrayList<>();
                             Elements images = document.select( "#product_image_list li" );
