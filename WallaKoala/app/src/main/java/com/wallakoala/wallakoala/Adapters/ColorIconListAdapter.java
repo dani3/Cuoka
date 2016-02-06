@@ -129,7 +129,7 @@ public class ColorIconListAdapter extends BaseAdapter
         } else {
             String imageFile = mColorList.get(position).getColorPath();
 
-            url = Utils.fixUrl(SERVER_URL + PREDEFINED_ICONS_PATH + imageFile);
+            url = Utils.fixUrl(SERVER_URL + PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
         }
 
         if (position == mIconSelected)
