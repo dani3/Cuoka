@@ -25,7 +25,7 @@ public class mainPdH
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Polos_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\false\\Pedro Del Hierro_Chaquetas_false.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
@@ -58,9 +58,7 @@ public class mainPdH
                                                                                     .ownText()
                                                                                     .replaceAll( "€", "" )
                                                                                     .replaceAll( ",", "." ).trim();
-                
-                System.out.println(different_price);
-                
+                                
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
                 
@@ -68,7 +66,7 @@ public class mainPdH
 
                 // Si hay varios colores
                 if ( colors.size() > 1 )
-                {
+                {                    
                     // Nos quedamos con el codigo del color, para diferenciar las imagenes
                     String colorCode = link.substring( link.indexOf( "?" ) + 1 ).replace( "=" , "_" );
 
@@ -158,7 +156,7 @@ public class mainPdH
             
         } // for products
         
-        Product p = productList.get( 2 );
+        Product p = productList.get( 0 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );

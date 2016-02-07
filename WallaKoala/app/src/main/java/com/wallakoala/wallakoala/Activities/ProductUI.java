@@ -271,7 +271,8 @@ public class ProductUI extends AppCompatActivity
 
                     mCurrentColor = position;
 
-                    mProductReferenceTextView.setText(mProduct.getColors().get(mCurrentColor).getReference());
+                    String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(mCurrentColor).getReference();
+                    mProductReferenceTextView.setText(Html.fromHtml(reference));
                 }
 
             }
