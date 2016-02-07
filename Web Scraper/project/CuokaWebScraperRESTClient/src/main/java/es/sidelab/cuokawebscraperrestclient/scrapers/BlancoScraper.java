@@ -53,9 +53,11 @@ public class BlancoScraper implements Scraper
                 // Obtener todos los atributos propios del producto
                 String link = shop.getURL().toString() + element.attr( "href" );
                 String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
                 String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
+                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).trim();
+                String decimals = document.select( "p.product-price small" ).first().ownText().replaceAll( ",", "." ).trim();
+                price = price + decimals;
                 
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);

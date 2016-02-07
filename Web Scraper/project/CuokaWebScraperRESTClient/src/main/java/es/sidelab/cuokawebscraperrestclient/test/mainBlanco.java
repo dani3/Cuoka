@@ -19,7 +19,7 @@ public class mainBlanco
         // Lista preparada para la concurrencia donde escribiran todos los scrapers
         List<Product> productList = new ArrayList<>();
         
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Blanco_true\\false\\Blanco_Camisas_false.html" );
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Blanco_true\\false\\Blanco_Blazers_false.html" );
         
         Document document = Jsoup.parse( html, "UTF-8" );
         
@@ -34,11 +34,22 @@ public class mainBlanco
                                 .ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
+            String different_price = null;
             String link = "https://www.blanco.com/" + element.attr( "href" );
             String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-            String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
             String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
+            String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).trim();
+            String decimals = document.select( "p.product-price small" ).first().ownText().replaceAll( ",", "." ).trim();
+            price = price + decimals;
+            
+            // Sacamos el descuento si lo hay
+            if ( ! document.select( "span.product-price-sale" ).isEmpty() )
+            {
+                different_price = document.select( "span.product-price-sale" ).first().ownText().replaceAll( "€", "" ).trim();
+                decimals = document.select( "span.product-price-sale small" ).first().ownText().replaceAll( ",", "." ).trim();
+                different_price = different_price + decimals;
+            }
             
             if ( description.length() > 255 )
                 description = description.substring(0, 255);
@@ -81,7 +92,7 @@ public class mainBlanco
             
         } // for products
         
-        Product p = productList.get( 1 );
+        Product p = productList.get( 0 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );

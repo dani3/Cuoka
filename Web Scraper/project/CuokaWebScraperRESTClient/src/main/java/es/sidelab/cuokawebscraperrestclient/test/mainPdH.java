@@ -25,7 +25,7 @@ public class mainPdH
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Polo_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Polos_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
@@ -45,11 +45,21 @@ public class mainPdH
                                                           .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
+                String different_price = null;
                 String link = shop + element.attr( "href" );
                 String name = document.select( "#product-information h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
+                
+                // Sacamos el descuento si lo hay
+                if ( ! document.select( "strong.product-price span" ).isEmpty() )
+                    different_price = document.select( "strong.product-price span" ).first()
+                                                                                    .ownText()
+                                                                                    .replaceAll( "€", "" )
+                                                                                    .replaceAll( ",", "." ).trim();
+                
+                System.out.println(different_price);
                 
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
@@ -148,7 +158,7 @@ public class mainPdH
             
         } // for products
         
-        Product p = productList.get( 0 );
+        Product p = productList.get( 2 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
