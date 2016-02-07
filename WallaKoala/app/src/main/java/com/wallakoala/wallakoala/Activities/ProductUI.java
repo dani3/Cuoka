@@ -16,6 +16,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -195,11 +196,15 @@ public class ProductUI extends AppCompatActivity
         mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
 
         /* Inicializamos la info del producto */
+        String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
+        String description = "<b>Descripción: </b>" +  mProduct.getDescription();
+        String price = String.format("%.2f", mProduct.getPrice()) + "€";
+        
         mProductNameTextView.setText(mProduct.getName());
         mProductShopTextView.setText(mProduct.getShop());
-        mProductDescriptionTextView.setText(mProduct.getDescription());
-        mProductReferenceTextView.setText(mProduct.getColors().get(0).getReference());
-        mProductPriceTextView.setText(String.format("%.2f", mProduct.getPrice()) + "€");
+        mProductDescriptionTextView.setText(Html.fromHtml(description));
+        mProductReferenceTextView.setText(Html.fromHtml(reference));
+        mProductPriceTextView.setText(price);
 
         mProductInfoLayout.setVisibility(View.INVISIBLE);
 
