@@ -27,8 +27,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 {
     /* Constants */
     private static final String TAG = "CUOKA";
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    protected static final String IMAGES_PATH = "/images/products/";
+    private static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    private static final String IMAGES_PATH = "/images/products/";
 
     /* Context */
     private static Context mContext;
@@ -68,7 +68,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             mProductImageView.getLayoutParams().height = (int)(Resources.getSystem()
                                                                         .getDisplayMetrics().widthPixels * mAspectRatio);
 
-            mProductImageView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+            mProductImageView.setBackgroundColor(mContext.getResources()
+                                                         .getColor(android.R.color.transparent));
 
             if (getAdapterPosition() != 0)
                 mLoadingView.setVisibility(View.VISIBLE);
@@ -156,4 +157,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     {
         return mColor.getNumberOfImages();
     }
+
 }

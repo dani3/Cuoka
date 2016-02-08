@@ -3,7 +3,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *  
 from PyQt4.QtWebKit import *  
 
-url = 'http://www.massimodutti.com/es/es/men/camisas-casual/camisa-blanca-dibujo-c1403341p6954009.html?colorId=250&categoryNav=1403341'
+url = 'http://www.zara.com/es/es/hombre/bombers/cazadora-estilo-bomber-c813531p3422501.html'
 
 #Take this class for granted.Just use result of rendering.
 class Render(QWebPage):  

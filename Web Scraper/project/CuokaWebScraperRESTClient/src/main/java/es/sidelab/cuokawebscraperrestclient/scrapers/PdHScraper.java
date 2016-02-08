@@ -39,6 +39,7 @@ public class PdHScraper implements Scraper
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
+        int colorId = 1;
         for ( Element element : products )
         {
             try 
@@ -48,6 +49,7 @@ public class PdHScraper implements Scraper
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
                 document = Jsoup.connect( shop.getURL().toString()
                                 + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
+                                                          .header( "Accept-Language", "es" )
                                                           .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
@@ -55,7 +57,11 @@ public class PdHScraper implements Scraper
                 String name = document.select( "#product-information h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
-
+                String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
+                
+                if ( description.length() > 255 )
+                    description = description.substring(0, 255);
+                
                 Elements colors = document.select( "ul.product_colors li" );
 
                 // Si hay varios colores
@@ -69,8 +75,20 @@ public class PdHScraper implements Scraper
                         if( color.className().equals( colorCode ) )
                         {
                             String colorReference = reference;
-                            String colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );
+                            String colorURL = null;
+                            
+                            if ( color.select( "img" ).first() != null )
+                                colorURL = fixURL( color.select( "img" ).first().attr( "src" ) ); 
+                            
+                            // Por si acaso los colores se llaman igual, ponemos un numero al final del color para que no se repitan.
                             String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
+                            for ( Element sameColor : colors )
+                            {
+                                if ( sameColor.select( "img" ).first().attr( "alt" ).toUpperCase().equals( colorName ) )
+                                {
+                                    colorName = colorName.concat(Integer.toString(colorId++));
+                                }
+                            }
 
                             List<Image> imagesURL = new ArrayList<>();
                             Elements images = document.select( "#product_image_list li" );
@@ -91,7 +109,7 @@ public class PdHScraper implements Scraper
                     Element color = colors.first();
 
                     String colorReference = reference;
-                    String colorURL = fixURL( color.select( "img" ).first().attr( "src" ) );
+                    String colorURL = fixURL( color.select( "img" ).attr( "src" ) );
                     String colorName = color.select( "img" ).first().attr( "alt" ).toUpperCase();
 
                     List<Image> imagesURL = new ArrayList<>();
@@ -107,7 +125,7 @@ public class PdHScraper implements Scraper
                 }
 
                 // Si el producto es nuevo, se inserta directamente, si no, se actualiza con el nuevo color
-                if ( ! containsProduct( productList, reference ) )
+                if ( ! containsProduct( productList, reference, section.getName() ) )
                 {
                     if ( ! colors.isEmpty() )
                     {
@@ -116,11 +134,12 @@ public class PdHScraper implements Scraper
                                                 , shop.getName()
                                                 , section.getName()
                                                 , link 
+                                                , description
                                                 , section.isMan()
                                                 , variants ) );  
                         prodOK++;
-                    }
-                    else
+                        
+                    } else
                         prodNOK++;
                     
                 } else {
@@ -158,11 +177,11 @@ public class PdHScraper implements Scraper
         return url;
     } 
     
-    private static boolean containsProduct( List<Product> productList, String reference )
+    private static boolean containsProduct( List<Product> productList, String reference, String section )
     {
         for ( Product p : productList )
             for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
+                if ( cv.getReference().equals( reference ) && ( p.getSection().equals( section ) ) )
                     return true;
         
         return false;

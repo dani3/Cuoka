@@ -3,38 +3,45 @@ package com.wallakoala.wallakoala.Activities;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.OvershootInterpolator;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 
 import java.io.File;
-import java.io.IOException;
+
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * @class Pantalla de un producto.
@@ -44,30 +51,42 @@ import java.io.IOException;
 public class ProductUI extends AppCompatActivity
 {
     /* Constants */
-    private static final String TAG = "CUOKA";
-    private static final String PACKAGE = "com.wallakoala.wallakoala";
-    private static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
-    private static final TimeInterpolator sAccelerator = new AccelerateInterpolator();
-    private static final int ANIM_DURATION = 500;
-    private static boolean EXITING;
+    protected static final String TAG = "CUOKA";
+    protected static final String PACKAGE = "com.wallakoala.wallakoala";
+    protected static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
+    protected static final int ANIM_DURATION = 500;
+    protected static boolean EXITING;
+    protected static boolean COLLAPSING;
+
+    /* Context */
+    protected static Context mContext;
 
     /* Container Views */
     protected FrameLayout mTopLevelLayout;
     protected RecyclerView mImagesRecylcerView;
     protected CoordinatorLayout mCoordinatorLayout;
+    protected LinearLayout mProductInfoLayout;
+    protected ListView mColorIconListView;
 
     /* Adapter */
     protected ProductAdapter mImagesAdapter;
+    protected ColorIconListAdapter mColorIconAdapter;
 
     /* LayoutManager */
     protected LinearLayoutManager mLinearLayoutManager;
 
     /* Views */
     protected ImageView mImageView;
-    protected View mProductInfo;
+
+    /* TextViews */
+    protected TextView mProductNameTextView;
+    protected TextView mProductPriceTextView;
+    protected TextView mProductReferenceTextView;
+    protected TextView mProductDescriptionTextView;
+    protected TextView mProductShopTextView;
 
     /* Floating Button */
-    protected FloatingActionButton mFloatingActionButton;
+    protected FloatingActionButton mFloatingActionButtonPlus;
 
     /* Animations */
     protected Animation mExplodeAnimation, mImplodeAnimation;
@@ -78,6 +97,7 @@ public class ProductUI extends AppCompatActivity
     protected String mBitmapUri;
     protected BitmapDrawable mBitmapDrawable;
     protected ColorDrawable mBackground;
+    protected int mCurrentColor;
 
     /* Others */
     protected int mLeftDelta;
@@ -89,6 +109,11 @@ public class ProductUI extends AppCompatActivity
     protected float mThumbnailWidth;
     protected float mThumbnailHeight;
     protected float mTopOffset;
+    protected int mFloatingButtonX;
+    protected int mFloatingButtonY;
+    protected int mFloatingButtonTop;
+    protected int mRadiusReveal;
+    protected double mRatio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -100,6 +125,7 @@ public class ProductUI extends AppCompatActivity
 
         _initData();
         _initViews();
+        _initIconListView();
         _initRecyclerView();
         _initAnimations();
 
@@ -134,40 +160,14 @@ public class ProductUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa todas las vistas.
-     */
-    protected void _initViews()
-    {
-        mImageView            = (ImageView)findViewById(R.id.imageView);
-        mTopLevelLayout       = (FrameLayout)findViewById(R.id.topLevelLayout);
-        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.floatingButton);
-        mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
-
-        /* Floatin Button */
-        mFloatingActionButton.setVisibility(View.GONE);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        /* Bitmap */
-        File filePath = getFileStreamPath(mBitmapUri);
-        mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
-        mImageView.setImageDrawable(mBitmapDrawable);
-
-        /* Background */
-        mBackground = new ColorDrawable(Color.WHITE);
-        mTopLevelLayout.setBackground(mBackground);
-    }
-
-    /**
      * Metodo que inicializa todos los datos.
      */
     protected void _initData()
     {
         EXITING = false;
+        COLLAPSING = false;
+
+        mContext = this;
 
         Bundle bundle = getIntent().getExtras();
 
@@ -179,6 +179,104 @@ public class ProductUI extends AppCompatActivity
         mProduct         = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
 
         mTopOffset = 0.0f;
+
+        mCurrentColor = 0;
+    }
+
+    /**
+     * Metodo que inicializa todas las vistas.
+     */
+    protected void _initViews()
+    {
+        mImageView                  = (ImageView)findViewById(R.id.imageView);
+        mTopLevelLayout             = (FrameLayout)findViewById(R.id.topLevelLayout);
+        mFloatingActionButtonPlus   = (FloatingActionButton)findViewById(R.id.floatingButton);
+        mCoordinatorLayout          = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
+        mProductInfoLayout          = (LinearLayout)findViewById(R.id.product_info);
+        mProductNameTextView        = (TextView)findViewById(R.id.product_info_name);
+        mProductPriceTextView       = (TextView)findViewById(R.id.product_info_price);
+        mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
+        mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
+        mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
+
+        /* Inicializamos la info del producto */
+        String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
+        String description = "<b>Descripción: </b>" +  mProduct.getDescription();
+        String price = String.format("%.2f", mProduct.getPrice()) + "€";
+
+        mProductNameTextView.setText(mProduct.getName());
+        mProductShopTextView.setText(mProduct.getShop());
+        mProductDescriptionTextView.setText(Html.fromHtml(description));
+        mProductReferenceTextView.setText(Html.fromHtml(reference));
+        mProductPriceTextView.setText(price);
+
+        mProductInfoLayout.setVisibility(View.INVISIBLE);
+
+        /* Floating Button */
+        mFloatingActionButtonPlus.setVisibility(View.GONE);
+        mFloatingActionButtonPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                    expandInfo();
+                else
+                    collapseInfo();
+            }
+        });
+
+        /* Cargamos el bitmap de la imagen en baja calidad */
+        File filePath = getFileStreamPath(mBitmapUri);
+        mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
+        mImageView.setImageDrawable(mBitmapDrawable);
+
+        /* Calculamos el aspect ratio de la imagen */
+        mRatio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
+
+        /* Background */
+        mBackground = new ColorDrawable(Color.WHITE);
+        mTopLevelLayout.setBackground(mBackground);
+    }
+
+    /**
+     * Metodo que inicializa la ListView de iconos.
+     */
+    protected void _initIconListView()
+    {
+        mColorIconListView = (ListView)findViewById(R.id.product_info_list_colors);
+
+        mColorIconAdapter = new ColorIconListAdapter(this
+                                    , mProduct.getColors()
+                                    , mProduct.getShop()
+                                    , mProduct.getSection());
+
+        mColorIconListView.setAdapter(mColorIconAdapter);
+
+        // Listener para cambiar de color
+        mColorIconListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mCurrentColor != position) {
+                    mColorIconAdapter.setSelected(position);
+                    mColorIconAdapter.notifyDataSetChanged();
+
+                    mImagesAdapter = new ProductAdapter(ProductUI.this
+                            , mProduct.getColors().get(position)
+                            , mRatio
+                            , mProduct.getShop()
+                            , mProduct.getSection()
+                            , mImageView);
+
+                    mImagesRecylcerView.setAdapter(mImagesAdapter);
+
+                    mCurrentColor = position;
+
+                    String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(mCurrentColor).getReference();
+                    mProductReferenceTextView.setText(Html.fromHtml(reference));
+                }
+
+            }
+        });
     }
 
     /**
@@ -186,15 +284,12 @@ public class ProductUI extends AppCompatActivity
      */
     protected void _initRecyclerView()
     {
-        // Calculamos el aspect ratio de la imagen
-        double ratio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
-
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         mImagesAdapter = new ProductAdapter(this
-                                , mProduct.getColors().get(0)
-                                , ratio
+                                , mProduct.getColors().get(mCurrentColor)
+                                , mRatio
                                 , mProduct.getShop()
                                 , mProduct.getSection()
                                 , mImageView);
@@ -205,11 +300,11 @@ public class ProductUI extends AppCompatActivity
 
         mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            }
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
                 mTopOffset += dy;
             }
         });
@@ -225,19 +320,19 @@ public class ProductUI extends AppCompatActivity
         mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
         mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
 
-        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener()
-        {
+        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                mFloatingActionButton.setVisibility(View.GONE);
+            public void onAnimationStart(Animation animation) {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationEnd(Animation animation) {
+                mFloatingActionButtonPlus.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
     }
 
@@ -245,7 +340,7 @@ public class ProductUI extends AppCompatActivity
      * La animacion de entrada escala la imagen desde la pequeña hasta la posicion/tamaño de la grande.
      * En paralelo, el fondo se va oscureciendo.
      */
-    public void runEnterAnimation()
+    private void runEnterAnimation()
     {
         final long duration = (int)(ANIM_DURATION * 0.5);
 
@@ -261,29 +356,43 @@ public class ProductUI extends AppCompatActivity
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
                             .setInterpolator(sDecelerator)
-                            .setListener(new Animator.AnimatorListener()
-                            {
+                            .setListener(new Animator.AnimatorListener() {
                                 @Override
-                                public void onAnimationStart(Animator animation) {}
+                                public void onAnimationStart(Animator animation) {
+                                }
 
                                 @Override
-                                public void onAnimationEnd(Animator animation)
-                                {
-                                    if (!EXITING)
-                                    {
+                                public void onAnimationEnd(Animator animation) {
+                                    if (!EXITING) {
                                         mImagesRecylcerView.setVisibility(View.VISIBLE);
 
                                         // Hacemos aparecer el FloatingButton
-                                        mFloatingActionButton.setVisibility(View.VISIBLE);
-                                        mFloatingActionButton.startAnimation(mExplodeAnimation);
+                                        mFloatingActionButtonPlus.setVisibility(View.VISIBLE);
+                                        mFloatingActionButtonPlus.startAnimation(mExplodeAnimation);
+
+                                        // Una vez cargado, nos quedamos con las coordenadas del FAB
+                                        mFloatingButtonX = (mFloatingActionButtonPlus.getLeft()
+                                                + mFloatingActionButtonPlus.getRight()) / 2;
+
+                                        mFloatingButtonY = ((int) mFloatingActionButtonPlus.getY()
+                                                + mFloatingActionButtonPlus.getHeight()) / 2;
+
+                                        int[] screenLocation = new int[2];
+                                        mFloatingActionButtonPlus.getLocationOnScreen(screenLocation);
+                                        mFloatingButtonTop = screenLocation[1];
+
+                                        mRadiusReveal = Math.max(mProductInfoLayout.getWidth()
+                                                , mProductInfoLayout.getHeight());
                                     }
                                 }
 
                                 @Override
-                                public void onAnimationCancel(Animator animation) {}
+                                public void onAnimationCancel(Animator animation) {
+                                }
 
                                 @Override
-                                public void onAnimationRepeat(Animator animation) {}
+                                public void onAnimationRepeat(Animator animation) {
+                                }
                             });
 
         // Efecto fade para oscurecer la pantalla
@@ -296,16 +405,14 @@ public class ProductUI extends AppCompatActivity
      * La animacion de salida es la misma animacion de entrada pero al reves
      * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
-    public void runExitAnimation(final Runnable endAction)
+    private void runExitAnimation(final Runnable endAction)
     {
         final long duration = (int)(ANIM_DURATION * 0.6);
 
-        mImageView.setVisibility(View.VISIBLE);
-
-        // Quitamos el recyclerView
-        mImagesRecylcerView.setVisibility(View.GONE);
-
         EXITING = true;
+
+        mImageView.setVisibility(View.VISIBLE);
+        mImagesRecylcerView.setVisibility(View.GONE);
 
         // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
         mImageView.setTranslationY(-mTopOffset);
@@ -315,7 +422,10 @@ public class ProductUI extends AppCompatActivity
                             .translationX(mLeftDelta).translationY(mTopDelta)
                             .withEndAction(endAction);
 
-        mFloatingActionButton.startAnimation(mImplodeAnimation);
+        if (mProductInfoLayout.getVisibility() == View.VISIBLE)
+            collapseInfo();
+
+        mFloatingActionButtonPlus.startAnimation(mImplodeAnimation);
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
@@ -345,4 +455,163 @@ public class ProductUI extends AppCompatActivity
         // Deshabilitamos las animaciones de Android
         overridePendingTransition(0, 0);
     }
+
+    private void expandInfo()
+    {
+        // Calculamos cuanto hay que desplazar el FAB hasta el borde del layout de info.
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButtonPlus.getHeight() / 2));
+        int offset = mProductInfoLayout.getHeight() - bottomHalf;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            mFloatingActionButtonPlus.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_remove_white
+                            , mContext.getTheme()));
+        else
+            mFloatingActionButtonPlus.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_remove_white));
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            SupportAnimator animator =
+                    ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                            , mFloatingButtonX
+                            , mFloatingButtonY
+                            , 0
+                            , mRadiusReveal);
+
+            mProductInfoLayout.setVisibility(View.VISIBLE);
+
+            animator.setDuration(200);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            mFloatingActionButtonPlus.animate()
+                    .translationYBy(-offset)
+                    .setDuration(400)
+                    .setStartDelay(75)
+                    .setInterpolator(new OvershootInterpolator()).start();
+
+            animator.start();
+
+        } else {
+            mProductInfoLayout.setVisibility(View.VISIBLE);
+
+            Animator animator =
+                    android.view.ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                            , mFloatingButtonX
+                            , mFloatingButtonY
+                            , 0
+                            , mRadiusReveal);
+
+            animator.setDuration(200);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            mFloatingActionButtonPlus.animate()
+                    .translationYBy(-offset)
+                    .setDuration(400)
+                    .setStartDelay(75)
+                    .setInterpolator(new OvershootInterpolator()).start();
+
+            animator.start();
+        }
+    }
+
+    private void collapseInfo()
+    {
+        COLLAPSING = true;
+
+        // Calculamos cuanto hay que desplazar el FAB hasta el borde del layout de info.
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButtonPlus.getHeight() / 2));
+        int offset = mProductInfoLayout.getHeight() - bottomHalf;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            mFloatingActionButtonPlus.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_add_white
+                            , mContext.getTheme()));
+        else
+            mFloatingActionButtonPlus.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_add_white));
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            SupportAnimator animator =
+                    ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                            , mFloatingButtonX
+                            , mFloatingButtonY
+                            , 0
+                            , mRadiusReveal);
+
+            SupportAnimator animator_reverse = animator.reverse();
+
+            animator_reverse.setDuration(200);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+                @Override
+                public void onAnimationStart() {
+                }
+
+                @Override
+                public void onAnimationEnd() {
+                    mProductInfoLayout.setVisibility(View.INVISIBLE);
+                    COLLAPSING = false;
+                }
+
+                @Override
+                public void onAnimationCancel() {
+                }
+
+                @Override
+                public void onAnimationRepeat() {
+                }
+            });
+
+            mFloatingActionButtonPlus.animate()
+                    .translationYBy(offset)
+                    .setDuration(400)
+                    .setStartDelay(75)
+                    .setInterpolator(new OvershootInterpolator()).start();
+
+            animator_reverse.start();
+
+        } else {
+            Animator animator =
+                    android.view.ViewAnimationUtils.createCircularReveal(mProductInfoLayout
+                            , mFloatingButtonX
+                            , mFloatingButtonY
+                            , mRadiusReveal
+                            , 0);
+
+            animator.setDuration(200);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    COLLAPSING = false;
+                    mProductInfoLayout.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+            });
+
+            mFloatingActionButtonPlus.animate()
+                    .translationYBy(offset)
+                    .setDuration(400)
+                    .setStartDelay(75)
+                    .setInterpolator(new OvershootInterpolator()).start();
+
+            animator.start();
+        }
+    }
+
 }

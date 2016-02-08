@@ -53,9 +53,15 @@ public class BlancoScraper implements Scraper
                 // Obtener todos los atributos propios del producto
                 String link = shop.getURL().toString() + element.attr( "href" );
                 String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
-
+                String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
+                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).trim();
+                String decimals = document.select( "p.product-price small" ).first().ownText().replaceAll( ",", "." ).trim();
+                price = price + decimals;
+                
+                if ( description.length() > 255 )
+                    description = description.substring(0, 255);
+                
                 // Obtenemos los colores del producto
                 boolean first = true;
                 List<ColorVariant> variants = new ArrayList<>();
@@ -65,7 +71,7 @@ public class BlancoScraper implements Scraper
                 Elements colors = colorList.select( "span" );
                 for ( Element color : colors )
                 {
-                    List<Image> imagesURL = null;
+                    List<Image> imagesURL = new ArrayList<>();
 
                     String colorName = color.ownText().toUpperCase();
 
@@ -73,14 +79,13 @@ public class BlancoScraper implements Scraper
                     if ( first )
                     {
                         Elements images = document.select( "#product-gallery-list img" );
-                        imagesURL = new ArrayList<>();
                         for ( Element img : images )
                             imagesURL.add( new Image( fixURL( shop.getURL().toString() + img.attr( "src" ) ) ) );
 
                         first = false;
-                    }
 
-                    variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                        variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                    }
                 }
 
                 if ( ! colors.isEmpty() )
@@ -92,6 +97,7 @@ public class BlancoScraper implements Scraper
                                             , shop.getName()
                                             , section.getName()
                                             , link 
+                                            , description
                                             , section.isMan()
                                             , variants ) );
                 } else

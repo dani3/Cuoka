@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:alpha="0.75">
+            android:alpha="0.85">
 
             <!-- Info extra -->
             <include android:id="@+id/extraInfo"

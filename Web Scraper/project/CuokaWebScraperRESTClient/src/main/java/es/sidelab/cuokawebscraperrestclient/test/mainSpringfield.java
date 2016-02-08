@@ -47,14 +47,20 @@ public class mainSpringfield
                 try {
                     // Obtener el HTML del producto
                     document = Jsoup.connect( element.attr( "href" ) )
-                                        .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+                                        .timeout( Properties.TIMEOUT )
+                                        .header( "Accept-Language", "es" )
+                                        .ignoreHttpErrors( true ).get();
 
                     // Obtener los atributos del producto
                     String link = element.attr( "href" );
                     String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
                     String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                     String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
+                    String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
 
+                    if ( description.length() > 255 )
+                        description = description.substring(0, 255);
+                    
                     // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
                     if ( ! containsProduct( productList, reference ) )
                     {
@@ -96,6 +102,7 @@ public class mainSpringfield
                                             , ""
                                             , ""
                                             , link 
+                                            , description
                                             , true
                                             , variants ) );
                     }
@@ -137,6 +144,7 @@ public class mainSpringfield
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
+        System.out.println( "Description: " + p.getDescription());
         System.out.println( "Precio: " + p.getPrice() + " €" );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )

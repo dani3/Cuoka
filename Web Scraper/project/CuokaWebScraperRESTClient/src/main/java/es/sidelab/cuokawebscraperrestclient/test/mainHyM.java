@@ -34,6 +34,7 @@ public class mainHyM
             // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
             document = Jsoup.connect( "http://www2.hm.com/"
                             + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
+                                                      .header( "Accept-Language", "es" )
                                                       .ignoreHttpErrors( true ).get();
 
             // Obtener los atributos propios del producto
@@ -41,6 +42,10 @@ public class mainHyM
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
             String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
+            String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
+            
+            if ( description.length() > 255 )
+                description = description.substring(0, 255);
             
             if ( ! containsProduct( productList, reference ) )
             {
@@ -71,6 +76,7 @@ public class mainHyM
                                     , ""
                                     , ""
                                     , link 
+                                    , description
                                     , true
                                     , variants ) );
             }
@@ -82,6 +88,7 @@ public class mainHyM
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
+        System.out.println( "Description: " + p.getDescription());
         System.out.println( "Precio: " + p.getPrice() + " €" );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )

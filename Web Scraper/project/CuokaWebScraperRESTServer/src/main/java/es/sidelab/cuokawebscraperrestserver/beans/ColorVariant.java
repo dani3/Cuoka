@@ -50,27 +50,31 @@ public class ColorVariant
     private short numberOfImages;
 
     
-    public ColorVariant() {}
-    
-    public String getReference() { return this.reference; }
-    public String getName() { return this.name; }
-    public short getNumberOfImages() { return this.numberOfImages; }
-    
-    @JsonIgnore
-    public String getColorURL() { return this.colorURL; }
-    public String getPath() { return this.path; }
+    public ColorVariant() {}    
     
     @JsonIgnore
     public List<Image> getImages() { return this.images; }
+    @JsonIgnore
+    public String getColorURL() { return this.colorURL; }
+    @JsonProperty( "1" )
+    public String getReference() { return this.reference; }
+    @JsonProperty( "2" )
+    public String getName() { return this.name; }
+    @JsonProperty( "3" )
+    public short getNumberOfImages() { return this.numberOfImages; }   
+    @JsonProperty( "4" )
+    public String getPath() { return this.path; }    
 
+    @JsonProperty( "reference" )
     public void setReference( String reference ) { this.reference = reference; }
+    @JsonProperty( "name" )
     public void setName( String name ) { this.name = name; }
-    public void setNumberOfImages( short numberOfImages ) { this.numberOfImages = numberOfImages; }    
-    
+    @JsonProperty( "numberOfImages" )
+    public void setNumberOfImages( short numberOfImages ) { this.numberOfImages = numberOfImages; }   
+    @JsonProperty( "path" )
+    public void setPath( String path ) { this.path = path; }      
     @JsonProperty
     public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
-    public void setPath( String path ) { this.path = path; }
-    
     @JsonProperty
     public void setImages( List<Image> images ) { this.images = images; }
 }
