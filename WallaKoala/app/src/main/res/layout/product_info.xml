@@ -31,7 +31,7 @@
                 android:textColor="@android:color/white"
                 android:text="@string/product_info_name"
                 android:textSize="16dp"
-                android:singleLine="true"
+                android:maxLines="2"
                 android:ellipsize="end"
                 android:textStyle="bold"/>
 

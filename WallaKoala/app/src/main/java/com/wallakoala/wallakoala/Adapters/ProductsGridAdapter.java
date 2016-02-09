@@ -167,8 +167,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             ERROR = false;
 
             /* Inicializamos los TextViews */
-            mTitleTextView.setText(product.getShop());
-            mSubtitleTextView.setText(product.getSection());
+            mTitleTextView.setText(product.getSection());
+            mSubtitleTextView.setText(product.getShop());
             mNameTextView.setText(product.getName());
             mPriceTextView.setText(String.format("%.2f", product.getPrice()) + "€");
 

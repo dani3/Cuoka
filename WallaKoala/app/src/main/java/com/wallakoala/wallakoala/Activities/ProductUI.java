@@ -13,11 +13,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -48,7 +50,7 @@ import io.codetail.animation.ViewAnimationUtils;
  * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 
-public class ProductUI extends AppCompatActivity
+public class ProductUI extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
 {
     /* Constants */
     protected static final String TAG = "CUOKA";
@@ -71,6 +73,9 @@ public class ProductUI extends AppCompatActivity
     /* Adapter */
     protected ProductAdapter mImagesAdapter;
     protected ColorIconListAdapter mColorIconAdapter;
+
+    /* GestureDetector */
+    protected GestureDetectorCompat mGestureDetector;
 
     /* LayoutManager */
     protected LinearLayoutManager mLinearLayoutManager;
@@ -168,6 +173,9 @@ public class ProductUI extends AppCompatActivity
         COLLAPSING = false;
 
         mContext = this;
+
+        mGestureDetector = new GestureDetectorCompat(this, this);
+        mGestureDetector.setOnDoubleTapListener(this);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -271,7 +279,7 @@ public class ProductUI extends AppCompatActivity
 
                     mCurrentColor = position;
 
-                    String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(mCurrentColor).getReference();
+                    String reference = "<b>Referencia: </b>" + mProduct.getColors().get(mCurrentColor).getReference();
                     mProductReferenceTextView.setText(Html.fromHtml(reference));
                 }
 
@@ -300,11 +308,11 @@ public class ProductUI extends AppCompatActivity
 
         mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mTopOffset += dy;
             }
         });
@@ -548,22 +556,20 @@ public class ProductUI extends AppCompatActivity
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
                 @Override
-                public void onAnimationStart() {
-                }
+                public void onAnimationStart() {}
 
                 @Override
-                public void onAnimationEnd() {
+                public void onAnimationEnd()
+                {
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
                     COLLAPSING = false;
                 }
 
                 @Override
-                public void onAnimationCancel() {
-                }
+                public void onAnimationCancel() {}
 
                 @Override
-                public void onAnimationRepeat() {
-                }
+                public void onAnimationRepeat() {}
             });
 
             mFloatingActionButtonPlus.animate()
@@ -586,22 +592,20 @@ public class ProductUI extends AppCompatActivity
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animation) {
-                }
+                public void onAnimationStart(Animator animation) {}
 
                 @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onAnimationEnd(Animator animation)
+                {
                     COLLAPSING = false;
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
-                public void onAnimationCancel(Animator animation) {
-                }
+                public void onAnimationCancel(Animator animation) {}
 
                 @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
+                public void onAnimationRepeat(Animator animation) {}
             });
 
             mFloatingActionButtonPlus.animate()
@@ -614,4 +618,56 @@ public class ProductUI extends AppCompatActivity
         }
     }
 
+    /**
+     * IMPORTANTE, los onTouch events los captura el recycler para el scroll.
+     * Es imprescindible sobreescribir este metodo para que la Activity intercepte el evento.
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        mGestureDetector.onTouchEvent(event);
+
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event)
+    {
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int productInfoHeight = mProductInfoLayout.getHeight();
+
+        if ((mProductInfoLayout.getVisibility() == View.VISIBLE) && (screenHeight - productInfoHeight > event.getY()))
+            collapseInfo();
+
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent event)
+    {
+        Log.d(TAG, "onDoubleTap: " + event.toString());
+
+        return true;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent event) { return true; }
+
+    @Override
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) { return false; }
+
+    @Override
+    public void onLongPress(MotionEvent event) {}
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) { return false; }
+
+    @Override
+    public void onShowPress(MotionEvent event) {}
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent event) { return false; }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) { return false; }
 }
