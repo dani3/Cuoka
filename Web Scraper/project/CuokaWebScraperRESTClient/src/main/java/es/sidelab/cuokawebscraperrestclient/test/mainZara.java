@@ -49,9 +49,7 @@ public class mainZara
                 String price = document.select( "span.price" ).first().attr( "data-price" ).replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll("Ref. ", "").replaceAll( "/", "-" );
                 String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\n", " "); 
-                               
-                
-                           
+                        
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
                     different_price = document.select( "strong.product-price span" ).first()
