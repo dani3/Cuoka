@@ -187,6 +187,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone */
             mProductFooterExtraView.setVisibility(View.GONE);
             mProductFooterMainView.setVisibility(View.GONE);
+            mProductFavoriteImageButton.setVisibility(View.GONE);
 
             /* Mostramos la view de carga */
             mLoadingView.setVisibility(View.VISIBLE);
@@ -200,6 +201,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     // Ocultamos la View de carga, y mostramos el pie de foto.
                     mLoadingView.setVisibility(View.GONE);
                     mProductFooterMainView.setVisibility(View.VISIBLE);
+                    mProductFavoriteImageButton.setVisibility(View.VISIBLE);
 
                     // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
                     mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
