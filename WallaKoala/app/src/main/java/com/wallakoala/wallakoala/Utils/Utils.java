@@ -35,12 +35,12 @@ public class Utils
         SpannableString sS = new SpannableString(sPrice);
 
         if (sPrice.contains(","))
-            sS.setSpan(new RelativeSizeSpan(0.8f)
+            sS.setSpan(new RelativeSizeSpan(0.65f)
                     , sPrice.indexOf(",")
                     , sPrice.indexOf("€") + 1
                     , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         else
-            sS.setSpan(new RelativeSizeSpan(0.8f)
+            sS.setSpan(new RelativeSizeSpan(0.65f)
                     , sPrice.indexOf("€")
                     , sPrice.indexOf("€") + 1
                     , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

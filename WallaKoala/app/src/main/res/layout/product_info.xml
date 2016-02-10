@@ -83,7 +83,11 @@
                 android:textColor="@android:color/white"
                 android:text="@string/product_info_price"
                 android:textSize="24dp"
-                android:layout_marginBottom="16dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/product_price_footer_relief"
+                android:layout_marginBottom="14dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignLeft="@+id/product_info_description"
                 android:layout_alignStart="@+id/product_info_description"/>

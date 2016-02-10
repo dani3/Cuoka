@@ -36,13 +36,12 @@
             app:riv_corner_radius_top_right="4dp"/>
 
         <ImageButton
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:scaleType="centerCrop"
             android:layout_gravity="top|right|end"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_favorite_white"
-            android:visibility="gone"
+            android:src="@drawable/ic_favorite_border_white"
             android:tint="@color/colorAccent"
             android:background="@android:color/transparent"/>
 

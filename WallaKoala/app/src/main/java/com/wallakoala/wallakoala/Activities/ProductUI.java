@@ -636,14 +636,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event)
     {
-        Log.d(TAG, "OnSingleTap: Collapse info");
-
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int productInfoHeight = mProductInfoLayout.getHeight();
 
         if ((mProductInfoLayout.getVisibility() == View.VISIBLE) &&
             (screenHeight - productInfoHeight > event.getY()) && (!COLLAPSING))
+        {
+            Log.d(TAG, "OnSingleTap: Collapse info");
+
             collapseInfo();
+        }
 
         return true;
     }
