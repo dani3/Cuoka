@@ -395,6 +395,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
                             .setInterpolator(sDecelerator)
+                            .setStartDelay(75)
                             .setListener(new Animator.AnimatorListener() {
                                 @Override
                                 public void onAnimationStart(Animator animation) {
@@ -457,14 +458,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mImageView.setTranslationY(-mTopOffset);
 
         mImageView.animate().setDuration(duration)
+                            .setStartDelay(0)
                             .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
                             .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
                             .withEndAction(endAction);
 
         mFavoriteImageButton.animate().setDuration(duration)
-                .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
-                .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
-                .withEndAction(endAction);
+                                      .setStartDelay(75)
+                                      .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
+                                      .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
+                                      .withEndAction(endAction);
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
             collapseInfo();
