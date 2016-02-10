@@ -35,6 +35,17 @@
             app:riv_corner_radius_top_left="4dp"
             app:riv_corner_radius_top_right="4dp"/>
 
+        <ImageButton
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|right|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_favorite_white"
+            android:visibility="gone"
+            android:tint="@color/colorAccent"
+            android:background="@android:color/transparent"/>
+
         <!-- Pie de foto -->
         <RelativeLayout
             android:id="@+id/footer"

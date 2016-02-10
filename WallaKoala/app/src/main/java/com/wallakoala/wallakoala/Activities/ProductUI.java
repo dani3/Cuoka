@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -39,6 +40,7 @@ import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.io.File;
 
@@ -210,7 +212,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         /* Inicializamos la info del producto */
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
         String description = "<b>Descripción: </b>" +  mProduct.getDescription();
-        String price = String.format("%.2f", mProduct.getPrice()) + "€";
+        SpannableString price = Utils.priceToString(mProduct.getPrice());
 
         mProductNameTextView.setText(mProduct.getName());
         mProductShopTextView.setText(mProduct.getShop());
@@ -639,7 +641,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int productInfoHeight = mProductInfoLayout.getHeight();
 
-        if ((mProductInfoLayout.getVisibility() == View.VISIBLE) && (screenHeight - productInfoHeight > event.getY()))
+        if ((mProductInfoLayout.getVisibility() == View.VISIBLE) &&
+            (screenHeight - productInfoHeight > event.getY()) && (!COLLAPSING))
             collapseInfo();
 
         return true;

@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -239,18 +240,14 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                {
-                    if (scrollingUp)
-                    {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (scrollingUp) {
                         if (verticalOffset > mToolbar.getHeight())
                             _toolbarAnimateHide();
 
@@ -258,7 +255,7 @@ public class ProductsUI extends AppCompatActivity
                             _toolbarAnimateShow();
 
                     } else if ((mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
-                               (verticalOffset > mToolbar.getHeight())))
+                            (verticalOffset > mToolbar.getHeight())))
                         _toolbarAnimateHide();
 
                     else
@@ -267,8 +264,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
 
@@ -276,8 +272,7 @@ public class ProductsUI extends AppCompatActivity
 
                 mToolbar.animate().cancel();
 
-                if (scrollingUp)
-                {
+                if (scrollingUp) {
                     // Animacion de la toolbar
                     if (toolbarYOffset < mToolbar.getHeight())
                         mToolbar.setTranslationY(-toolbarYOffset);
@@ -285,14 +280,12 @@ public class ProductsUI extends AppCompatActivity
                         mToolbar.setTranslationY(-mToolbar.getHeight());
 
                     // Detectamos cuando llegamos abajo para cargar nuevos productos
-                    if (!mProductsCandidatesDeque.isEmpty())
-                    {
+                    if (!mProductsCandidatesDeque.isEmpty()) {
                         int[] lastItemsPosition = new int[2];
                         mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
 
                         if ((lastItemsPosition[0] >= mProductsDisplayedList.size() - 2) ||
-                            (lastItemsPosition[1] >= mProductsDisplayedList.size() - 1))
-                        {
+                                (lastItemsPosition[1] >= mProductsDisplayedList.size() - 1)) {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
 
@@ -314,6 +307,23 @@ public class ProductsUI extends AppCompatActivity
 
                 } else
                     mToolbar.setTranslationY(-toolbarYOffset);
+            }
+        });
+
+        mProductsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
             }
         });
     }
