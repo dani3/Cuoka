@@ -31,6 +31,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -57,7 +58,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /* Constants */
     protected static final String TAG = "CUOKA";
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
+    protected static final TimeInterpolator sDecelerator = new AccelerateDecelerateInterpolator();
     protected static final int ANIM_DURATION = 500;
     protected static boolean EXITING;
     protected static boolean COLLAPSING;
@@ -84,6 +85,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     /* Views */
     protected ImageView mImageView;
+    protected ImageButton mFavoriteImageButton;
 
     /* TextViews */
     protected TextView mProductNameTextView;
@@ -107,14 +109,14 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     protected int mCurrentColor;
 
     /* Others */
-    protected int mLeftDelta;
-    protected int mTopDelta;
-    protected float mWidthScale;
-    protected float mHeightScale;
-    protected int mThumbnailLeft;
-    protected int mThumbnailTop;
-    protected float mThumbnailWidth;
-    protected float mThumbnailHeight;
+    protected int mLeftDeltaImage, mLeftDeltaFav;
+    protected int mTopDeltaImage, mTopDeltaFav;
+    protected float mWidthScaleImage, mWidthScaleFav;
+    protected float mHeightScaleImage, mHeightScaleFav;
+    protected int mThumbnailLeft, mThumbnailLeftFav;
+    protected int mThumbnailTop, mThumbnailTopFav;
+    protected float mThumbnailWidth, mThumbnailWidthFav;
+    protected float mThumbnailHeight, mThumbnailHeightFav;
     protected float mTopOffset;
     protected int mFloatingButtonX;
     protected int mFloatingButtonY;
@@ -149,14 +151,23 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                     mImageView.getViewTreeObserver().removeOnPreDrawListener(this);
 
                     // Sacamos donde esta la imagen pequeña y lo que hay que desplazarse hacia ella
-                    int[] screenLocation = new int[2];
-                    mImageView.getLocationOnScreen(screenLocation);
-                    mLeftDelta = mThumbnailLeft - screenLocation[0];
-                    mTopDelta = mThumbnailTop - screenLocation[1];
+                    int[] imageScreenLocation = new int[2];
+                    mImageView.getLocationOnScreen(imageScreenLocation);
+                    mLeftDeltaImage = mThumbnailLeft - imageScreenLocation[0];
+                    mTopDeltaImage = mThumbnailTop - imageScreenLocation[1];
 
                     // Factores de escala para saber cuanto hay que encojer o agrandar la imagen
-                    mWidthScale = mThumbnailWidth / mImageView.getWidth();
-                    mHeightScale = mThumbnailHeight / mImageView.getHeight();
+                    mWidthScaleImage = mThumbnailWidth / mImageView.getWidth();
+                    mHeightScaleImage = mThumbnailHeight / mImageView.getHeight();
+
+                    // Lo mismo para el boton de favorito
+                    int[] favScreenLocation = new int[2];
+                    mFavoriteImageButton.getLocationOnScreen(favScreenLocation);
+                    mLeftDeltaFav = mThumbnailLeftFav - favScreenLocation[0];
+                    mTopDeltaFav = mThumbnailTopFav - favScreenLocation[1];
+
+                    mWidthScaleFav = mThumbnailWidthFav / mFavoriteImageButton.getWidth();
+                    mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
 
                     runEnterAnimation();
 
@@ -181,12 +192,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         Bundle bundle = getIntent().getExtras();
 
-        mThumbnailTop    = bundle.getInt(PACKAGE + ".top");
-        mThumbnailLeft   = bundle.getInt(PACKAGE + ".left");
-        mThumbnailWidth  = bundle.getInt(PACKAGE + ".width");
-        mThumbnailHeight = bundle.getInt(PACKAGE + ".height");
-        mBitmapUri       = bundle.getString(PACKAGE + ".bitmap");
-        mProduct         = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
+        mThumbnailTopFav    = bundle.getInt(PACKAGE + ".topFav");
+        mThumbnailLeftFav   = bundle.getInt(PACKAGE + ".leftFav");
+        mThumbnailWidthFav  = bundle.getInt(PACKAGE + ".widthFav");
+        mThumbnailHeightFav = bundle.getInt(PACKAGE + ".heightFav");
+        mThumbnailTop       = bundle.getInt(PACKAGE + ".top");
+        mThumbnailLeft      = bundle.getInt(PACKAGE + ".left");
+        mThumbnailWidth     = bundle.getInt(PACKAGE + ".width");
+        mThumbnailHeight    = bundle.getInt(PACKAGE + ".height");
+        mBitmapUri          = bundle.getString(PACKAGE + ".bitmap");
+        mProduct            = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
 
         mTopOffset = 0.0f;
 
@@ -208,6 +223,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
         mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
         mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
+        mFavoriteImageButton        = (ImageButton)findViewById(R.id.product_favorite);
 
         /* Inicializamos la info del producto */
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
@@ -356,10 +372,23 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
-        mImageView.setScaleX(mWidthScale);
-        mImageView.setScaleY(mHeightScale);
-        mImageView.setTranslationX(mLeftDelta);
-        mImageView.setTranslationY(mTopDelta);
+        mImageView.setScaleX(mWidthScaleImage);
+        mImageView.setScaleY(mHeightScaleImage);
+        mImageView.setTranslationX(mLeftDeltaImage);
+        mImageView.setTranslationY(mTopDeltaImage);
+
+        mFavoriteImageButton.setPivotX(0);
+        mFavoriteImageButton.setPivotY(0);
+        mFavoriteImageButton.setScaleX(mWidthScaleFav);
+        mFavoriteImageButton.setScaleY(mHeightScaleFav);
+        mFavoriteImageButton.setTranslationX(mLeftDeltaFav);
+        mFavoriteImageButton.setTranslationY(mTopDeltaFav);
+
+        // Animacion de escalado y desplazamiento hasta el tamaño grande
+        mFavoriteImageButton.animate().setDuration(duration)
+                .scaleX(1).scaleY(1)
+                .translationX(0).translationY(0)
+                .setInterpolator(sDecelerator);
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande
         mImageView.animate().setDuration(duration)
@@ -428,9 +457,14 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mImageView.setTranslationY(-mTopOffset);
 
         mImageView.animate().setDuration(duration)
-                            .scaleX(mWidthScale).scaleY(mHeightScale)
-                            .translationX(mLeftDelta).translationY(mTopDelta)
+                            .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
+                            .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
                             .withEndAction(endAction);
+
+        mFavoriteImageButton.animate().setDuration(duration)
+                .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
+                .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
+                .withEndAction(endAction);
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
             collapseInfo();

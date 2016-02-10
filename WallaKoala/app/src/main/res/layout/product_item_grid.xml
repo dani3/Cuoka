@@ -36,6 +36,7 @@
             app:riv_corner_radius_top_right="4dp"/>
 
         <ImageButton
+            android:id="@+id/product_item_favorite"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:scaleType="centerCrop"

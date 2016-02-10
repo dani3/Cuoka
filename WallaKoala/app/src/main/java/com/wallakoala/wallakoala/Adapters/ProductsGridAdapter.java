@@ -71,6 +71,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private String mBitmapFileName;
 
         private ImageView mProductImageView;
+        private ImageButton mProductFavoriteImageButton;
         private View mLoadingView;
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
@@ -87,6 +88,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.footer_price);
 
+            mProductFavoriteImageButton = (ImageButton)itemView.findViewById(R.id.product_item_favorite);
+
             mLoadingView            = itemView.findViewById(R.id.avloadingitem);
             mProductFooterView      = itemView.findViewById(R.id.footer);
             mProductFooterExtraView = itemView.findViewById(R.id.extraInfo);
@@ -99,19 +102,19 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
             scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
 
-            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
-            {
+            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {}
+                public void onAnimationStart(Animation animation) {
+                }
 
                 @Override
-                public void onAnimationEnd(Animation animation)
-                {
+                public void onAnimationEnd(Animation animation) {
                     mProductFooterExtraView.setVisibility(View.GONE);
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+                }
             });
 
             scaleDownFooter.setAnimationListener(new Animation.AnimationListener()
@@ -126,9 +129,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     Activity activity = (Activity)mContext;
 
-                    /* Sacamos las coordenadas de la imagen */
-                    int[] screenLocation = new int[2];
-                    mProductImageView.getLocationInWindow(screenLocation);
+                    /* Sacamos las coordenadas de la imagen y del corazon */
+                    int[] imageScreenLocation = new int[2];
+                    mProductImageView.getLocationInWindow(imageScreenLocation);
+
+                    int[] favoriteScreenLocation = new int[2];
+                    mProductFavoriteImageButton.getLocationOnScreen(favoriteScreenLocation);
 
                     /* Creamos el intent */
                     Intent intent = new Intent(mContext, ProductUI.class);
@@ -137,8 +143,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     * realice la animacion */
                     intent.putExtra(PACKAGE + ".Beans.Product", mProduct)
                           .putExtra(PACKAGE + ".bitmap", mBitmapFileName)
-                          .putExtra(PACKAGE + ".left", screenLocation[0])
-                          .putExtra(PACKAGE + ".top", screenLocation[1])
+                          .putExtra(PACKAGE + ".leftFav", favoriteScreenLocation[0])
+                          .putExtra(PACKAGE + ".topFav", favoriteScreenLocation[1])
+                          .putExtra(PACKAGE + ".widthFav", mProductFavoriteImageButton.getWidth())
+                          .putExtra(PACKAGE + ".heightFav", mProductFavoriteImageButton.getHeight())
+                          .putExtra(PACKAGE + ".left", imageScreenLocation[0])
+                          .putExtra(PACKAGE + ".top", imageScreenLocation[1])
                           .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
                           .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
 
