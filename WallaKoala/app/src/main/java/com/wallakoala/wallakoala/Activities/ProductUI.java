@@ -27,7 +27,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -58,8 +57,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /* Constants */
     protected static final String TAG = "CUOKA";
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final TimeInterpolator sDecelerator = new AccelerateDecelerateInterpolator();
-    protected static final int ANIM_DURATION = 500;
+    protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
+    protected static final int ANIM_DURATION = 250;
     protected static boolean EXITING;
     protected static boolean COLLAPSING;
 
@@ -368,8 +367,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     private void runEnterAnimation()
     {
-        final long duration = (int)(ANIM_DURATION * 0.5);
-
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
         mImageView.setScaleX(mWidthScaleImage);
@@ -385,25 +382,28 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mFavoriteImageButton.setTranslationY(mTopDeltaFav);
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande
-        mFavoriteImageButton.animate().setDuration(duration)
-                .scaleX(1).scaleY(1)
-                .translationX(0).translationY(0)
-                .setInterpolator(sDecelerator);
+        mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
+                                      .scaleX(1).scaleY(1)
+                                      .translationX(0).translationY(0)
+                                      .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande
-        mImageView.animate().setDuration(duration)
+        mImageView.animate().setDuration(ANIM_DURATION)
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
-                            .setInterpolator(sDecelerator)
+                            .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR)
                             .setStartDelay(75)
-                            .setListener(new Animator.AnimatorListener() {
+                            .setListener(new Animator.AnimatorListener()
+                            {
                                 @Override
                                 public void onAnimationStart(Animator animation) {
                                 }
 
                                 @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    if (!EXITING) {
+                                public void onAnimationEnd(Animator animation)
+                                {
+                                    if (!EXITING)
+                                    {
                                         mImagesRecylcerView.setVisibility(View.VISIBLE);
 
                                         // Hacemos aparecer el FloatingButton
@@ -422,7 +422,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                         mFloatingButtonTop = screenLocation[1];
 
                                         mRadiusReveal = Math.max(mProductInfoLayout.getWidth()
-                                                , mProductInfoLayout.getHeight());
+                                                            , mProductInfoLayout.getHeight());
                                     }
                                 }
 
@@ -437,7 +437,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         // Efecto fade para oscurecer la pantalla
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
-        bgAnim.setDuration(duration);
+        bgAnim.setDuration(ANIM_DURATION);
         bgAnim.start();
     }
 
@@ -447,8 +447,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     private void runExitAnimation(final Runnable endAction)
     {
-        final long duration = (int)(ANIM_DURATION * 0.6);
-
         EXITING = true;
 
         mImageView.setVisibility(View.VISIBLE);
@@ -457,13 +455,13 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
         mImageView.setTranslationY(-mTopOffset);
 
-        mImageView.animate().setDuration(duration)
+        mImageView.animate().setDuration(ANIM_DURATION)
                             .setStartDelay(0)
                             .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
                             .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
                             .withEndAction(endAction);
 
-        mFavoriteImageButton.animate().setDuration(duration)
+        mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
                                       .setStartDelay(75)
                                       .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
                                       .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
@@ -476,7 +474,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-        bgAnim.setDuration(duration);
+        bgAnim.setDuration(ANIM_DURATION);
         bgAnim.start();
     }
 
@@ -499,7 +497,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     {
         super.finish();
 
-        // Deshabilitamos las animaciones de Android
         overridePendingTransition(0, 0);
     }
 
@@ -599,8 +596,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 }
 
                 @Override
-                public void onAnimationEnd() {
+                public void onAnimationEnd()
+                {
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
+
                     COLLAPSING = false;
                 }
 

@@ -14,16 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Loading View -->
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/avloadingitem"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:indicator="BallClipRotate"
-            app:indicator_color="@color/colorAccent"/>
-
         <!-- Imagen -->
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/grid_image"

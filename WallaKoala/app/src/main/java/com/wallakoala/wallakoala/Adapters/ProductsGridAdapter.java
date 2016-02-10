@@ -72,7 +72,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
         private ImageView mProductImageView;
         private ImageButton mProductFavoriteImageButton;
-        private View mLoadingView;
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
 
@@ -90,7 +89,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             mProductFavoriteImageButton = (ImageButton)itemView.findViewById(R.id.product_item_favorite);
 
-            mLoadingView            = itemView.findViewById(R.id.avloadingitem);
             mProductFooterView      = itemView.findViewById(R.id.footer);
             mProductFooterExtraView = itemView.findViewById(R.id.extraInfo);
             mProductFooterMainView  = itemView.findViewById(R.id.mainFooter);
@@ -190,17 +188,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterMainView.setVisibility(View.GONE);
             mProductFavoriteImageButton.setVisibility(View.GONE);
 
-            /* Mostramos la view de carga */
-            mLoadingView.setVisibility(View.VISIBLE);
-
             /* Cargamos la imagen usando Picasso */
             mTarget = new Target()
             {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
-                    // Ocultamos la View de carga, y mostramos el pie de foto.
-                    mLoadingView.setVisibility(View.GONE);
+                    // Mostramos el pie de foto y el boton de favorito
                     mProductFooterMainView.setVisibility(View.VISIBLE);
                     mProductFavoriteImageButton.setVisibility(View.VISIBLE);
 
@@ -223,8 +217,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable)
                 {
-                    mLoadingView.setVisibility(View.GONE);
-
                     ERROR = true;
 
                     mProductImageView.setBackgroundColor(mContext.getResources()
