@@ -595,20 +595,22 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
                 @Override
-                public void onAnimationStart() {}
+                public void onAnimationStart() {
+                }
 
                 @Override
-                public void onAnimationEnd()
-                {
+                public void onAnimationEnd() {
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
                     COLLAPSING = false;
                 }
 
                 @Override
-                public void onAnimationCancel() {}
+                public void onAnimationCancel() {
+                }
 
                 @Override
-                public void onAnimationRepeat() {}
+                public void onAnimationRepeat() {
+                }
             });
 
             mFloatingActionButtonPlus.animate()
@@ -629,23 +631,24 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             animator.setDuration(200);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.addListener(new Animator.AnimatorListener()
-            {
+            animator.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animation) {}
+                public void onAnimationStart(Animator animation) {
+                }
 
                 @Override
-                public void onAnimationEnd(Animator animation)
-                {
+                public void onAnimationEnd(Animator animation) {
                     COLLAPSING = false;
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
-                public void onAnimationCancel(Animator animation) {}
+                public void onAnimationCancel(Animator animation) {
+                }
 
                 @Override
-                public void onAnimationRepeat(Animator animation) {}
+                public void onAnimationRepeat(Animator animation) {
+                }
             });
 
             mFloatingActionButtonPlus.animate()
@@ -671,15 +674,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     }
 
     @Override
-    public boolean onSingleTapConfirmed(MotionEvent event)
+    public boolean onSingleTapUp(MotionEvent event)
     {
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int productInfoHeight = mProductInfoLayout.getHeight();
 
         if ((mProductInfoLayout.getVisibility() == View.VISIBLE) &&
-            (screenHeight - productInfoHeight > event.getY()) && (!COLLAPSING))
+            (screenHeight - productInfoHeight > event.getY()) &&
+            (!COLLAPSING))
         {
-            Log.d(TAG, "OnSingleTap: Collapse info");
+            Log.d(TAG, "OnSingleTap: Collapsing info");
 
             collapseInfo();
         }
@@ -688,12 +692,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     }
 
     @Override
-    public boolean onDoubleTap(MotionEvent event)
-    {
-        Log.d(TAG, "OnDoubleTap");
+    public boolean onSingleTapConfirmed(MotionEvent event) { return false; }
 
-        return true;
-    }
+    @Override
+    public boolean onDoubleTap(MotionEvent event) { return false; }
 
     @Override
     public boolean onDown(MotionEvent event) { return true; }
@@ -709,9 +711,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     @Override
     public void onShowPress(MotionEvent event) {}
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent event) { return false; }
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) { return false; }

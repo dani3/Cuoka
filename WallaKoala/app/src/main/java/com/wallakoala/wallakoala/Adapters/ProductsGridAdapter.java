@@ -82,9 +82,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             super(itemView);
 
+            mProductImageView = (ImageView)itemView.findViewById(R.id.grid_image);
             mTitleTextView    = (TextView)itemView.findViewById(R.id.footer_title);
             mSubtitleTextView = (TextView)itemView.findViewById(R.id.footer_subtitle);
-            mProductImageView = (ImageView)itemView.findViewById(R.id.grid_image);
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.footer_price);
 
@@ -102,7 +102,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
             scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
 
-            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener() {
+            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
+            {
                 @Override
                 public void onAnimationStart(Animation animation) {
                 }

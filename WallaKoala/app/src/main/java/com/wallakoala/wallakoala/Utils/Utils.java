@@ -29,6 +29,11 @@ public class Utils
         return url.replaceAll(" ", "%20");
     }
 
+    /**
+     * Metodo que da formato al precio.
+     * @param price: double con el precio.
+     * @return SpannableString con el precio formateado.
+     */
     public static SpannableString priceToString(double price)
     {
         String sPrice = (String.format("%.2f", price) + "€").replaceAll(",00", "");
