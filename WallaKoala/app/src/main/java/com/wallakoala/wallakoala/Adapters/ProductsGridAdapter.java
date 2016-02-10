@@ -8,9 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -60,13 +63,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      */
     public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private boolean ERROR;
+
         private Product mProduct;
         private Target mTarget;
         private Bitmap mBitmap;
         private String mBitmapFileName;
-        private boolean ERROR;
 
-        private ImageButton mFavImageButton;
         private ImageView mProductImageView;
         private View mLoadingView;
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
@@ -81,9 +84,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mTitleTextView    = (TextView)itemView.findViewById(R.id.footer_title);
             mSubtitleTextView = (TextView)itemView.findViewById(R.id.footer_subtitle);
             mProductImageView = (ImageView)itemView.findViewById(R.id.grid_image);
-            mFavImageButton   = (ImageButton)itemView.findViewById(R.id.footer_fav_button);
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
-            mPriceTextView    = (TextView)itemView.findViewById(R.id.price);
+            mPriceTextView    = (TextView)itemView.findViewById(R.id.footer_price);
 
             mLoadingView            = itemView.findViewById(R.id.avloadingitem);
             mProductFooterView      = itemView.findViewById(R.id.footer);
@@ -97,19 +99,19 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
             scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
 
-            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener() {
+            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
+            {
                 @Override
-                public void onAnimationStart(Animation animation) {
-                }
+                public void onAnimationStart(Animation animation) {}
 
                 @Override
-                public void onAnimationEnd(Animation animation) {
+                public void onAnimationEnd(Animation animation)
+                {
                     mProductFooterExtraView.setVisibility(View.GONE);
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
+                public void onAnimationRepeat(Animation animation) {}
             });
 
             scaleDownFooter.setAnimationListener(new Animation.AnimationListener()
@@ -170,7 +172,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mTitleTextView.setText(product.getSection());
             mSubtitleTextView.setText(product.getShop());
             mNameTextView.setText(product.getName());
-            mPriceTextView.setText(String.format("%.2f", product.getPrice()) + "€");
+            mPriceTextView.setText(Utils.priceToString(product.getPrice()));
 
             /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone */
             mProductFooterExtraView.setVisibility(View.GONE);
@@ -178,9 +180,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             /* Mostramos la view de carga */
             mLoadingView.setVisibility(View.VISIBLE);
-
-            /* Ponemos el icono del corazon. */
-            mFavImageButton.setBackgroundResource(R.drawable.ic_favorite_border_white);
 
             /* Cargamos la imagen usando Picasso */
             mTarget = new Target()

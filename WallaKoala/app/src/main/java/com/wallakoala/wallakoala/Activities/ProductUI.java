@@ -590,7 +590,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             animator.setDuration(200);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.addListener(new Animator.AnimatorListener() {
+            animator.addListener(new Animator.AnimatorListener()
+            {
                 @Override
                 public void onAnimationStart(Animator animation) {}
 
@@ -633,6 +634,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event)
     {
+        Log.d(TAG, "OnSingleTap: Collapse info");
+
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int productInfoHeight = mProductInfoLayout.getHeight();
 
@@ -645,7 +648,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @Override
     public boolean onDoubleTap(MotionEvent event)
     {
-        Log.d(TAG, "onDoubleTap: " + event.toString());
+        Log.d(TAG, "OnDoubleTap");
 
         return true;
     }
@@ -670,4 +673,5 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) { return false; }
+
 }

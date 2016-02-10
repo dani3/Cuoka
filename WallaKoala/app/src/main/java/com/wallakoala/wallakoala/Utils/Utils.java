@@ -3,6 +3,9 @@ package com.wallakoala.wallakoala.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -24,6 +27,25 @@ public class Utils
     public static String fixUrl(String url)
     {
         return url.replaceAll(" ", "%20");
+    }
+
+    public static SpannableString priceToString(double price)
+    {
+        String sPrice = (String.format("%.2f", price) + "€").replaceAll(",00", "");
+        SpannableString sS = new SpannableString(sPrice);
+
+        if (sPrice.contains(","))
+            sS.setSpan(new RelativeSizeSpan(0.8f)
+                    , sPrice.indexOf(",")
+                    , sPrice.indexOf("€") + 1
+                    , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        else
+            sS.setSpan(new RelativeSizeSpan(0.8f)
+                    , sPrice.indexOf("€")
+                    , sPrice.indexOf("€") + 1
+                    , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return sS;
     }
 
     @Nullable
