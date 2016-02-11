@@ -64,6 +64,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private boolean ERROR;
+        private boolean LOADED;
 
         private Product mProduct;
         private Target mTarget;
@@ -176,6 +177,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             mProductImageView.setImageBitmap(null);
             ERROR = false;
+            LOADED = false;
 
             /* Inicializamos los TextViews */
             mTitleTextView.setText(product.getSection());
@@ -194,6 +196,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
+                    LOADED = true;
+
                     // Mostramos el pie de foto y el boton de favorito
                     mProductFooterMainView.setVisibility(View.VISIBLE);
                     mProductFavoriteImageButton.setVisibility(View.VISIBLE);
@@ -277,7 +281,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             /* Si se pulsa en la imagen */
             if (view.getId() == mProductImageView.getId())
             {
-                if (!ERROR)
+                if (!ERROR && LOADED)
                 {
                     // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
                     // y ralentiza la animacion
