@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -450,7 +451,7 @@ public class ProductsUI extends AppCompatActivity
         this.mMenu = menu;
 
         // Inflamos la ActionBar
-        getMenuInflater().inflate(R.menu.action_bar, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_grid, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -458,6 +459,15 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        if (item.getItemId() == R.id.menu_item_filter)
+        {
+            Intent intent = new Intent(ProductsUI.this, FilterUI.class);
+            startActivity(intent);
+
+            // Animacion de transicion para pasar de una activity a otra.
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

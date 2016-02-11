@@ -1,115 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:id="@+id/filter_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
-    android:weightSum="1">
+    android:background="@drawable/shop_background_bw">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.8"
-        android:alpha="0.5"
-        android:background="@android:color/black">
+    <!-- Toolbar -->
+    <include android:id="@+id/filter_appbar"
+        layout="@layout/toolbar">
 
-    </LinearLayout>
+    </include>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:elevation="16dp">
-
-        <!-- Filtro tiendas -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/filter_image_shop"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_local_mall_black"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Tiendas"
-                android:textSize="10sp"
-                android:textColor="@color/colorText"
-                android:layout_below="@+id/filter_image_shop"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-
-        <!-- Filtro secciones -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/filter_image_section"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_today"
-                android:layout_centerVertical="true"
-                android:background="@color/colorAccent"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Secciones"
-                android:textSize="10sp"
-                android:textColor="@color/colorText"
-                android:layout_below="@+id/filter_image_section"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-
-        <!-- Filtro secciones -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/filter_image_price"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_sort_by_size"
-                android:layout_centerVertical="true"
-                android:background="@android:color/holo_green_dark"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Precio"
-                android:textSize="10sp"
-                android:textColor="@color/colorText"
-                android:layout_below="@+id/filter_image_price"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
