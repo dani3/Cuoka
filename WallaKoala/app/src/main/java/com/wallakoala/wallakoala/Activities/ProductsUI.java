@@ -461,11 +461,14 @@ public class ProductsUI extends AppCompatActivity
     {
         if (item.getItemId() == R.id.menu_item_filter)
         {
-            Intent intent = new Intent(ProductsUI.this, FilterUI.class);
-            startActivity(intent);
+            if (mState != STATE.LOADING)
+            {
+                Intent intent = new Intent(ProductsUI.this, FilterUI.class);
+                startActivity(intent);
 
-            // Animacion de transicion para pasar de una activity a otra.
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                // Animacion de transicion para pasar de una activity a otra.
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
         }
 
         return super.onOptionsItemSelected(item);

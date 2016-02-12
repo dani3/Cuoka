@@ -281,7 +281,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             /* Si se pulsa en la imagen */
             if (view.getId() == mProductImageView.getId())
             {
-                if (!ERROR && LOADED)
+                if (!ERROR && LOADED && mProductClicked == null)
                 {
                     // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
                     // y ralentiza la animacion

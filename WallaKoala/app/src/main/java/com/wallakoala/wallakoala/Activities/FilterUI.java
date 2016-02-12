@@ -11,13 +11,19 @@ import android.widget.TextView;
 import com.wallakoala.wallakoala.R;
 
 /**
- * Created by Dani on 11/02/2016.
+ * @class Activity con la pantalla de filtros.
+ * Created by Daniel Mancebo Aldea on 11/02/2016.
  */
 
 public class FilterUI extends AppCompatActivity
 {
+    /* Constants */
+    protected static final String TAG = "CUOKA";
+
+    /* Toolbar */
     protected Toolbar mToolbar;
 
+    /* TextViews */
     protected TextView mToolbarTextView;
 
     @Override
@@ -35,7 +41,7 @@ public class FilterUI extends AppCompatActivity
         mToolbar = (Toolbar)findViewById(R.id.filter_appbar);
         mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
 
-        mToolbarTextView.setText("Filtros");
+        mToolbarTextView.setText(getResources().getString(R.string.toolbar_filter));
 
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null)
@@ -49,7 +55,6 @@ public class FilterUI extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Inflamos la ActionBar
         getMenuInflater().inflate(R.menu.toolbar_menu_filter, menu);
 
         return super.onCreateOptionsMenu(menu);
@@ -74,4 +79,5 @@ public class FilterUI extends AppCompatActivity
 
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
 }
