@@ -56,9 +56,6 @@ public class Product
     @Column( name = "COLORS" )
     private List<ColorVariant> colors;
     
-    @Column( name = "NEWNESS" )
-    private boolean newness;
-    
     @JsonIgnore
     @Column( name = "INSERT_DATE" )
     private Calendar insertDate;
@@ -90,9 +87,7 @@ public class Product
     @JsonProperty
     public void setMan( boolean man ) { this.man = man; }
     @JsonProperty( "colors" )
-    public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
-    @JsonProperty( "newness" )
-    public void setNewness( boolean newness ) { this.newness = newness; }    
+    public void setColors( List<ColorVariant> colors ) { this.colors = colors; }  
     @JsonIgnore
     public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
         
@@ -110,10 +105,8 @@ public class Product
     public boolean isMan() { return this.man; }
     @JsonProperty( "6" )
     public List<ColorVariant> getColors() { return this.colors; }
-    public long getId() { return this.id; }
+    public long getId() { return this.id; } 
     @JsonProperty( "7" )
-    public boolean isNewness() { return this.newness; }    
-    @JsonProperty( "8" )
     public String getDescription() { return this.description; }  
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }

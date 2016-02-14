@@ -22,5 +22,7 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     List<Product> findByShop( String shop );
     List<Product> findByManAndShop( boolean man, String shop );
     List<Product> findBySectionAndShop( String section, String shop );
-    List<Product> findByManAndNewnessAndShop( boolean man, boolean newness, String shop );
+    
+    @Query( "FROM Product WHERE shop = ?1 and man = ?2 and DATEDIFF(CURDATE(), insert_date) = ?3" )
+    List<Product> findByShopAndDate( String shop, boolean man, int offset );
 }

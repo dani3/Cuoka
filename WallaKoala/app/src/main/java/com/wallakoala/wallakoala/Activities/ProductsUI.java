@@ -519,16 +519,7 @@ public class ProductsUI extends AppCompatActivity
         // Recorremos el mapa de filtros
         for (String key : mFilterMap.keySet())
         {
-            // Si es el filtro de novedades
-            if (key.equals("newness"))
-            {
-                if (mFilterMap.get(key) != null)
-                    displayable =  ((Boolean)mFilterMap.get(key) == product.isNewness());
-            }
 
-            // Rompemos el bucle cuando el producto no pase algun filtro.
-            if (!displayable)
-                break;
         }
 
         return displayable;
@@ -635,8 +626,7 @@ public class ProductsUI extends AppCompatActivity
             String section = jsonObject.getString("4");
             double price = jsonObject.getDouble("1");
             String link = jsonObject.getString("5");
-            boolean newness = jsonObject.getBoolean("7");
-            String description = jsonObject.getString("8");
+            String description = jsonObject.getString("7");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -652,10 +642,10 @@ public class ProductsUI extends AppCompatActivity
                 colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
             }
 
-            Product product = new Product( name, shop, section, price, link, description, colors, newness );
+            Product product = new Product( name, shop, section, price, link, description, colors );
 
             if (product.isOkay())
-                productsList.add( new Product( name, shop, section, price, link, description, colors, newness ) );
+                productsList.add( new Product( name, shop, section, price, link, description, colors ) );
 
         }
 
