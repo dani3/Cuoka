@@ -342,6 +342,18 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     public void updateProductList(List<Product> productList)
     {
         mProductList = productList;
+
+        if (mProductList.size() > mProductBitmapArray.length)
+        {
+            double[] aux = new double[mProductList.size()];
+            for (int i = 0; i < mProductBitmapArray.length; i++)
+                aux[i] = mProductBitmapArray[i];
+
+            for (int i = mProductBitmapArray.length; i < aux.length; i++)
+                aux[i] = 0.0f;
+
+            mProductBitmapArray = aux;
+        }
     }
 
     /**
