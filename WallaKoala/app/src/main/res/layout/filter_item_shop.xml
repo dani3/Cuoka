@@ -12,10 +12,23 @@
     app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true">
 
+    <ImageButton
+        android:id="@+id/filter_item_shop_clear"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="top|end"
+        android:alpha="0.2"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_clear_black"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="42dp"
+        android:layout_marginTop="8dp"
         android:paddingBottom="4dp"
         android:paddingLeft="8dp"
         android:text="@string/filter_item_shops"
