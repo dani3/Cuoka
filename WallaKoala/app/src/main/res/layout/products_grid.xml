@@ -57,6 +57,13 @@
                 android:textSize="20sp"
                 android:textColor="@color/colorText"/>
 
+            <include android:id="@+id/loading"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="bottom|center"
+                layout="@layout/loading"/>
+
         </FrameLayout>
 
         <include layout="@layout/left_navigation_drawer"/>

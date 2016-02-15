@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -51,7 +50,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -119,12 +117,14 @@ public class ProductsUI extends AppCompatActivity
     protected TextView mToolbarTextView;
     protected TextView mNoDataTextView;
     protected View mLoadingView;
+    protected View mLoadingServerView;
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation moveAndFade;
+    protected Animation mMoveAndFadeAnimation;
+    protected Animation mShowFromDown, mHideFromUp;
 
     /* Snackbar */
     protected Snackbar mSnackbar;
@@ -211,7 +211,10 @@ public class ProductsUI extends AppCompatActivity
         mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
 
         // LoaderView
-        mLoadingView = findViewById(R.id.avloadingIndicatorView);
+        mLoadingView       = findViewById(R.id.avloadingIndicatorView);
+        mLoadingServerView = findViewById(R.id.loading);
+
+        mLoadingServerView.setVisibility(View.GONE);
 
         // TextView que muestran que no hay productos disponibles
         mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
@@ -310,11 +313,10 @@ public class ProductsUI extends AppCompatActivity
                             if (mState != STATE.LOADING)
                             {
                                 DAYS_OFFSET++;
+
                                 new ConnectToServer().execute();
                             }
-
                         }
-
                     }
 
                 } else if (toolbarYOffset < 0) {
@@ -398,8 +400,14 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initAnimations()
     {
-        moveAndFade = AnimationUtils.loadAnimation(ProductsUI.this
+        mMoveAndFadeAnimation = AnimationUtils.loadAnimation(ProductsUI.this
                 , R.anim.translate_and_fade);
+
+        mHideFromUp = AnimationUtils.loadAnimation(ProductsUI.this
+                , R.anim.hide_to_down);
+
+        mShowFromDown = AnimationUtils.loadAnimation(ProductsUI.this
+                , R.anim.show_up_from_down);
     }
 
     @Override
@@ -664,7 +672,8 @@ public class ProductsUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            _loading(true, true);
+            if (mState != STATE.LOADING)
+                _loading(true, true);
 
             // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
             executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
@@ -887,6 +896,7 @@ public class ProductsUI extends AppCompatActivity
                 if (mProductsListMap.get(mProductsListMap.size()-1).isEmpty())
                 {
                     DAYS_OFFSET++;
+
                     new ConnectToServer().execute();
 
                 } else {
@@ -939,13 +949,14 @@ public class ProductsUI extends AppCompatActivity
                 if (FIRST_CONNECTION)
                 {
                     // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
-                    moveAndFade.setAnimationListener(new Animation.AnimationListener()
+                    mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
                     {
                         @Override
                         public void onAnimationStart(Animation animation) {}
 
                         @Override
-                        public void onAnimationEnd(Animation animation) {
+                        public void onAnimationEnd(Animation animation)
+                        {
                             mLoadingView.setVisibility(View.GONE);
 
                             // La animacion de cada item solo esta disponible para 5.0+
@@ -953,7 +964,7 @@ public class ProductsUI extends AppCompatActivity
                             {
                                 _initRecyclerView();
                                 mProductsRecyclerView.startAnimation(AnimationUtils.loadAnimation(ProductsUI.this
-                                        , android.R.anim.fade_in ));
+                                        , android.R.anim.fade_in));
 
                             } else {
                                 _initRecyclerView();
@@ -963,23 +974,38 @@ public class ProductsUI extends AppCompatActivity
 
                         @Override
                         public void onAnimationRepeat(Animation animation) {}
-                    } );
+                    });
 
-                    mLoadingView.startAnimation(moveAndFade);
+                    mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
                     mState = STATE.NORMAL;
 
                     FIRST_CONNECTION = false;
 
                 } else {
-                    /*  asdasfasfaffs sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf */
+                    mHideFromUp.setAnimationListener(new Animation.AnimationListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animation animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animation animation)
+                        {
+                            mLoadingServerView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {}
+                    });
+
+                    mLoadingServerView.startAnimation(mHideFromUp);
 
                     mState = STATE.NORMAL;
                 }
 
             } else {
                 mLoadingView.setVisibility(View.GONE);
-                /*  asdasfasfaffs sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf */
+                mLoadingServerView.setVisibility(View.GONE);
             }
 
         } else if (FIRST_CONNECTION) {
@@ -989,7 +1015,10 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.LOADING;
 
         } else {
-            /* asfsagasfdgadfgnadfgkladfgldfagadfglfngldfangaldfngñlkadflkadnf */
+            // Icono de carga
+            mLoadingServerView.startAnimation(mShowFromDown);
+            mLoadingServerView.setVisibility(View.VISIBLE);
+
             mState = STATE.LOADING;
         }
 
