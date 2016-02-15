@@ -239,6 +239,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
+
+            } else {
+                SHOP_FILTER_ACTIVE = false;
+
+                mFilterShopImageView.animate().setDuration(250)
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
+
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+                mSnackbar.show();
             }
         }
 
@@ -255,6 +269,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
+
+            } else {
+                SECTION_FILTER_ACTIVE = false;
+
+                mFilterSectionImageView.animate().setDuration(250)
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
+
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+                mSnackbar.show();
             }
         }
 
@@ -271,6 +299,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
+
+            } else {
+                PRICE_FILTER_ACTIVE = false;
+
+                mFilterPriceImageView.animate().setDuration(250)
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
+
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+                mSnackbar.show();
             }
         }
 
@@ -287,6 +329,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
+
+            } else {
+                COLOR_FILTER_ACTIVE = false;
+
+                mFilterColorImageView.animate().setDuration(250)
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
+
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+                mSnackbar.show();
             }
         }
 
@@ -303,6 +359,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterNewnessMenuLayout, 0);
+
+            } else {
+                NEWNESS_FILTER_ACTIVE = false;
+
+                mFilterNewnessImageView.animate().setDuration(250)
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mItemsMenuViewGroup.removeView(mFilterNewnessMenuLayout);
+
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+                mSnackbar.show();
             }
         }
 

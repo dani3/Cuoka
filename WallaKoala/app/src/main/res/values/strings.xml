@@ -53,6 +53,9 @@
     <string name="filter_color_pink">Rosas</string>
     <string name="filter_color_green">Verdes</string>
 
+    <string name="filter_price_from">De:</string>
+    <string name="filter_price_to">Hasta:</string>
+
     <string name="accesibility_favorite">Favorito</string>
 
 </resources>
