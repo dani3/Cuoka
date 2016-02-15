@@ -2,12 +2,15 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -81,6 +84,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /* TextViews */
     protected TextView mToolbarTextView;
 
+    /* RadioButtons */
+    protected AppCompatRadioButton mNewnessAllRadioButton;
+    protected AppCompatRadioButton mNewnessNewRadioButton;
+
     /* Data */
     protected boolean SHOP_FILTER_ACTIVE;
     protected boolean SECTION_FILTER_ACTIVE;
@@ -101,6 +108,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         _initViews();
         _initFilterItemViews();
         _initFilterMenuViews();
+        _initNewnessMenuViewFilter();
     }
 
     /**
@@ -221,6 +229,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (mFilterNewnessMenuLayout.getParent() != null)
             ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
+    }
+
+    protected void _initNewnessMenuViewFilter()
+    {
+        mNewnessAllRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_all_radio_button);
+        mNewnessNewRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_new_radio_button);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][] {new int[]{-android.R.attr.state_checked}, new int[]{android.R.attr.state_checked}},
+                    new int[]{R.color.colorAccent, R.color.colorAccent}
+            );
+
+            mNewnessAllRadioButton.setSupportButtonTintList(colorStateList);
+            mNewnessNewRadioButton.setSupportButtonTintList(colorStateList);
+        }
     }
 
     @Override
