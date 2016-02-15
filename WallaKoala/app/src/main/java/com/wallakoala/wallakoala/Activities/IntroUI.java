@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,7 +26,7 @@ public class IntroUI extends AppCompatActivity
 
     /* Views */
     protected Button enter;
-    protected CheckBox man;
+    protected AppCompatCheckBox man;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,7 +38,7 @@ public class IntroUI extends AppCompatActivity
         // Especificamos el layout 'intro.xml'
         setContentView(R.layout.intro);
 
-        man   = (CheckBox)findViewById(R.id.checkBox);
+        man   = (AppCompatCheckBox)findViewById(R.id.checkBox);
         enter = (Button)findViewById(R.id.enter);
 
         enter.setOnClickListener(new View.OnClickListener()
