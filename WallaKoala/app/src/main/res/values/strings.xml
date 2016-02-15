@@ -40,6 +40,19 @@
     <string name="filter_newness_1">Sólo novedades</string>
     <string name="filter_newness_2">Todos los productos</string>
 
+    <string name="filter_color_yellow">Amarillos</string>
+    <string name="filter_color_blue">Azules</string>
+    <string name="filter_color_beige">Beiges</string>
+    <string name="filter_color_white">Blancos</string>
+    <string name="filter_color_grey">Grises</string>
+    <string name="filter_color_khaki">Khakis</string>
+    <string name="filter_color_brown">Marrones</string>
+    <string name="filter_color_purple">Morados</string>
+    <string name="filter_color_black">Negros</string>
+    <string name="filter_color_red">Rojos</string>
+    <string name="filter_color_pink">Rosas</string>
+    <string name="filter_color_green">Verdes</string>
+
     <string name="accesibility_favorite">Favorito</string>
 
 </resources>

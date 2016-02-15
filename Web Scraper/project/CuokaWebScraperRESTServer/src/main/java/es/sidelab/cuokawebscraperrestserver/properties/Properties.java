@@ -13,7 +13,7 @@ public class Properties
     public static final String COLOR_PATH = "/var/www/html/images/products/";
     public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";
     
-    public static final int IMAGE_HEIGHT_S = 300;  
+    public static final int IMAGE_HEIGHT_S = 400;  
     public static final int IMAGE_HEIGHT_L = 850;
     public static final int ICON_WIDTH = 50;
     public static final int ICON_HEIGHT = 50;

@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Header -->
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
@@ -51,6 +52,7 @@
 
         </RelativeLayout>
 
+        <!-- Body -->
         <RadioGroup
             android:animateLayoutChanges="true"
             android:layout_width="match_parent"
@@ -63,7 +65,7 @@
             android:layout_marginBottom="16dp"
             android:orientation="vertical">
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/newness_all_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,7 +74,7 @@
                 android:layout_marginBottom="4dp"
                 android:buttonTint="@color/colorAccent"/>
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <RadioButton
                 android:id="@+id/newness_new_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
