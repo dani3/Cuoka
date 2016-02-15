@@ -29,13 +29,13 @@ public class ColorManager
         {
             String fileName = file.getName();
             
-            String[] colors = fileName.split("_");
+            String[] colors = fileName.split( "_" );
             for ( String color : colors )
             {
-                if ( color.contains("-") )
+                if ( color.contains( "-" ) )
                     colors_compound.add( color.replaceAll( "-", " " ) );
                 
-                else if ( ( ! color.contains("-") ) && ( ! color.contains("ICON") ) )
+                else if ( ( ! color.contains( "-" ) ) && ( ! color.contains( "ICON" ) ) )
                     colors_simple.add( color );
                 
             }

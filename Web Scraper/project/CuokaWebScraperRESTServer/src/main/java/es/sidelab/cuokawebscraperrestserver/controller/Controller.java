@@ -92,7 +92,6 @@ public class Controller
                     }               
                 }
 
-                product.setNewness( newness );
                 if ( newness )            
                     product.setInsertDate( Calendar.getInstance() );
 
@@ -130,15 +129,17 @@ public class Controller
      * Metodo que devuelve una lista de novedades de una tienda
      * @param shop: Tienda de la que se quieren las novedades.
      * @param man: true si se quiere solo los productos de hombre.
+     * @param offset: numero de dias del que se quiere los productos.
      * @return Lista de productos.
      */
-    @Cacheable( value = "products", key = "#shop.toString() + #man.toString()" )
-    @RequestMapping( value = "/newness/{shop}/{man}", method = RequestMethod.GET )
-    public List<Product> getNewness( @PathVariable String shop
-                            , @PathVariable String man )
+    @Cacheable( value = "products", key = "#shop.toString() + #man.toString() + #offset.toString()" )
+    @RequestMapping( value = "/products/{shop}/{man}/{offset}", method = RequestMethod.GET )
+    public List<Product> getProductsByShopAndByDay( @PathVariable String shop
+                            , @PathVariable String man
+                            , @PathVariable String offset )
     {
-        LOG.info( "Peticion GET para obtener las novedades de " + shop );
-        return productsRepository.findByManAndNewnessAndShop( Boolean.valueOf( man ), true, shop ) ;
+        LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) ) ;
     }
     
     /**

@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,7 +26,7 @@ public class IntroUI extends AppCompatActivity
 
     /* Views */
     protected Button enter;
-    protected CheckBox man;
+    protected AppCompatCheckBox man;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,7 +38,7 @@ public class IntroUI extends AppCompatActivity
         // Especificamos el layout 'intro.xml'
         setContentView(R.layout.intro);
 
-        man   = (CheckBox)findViewById(R.id.checkBox);
+        man   = (AppCompatCheckBox)findViewById(R.id.checkBox);
         enter = (Button)findViewById(R.id.enter);
 
         enter.setOnClickListener(new View.OnClickListener()
@@ -60,7 +61,7 @@ public class IntroUI extends AppCompatActivity
                 startActivity(intent);
 
                 // Animacion de transicion para pasar de una activity a otra.
-                overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
                 // Terminamos la activity, si se comenta, se da la posibilidad de volver a esta pantalla.
                 finish();

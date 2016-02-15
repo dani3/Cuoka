@@ -13,21 +13,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,6 +40,7 @@ import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.io.File;
 
@@ -48,13 +52,13 @@ import io.codetail.animation.ViewAnimationUtils;
  * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 
-public class ProductUI extends AppCompatActivity
+public class ProductUI extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
 {
     /* Constants */
     protected static final String TAG = "CUOKA";
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final TimeInterpolator sDecelerator = new DecelerateInterpolator();
-    protected static final int ANIM_DURATION = 500;
+    protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
+    protected static final int ANIM_DURATION = 250;
     protected static boolean EXITING;
     protected static boolean COLLAPSING;
 
@@ -72,11 +76,15 @@ public class ProductUI extends AppCompatActivity
     protected ProductAdapter mImagesAdapter;
     protected ColorIconListAdapter mColorIconAdapter;
 
+    /* GestureDetector */
+    protected GestureDetectorCompat mGestureDetector;
+
     /* LayoutManager */
     protected LinearLayoutManager mLinearLayoutManager;
 
     /* Views */
     protected ImageView mImageView;
+    protected ImageButton mFavoriteImageButton;
 
     /* TextViews */
     protected TextView mProductNameTextView;
@@ -100,14 +108,14 @@ public class ProductUI extends AppCompatActivity
     protected int mCurrentColor;
 
     /* Others */
-    protected int mLeftDelta;
-    protected int mTopDelta;
-    protected float mWidthScale;
-    protected float mHeightScale;
-    protected int mThumbnailLeft;
-    protected int mThumbnailTop;
-    protected float mThumbnailWidth;
-    protected float mThumbnailHeight;
+    protected int mLeftDeltaImage, mLeftDeltaFav;
+    protected int mTopDeltaImage, mTopDeltaFav;
+    protected float mWidthScaleImage, mWidthScaleFav;
+    protected float mHeightScaleImage, mHeightScaleFav;
+    protected int mThumbnailLeft, mThumbnailLeftFav;
+    protected int mThumbnailTop, mThumbnailTopFav;
+    protected float mThumbnailWidth, mThumbnailWidthFav;
+    protected float mThumbnailHeight, mThumbnailHeightFav;
     protected float mTopOffset;
     protected int mFloatingButtonX;
     protected int mFloatingButtonY;
@@ -142,14 +150,23 @@ public class ProductUI extends AppCompatActivity
                     mImageView.getViewTreeObserver().removeOnPreDrawListener(this);
 
                     // Sacamos donde esta la imagen pequeña y lo que hay que desplazarse hacia ella
-                    int[] screenLocation = new int[2];
-                    mImageView.getLocationOnScreen(screenLocation);
-                    mLeftDelta = mThumbnailLeft - screenLocation[0];
-                    mTopDelta = mThumbnailTop - screenLocation[1];
+                    int[] imageScreenLocation = new int[2];
+                    mImageView.getLocationOnScreen(imageScreenLocation);
+                    mLeftDeltaImage = mThumbnailLeft - imageScreenLocation[0];
+                    mTopDeltaImage = mThumbnailTop - imageScreenLocation[1];
 
                     // Factores de escala para saber cuanto hay que encojer o agrandar la imagen
-                    mWidthScale = mThumbnailWidth / mImageView.getWidth();
-                    mHeightScale = mThumbnailHeight / mImageView.getHeight();
+                    mWidthScaleImage = mThumbnailWidth / mImageView.getWidth();
+                    mHeightScaleImage = mThumbnailHeight / mImageView.getHeight();
+
+                    // Lo mismo para el boton de favorito
+                    int[] favScreenLocation = new int[2];
+                    mFavoriteImageButton.getLocationOnScreen(favScreenLocation);
+                    mLeftDeltaFav = mThumbnailLeftFav - favScreenLocation[0];
+                    mTopDeltaFav = mThumbnailTopFav - favScreenLocation[1];
+
+                    mWidthScaleFav = mThumbnailWidthFav / mFavoriteImageButton.getWidth();
+                    mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
 
                     runEnterAnimation();
 
@@ -169,14 +186,21 @@ public class ProductUI extends AppCompatActivity
 
         mContext = this;
 
+        mGestureDetector = new GestureDetectorCompat(this, this);
+        mGestureDetector.setOnDoubleTapListener(this);
+
         Bundle bundle = getIntent().getExtras();
 
-        mThumbnailTop    = bundle.getInt(PACKAGE + ".top");
-        mThumbnailLeft   = bundle.getInt(PACKAGE + ".left");
-        mThumbnailWidth  = bundle.getInt(PACKAGE + ".width");
-        mThumbnailHeight = bundle.getInt(PACKAGE + ".height");
-        mBitmapUri       = bundle.getString(PACKAGE + ".bitmap");
-        mProduct         = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
+        mThumbnailTopFav    = bundle.getInt(PACKAGE + ".topFav");
+        mThumbnailLeftFav   = bundle.getInt(PACKAGE + ".leftFav");
+        mThumbnailWidthFav  = bundle.getInt(PACKAGE + ".widthFav");
+        mThumbnailHeightFav = bundle.getInt(PACKAGE + ".heightFav");
+        mThumbnailTop       = bundle.getInt(PACKAGE + ".top");
+        mThumbnailLeft      = bundle.getInt(PACKAGE + ".left");
+        mThumbnailWidth     = bundle.getInt(PACKAGE + ".width");
+        mThumbnailHeight    = bundle.getInt(PACKAGE + ".height");
+        mBitmapUri          = bundle.getString(PACKAGE + ".bitmap");
+        mProduct            = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
 
         mTopOffset = 0.0f;
 
@@ -198,11 +222,12 @@ public class ProductUI extends AppCompatActivity
         mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
         mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
         mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
+        mFavoriteImageButton        = (ImageButton)findViewById(R.id.product_favorite);
 
         /* Inicializamos la info del producto */
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
         String description = "<b>Descripción: </b>" +  mProduct.getDescription();
-        String price = String.format("%.2f", mProduct.getPrice()) + "€";
+        SpannableString price = Utils.priceToString(mProduct.getPrice());
 
         mProductNameTextView.setText(mProduct.getName());
         mProductShopTextView.setText(mProduct.getShop());
@@ -271,7 +296,7 @@ public class ProductUI extends AppCompatActivity
 
                     mCurrentColor = position;
 
-                    String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(mCurrentColor).getReference();
+                    String reference = "<b>Referencia: </b>" + mProduct.getColors().get(mCurrentColor).getReference();
                     mProductReferenceTextView.setText(Html.fromHtml(reference));
                 }
 
@@ -300,11 +325,11 @@ public class ProductUI extends AppCompatActivity
 
         mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mTopOffset += dy;
             }
         });
@@ -342,28 +367,43 @@ public class ProductUI extends AppCompatActivity
      */
     private void runEnterAnimation()
     {
-        final long duration = (int)(ANIM_DURATION * 0.5);
-
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
-        mImageView.setScaleX(mWidthScale);
-        mImageView.setScaleY(mHeightScale);
-        mImageView.setTranslationX(mLeftDelta);
-        mImageView.setTranslationY(mTopDelta);
+        mImageView.setScaleX(mWidthScaleImage);
+        mImageView.setScaleY(mHeightScaleImage);
+        mImageView.setTranslationX(mLeftDeltaImage);
+        mImageView.setTranslationY(mTopDeltaImage);
+
+        mFavoriteImageButton.setPivotX(0);
+        mFavoriteImageButton.setPivotY(0);
+        mFavoriteImageButton.setScaleX(mWidthScaleFav);
+        mFavoriteImageButton.setScaleY(mHeightScaleFav);
+        mFavoriteImageButton.setTranslationX(mLeftDeltaFav);
+        mFavoriteImageButton.setTranslationY(mTopDeltaFav);
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande
-        mImageView.animate().setDuration(duration)
+        mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
+                                      .scaleX(1).scaleY(1)
+                                      .translationX(0).translationY(0)
+                                      .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
+
+        // Animacion de escalado y desplazamiento hasta el tamaño grande
+        mImageView.animate().setDuration(ANIM_DURATION)
                             .scaleX(1).scaleY(1)
                             .translationX(0).translationY(0)
-                            .setInterpolator(sDecelerator)
-                            .setListener(new Animator.AnimatorListener() {
+                            .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR)
+                            .setStartDelay(75)
+                            .setListener(new Animator.AnimatorListener()
+                            {
                                 @Override
                                 public void onAnimationStart(Animator animation) {
                                 }
 
                                 @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    if (!EXITING) {
+                                public void onAnimationEnd(Animator animation)
+                                {
+                                    if (!EXITING)
+                                    {
                                         mImagesRecylcerView.setVisibility(View.VISIBLE);
 
                                         // Hacemos aparecer el FloatingButton
@@ -382,7 +422,7 @@ public class ProductUI extends AppCompatActivity
                                         mFloatingButtonTop = screenLocation[1];
 
                                         mRadiusReveal = Math.max(mProductInfoLayout.getWidth()
-                                                , mProductInfoLayout.getHeight());
+                                                            , mProductInfoLayout.getHeight());
                                     }
                                 }
 
@@ -397,7 +437,7 @@ public class ProductUI extends AppCompatActivity
 
         // Efecto fade para oscurecer la pantalla
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
-        bgAnim.setDuration(duration);
+        bgAnim.setDuration(ANIM_DURATION);
         bgAnim.start();
     }
 
@@ -407,8 +447,6 @@ public class ProductUI extends AppCompatActivity
      */
     private void runExitAnimation(final Runnable endAction)
     {
-        final long duration = (int)(ANIM_DURATION * 0.6);
-
         EXITING = true;
 
         mImageView.setVisibility(View.VISIBLE);
@@ -417,10 +455,17 @@ public class ProductUI extends AppCompatActivity
         // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
         mImageView.setTranslationY(-mTopOffset);
 
-        mImageView.animate().setDuration(duration)
-                            .scaleX(mWidthScale).scaleY(mHeightScale)
-                            .translationX(mLeftDelta).translationY(mTopDelta)
+        mImageView.animate().setDuration(ANIM_DURATION)
+                            .setStartDelay(0)
+                            .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
+                            .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
                             .withEndAction(endAction);
+
+        mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
+                                      .setStartDelay(75)
+                                      .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
+                                      .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
+                                      .withEndAction(endAction);
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
             collapseInfo();
@@ -429,7 +474,7 @@ public class ProductUI extends AppCompatActivity
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-        bgAnim.setDuration(duration);
+        bgAnim.setDuration(ANIM_DURATION);
         bgAnim.start();
     }
 
@@ -452,7 +497,6 @@ public class ProductUI extends AppCompatActivity
     {
         super.finish();
 
-        // Deshabilitamos las animaciones de Android
         overridePendingTransition(0, 0);
     }
 
@@ -552,8 +596,10 @@ public class ProductUI extends AppCompatActivity
                 }
 
                 @Override
-                public void onAnimationEnd() {
+                public void onAnimationEnd()
+                {
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
+
                     COLLAPSING = false;
                 }
 
@@ -613,5 +659,59 @@ public class ProductUI extends AppCompatActivity
             animator.start();
         }
     }
+
+    /**
+     * IMPORTANTE, los onTouch events los captura el recycler para el scroll.
+     * Es imprescindible sobreescribir este metodo para que la Activity intercepte el evento.
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        mGestureDetector.onTouchEvent(event);
+
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent event)
+    {
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        int productInfoHeight = mProductInfoLayout.getHeight();
+
+        if ((mProductInfoLayout.getVisibility() == View.VISIBLE) &&
+            (screenHeight - productInfoHeight > event.getY()) &&
+            (!COLLAPSING))
+        {
+            Log.d(TAG, "OnSingleTap: Collapsing info");
+
+            collapseInfo();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event) { return false; }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent event) { return false; }
+
+    @Override
+    public boolean onDown(MotionEvent event) { return true; }
+
+    @Override
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) { return false; }
+
+    @Override
+    public void onLongPress(MotionEvent event) {}
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) { return false; }
+
+    @Override
+    public void onShowPress(MotionEvent event) {}
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) { return false; }
 
 }

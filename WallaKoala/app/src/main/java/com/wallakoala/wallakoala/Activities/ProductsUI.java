@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -40,7 +41,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,8 +69,10 @@ public class ProductsUI extends AppCompatActivity
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static boolean MAN;
+    protected static boolean FIRST_CONNECTION;
     protected static boolean ON_CREATE_FLAG;
     protected static int NUMBER_OF_CORES;
+    protected static int DAYS_OFFSET;
     protected enum STATE
     {
         ERROR
@@ -92,7 +94,7 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /* Data */
-    protected ConcurrentMap<String, List<Product>> mProductsMap;
+    protected List<ConcurrentMap<String, List<Product>>> mProductsListMap;
     protected Map<String, List<Product>> mProductsNonFilteredMap;
     protected Map<String, ?> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
@@ -115,12 +117,14 @@ public class ProductsUI extends AppCompatActivity
     protected TextView mToolbarTextView;
     protected TextView mNoDataTextView;
     protected View mLoadingView;
+    protected View mLoadingServerView;
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation moveAndFade;
+    protected Animation mMoveAndFadeAnimation;
+    protected Animation mShowFromDown, mHideFromUp;
 
     /* Snackbar */
     protected Snackbar mSnackbar;
@@ -161,7 +165,7 @@ public class ProductsUI extends AppCompatActivity
     {
         mSharedPreferences = new SharedPreferencesManager(this);
 
-        mProductsMap             = new ConcurrentHashMap<>();
+        mProductsListMap         = new ArrayList<>();
         mFilterMap               = _initFilterMap();
         mProductsNonFilteredMap  = new HashMap<>();
         mProductsDisplayedList   = new ArrayList<>();
@@ -174,10 +178,12 @@ public class ProductsUI extends AppCompatActivity
         start = count = 0;
         mBackPressed = 0;
 
+        DAYS_OFFSET = 0;
         MAN = mSharedPreferences.retreiveMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
+        FIRST_CONNECTION = true;
         ON_CREATE_FLAG = true;
 
         Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
@@ -205,7 +211,10 @@ public class ProductsUI extends AppCompatActivity
         mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
 
         // LoaderView
-        mLoadingView = findViewById(R.id.avloadingIndicatorView);
+        mLoadingView       = findViewById(R.id.avloadingIndicatorView);
+        mLoadingServerView = findViewById(R.id.loading);
+
+        mLoadingServerView.setVisibility(View.GONE);
 
         // TextView que muestran que no hay productos disponibles
         mNoDataTextView = (TextView)findViewById(R.id.nodata_textview);
@@ -239,18 +248,14 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                {
-                    if (scrollingUp)
-                    {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (scrollingUp) {
                         if (verticalOffset > mToolbar.getHeight())
                             _toolbarAnimateHide();
 
@@ -258,7 +263,7 @@ public class ProductsUI extends AppCompatActivity
                             _toolbarAnimateShow();
 
                     } else if ((mToolbar.getTranslationY() < (mToolbar.getHeight() * -0.6f) &&
-                               (verticalOffset > mToolbar.getHeight())))
+                            (verticalOffset > mToolbar.getHeight())))
                         _toolbarAnimateHide();
 
                     else
@@ -267,8 +272,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 verticalOffset += dy;
                 scrollingUp = dy > 0;
 
@@ -276,8 +280,7 @@ public class ProductsUI extends AppCompatActivity
 
                 mToolbar.animate().cancel();
 
-                if (scrollingUp)
-                {
+                if (scrollingUp) {
                     // Animacion de la toolbar
                     if (toolbarYOffset < mToolbar.getHeight())
                         mToolbar.setTranslationY(-toolbarYOffset);
@@ -285,13 +288,13 @@ public class ProductsUI extends AppCompatActivity
                         mToolbar.setTranslationY(-mToolbar.getHeight());
 
                     // Detectamos cuando llegamos abajo para cargar nuevos productos
-                    if (!mProductsCandidatesDeque.isEmpty())
-                    {
-                        int[] lastItemsPosition = new int[2];
-                        mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
+                    int[] lastItemsPosition = new int[2];
+                    mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
 
-                        if ((lastItemsPosition[0] >= mProductsDisplayedList.size() - 2) ||
+                    if ((lastItemsPosition[0] >= mProductsDisplayedList.size() - 2) ||
                             (lastItemsPosition[1] >= mProductsDisplayedList.size() - 1))
+                    {
+                        if (!mProductsCandidatesDeque.isEmpty())
                         {
                             // Sacamos los siguientes productos
                             getNextProductsToBeDisplayed();
@@ -305,9 +308,16 @@ public class ProductsUI extends AppCompatActivity
 
                             // Notificamos el cambio
                             mProductAdapter.notifyItemRangeInserted(start, count);
+
+                        } else {
+                            if (mState != STATE.LOADING)
+                            {
+                                DAYS_OFFSET++;
+
+                                new ConnectToServer().execute();
+                            }
                         }
                     }
-
 
                 } else if (toolbarYOffset < 0) {
                     mToolbar.setTranslationY(0);
@@ -390,8 +400,14 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initAnimations()
     {
-        moveAndFade = AnimationUtils.loadAnimation(ProductsUI.this
+        mMoveAndFadeAnimation = AnimationUtils.loadAnimation(ProductsUI.this
                 , R.anim.translate_and_fade);
+
+        mHideFromUp = AnimationUtils.loadAnimation(ProductsUI.this
+                , R.anim.hide_to_down);
+
+        mShowFromDown = AnimationUtils.loadAnimation(ProductsUI.this
+                , R.anim.show_up_from_down);
     }
 
     @Override
@@ -440,7 +456,7 @@ public class ProductsUI extends AppCompatActivity
         this.mMenu = menu;
 
         // Inflamos la ActionBar
-        getMenuInflater().inflate(R.menu.action_bar, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_grid, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -448,6 +464,18 @@ public class ProductsUI extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        if (item.getItemId() == R.id.menu_item_filter)
+        {
+            if (mState != STATE.LOADING)
+            {
+                Intent intent = new Intent(ProductsUI.this, FilterUI.class);
+                startActivity(intent);
+
+                // Animacion de transicion para pasar de una activity a otra.
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -496,16 +524,7 @@ public class ProductsUI extends AppCompatActivity
         // Recorremos el mapa de filtros
         for (String key : mFilterMap.keySet())
         {
-            // Si es el filtro de novedades
-            if (key.equals("newness"))
-            {
-                if (mFilterMap.get(key) != null)
-                    displayable =  ((Boolean)mFilterMap.get(key) == product.isNewness());
-            }
 
-            // Rompemos el bucle cuando el producto no pase algun filtro.
-            if (!displayable)
-                break;
         }
 
         return displayable;
@@ -523,10 +542,10 @@ public class ProductsUI extends AppCompatActivity
         boolean turn = true;
 
         // Inicializar mapa de indices con todos a 0.
-        for (String key : mProductsMap.keySet())
+        for (String key : mProductsListMap.get(mProductsListMap.size()-1).keySet())
             indexMap.put(key, 0);
 
-        Iterator<String> iterator = mProductsMap.keySet().iterator();
+        Iterator<String> iterator = mProductsListMap.get(mProductsListMap.size()-1).keySet().iterator();
 
         // Mientras queden productos pendientes.
         while (!finished)
@@ -535,7 +554,7 @@ public class ProductsUI extends AppCompatActivity
 
             // Sacamos el indice de donde nos quedamos y la lista de productos.
             int index = indexMap.get(key);
-            List<Product> list = mProductsMap.get(key);
+            List<Product> list = mProductsListMap.get(mProductsListMap.size()-1).get(key);
 
             // Mientras queden productos y no encontremos un producto mostrable.
             while((index < list.size()) && (turn))
@@ -556,7 +575,7 @@ public class ProductsUI extends AppCompatActivity
 
             // Si se ha terminado el recorrido, lo iniciamos de nuevo.
             if (!iterator.hasNext())
-                iterator = mProductsMap.keySet().iterator();
+                iterator = mProductsListMap.get(mProductsListMap.size()-1).keySet().iterator();
 
             finished = _checkIfFinished(indexMap);
 
@@ -578,7 +597,7 @@ public class ProductsUI extends AppCompatActivity
 
         for (int i = 0; i < mProductsInsertedPreviously; i++)
         {
-            mProductsDisplayedList.add( mProductsCandidatesDeque.getFirst() );
+            mProductsDisplayedList.add(mProductsCandidatesDeque.getFirst());
 
             mProductsCandidatesDeque.removeFirst();
         }
@@ -612,8 +631,7 @@ public class ProductsUI extends AppCompatActivity
             String section = jsonObject.getString("4");
             double price = jsonObject.getDouble("1");
             String link = jsonObject.getString("5");
-            boolean newness = jsonObject.getBoolean("7");
-            String description = jsonObject.getString("8");
+            String description = jsonObject.getString("7");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -629,14 +647,14 @@ public class ProductsUI extends AppCompatActivity
                 colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
             }
 
-            Product product = new Product( name, shop, section, price, link, description, colors, newness );
+            Product product = new Product( name, shop, section, price, link, description, colors );
 
             if (product.isOkay())
-                productsList.add( new Product( name, shop, section, price, link, description, colors, newness ) );
+                productsList.add( new Product( name, shop, section, price, link, description, colors ) );
 
         }
 
-        mProductsMap.put(key, productsList);
+        mProductsListMap.get(mProductsListMap.size()-1).put(key, productsList);
     }
 
     /**
@@ -654,7 +672,8 @@ public class ProductsUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            _loading(true, true);
+            if (mState != STATE.LOADING)
+                _loading(true, true);
 
             // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
             executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
@@ -710,7 +729,7 @@ public class ProductsUI extends AppCompatActivity
         {
             if (error != null)
             {
-                mLoadingView.setVisibility(View.GONE);
+                _loading(false, false);
 
                 _errorConnectingToServer();
 
@@ -743,16 +762,15 @@ public class ProductsUI extends AppCompatActivity
 
             try {
                 String fixedURL = SERVER_URL + ":" + SERVER_SPRING_PORT
-                        + "/newness/" + mShopsList.get(myPos).replaceAll(" ", "%20") + "/" + MAN;
+                        + "/products/" + mShopsList.get(myPos).replaceAll(" ", "%20") + "/" + MAN + "/" + DAYS_OFFSET;
 
-                Log.d(TAG, "Conectando con: " + fixedURL);
+                Log.d(TAG, "Conectando con: " + fixedURL
+                        + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
 
                 url = new URL(fixedURL);
 
                 if (url != null)
                 {
-                    Log.d(TAG, "Time INI (" + mShopsList.get(myPos) + "): " + Calendar.getInstance().toString());
-
                     URLConnection conn = url.openConnection();
 
                     // Obtenemos la respuesta del servidor
@@ -763,8 +781,6 @@ public class ProductsUI extends AppCompatActivity
                     // Leemos la respuesta
                     while ((line = reader.readLine()) != null)
                         sb.append(line + "");
-
-                    Log.d(TAG, "Time FIN (" + mShopsList.get(myPos) + "): " + Calendar.getInstance().toString());
 
                     // Devolvemos la respuesta
                     return sb.toString();
@@ -820,6 +836,8 @@ public class ProductsUI extends AppCompatActivity
 
             try
             {
+                mProductsListMap.add(new ConcurrentHashMap<String, List<Product>>());
+
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
@@ -842,6 +860,20 @@ public class ProductsUI extends AppCompatActivity
                 // ... y actualizamos la lista de los que se van a mostrar
                 getNextProductsToBeDisplayed();
 
+                // Si no es la primera conexion
+                if (!FIRST_CONNECTION)
+                {
+                    // Sacamos el indice del primer producto a insertar
+                    start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
+                    count = mProductsInsertedPreviously;
+
+                    // Actualizamos la lista de productos del adapter
+                    mProductAdapter.updateProductList(mProductsDisplayedList);
+
+                    // Notificamos el cambio
+                    mProductAdapter.notifyItemRangeInserted(start, count);
+                }
+
             } catch (Exception e) {
                 error = e.getMessage();
 
@@ -861,13 +893,15 @@ public class ProductsUI extends AppCompatActivity
 
             } else {
 
-                if (mProductsDisplayedList.isEmpty())
+                if (mProductsListMap.get(mProductsListMap.size()-1).isEmpty())
                 {
-                    _noData(true);
-                    mLoadingView.setVisibility(View.GONE);
+                    DAYS_OFFSET++;
+
+                    new ConnectToServer().execute();
 
                 } else {
                     _loading(false, true);
+
                 }
             }
         }
@@ -912,43 +946,78 @@ public class ProductsUI extends AppCompatActivity
         {
             if (ok)
             {
-                // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
-                moveAndFade.setAnimationListener(new Animation.AnimationListener()
+                if (FIRST_CONNECTION)
                 {
-                    @Override
-                    public void onAnimationStart(Animation animation) {}
+                    // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
+                    mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animation animation) {}
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mLoadingView.setVisibility(View.GONE);
-
-                        // La animacion de cada item solo esta disponible para 5.0+
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                        @Override
+                        public void onAnimationEnd(Animation animation)
                         {
-                            _initRecyclerView();
-                            mProductsRecyclerView.startAnimation(AnimationUtils.loadAnimation(ProductsUI.this
-                                                                            , android.R.anim.fade_in ));
+                            mLoadingView.setVisibility(View.GONE);
 
-                        } else {
-                            _initRecyclerView();
-                            mProductsRecyclerView.scheduleLayoutAnimation();
+                            // La animacion de cada item solo esta disponible para 5.0+
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                            {
+                                _initRecyclerView();
+                                mProductsRecyclerView.startAnimation(AnimationUtils.loadAnimation(ProductsUI.this
+                                        , android.R.anim.fade_in));
+
+                            } else {
+                                _initRecyclerView();
+                                mProductsRecyclerView.scheduleLayoutAnimation();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {}
-                } );
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {}
+                    });
 
-                mLoadingView.startAnimation(moveAndFade);
+                    mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
-                mState = STATE.NORMAL;
+                    mState = STATE.NORMAL;
 
-            } else
+                    FIRST_CONNECTION = false;
+
+                } else {
+                    mHideFromUp.setAnimationListener(new Animation.AnimationListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animation animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animation animation)
+                        {
+                            mLoadingServerView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {}
+                    });
+
+                    mLoadingServerView.startAnimation(mHideFromUp);
+
+                    mState = STATE.NORMAL;
+                }
+
+            } else {
                 mLoadingView.setVisibility(View.GONE);
+                mLoadingServerView.setVisibility(View.GONE);
+            }
+
+        } else if (FIRST_CONNECTION) {
+            // Pantalla de carga cuando es la primera conexion
+            mLoadingView.setVisibility(View.VISIBLE);
+
+            mState = STATE.LOADING;
 
         } else {
-            // Pantalla de carga
-            mLoadingView.setVisibility(View.VISIBLE);
+            // Icono de carga
+            mLoadingServerView.startAnimation(mShowFromDown);
+            mLoadingServerView.setVisibility(View.VISIBLE);
 
             mState = STATE.LOADING;
         }
@@ -995,7 +1064,7 @@ public class ProductsUI extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                new ConnectToServer().execute("Springfield", "Blanco", "HyM");
+                new ConnectToServer().execute();
             }
         });
 
@@ -1019,7 +1088,7 @@ public class ProductsUI extends AppCompatActivity
         {
             String key = iterator.next();
 
-            finished = (mProductsMap.get(key).size() == indexMap.get(key));
+            finished = (mProductsListMap.get(mProductsListMap.size()-1).get(key).size() == indexMap.get(key));
         }
 
         return finished;

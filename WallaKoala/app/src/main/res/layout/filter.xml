@@ -1,115 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/filter_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
-    android:weightSum="1">
+    android:background="@drawable/shop_background_bw">
+
+    <!-- Toolbar -->
+    <include android:id="@+id/filter_appbar"
+        layout="@layout/toolbar">
+
+    </include>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.8"
-        android:alpha="0.5"
-        android:background="@android:color/black">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
         android:orientation="vertical"
-        android:background="@android:color/white"
-        android:elevation="16dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp">
 
-        <!-- Filtro tiendas -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+        <!-- Lista de filtros -->
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/filter_image_shop"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_local_mall_black"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Tiendas"
-                android:textSize="10sp"
-                android:textColor="@color/colorText"
-                android:layout_below="@+id/filter_image_shop"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:background="@drawable/filter_bottom_border">
 
-        </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/filter_shop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="16dp">
 
-        <!-- Filtro secciones -->
-        <RelativeLayout
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/filter_image_shop"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        android:src="@android:color/holo_blue_light"/>
+
+                    <TextView
+                        android:id="@+id/filter_text_shop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_item_shops"
+                        android:textSize="14dp"
+                        android:textColor="@color/colorLightText"
+                        android:layout_below="@+id/filter_image_shop"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/filter_section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/filter_image_section"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        android:src="@android:color/holo_purple"/>
+
+                    <TextView
+                        android:id="@+id/filter_text_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_item_sections"
+                        android:textSize="14dp"
+                        android:textColor="@color/colorLightText"
+                        android:layout_below="@+id/filter_image_section"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/filter_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/filter_image_price"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        android:src="@android:color/holo_green_light"/>
+
+                    <TextView
+                        android:id="@+id/filter_text_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_item_price"
+                        android:textSize="14dp"
+                        android:textColor="@color/colorLightText"
+                        android:layout_below="@+id/filter_image_price"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/filter_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/filter_image_color"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        android:src="@android:color/holo_orange_light"/>
+
+                    <TextView
+                        android:id="@+id/filter_text_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_item_colors"
+                        android:textSize="14dp"
+                        android:textColor="@color/colorLightText"
+                        android:layout_below="@+id/filter_image_color"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/filter_newness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/filter_image_newness"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        android:src="@android:color/darker_gray"/>
+
+                    <TextView
+                        android:id="@+id/filter_text_newness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_item_newness"
+                        android:textSize="14dp"
+                        android:textColor="@color/colorLightText"
+                        android:layout_below="@+id/filter_image_newness"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/filter_image_section"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_today"
-                android:layout_centerVertical="true"
-                android:background="@color/colorAccent"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/menu_items"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Secciones"
-                android:textSize="10sp"
-                android:textColor="@color/colorText"
-                android:layout_below="@+id/filter_image_section"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
+                android:paddingBottom="95dp"
+                android:orientation="vertical"
+                android:animateLayoutChanges="true">
 
-        </RelativeLayout>
+                <include android:id="@+id/filter_item_shop_menu"
+                    layout="@layout/filter_item_shop"/>
 
-        <!-- Filtro secciones -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+                <include android:id="@+id/filter_item_section_menu"
+                    layout="@layout/filter_item_sections"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/filter_image_price"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_sort_by_size"
-                android:layout_centerVertical="true"
-                android:background="@android:color/holo_green_dark"
-                android:layout_centerHorizontal="true"/>
+                <include android:id="@+id/filter_item_price_menu"
+                    layout="@layout/filter_item_price"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Precio"
-                android:textSize="10sp"
-                android:textColor="@color/colorText"
-                android:layout_below="@+id/filter_image_price"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
+                <include android:id="@+id/filter_item_color_menu"
+                    layout="@layout/filter_item_colors"/>
 
-        </RelativeLayout>
+                <include android:id="@+id/filter_item_newness_menu"
+                    layout="@layout/filter_item_newness"/>
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white"
+        android:layout_gravity="bottom|right|end"
+        android:layout_margin="24dp"
+        app:borderWidth="0dp"/>
+
+</android.support.design.widget.CoordinatorLayout>

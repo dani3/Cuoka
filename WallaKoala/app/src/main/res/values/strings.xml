@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">cuoka</string>
+    <string name="toolbar_filter">Filtros</string>
 
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>
@@ -13,7 +14,7 @@
     <string name="help_item">Ayuda</string>
 
     <string name="footer_shop">TIENDA</string>
-    <string name="footer_section">Seccion</string>
+    <string name="footer_section">SECCION</string>
 
     <string name="product_info_name">NOMBRE DEL PRODUCTO</string>
     <string name="product_info_price">29.99€</string>
@@ -29,6 +30,28 @@
     <string name="filter_sizes">sizes</string>
     <string name="filter_colors">colors</string>
     <string name="filter_sections">sections</string>
+
+    <string name="filter_item_shops">Tiendas</string>
+    <string name="filter_item_sections">Secciones</string>
+    <string name="filter_item_price">Precio</string>
+    <string name="filter_item_colors">Colores</string>
+    <string name="filter_item_newness">Novedades</string>
+
+    <string name="filter_newness_1">Sólo novedades</string>
+    <string name="filter_newness_2">Todos los productos</string>
+
+    <string name="filter_color_yellow">Amarillos</string>
+    <string name="filter_color_blue">Azules</string>
+    <string name="filter_color_beige">Beiges</string>
+    <string name="filter_color_white">Blancos</string>
+    <string name="filter_color_grey">Grises</string>
+    <string name="filter_color_khaki">Khakis</string>
+    <string name="filter_color_brown">Marrones</string>
+    <string name="filter_color_purple">Morados</string>
+    <string name="filter_color_black">Negros</string>
+    <string name="filter_color_red">Rojos</string>
+    <string name="filter_color_pink">Rosas</string>
+    <string name="filter_color_green">Verdes</string>
 
     <string name="accesibility_favorite">Favorito</string>
 

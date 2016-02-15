@@ -24,19 +24,25 @@
 
         <activity android:name=".Activities.LoginUI"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
 
         <activity android:name=".Activities.ProductsUI"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="adjustNothing">  <!-- No modifica la interfaz al mostrar el teclado -->
+            android:configChanges="orientation|keyboardHidden">
         </activity>
 
         <activity android:name=".Activities.ProductUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/Transparent">
+        </activity>
+
+        <activity android:name=".Activities.FilterUI"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
 
     </application>

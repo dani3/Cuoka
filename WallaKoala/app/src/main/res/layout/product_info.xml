@@ -31,7 +31,7 @@
                 android:textColor="@android:color/white"
                 android:text="@string/product_info_name"
                 android:textSize="16dp"
-                android:singleLine="true"
+                android:maxLines="2"
                 android:ellipsize="end"
                 android:textStyle="bold"/>
 
@@ -68,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
+                android:textSize="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/product_info_reference"
                 android:singleLine="true"
@@ -83,7 +84,11 @@
                 android:textColor="@android:color/white"
                 android:text="@string/product_info_price"
                 android:textSize="24dp"
-                android:layout_marginBottom="16dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/product_price_footer_relief"
+                android:layout_marginBottom="14dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignLeft="@+id/product_info_description"
                 android:layout_alignStart="@+id/product_info_description"/>

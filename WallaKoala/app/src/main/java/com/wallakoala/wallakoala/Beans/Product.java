@@ -19,7 +19,6 @@ public class Product implements Serializable
 	private double price;
 	private String link;
 	private String description;
-	private boolean newness;
 	private List<ColorVariant> colors;
 	
 	public Product() {}
@@ -30,8 +29,7 @@ public class Product implements Serializable
 			 , double price
 			 , String link
              , String description
-			 , List<ColorVariant> colors
-			 , boolean newness )
+			 , List<ColorVariant> colors )
 	{
 		this.name = name;
 		this.shop = shop;
@@ -40,7 +38,6 @@ public class Product implements Serializable
 		this.link = link;
         this.description = description;
 		this.colors = colors;
-		this.newness = newness;
 	}
 
 	public String getName()               { return this.name; }
@@ -50,7 +47,6 @@ public class Product implements Serializable
     public String getDescription()        { return this.description; }
 	public List<ColorVariant> getColors() { return this.colors; }
 	public String getLink()               { return this.link; }
-	public boolean isNewness()            { return this.newness; }
 
 	public void setName( String name ) { this.name = name; }
 

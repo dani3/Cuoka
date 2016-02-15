@@ -163,7 +163,7 @@ public class PdHScraper implements Scraper
             
         } // for products
         
-        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );
+        ActivityStatsManager.updateProducts( shop.getName(), section, prodOK, prodNOK );
             
         return productList;
     }

@@ -14,16 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Loading View -->
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/avloadingitem"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:indicator="BallClipRotate"
-            app:indicator_color="@color/colorAccent"/>
-
         <!-- Imagen -->
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/grid_image"
@@ -34,6 +24,17 @@
             app:riv_corner_radius_bottom_right="4dp"
             app:riv_corner_radius_top_left="4dp"
             app:riv_corner_radius_top_right="4dp"/>
+
+        <ImageButton
+            android:id="@+id/product_item_favorite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|right|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_favorite_border_white"
+            android:tint="@color/colorAccent"
+            android:background="@android:color/transparent"/>
 
         <!-- Pie de foto -->
         <RelativeLayout
