@@ -207,11 +207,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorRemove.setOnClickListener(this);
         mFilterNewnessRemove.setOnClickListener(this);
 
-        mFilterShopMenuLayout.setVisibility(View.GONE);
-        mFilterSectionMenuLayout.setVisibility(View.GONE);
-        mFilterPriceMenuLayout.setVisibility(View.GONE);
-        mFilterColorMenuLayout.setVisibility(View.GONE);
-        mFilterNewnessMenuLayout.setVisibility(View.GONE);
+        if (mFilterShopMenuLayout.getParent() != null)
+            ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
+
+        if (mFilterSectionMenuLayout.getParent() != null)
+            ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
+
+        if (mFilterPriceMenuLayout.getParent() != null)
+            ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
+
+        if (mFilterColorMenuLayout.getParent() != null)
+            ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
+
+        if (mFilterNewnessMenuLayout.getParent() != null)
+            ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
     }
 
     @Override
@@ -230,11 +239,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .alpha(ALPHA_ACTIVE_FILTER)
                                               .setInterpolator(new OvershootInterpolator());
 
-                mFilterShopMenuLayout.setVisibility(View.VISIBLE);
-
-                if (mFilterShopMenuLayout.getParent() != null)
-                    ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
-
                 mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
             }
         }
@@ -250,11 +254,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .scaleYBy(0.1f)
                                                  .alpha(ALPHA_ACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
-
-                mFilterSectionMenuLayout.setVisibility(View.VISIBLE);
-
-                if (mFilterSectionMenuLayout.getParent() != null)
-                    ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
 
                 mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
             }
@@ -272,11 +271,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
-                mFilterPriceMenuLayout.setVisibility(View.VISIBLE);
-
-                if (mFilterPriceMenuLayout.getParent() != null)
-                    ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
-
                 mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
             }
         }
@@ -293,11 +287,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
-                mFilterColorMenuLayout.setVisibility(View.VISIBLE);
-
-                if (mFilterColorMenuLayout.getParent() != null)
-                    ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
-
                 mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
             }
         }
@@ -313,11 +302,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .scaleYBy(0.1f)
                                                  .alpha(ALPHA_ACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
-
-                mFilterNewnessMenuLayout.setVisibility(View.VISIBLE);
-
-                if (mFilterNewnessMenuLayout.getParent() != null)
-                    ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
 
                 mItemsMenuViewGroup.addView(mFilterNewnessMenuLayout, 0);
             }
