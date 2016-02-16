@@ -98,7 +98,7 @@ public class ProductsUI extends AppCompatActivity
     /* Data */
     protected List<ConcurrentMap<String, List<Product>>> mProductsListMap;
     protected Map<String, List<Product>> mProductsNonFilteredMap;
-    protected Map<String, ?> mFilterMap;
+    protected Map<String, Object> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
     protected List<Product> mProductsDisplayedList;
     protected List<String> mShopsList;
@@ -195,7 +195,7 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que inicializa el mapa de filtros.
      * @return: Mapa con los filtros actuales.
      */
-    protected Map<String, ?> _initFilterMap()
+    protected Map<String, Object> _initFilterMap()
     {
         Map<String, Object> map = new HashMap<>();
 
@@ -469,6 +469,11 @@ public class ProductsUI extends AppCompatActivity
             if (mState != STATE.LOADING)
             {
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
+
+                List<String> aux = new ArrayList<>();
+                /*aux.add("Rojos");
+                aux.add("Amarillos");
+                mFilterMap.put("colors", aux);*/
 
                 intent.putExtra(PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
                 intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));

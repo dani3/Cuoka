@@ -103,6 +103,18 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mShopSpringfieldCheckBox;
     protected AppCompatCheckBox mShopHyMCheckBox;
 
+    protected AppCompatCheckBox mColorYellowCheckBox;
+    protected AppCompatCheckBox mColorBlueCheckBox;
+    protected AppCompatCheckBox mColorBeigeCheckBox;
+    protected AppCompatCheckBox mColorWhiteCheckBox;
+    protected AppCompatCheckBox mColorGreyCheckBox;
+    protected AppCompatCheckBox mColorBrownCheckBox;
+    protected AppCompatCheckBox mColorPurpleCheckBox;
+    protected AppCompatCheckBox mColorBlackCheckBox;
+    protected AppCompatCheckBox mColorRedCheckBox;
+    protected AppCompatCheckBox mColorPinkCheckBox;
+    protected AppCompatCheckBox mColorGreenCheckBox;
+
     /* Data */
     protected List<String> mShopsList;
     protected List<String> mFilterShops;
@@ -273,6 +285,18 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorRemove.setOnClickListener(this);
         mFilterNewnessRemove.setOnClickListener(this);
 
+        mColorYellowCheckBox = (AppCompatCheckBox)findViewById(R.id.filter_color_yellow);
+        mColorBlueCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_blue);
+        mColorBeigeCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_beige);
+        mColorWhiteCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_white);
+        mColorGreyCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_grey);
+        mColorBrownCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_brown);
+        mColorPurpleCheckBox = (AppCompatCheckBox)findViewById(R.id.filter_color_purple);
+        mColorBlackCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_black);
+        mColorRedCheckBox    = (AppCompatCheckBox)findViewById(R.id.filter_color_red);
+        mColorPinkCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_pink);
+        mColorGreenCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_green);
+
         /*
          * Si el filtro de colores esta activo, inicializamos cada CheckBox usando la lista mFilterColors
          * y lo añadimos al layout.
@@ -286,6 +310,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             for (String color : mFilterColors)
             {
+                switch (color)
+                {
+                    case "Amarillos": mColorYellowCheckBox.setChecked(true); break;
+                    case "Azules": mColorBlueCheckBox.setChecked(true); break;
+                    case "Beiges": mColorBeigeCheckBox.setChecked(true); break;
+                    case "Blancos": mColorWhiteCheckBox.setChecked(true); break;
+                    case "Grises": mColorGreyCheckBox.setChecked(true); break;
+                    case "Marrones": mColorBrownCheckBox.setChecked(true); break;
+                    case "Morados": mColorPurpleCheckBox.setChecked(true); break;
+                    case "Negros": mColorBlackCheckBox.setChecked(true); break;
+                    case "Rojos": mColorRedCheckBox.setChecked(true); break;
+                    case "Rosas": mColorPinkCheckBox.setChecked(true); break;
+                    case "Verdes": mColorGreenCheckBox.setChecked(true); break;
+                }
 
             }
         }
