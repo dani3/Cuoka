@@ -70,7 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/filter_newness_2"
-                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:textColor="@color/colorMediumText"
                 android:layout_marginBottom="4dp"
                 app:buttonTint="@color/colorAccent"/>
 
@@ -79,7 +80,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/filter_newness_1"
-                android:textColor="@color/colorText"
+                android:textSize="16dp"
+                android:textColor="@color/colorMediumText"
                 app:buttonTint="@color/colorAccent"/>
 
         </RadioGroup>

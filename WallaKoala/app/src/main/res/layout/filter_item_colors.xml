@@ -80,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_yellow"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_blue"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_beige"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_white"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_grey"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_brown"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_purple"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_black"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -153,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_red"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -161,7 +161,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_pink"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
@@ -169,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_color_green"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
