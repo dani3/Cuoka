@@ -53,6 +53,22 @@
     <string name="filter_color_pink">Rosas</string>
     <string name="filter_color_green">Verdes</string>
 
+    <string name="filter_section_camisas">Camisas</string>
+    <string name="filter_section_camisetas">Camisetas</string>
+    <string name="filter_section_trajes">Trajes</string>
+    <string name="filter_section_americanas">Americanas</string>
+    <string name="filter_section_pantalones">Pantalones</string>
+    <string name="filter_section_vaqueros">Vaqueros</string>
+    <string name="filter_section_abrigos">Abrigos</string>
+    <string name="filter_section_sudaderas">Sudaderas</string>
+
+    <string name="filter_shops_all">Todas las tiendas</string>
+    <string name="filter_shops_only_mine">Sólo mis tiendas</string>
+    <string name="filter_shops_blanco">Blanco</string>
+    <string name="filter_shops_pedro_del_hierro">Pedro Del Hierro</string>
+    <string name="filter_shops_springfield">Springfield</string>
+    <string name="filter_shops_hym">HyM</string>
+
     <string name="filter_price_from">De:</string>
     <string name="filter_price_to">Hasta:</string>
 
