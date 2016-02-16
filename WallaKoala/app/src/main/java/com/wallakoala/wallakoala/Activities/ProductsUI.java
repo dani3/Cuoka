@@ -64,8 +64,10 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     protected static final String TAG = "CUOKA";
+    protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected static final int FILTER_REQUEST = 1;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static boolean MAN;
@@ -196,8 +198,6 @@ public class ProductsUI extends AppCompatActivity
     protected Map<String, ?> _initFilterMap()
     {
         Map<String, Object> map = new HashMap<>();
-
-        map.put(getResources().getString(R.string.filter_newness), mSharedPreferences.retreiveNewness());
 
         return map;
     }
@@ -469,7 +469,16 @@ public class ProductsUI extends AppCompatActivity
             if (mState != STATE.LOADING)
             {
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
-                startActivity(intent);
+
+                intent.putExtra(PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
+                intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
+                intent.putExtra(PACKAGE + ".colors", (ArrayList<String>)mFilterMap.get("colors"));
+                intent.putExtra(PACKAGE + ".shops", (ArrayList<String>)mFilterMap.get("shops"));
+                intent.putExtra(PACKAGE + ".minPrice", (Integer)mFilterMap.get("minPrice"));
+                intent.putExtra(PACKAGE + ".maxPrice", (Integer)mFilterMap.get("maxPrice"));
+                intent.putExtra(PACKAGE + ".man", MAN);
+
+                startActivityForResult(intent, FILTER_REQUEST);
 
                 // Animacion de transicion para pasar de una activity a otra.
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -477,6 +486,12 @@ public class ProductsUI extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -513,24 +528,6 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que determina si un producto pasa el filtro o no.
-     * @param product: Producto a comprobar.
-     * @return: true si el producto ha pasado el filtro y, por tanto, se puede mostrar.
-     */
-    protected boolean _isDisplayable(Product product)
-    {
-        boolean displayable = true;
-
-        // Recorremos el mapa de filtros
-        for (String key : mFilterMap.keySet())
-        {
-
-        }
-
-        return displayable;
-    }
-
-    /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
      * Solo se queda con los productos que pasen el filtro.
      */
@@ -559,14 +556,8 @@ public class ProductsUI extends AppCompatActivity
             // Mientras queden productos y no encontremos un producto mostrable.
             while((index < list.size()) && (turn))
             {
-                // Si el producto pasa el filtro, se añade a la cola
-                if (_isDisplayable(list.get(index)))
-                {
-                    mProductsCandidatesDeque.addLast(list.get(index));
-                    turn = false;
-                }
-
-                index++;
+                mProductsCandidatesDeque.addLast(list.get(index++));
+                turn = false;
             } // while #2
 
             // Actualizamos el mapa de indices.

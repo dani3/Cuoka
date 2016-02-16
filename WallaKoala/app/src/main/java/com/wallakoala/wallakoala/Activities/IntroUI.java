@@ -55,7 +55,6 @@ public class IntroUI extends AppCompatActivity
 
                 mSharedPreferencesManager.insertMan(man.isChecked());
                 mSharedPreferencesManager.insertShops(shops);
-                mSharedPreferencesManager.insertNewness(true);
 
                 Intent intent = new Intent(IntroUI.this, ProductsUI.class);
                 startActivity(intent);

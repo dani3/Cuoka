@@ -77,14 +77,16 @@
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_shops_all"
                     android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="18dp"
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_blanco"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_shops_blanco"
@@ -93,6 +95,7 @@
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_pedro_del_hierro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_shops_pedro_del_hierro"
@@ -110,14 +113,16 @@
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_new"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_shops_only_mine"
                     android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="18dp"
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_springfield"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_shops_springfield"
@@ -126,6 +131,7 @@
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_hym"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_shops_hym"

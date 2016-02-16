@@ -1,12 +1,15 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,12 +17,19 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @class Activity con la pantalla de filtros.
@@ -30,14 +40,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 {
     /* Constants */
     protected static final String TAG = "CUOKA";
+    protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final float ALPHA_ACTIVE_FILTER = 0.8f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
+    protected static boolean MAN;
 
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButton;
 
     /* Toolbar */
     protected Toolbar mToolbar;
+
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferences;
 
     /* Snackbar */
     protected Snackbar mSnackbar;
@@ -80,7 +95,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatRadioButton mNewnessAllRadioButton;
     protected AppCompatRadioButton mNewnessNewRadioButton;
 
+    /* CheckBoxes */
+    protected AppCompatCheckBox mShopAllCheckBox;
+    protected AppCompatCheckBox mShopNewCheckBox;
+    protected AppCompatCheckBox mShopBlancoCheckBox;
+    protected AppCompatCheckBox mShopPedroDelHierroCheckBox;
+    protected AppCompatCheckBox mShopSpringfieldCheckBox;
+    protected AppCompatCheckBox mShopHyMCheckBox;
+
     /* Data */
+    protected List<String> mShopsList;
+    protected List<String> mFilterShops;
+    protected List<String> mFilterColors;
+    protected List<String> mFilterSections;
+    protected Map<String, ?> mFilterMap;
+    protected int mFilterMinPrice;
+    protected int mFilterMaxPrice;
+    protected boolean mFilterNewness;
     protected boolean SHOP_FILTER_ACTIVE;
     protected boolean SECTION_FILTER_ACTIVE;
     protected boolean PRICE_FILTER_ACTIVE;
@@ -93,6 +124,37 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.filter);
+
+        if (savedInstanceState == null)
+        {
+            Map<String, Object> map = new HashMap<>();
+
+            Intent intent = getIntent();
+
+            // Filtro de novedades (false si no esta activado)
+            map.put("newness", intent.getBooleanExtra(PACKAGE + ".newness", false));
+            // Filtro de secciones (null si no esta activado)
+            map.put("sections", intent.getSerializableExtra(PACKAGE + ".sections"));
+            // Filtro de colores (null si no esta activado)
+            map.put("colors", intent.getSerializableExtra(PACKAGE + ".colors"));
+            // Filtro de tiendas (null si no esta activado)
+            map.put("shops", intent.getSerializableExtra(PACKAGE + ".shops"));
+            // Filtro de precio (minimo) (-1 si no esta activado)
+            map.put("minPrice", intent.getIntExtra(PACKAGE + ".minPrice", -1));
+            // Filtro de precio (maximo) (-1 si no esta activado)
+            map.put("maxPrice", intent.getIntExtra(PACKAGE + ".maxPrice", -1));
+
+            MAN = intent.getBooleanExtra(PACKAGE + ".man", false);
+
+            mFilterNewness  = intent.getBooleanExtra(PACKAGE + ".newness", false);
+            mFilterMinPrice = intent.getIntExtra(PACKAGE + ".minPrice", -1);
+            mFilterMaxPrice = intent.getIntExtra(PACKAGE + ".maxPrice", -1);
+            mFilterSections = (ArrayList<String>)intent.getSerializableExtra(PACKAGE + ".sections");
+            mFilterColors   = (ArrayList<String>)intent.getSerializableExtra(PACKAGE + ".colors");
+            mFilterShops    = (ArrayList<String>)intent.getSerializableExtra(PACKAGE + ".shops");
+
+            mFilterMap = map;
+        }
 
         _initData();
         _initToolbar();
@@ -107,11 +169,16 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initData()
     {
-        SHOP_FILTER_ACTIVE    = false;
-        SECTION_FILTER_ACTIVE = false;
-        PRICE_FILTER_ACTIVE   = false;
-        COLOR_FILTER_ACTIVE   = false;
-        NEWNESS_FILTER_ACTIVE = false;
+        SHOP_FILTER_ACTIVE    = (mFilterShops != null);
+        SECTION_FILTER_ACTIVE = (mFilterSections != null);
+        PRICE_FILTER_ACTIVE   = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
+        COLOR_FILTER_ACTIVE   = (mFilterColors != null);
+        NEWNESS_FILTER_ACTIVE = true;
+
+        mShopsList = new ArrayList<>();
+        mSharedPreferences = new SharedPreferencesManager(this);
+        for (String shop : mSharedPreferences.retreiveShops())
+            mShopsList.add(shop);
     }
 
     /**
@@ -170,11 +237,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorImageView   = (ImageView)findViewById(R.id.filter_image_color);
         mFilterNewnessImageView = (ImageView)findViewById(R.id.filter_image_newness);
 
-        mFilterShopImageView.setAlpha(ALPHA_INACTIVE_FILTER);
-        mFilterSectionImageView.setAlpha(ALPHA_INACTIVE_FILTER);
-        mFilterPriceImageView.setAlpha(ALPHA_INACTIVE_FILTER);
-        mFilterColorImageView.setAlpha(ALPHA_INACTIVE_FILTER);
-        mFilterNewnessImageView.setAlpha(ALPHA_INACTIVE_FILTER);
+        mFilterShopImageView.setAlpha((mFilterShops == null) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterSectionImageView.setAlpha((mFilterSections == null) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterPriceImageView.setAlpha(((mFilterMinPrice == -1) && (mFilterMaxPrice == -1)) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterColorImageView.setAlpha((mFilterColors == null) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterNewnessImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
         mFilterShopItemLayout.setOnClickListener(this);
         mFilterSectionItemLayout.setOnClickListener(this);
@@ -206,20 +273,128 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorRemove.setOnClickListener(this);
         mFilterNewnessRemove.setOnClickListener(this);
 
-        if (mFilterShopMenuLayout.getParent() != null)
+        /*
+         * Si el filtro de colores esta activo, inicializamos cada CheckBox usando la lista mFilterColors
+         * y lo añadimos al layout.
+         */
+        ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
+        if (COLOR_FILTER_ACTIVE)
+        {
+            Log.d(TAG, "Filtro de colores ACTIVO");
+
+            mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
+
+            for (String color : mFilterColors)
+            {
+
+            }
+        }
+
+        /*
+         * Si el filtro de secciones esta activo, inicializamos cada CheckBox usando la lista mFilterSections
+         * y lo añadimos al layout.
+         */
+        ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
+        if (SECTION_FILTER_ACTIVE)
+        {
+            Log.d(TAG, "Filtro de secciones ACTIVO");
+
+            mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
+        }
+
+        mShopAllCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_all);
+        mShopNewCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_new);
+        mShopBlancoCheckBox         = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_blanco);
+        mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
+        mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
+        mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
+
+        mShopAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                mShopBlancoCheckBox.setChecked(isChecked);
+                mShopPedroDelHierroCheckBox.setChecked(isChecked);
+                mShopHyMCheckBox.setChecked(isChecked);
+                mShopSpringfieldCheckBox.setChecked(isChecked);
+            }
+        });
+
+        mShopNewCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+
+            }
+        });
+
+        /*
+         * Si el filtro de tiendas esta activo, lo añadimos al layout e inicializamos los CheckBoxes.
+         * Si no, solo inicializamos los CheckBoxes, sin añadir al layout.
+         */
+        if (SHOP_FILTER_ACTIVE)
+        {
+            Log.d(TAG, "Filtro de tiendas ACTIVO");
+
             ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
 
-        if (mFilterSectionMenuLayout.getParent() != null)
-            ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
+            mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
-        if (mFilterPriceMenuLayout.getParent() != null)
-            ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
+            for (String shop : mFilterShops )
+            {
 
-        if (mFilterColorMenuLayout.getParent() != null)
-            ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
+            }
 
-        if (mFilterNewnessMenuLayout.getParent() != null)
+        } else {
+
+            ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
+        }
+
+        /*
+         * Si el filtro de novedades esta activo, lo añadimos al layout e inicializamos los RadioButtons
+         * usando el booleano mFilterNewness.
+         */
+        if (NEWNESS_FILTER_ACTIVE)
+        {
+            Log.d(TAG, "Filtro de novedades ACTIVO");
+            if (mFilterNewness)
+                Log.d(TAG, "  - Solo novedades");
+            else
+                Log.d(TAG, "  - Todos los products");
+
             ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
+
+            mItemsMenuViewGroup.addView(mFilterNewnessMenuLayout, 0);
+
+            mFilterNewnessImageView.setScaleX(1.1f);
+            mFilterNewnessImageView.setScaleY(1.1f);
+            mFilterNewnessImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            mNewnessAllRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_all_radio_button);
+            mNewnessNewRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_new_radio_button);
+
+            mNewnessNewRadioButton.setChecked(false);
+            mNewnessNewRadioButton.setChecked(false);
+
+            if (mFilterNewness)
+                mNewnessNewRadioButton.setChecked(true);
+            else
+                mNewnessAllRadioButton.setChecked(true);
+        }
+
+        /*
+         * Si el filtro de precios esta activo, inicializamos los EditText y la RangeSeekBar
+         * usando los dos integers mFilterMinPrice y mFilterMaxPrice y lo añadimos al layout.
+         */
+        ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
+        if (PRICE_FILTER_ACTIVE)
+        {
+            Log.d(TAG, "Filtro de precio ACTIVO");
+
+            mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
+        }
     }
 
     @Override
@@ -244,10 +419,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 SHOP_FILTER_ACTIVE = false;
 
                 mFilterShopImageView.animate().setDuration(250)
-                        .scaleXBy(-0.1f)
-                        .scaleYBy(-0.1f)
-                        .alpha(ALPHA_INACTIVE_FILTER)
-                        .setInterpolator(new OvershootInterpolator());
+                                              .scaleXBy(-0.1f)
+                                              .scaleYBy(-0.1f)
+                                              .alpha(ALPHA_INACTIVE_FILTER)
+                                              .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 

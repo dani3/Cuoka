@@ -41,8 +41,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/filter_image_shop"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_marginBottom="24dp"
                         android:layout_marginRight="24dp"
                         android:layout_centerVertical="true"
@@ -70,8 +70,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/filter_image_section"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_marginBottom="24dp"
                         android:layout_marginRight="24dp"
                         android:layout_centerVertical="true"
@@ -99,8 +99,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/filter_image_price"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_marginBottom="24dp"
                         android:layout_marginRight="24dp"
                         android:layout_centerVertical="true"
@@ -128,8 +128,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/filter_image_color"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_marginBottom="24dp"
                         android:layout_marginRight="24dp"
                         android:layout_centerVertical="true"
@@ -157,8 +157,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/filter_image_newness"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_marginBottom="24dp"
                         android:layout_marginRight="24dp"
                         android:layout_centerVertical="true"
