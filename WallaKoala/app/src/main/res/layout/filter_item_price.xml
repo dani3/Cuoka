@@ -75,6 +75,7 @@
                 android:layout_weight="0.3">
 
                 <com.wallakoala.wallakoala.Views.RangeSeekBar
+                    android:id="@+id/filter_price_range_seek_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -132,7 +133,7 @@
                         android:gravity="center">
 
                         <EditText
-                            android:id="@+id/editText"
+                            android:id="@+id/filter_price_from"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="end"
@@ -152,9 +153,9 @@
                             android:text="€"
                             android:textSize="16dp"
                             android:textColor="@color/colorLightText"
-                            android:layout_alignBottom="@+id/editText"
-                            android:layout_toRightOf="@+id/editText"
-                            android:layout_toEndOf="@+id/editText"/>
+                            android:layout_alignBottom="@id/filter_price_from"
+                            android:layout_toRightOf="@id/filter_price_from"
+                            android:layout_toEndOf="@id/filter_price_from"/>
 
                     </RelativeLayout>
 
@@ -164,7 +165,7 @@
                         android:gravity="center">
 
                         <EditText
-                            android:id="@+id/editText2"
+                            android:id="@+id/filter_price_to"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="end"
@@ -184,9 +185,9 @@
                             android:text="€"
                             android:textSize="16dp"
                             android:textColor="@color/colorLightText"
-                            android:layout_alignBottom="@+id/editText2"
-                            android:layout_toRightOf="@+id/editText2"
-                            android:layout_toEndOf="@+id/editText2"/>
+                            android:layout_alignBottom="@id/filter_price_to"
+                            android:layout_toRightOf="@id/filter_price_to"
+                            android:layout_toEndOf="@id/filter_price_to"/>
 
                     </RelativeLayout>
 

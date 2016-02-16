@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Views.RangeSeekBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,7 +101,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /* CheckBoxes */
     protected AppCompatCheckBox mShopAllCheckBox;
-    protected AppCompatCheckBox mShopNewCheckBox;
+    protected AppCompatCheckBox mShopMyCheckBox;
     protected AppCompatCheckBox mShopBlancoCheckBox;
     protected AppCompatCheckBox mShopPedroDelHierroCheckBox;
     protected AppCompatCheckBox mShopSpringfieldCheckBox;
@@ -114,6 +118,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mColorRedCheckBox;
     protected AppCompatCheckBox mColorPinkCheckBox;
     protected AppCompatCheckBox mColorGreenCheckBox;
+
+    /* RangeSeekBar */
+    protected RangeSeekBar mRangeSeekBar;
+
+    /* EditTexts */
+    protected EditText mPriceFromEditText;
+    protected EditText mPriceToEditText;
 
     /* Data */
     protected List<String> mShopsList;
@@ -324,7 +335,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     case "Rosas": mColorPinkCheckBox.setChecked(true); break;
                     case "Verdes": mColorGreenCheckBox.setChecked(true); break;
                 }
-
             }
         }
 
@@ -341,7 +351,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
 
         mShopAllCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_all);
-        mShopNewCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_new);
+        mShopMyCheckBox             = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_my);
         mShopBlancoCheckBox         = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_blanco);
         mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
         mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
@@ -352,18 +362,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                mShopBlancoCheckBox.setChecked(isChecked);
-                mShopPedroDelHierroCheckBox.setChecked(isChecked);
-                mShopHyMCheckBox.setChecked(isChecked);
-                mShopSpringfieldCheckBox.setChecked(isChecked);
+                if (!mShopMyCheckBox.isChecked())
+                {
+                    mShopBlancoCheckBox.setChecked(isChecked);
+                    mShopPedroDelHierroCheckBox.setChecked(isChecked);
+                    mShopHyMCheckBox.setChecked(isChecked);
+                    mShopSpringfieldCheckBox.setChecked(isChecked);
+
+                } else {
+                    mShopMyCheckBox.setChecked(false);
+
+                }
             }
         });
 
-        mShopNewCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        mShopMyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
             }
         });
@@ -379,11 +394,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
 
             mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
-
-            for (String shop : mFilterShops )
-            {
-
-            }
 
         } else {
 
@@ -421,6 +431,35 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             else
                 mNewnessAllRadioButton.setChecked(true);
         }
+
+        mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
+        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
+        {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue)
+            {
+                int from = (int)bar.getSelectedMinValue();
+                int to = (int)bar.getSelectedMaxValue();
+
+                mPriceFromEditText.setText((from == 0) ? "" : Integer.toString(from));
+                mPriceToEditText.setText((to == 100) ? "" : Integer.toString(to));
+            }
+        });
+
+        mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
+        mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
+
+        mPriceFromEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         /*
          * Si el filtro de precios esta activo, inicializamos los EditText y la RangeSeekBar
