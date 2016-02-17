@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -246,6 +244,33 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         // Hacemos aparecer el FloatingButton
         mFloatingActionButton.setVisibility(View.VISIBLE);
         mFloatingActionButton.startAnimation(mExplode);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (!COLOR_FILTER_ACTIVE &&
+                    !SHOP_FILTER_ACTIVE &&
+                    !SECTION_FILTER_ACTIVE &&
+                    !PRICE_FILTER_ACTIVE &&
+                    !NEWNESS_FILTER_ACTIVE)
+                {
+                    mSnackbar = Snackbar.make(mCoordinatorLayout
+                                    , "No se ha establecido ningún filtro"
+                                    , Snackbar.LENGTH_SHORT);
+
+                    mSnackbar.show();
+
+                } else {
+                    Intent intent = new Intent();
+
+                    setResult(RESULT_OK, intent);
+
+                    finish();
+                }
+            }
+        });
     }
 
     /**
@@ -504,21 +529,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        mShopMyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        mShopMyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopAllCheckBox)
-                if (!isChecked && !mShopAllCheckBox.isChecked())
-                {
+                if (!isChecked && !mShopAllCheckBox.isChecked()) {
                     for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
                         checkBox.setChecked(false);
                 }
 
                 // Si se marca, desmarco el resto de tiendas y mShopAllCheckBox
-                if (isChecked)
-                {
+                if (isChecked) {
                     mShopAllCheckBox.setChecked(false);
 
                     for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
@@ -812,7 +833,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         if (item.getItemId() == android.R.id.home)
         {
-            super.onBackPressed();
+            onBackPressed();
 
             return true;
         }
@@ -821,7 +842,16 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public void finish(){
+    public void onBackPressed()
+    {
+        setResult(RESULT_CANCELED);
+
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finish()
+    {
         super.finish();
 
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
