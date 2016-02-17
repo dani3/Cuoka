@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -25,4 +26,26 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     
     @Query( "FROM Product WHERE shop = ?1 and man = ?2 and DATEDIFF(CURDATE(), insert_date) = ?3" )
     List<Product> findByShopAndDate( String shop, boolean man, int offset );
+    
+    List<Product> findByShopInAndMan( List<String> shops, boolean man );
+    
+    @Query( "FROM Product "
+            + "WHERE shop IN :shops AND "
+            + "man = :man AND "
+            + "price >= :from AND price <= :to" )
+    List<Product> findByShopInAndManAndPrice(@Param("shops") List<String> shops
+                            , @Param("man") boolean man
+                            , @Param("from") double from
+                            , @Param("to") double to );
+    
+    @Query( "FROM Product "
+            + "WHERE shop IN :shops AND "
+            + "man = :man AND "
+            + "DATEDIFF(CURDATE(), insert_date) = :offset AND "
+            + "price >= :from AND price <= :to" )
+    List<Product> findByShopInAndManAndNewnessAndPrice(@Param("shops") List<String> shops
+                            , @Param("man") boolean man
+                            , @Param("offset") int offset
+                            , @Param("from") double from
+                            , @Param("to") double to );
 }

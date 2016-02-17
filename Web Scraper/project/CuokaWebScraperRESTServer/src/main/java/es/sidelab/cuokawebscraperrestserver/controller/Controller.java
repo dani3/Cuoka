@@ -1,11 +1,13 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -156,5 +158,77 @@ public class Controller
         LOG.info( "Peticion GET para obtener los productos de la seccion de " 
                         + section + " de la tienda " + shop );
         return productsRepository.findBySectionAndShop( section, shop ) ;
+    }
+    
+    /**
+     * Metodo que devuelve una lista de productos que cumplen una serie de condiciones.
+     * @param filter: Filtro por el que tienen que pasar los productos.
+     * @return Lista de productos.
+     */
+    @RequestMapping( value = "/products", method = RequestMethod.POST )
+    public List<Product> getProductsByFilter( @RequestBody Filter filter )
+    {
+        LOG.info( "Peticion GET para obtener los productos que cumplan los siguientes filtros:" );
+        
+        List<Product> productList = new ArrayList<>();
+        
+        // La lista de tiendas no puede ser NULL
+        if ( ! filter.getShops().isEmpty() )
+        {
+            LOG.info( " - De las siguientes tiendas:" );            
+            for ( String shop : filter.getShops() )
+                LOG.info( "   " + shop );
+            
+            if ( filter.isMan() )
+                LOG.info( " - Solo hombre" );
+            else
+                LOG.info( " - Solo mujer" ); 
+            
+            if ( filter.getPriceFrom() > 0 )
+                LOG.info( " - Precio minimo = " + filter.getPriceFrom() );
+
+            if ( filter.getPriceTo() > 0 )
+                LOG.info( " - Precio maximo = " + filter.getPriceTo() ); 
+                
+            double from = ( filter.getPriceFrom() > 0 ) ? filter.getPriceFrom() : -1;
+            double to = ( filter.getPriceTo() > 0 ) ? filter.getPriceTo() : 999; 
+            
+            if ( filter.isNewness() )
+            {
+                LOG.info( " - Solo novedades" );                                 
+                
+                return productsRepository.findByShopInAndManAndNewnessAndPrice( filter.getShops()
+                                            , filter.isMan()
+                                            , 2
+                                            , from
+                                            , to );
+                
+            } else {
+                LOG.info( " - Todos los productos" );                                 
+                
+                return productsRepository.findByShopInAndManAndPrice( filter.getShops()
+                                            , filter.isMan()
+                                            , from
+                                            , to );
+            }           
+            
+        }
+        
+        if ( ! filter.getSections().isEmpty() )
+        {
+            LOG.info( " - De las siguientes secciones:" );
+            
+            for ( String section : filter.getSections() )
+            {
+                LOG.info( "   " + section );
+            }
+        }
+        
+        if ( ! filter.getColors().isEmpty() )
+        {
+            LOG.info( " - Por color" );
+        }          
+        
+        return null;
     }
 }
