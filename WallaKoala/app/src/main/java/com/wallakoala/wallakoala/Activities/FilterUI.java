@@ -544,12 +544,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             for (String shop : mFilterShops)
             {
-                switch (shop)
+                for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
                 {
-                    case "Blanco": mShopBlancoCheckBox.setChecked(true); break;
-                    case "Springfield": mShopSpringfieldCheckBox.setChecked(true); break;
-                    case "Pedro Del Hierro": mShopPedroDelHierroCheckBox.setChecked(true); break;
-                    case "HyM": mShopHyMCheckBox.setChecked(true); break;
+                    if (checkBox.getText().toString().equals(shop))
+                    {
+                        checkBox.setChecked(true);
+                    }
                 }
             }
 
