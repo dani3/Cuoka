@@ -497,6 +497,27 @@ public class ProductsUI extends AppCompatActivity
         {
             Log.d(TAG, "Filtro establecido");
 
+            mFilterMap.put("newness", data.getBooleanExtra(PACKAGE + ".newness", false));
+            mFilterMap.put("sections", data.getSerializableExtra(PACKAGE + ".sections"));
+            mFilterMap.put("colors", data.getSerializableExtra(PACKAGE + ".colors"));
+            mFilterMap.put("shops", data.getSerializableExtra(PACKAGE + ".shops"));
+            mFilterMap.put("minPrice", data.getIntExtra(PACKAGE + ".minPrice", -1));
+            mFilterMap.put("maxPrice", data.getIntExtra(PACKAGE + ".maxPrice", -1));
+
+            Log.d(TAG, "Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
+            Log.d(TAG, "Precio Min = " + Integer.toString((int)mFilterMap.get("minPrice")));
+            Log.d(TAG, "Precio Max = " + Integer.toString((int)mFilterMap.get("maxPrice")));
+
+            List<String> shopsList = (ArrayList<String>)mFilterMap.get("shops");
+            if (shopsList != null)
+                for (String shop : shopsList)
+                    Log.d(TAG, "Tienda = " + shop);
+
+            List<String> colorsList = (ArrayList<String>)mFilterMap.get("colors");
+            if (colorsList != null)
+                for (String color : colorsList)
+                    Log.d(TAG, "Color = " + color);
+
         } else {
             Log.d(TAG, "Filtro cancelado");
 

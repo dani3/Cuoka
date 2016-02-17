@@ -107,6 +107,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mShopSpringfieldCheckBox;
     protected AppCompatCheckBox mShopHyMCheckBox;
 
+    protected List<AppCompatCheckBox> mColorCheckBoxesList;
     protected AppCompatCheckBox mColorYellowCheckBox;
     protected AppCompatCheckBox mColorBlueCheckBox;
     protected AppCompatCheckBox mColorBeigeCheckBox;
@@ -198,8 +199,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         COLOR_FILTER_ACTIVE   = (mFilterColors != null);
         NEWNESS_FILTER_ACTIVE = true;
 
-        mAllCheckBoxesList = new ArrayList<>();
-        mMyCheckBoxesList  = new ArrayList<>();
+        mAllCheckBoxesList   = new ArrayList<>();
+        mMyCheckBoxesList    = new ArrayList<>();
+        mColorCheckBoxesList = new ArrayList<>();
 
         mShopsList = new ArrayList<>();
         mSharedPreferences = new SharedPreferencesManager(this);
@@ -265,6 +267,45 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 } else {
                     Intent intent = new Intent();
 
+                    ArrayList<String> shopsList = null;
+                    if (SHOP_FILTER_ACTIVE)
+                    {
+                        shopsList = new ArrayList<>();
+                        for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+                        {
+                            if (checkBox.isChecked())
+                            {
+                                shopsList.add(checkBox.getText().toString());
+                            }
+                        }
+                    }
+
+                    ArrayList<String> colorsList = null;
+                    if (COLOR_FILTER_ACTIVE)
+                    {
+                        colorsList = new ArrayList<>();
+                        for (AppCompatCheckBox checkBox : mColorCheckBoxesList)
+                        {
+                            if (checkBox.isChecked())
+                            {
+                                colorsList.add(checkBox.getText().toString());
+                            }
+                        }
+                    }
+
+                    int from = (mPriceFromEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
+                    int to = (mPriceToEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
+
+                    boolean newness = mNewnessNewRadioButton.isChecked();
+
+                    intent.putExtra(PACKAGE + ".shops", shopsList);
+                    intent.putExtra(PACKAGE + ".colors", colorsList);
+                    intent.putExtra(PACKAGE + ".minPrice", from);
+                    intent.putExtra(PACKAGE + ".maxPrice", to);
+                    intent.putExtra(PACKAGE + ".newness", newness);
+
+                    intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
+
                     setResult(RESULT_OK, intent);
 
                     finish();
@@ -290,10 +331,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorImageView   = (ImageView)findViewById(R.id.filter_image_color);
         mFilterNewnessImageView = (ImageView)findViewById(R.id.filter_image_newness);
 
-        mFilterShopImageView.setAlpha((mFilterShops == null) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
-        mFilterSectionImageView.setAlpha((mFilterSections == null) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterShopImageView.setAlpha((mFilterShops == null || mFilterShops.isEmpty()) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterSectionImageView.setAlpha((mFilterSections == null || mFilterSections.isEmpty()) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
         mFilterPriceImageView.setAlpha(((mFilterMinPrice == -1) && (mFilterMaxPrice == -1)) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
-        mFilterColorImageView.setAlpha((mFilterColors == null) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterColorImageView.setAlpha((mFilterColors == null || mFilterColors.isEmpty()) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
         mFilterNewnessImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
         mFilterShopItemLayout.setOnClickListener(this);
@@ -350,11 +391,16 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mColorPinkCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_pink);
         mColorGreenCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_green);
 
-        ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
+        mColorCheckBoxesList.add(mColorYellowCheckBox); mColorCheckBoxesList.add(mColorBlueCheckBox);
+        mColorCheckBoxesList.add(mColorBeigeCheckBox); mColorCheckBoxesList.add(mColorWhiteCheckBox);
+        mColorCheckBoxesList.add(mColorGreyCheckBox); mColorCheckBoxesList.add(mColorBrownCheckBox);
+        mColorCheckBoxesList.add(mColorPurpleCheckBox); mColorCheckBoxesList.add(mColorBlackCheckBox);
+        mColorCheckBoxesList.add(mColorRedCheckBox); mColorCheckBoxesList.add(mColorPinkCheckBox);
+        mColorCheckBoxesList.add(mColorGreenCheckBox);
+
+        ((ViewGroup) mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
         if (COLOR_FILTER_ACTIVE)
         {
-            Log.d(TAG, "Filtro de colores ACTIVO");
-
             mFilterColorImageView.setScaleX(1.1f);
             mFilterColorImageView.setScaleY(1.1f);
             mFilterColorImageView.setAlpha(ALPHA_ACTIVE_FILTER);
@@ -389,8 +435,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
         if (SECTION_FILTER_ACTIVE)
         {
-            Log.d(TAG, "Filtro de secciones ACTIVO");
-
             mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
         }
     }
@@ -402,12 +446,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         if (NEWNESS_FILTER_ACTIVE)
         {
-            Log.d(TAG, "Filtro de novedades ACTIVO");
-            if (mFilterNewness)
-                Log.d(TAG, "  - Solo novedades");
-            else
-                Log.d(TAG, "  - Todos los products");
-
             ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
 
             mItemsMenuViewGroup.addView(mFilterNewnessMenuLayout, 0);
@@ -454,8 +492,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
         if (PRICE_FILTER_ACTIVE)
         {
-            Log.d(TAG, "Filtro por precio ACTIVO");
-
             mFilterPriceImageView.setScaleX(1.1f);
             mFilterPriceImageView.setScaleY(1.1f);
             mFilterPriceImageView.setAlpha(ALPHA_ACTIVE_FILTER);
@@ -553,8 +589,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (SHOP_FILTER_ACTIVE)
         {
-            Log.d(TAG, "Filtro de tiendas ACTIVO");
-
             mFilterShopImageView.setScaleX(1.1f);
             mFilterShopImageView.setScaleY(1.1f);
             mFilterShopImageView.setAlpha(ALPHA_ACTIVE_FILTER);

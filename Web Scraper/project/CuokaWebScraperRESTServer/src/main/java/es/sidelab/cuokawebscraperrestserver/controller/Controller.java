@@ -189,7 +189,8 @@ public class Controller
 
             if ( filter.getPriceTo() > 0 )
                 LOG.info( " - Precio maximo = " + filter.getPriceTo() ); 
-                
+               
+            // Ponemos un valor minimo y maximo si no se reciben en el JSON.
             double from = ( filter.getPriceFrom() > 0 ) ? filter.getPriceFrom() : -1;
             double to = ( filter.getPriceTo() > 0 ) ? filter.getPriceTo() : 999; 
             
@@ -197,7 +198,7 @@ public class Controller
             {
                 LOG.info( " - Solo novedades" );                                 
                 
-                return productsRepository.findByShopInAndManAndNewnessAndPrice( filter.getShops()
+                productList = productsRepository.findByShopInAndManAndNewnessAndPrice( filter.getShops()
                                             , filter.isMan()
                                             , 2
                                             , from
@@ -206,7 +207,7 @@ public class Controller
             } else {
                 LOG.info( " - Todos los productos" );                                 
                 
-                return productsRepository.findByShopInAndManAndPrice( filter.getShops()
+                productList = productsRepository.findByShopInAndManAndPrice( filter.getShops()
                                             , filter.isMan()
                                             , from
                                             , to );
