@@ -471,9 +471,9 @@ public class ProductsUI extends AppCompatActivity
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
 
                 List<String> aux = new ArrayList<>();
-                /*aux.add("Rojos");
-                aux.add("Amarillos");
-                mFilterMap.put("colors", aux);*/
+                /*aux.add("Blanco");
+                aux.add("HyM");
+                mFilterMap.put("shops", aux);*/
 
                 intent.putExtra(PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
                 intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));

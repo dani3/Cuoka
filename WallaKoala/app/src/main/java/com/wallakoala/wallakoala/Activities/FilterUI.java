@@ -100,6 +100,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatRadioButton mNewnessNewRadioButton;
 
     /* CheckBoxes */
+    protected List<AppCompatCheckBox> mMyCheckBoxesList;
+    protected List<AppCompatCheckBox> mAllCheckBoxesList;
     protected AppCompatCheckBox mShopAllCheckBox;
     protected AppCompatCheckBox mShopMyCheckBox;
     protected AppCompatCheckBox mShopBlancoCheckBox;
@@ -197,6 +199,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         PRICE_FILTER_ACTIVE   = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
         COLOR_FILTER_ACTIVE   = (mFilterColors != null);
         NEWNESS_FILTER_ACTIVE = true;
+
+        mAllCheckBoxesList = new ArrayList<>();
+        mMyCheckBoxesList  = new ArrayList<>();
 
         mShopsList = new ArrayList<>();
         mSharedPreferences = new SharedPreferencesManager(this);
@@ -296,6 +301,18 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorRemove.setOnClickListener(this);
         mFilterNewnessRemove.setOnClickListener(this);
 
+        _initFilterColor();
+        _initFilterSection();
+        _initFilterNewness();
+        _initFilterPrice();
+        _initFilterShop();
+    }
+
+    /**
+     * Metodo para inicializar el menu de colores.
+     */
+    protected void _initFilterColor()
+    {
         mColorYellowCheckBox = (AppCompatCheckBox)findViewById(R.id.filter_color_yellow);
         mColorBlueCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_blue);
         mColorBeigeCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_beige);
@@ -308,14 +325,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mColorPinkCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_pink);
         mColorGreenCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_green);
 
-        /*
-         * Si el filtro de colores esta activo, inicializamos cada CheckBox usando la lista mFilterColors
-         * y lo añadimos al layout.
-         */
         ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
         if (COLOR_FILTER_ACTIVE)
         {
             Log.d(TAG, "Filtro de colores ACTIVO");
+
+            mFilterColorImageView.setScaleX(1.1f);
+            mFilterColorImageView.setScaleY(1.1f);
+            mFilterColorImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
             mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
@@ -337,11 +354,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 }
             }
         }
+    }
 
-        /*
-         * Si el filtro de secciones esta activo, inicializamos cada CheckBox usando la lista mFilterSections
-         * y lo añadimos al layout.
-         */
+    /**
+     * Metodo para inicializar el menu de secciones.
+     */
+    protected void _initFilterSection()
+    {
         ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
         if (SECTION_FILTER_ACTIVE)
         {
@@ -349,61 +368,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
         }
+    }
 
-        mShopAllCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_all);
-        mShopMyCheckBox             = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_my);
-        mShopBlancoCheckBox         = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_blanco);
-        mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
-        mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
-        mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
-
-        mShopAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if (!mShopMyCheckBox.isChecked())
-                {
-                    mShopBlancoCheckBox.setChecked(isChecked);
-                    mShopPedroDelHierroCheckBox.setChecked(isChecked);
-                    mShopHyMCheckBox.setChecked(isChecked);
-                    mShopSpringfieldCheckBox.setChecked(isChecked);
-
-                } else {
-                    mShopMyCheckBox.setChecked(false);
-
-                }
-            }
-        });
-
-        mShopMyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-            }
-        });
-
-        /*
-         * Si el filtro de tiendas esta activo, lo añadimos al layout e inicializamos los CheckBoxes.
-         * Si no, solo inicializamos los CheckBoxes, sin añadir al layout.
-         */
-        if (SHOP_FILTER_ACTIVE)
-        {
-            Log.d(TAG, "Filtro de tiendas ACTIVO");
-
-            ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
-
-            mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
-
-        } else {
-
-            ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
-        }
-
-        /*
-         * Si el filtro de novedades esta activo, lo añadimos al layout e inicializamos los RadioButtons
-         * usando el booleano mFilterNewness.
-         */
+    /**
+     * Metodo para inicializar el menu de novedades.
+     */
+    protected void _initFilterNewness()
+    {
         if (NEWNESS_FILTER_ACTIVE)
         {
             Log.d(TAG, "Filtro de novedades ACTIVO");
@@ -431,7 +402,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             else
                 mNewnessAllRadioButton.setChecked(true);
         }
+    }
 
+    /**
+     * Metodo para inicializa el menu de precios.
+     */
+    protected void _initFilterPrice()
+    {
         mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
         mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
         {
@@ -449,28 +426,139 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
 
-        mPriceFromEditText.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        /*
-         * Si el filtro de precios esta activo, inicializamos los EditText y la RangeSeekBar
-         * usando los dos integers mFilterMinPrice y mFilterMaxPrice y lo añadimos al layout.
-         */
         ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
         if (PRICE_FILTER_ACTIVE)
         {
-            Log.d(TAG, "Filtro de precio ACTIVO");
+            Log.d(TAG, "Filtro por precio ACTIVO");
+
+            mFilterPriceImageView.setScaleX(1.1f);
+            mFilterPriceImageView.setScaleY(1.1f);
+            mFilterPriceImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            if (mFilterMinPrice > 0)
+            {
+                mPriceFromEditText.setText(Integer.toString(mFilterMinPrice));
+                mRangeSeekBar.setSelectedMinValue(mFilterMinPrice);
+            }
+
+            if (mFilterMaxPrice > 0)
+            {
+                mPriceToEditText.setText(Integer.toString(mFilterMaxPrice));
+                mRangeSeekBar.setSelectedMaxValue(mFilterMaxPrice);
+            }
 
             mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
+        }
+    }
+
+    /**
+     * Metodo para inicializar el menu de tiendas.
+     */
+    protected void _initFilterShop()
+    {
+        mShopAllCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_all);
+        mShopMyCheckBox             = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_my);
+        mShopBlancoCheckBox         = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_blanco);
+        mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
+        mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
+        mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
+
+        // Metemos en una lista todos los CheckBoxes de mis tiendas
+        for (String shop : mShopsList)
+        {
+            switch (shop)
+            {
+                case "Blanco": mMyCheckBoxesList.add(mShopBlancoCheckBox); break;
+                case "Springfield": mMyCheckBoxesList.add(mShopSpringfieldCheckBox); break;
+                case "Pedro Del Hierro": mMyCheckBoxesList.add(mShopPedroDelHierroCheckBox); break;
+                case "HyM": mMyCheckBoxesList.add(mShopHyMCheckBox); break;
+            }
+        }
+
+        // Metemos en una lista todos los CheckBoxes de todas las tiendas
+        mAllCheckBoxesList.add(mShopBlancoCheckBox);
+        mAllCheckBoxesList.add(mShopSpringfieldCheckBox);
+        mAllCheckBoxesList.add(mShopPedroDelHierroCheckBox);
+        mAllCheckBoxesList.add(mShopHyMCheckBox);
+
+        mShopAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopMyCheckBox)
+                if (!isChecked && !mShopMyCheckBox.isChecked())
+                {
+                    for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+                        checkBox.setChecked(false);
+                }
+
+                // Si se marca, se marcan todas las tiendas y se desmarca mShopMyCheckBox
+                if (isChecked)
+                {
+                    mShopMyCheckBox.setChecked(false);
+
+                    for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+                        checkBox.setChecked(true);
+                }
+            }
+        });
+
+        mShopMyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopAllCheckBox)
+                if (!isChecked && !mShopAllCheckBox.isChecked())
+                {
+                    for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
+                        checkBox.setChecked(false);
+                }
+
+                // Si se marca, desmarco el resto de tiendas y mShopAllCheckBox
+                if (isChecked)
+                {
+                    mShopAllCheckBox.setChecked(false);
+
+                    for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+                        checkBox.setChecked(false);
+
+                    for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
+                        checkBox.setChecked(true);
+                }
+            }
+        });
+
+        if (SHOP_FILTER_ACTIVE)
+        {
+            Log.d(TAG, "Filtro de tiendas ACTIVO");
+
+            mFilterShopImageView.setScaleX(1.1f);
+            mFilterShopImageView.setScaleY(1.1f);
+            mFilterShopImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
+
+            mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
+
+            for (String shop : mFilterShops)
+            {
+                switch (shop)
+                {
+                    case "Blanco": mShopBlancoCheckBox.setChecked(true); break;
+                    case "Springfield": mShopSpringfieldCheckBox.setChecked(true); break;
+                    case "Pedro Del Hierro": mShopPedroDelHierroCheckBox.setChecked(true); break;
+                    case "HyM": mShopHyMCheckBox.setChecked(true); break;
+                }
+            }
+
+        } else {
+
+            // Marcamos el ChecBox, el listener lo tratara y marcara las tiendas.
+            mShopMyCheckBox.setChecked(true);
+
+            ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
         }
     }
 
