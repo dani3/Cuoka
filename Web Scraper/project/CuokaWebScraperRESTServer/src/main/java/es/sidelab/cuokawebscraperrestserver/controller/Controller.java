@@ -165,57 +165,52 @@ public class Controller
      * @param filter: Filtro por el que tienen que pasar los productos.
      * @return Lista de productos.
      */
-    @RequestMapping( value = "/products", method = RequestMethod.POST )
-    public List<Product> getProductsByFilter( @RequestBody Filter filter )
+    @RequestMapping( value = "/filter/{shop}", method = RequestMethod.POST )
+    public List<Product> getProductsByFilter( @RequestBody Filter filter
+                                    , @PathVariable String shop )
     {
         LOG.info( "Peticion GET para obtener los productos que cumplan los siguientes filtros:" );
         
         List<Product> productList = new ArrayList<>();
         
-        // La lista de tiendas no puede ser NULL
-        if ( ! filter.getShops().isEmpty() )
-        {
-            LOG.info( " - De las siguientes tiendas:" );            
-            for ( String shop : filter.getShops() )
-                LOG.info( "   " + shop );
             
-            if ( filter.isMan() )
-                LOG.info( " - Solo hombre" );
-            else
-                LOG.info( " - Solo mujer" ); 
+        if ( filter.isMan() )
+            LOG.info( " - Solo hombre" );
+        else
+            LOG.info( " - Solo mujer" ); 
             
-            if ( filter.getPriceFrom() > 0 )
-                LOG.info( " - Precio minimo = " + filter.getPriceFrom() );
+        if ( filter.getPriceFrom() > 0 )
+            LOG.info( " - Precio minimo = " + filter.getPriceFrom() );
 
-            if ( filter.getPriceTo() > 0 )
-                LOG.info( " - Precio maximo = " + filter.getPriceTo() ); 
-               
-            // Ponemos un valor minimo y maximo si no se reciben en el JSON.
-            double from = ( filter.getPriceFrom() > 0 ) ? filter.getPriceFrom() : -1;
-            double to = ( filter.getPriceTo() > 0 ) ? filter.getPriceTo() : 999; 
+        if ( filter.getPriceTo() > 0 )
+            LOG.info( " - Precio maximo = " + filter.getPriceTo() ); 
+
+        // Ponemos un valor minimo y maximo si no se reciben en el JSON.
+        double from = ( filter.getPriceFrom() > 0 ) ? filter.getPriceFrom() : -1;
+        double to = ( filter.getPriceTo() > 0 ) ? filter.getPriceTo() : 999; 
+
+        if ( filter.isNewness() )
+        {
+            LOG.info( " - Solo novedades" );                                 
+
+            return productsRepository.findByShopInAndManAndNewnessAndPrice( shop
+                                        , filter.isMan()
+                                        , 0
+                                        , from
+                                        , to );
+
+        } else {
+            LOG.info( " - Todos los productos" );                                 
+
+            return productsRepository.findByShopInAndManAndPrice( shop
+                                        , filter.isMan()
+                                        , from
+                                        , to );
+        }           
             
-            if ( filter.isNewness() )
-            {
-                LOG.info( " - Solo novedades" );                                 
-                
-                productList = productsRepository.findByShopInAndManAndNewnessAndPrice( filter.getShops()
-                                            , filter.isMan()
-                                            , 0
-                                            , from
-                                            , to );
-                
-            } else {
-                LOG.info( " - Todos los productos" );                                 
-                
-                productList = productsRepository.findByShopInAndManAndPrice( filter.getShops()
-                                            , filter.isMan()
-                                            , from
-                                            , to );
-            }           
-            
-        }
         
-        if ( ! filter.getSections().isEmpty() )
+        
+        /*if ( ! filter.getSections().isEmpty() )
         {
             LOG.info( " - De las siguientes secciones:" );
             
@@ -230,6 +225,6 @@ public class Controller
             LOG.info( " - Por color" );
         }          
         
-        return null;
+        return null;*/
     }
 }

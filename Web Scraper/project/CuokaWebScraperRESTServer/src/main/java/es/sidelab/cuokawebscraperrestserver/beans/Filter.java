@@ -15,7 +15,6 @@ public class Filter
     private int priceTo;
     private List<String> colors;
     private List<String> sections;
-    private List<String> shops;
     
     public Filter() {}
 
@@ -24,8 +23,7 @@ public class Filter
             , int priceFrom
             , int priceTo
             , List<String> colors
-            , List<String> sections
-            , List<String> shops) 
+            , List<String> sections) 
     {
         this.man = man;
         this.newness = newness;
@@ -33,7 +31,6 @@ public class Filter
         this.priceTo = priceTo;
         this.colors = colors;
         this.sections = sections;
-        this.shops = shops;
     }
     
     public void setMan(boolean man) {
@@ -60,10 +57,6 @@ public class Filter
         this.sections = sections;
     }
 
-    public void setShops(List<String> shops) {
-        this.shops = shops;
-    }   
-
     public boolean isMan() {
         return man;
     }
@@ -86,9 +79,5 @@ public class Filter
 
     public List<String> getSections() {
         return sections;
-    }
-
-    public List<String> getShops() {
-        return shops;
     }
 }

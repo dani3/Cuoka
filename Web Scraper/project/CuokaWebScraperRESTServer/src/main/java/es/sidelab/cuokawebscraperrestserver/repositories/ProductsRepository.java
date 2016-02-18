@@ -30,20 +30,20 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     List<Product> findByShopInAndMan( List<String> shops, boolean man );
     
     @Query( "FROM Product "
-            + "WHERE shop IN :shops AND "
+            + "WHERE shop IN :shop AND "
             + "man = :man AND "
             + "price >= :from AND price <= :to" )
-    List<Product> findByShopInAndManAndPrice(@Param("shops") List<String> shops
+    List<Product> findByShopInAndManAndPrice(@Param("shop") String shop
                             , @Param("man") boolean man
                             , @Param("from") double from
                             , @Param("to") double to );
     
     @Query( "FROM Product "
-            + "WHERE shop IN :shops AND "
+            + "WHERE shop = :shop AND "
             + "man = :man AND "
             + "DATEDIFF(CURDATE(), insert_date) = :offset AND "
             + "price >= :from AND price <= :to" )
-    List<Product> findByShopInAndManAndNewnessAndPrice(@Param("shops") List<String> shops
+    List<Product> findByShopInAndManAndNewnessAndPrice(@Param("shop") String shop
                             , @Param("man") boolean man
                             , @Param("offset") int offset
                             , @Param("from") double from

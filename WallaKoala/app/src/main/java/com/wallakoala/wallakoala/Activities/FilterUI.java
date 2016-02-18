@@ -362,8 +362,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         }
                     }
 
-                    int from = (mPriceFromEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
-                    int to = (mPriceToEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
+                    int from = -1;
+                    int to = -1;
+                    if (PRICE_FILTER_ACTIVE)
+                    {
+                        from = (mPriceFromEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
+                        to = (mPriceToEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
+                    }
 
                     boolean newness = mNewnessNewRadioButton.isChecked();
 

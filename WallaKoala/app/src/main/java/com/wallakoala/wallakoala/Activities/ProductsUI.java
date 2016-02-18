@@ -29,16 +29,20 @@ import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -194,7 +198,6 @@ public class ProductsUI extends AppCompatActivity
     protected void _reinitializeData()
     {
         mProductsListMap         = new ArrayList<>();
-        mFilterMap               = _initFilterMap();
         mProductsNonFilteredMap  = new HashMap<>();
         mProductsDisplayedList   = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
@@ -566,8 +569,11 @@ public class ProductsUI extends AppCompatActivity
                 new ConnectToServer().execute();
 
             } else {
-                new RetreiveProductsFromServer().execute();
+                _reinitializeData();
 
+                mProductsRecyclerView.setVisibility(View.GONE);
+
+                new RetreiveProductsFromServer().execute();
             }
 
         }
@@ -613,26 +619,177 @@ public class ProductsUI extends AppCompatActivity
      */
     private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
     {
+        private ThreadPoolExecutor executor;
+        private CompletionService<String> completionService;
+        private List<String> content = new ArrayList<>();
+        private String error = null;
+        private boolean EMPTY;
+
         @Override
         protected void onPreExecute()
         {
+            if (mState != STATE.LOADING)
+                _loading(true, true);
 
+            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
+            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
+                    , NUMBER_OF_CORES * 4
+                    , 60L
+                    , TimeUnit.SECONDS
+                    , new LinkedBlockingQueue<Runnable>());
+
+            completionService = new ExecutorCompletionService<>(executor);
         }
 
         @Override
         protected Void doInBackground(String... params)
         {
+            try
+            {
+                List<String> aux = (ArrayList<String>)mFilterMap.get("shops");
+                List<String> shopsList = (aux == null) ? mShopsList : aux;
+
+                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
+                for (int i = 0; i < shopsList.size(); i++)
+                {
+                    ConnectionFilterTask connectionFilterTask = new ConnectionFilterTask(shopsList.get(i));
+
+                    completionService.submit(connectionFilterTask);
+                }
+
+                // Metemos en content el resultado de cada uno
+                for (int i = 0; i < shopsList.size(); i++)
+                {
+                    String future = completionService.take().get();
+                    if (future != null)
+                        content.add(future);
+                }
+
+                EMPTY = content.isEmpty();
+
+            } catch(Exception ex)  {
+                error = ex.getMessage();
+
+            } finally {
+                executor.shutdown();
+            }
 
             return null;
+
         }
 
         @Override
         protected void onPostExecute(Void unused)
         {
+            if (error != null)
+            {
+                _loading(false, false);
 
+                /* Esto hay que corregirlo, la llamada que se hace dentro hay que cambiarla */
+                _errorConnectingToServer();
+
+            } else {
+                if (!EMPTY)
+                    new MultithreadConversion().execute(content);
+
+            }
         }
 
     } /* [END retreiveProductsFromServer] */
+
+    private class ConnectionFilterTask implements Callable<String>
+    {
+        private String shop;
+
+        public ConnectionFilterTask(String shop)
+        {
+            this.shop = shop;
+        }
+
+        @Override
+        public String call()
+        {
+            BufferedReader reader = null;
+            DataOutputStream writer = null;
+            URL url;
+
+            try
+            {
+                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT + "/filter/" + shop);
+
+                Log.d(TAG, "Conectando con: " + fixedURL);
+
+                url = new URL(fixedURL);
+
+                if (url != null)
+                {
+                    URLConnection conn = url.openConnection();
+
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setDoOutput(true);
+
+                    conn.connect();
+
+                    // Creamos el JSON con los filtros
+                    JSONObject jsonObject = new JSONObject();
+
+                    List<String> sectionsList = new ArrayList<>();
+                    List<String> colorsList = new ArrayList<>();
+
+                    jsonObject.put("newness", mFilterMap.get("newness"));
+                    jsonObject.put("man", MAN);
+                    jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
+                    jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
+                    jsonObject.put("colors", new JSONArray(colorsList));
+                    jsonObject.put("sections", new JSONArray(sectionsList));
+
+                    Log.d(TAG, "JSON de filtros:\n    " + jsonObject.toString());
+
+                    // Enviamos el JSON
+                    writer = new DataOutputStream(conn.getOutputStream());
+
+                    String str = jsonObject.toString();
+                    byte[] data=str.getBytes("UTF-8");
+
+                    writer.write(data);
+                    writer.flush();
+
+                    // Obtenemos la respuesta del servidor
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
+
+                    // Leemos la respuesta
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
+
+                    return sb.toString();
+                }
+
+            } catch(Exception ex) {
+                Log.d(TAG, "Error conectando con el servidor");
+
+            } finally {
+                try
+                {
+                    if (reader != null)
+                        reader.close();
+
+                    if (writer != null)
+                        writer.close();
+
+                } catch ( IOException e ) {
+                    Log.d(TAG, "Error cerrando conexion");
+
+                }
+
+            }
+
+            return null;
+
+        }
+
+    }
 
     /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
