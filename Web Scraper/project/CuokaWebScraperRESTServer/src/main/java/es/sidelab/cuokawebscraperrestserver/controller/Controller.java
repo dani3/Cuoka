@@ -213,6 +213,14 @@ public class Controller
         // Buscamos primero si tiene el filtro de color y de secciones
         if ( ! filter.getSections().isEmpty() && ! filter.getColors().isEmpty() )
         {
+            LOG.info( " - De las siguientes secciones:" );            
+            for ( String section : filter.getSections() )
+                LOG.info( "   " + section );   
+            
+            LOG.info( " - De los siguientes colores:" );            
+            for ( String color : filter.getColors() )
+                LOG.info( "   " + color );  
+            
             for ( Product product : productList )
                 // OR Perezoso!
                 if ( _searchForSection( product, filter.getSections() ) || _searchForColor( product, filter.getColors() ) )
@@ -223,7 +231,11 @@ public class Controller
         
         // Buscamos la seccion si no tiene el filtro de color
         if ( ! filter.getSections().isEmpty() && filter.getColors().isEmpty() )
-        {            
+        {         
+            LOG.info( " - De las siguientes secciones:" );            
+            for ( String section : filter.getSections() )
+                LOG.info( "   " + section );   
+            
             for ( Product product : productList )
                 if ( _searchForSection( product, filter.getSections() ) )
                     newList.add( product );  
@@ -233,7 +245,11 @@ public class Controller
 
         // Buscamos el color si no tiene el filtro de secciones
         if ( filter.getSections().isEmpty() && ! filter.getColors().isEmpty() )
-        {            
+        {   
+            LOG.info( " - De los siguientes colores:" );            
+            for ( String color : filter.getColors() )
+                LOG.info( "   " + color );         
+            
             for ( Product product : productList )
                 if ( _searchForColor( product, filter.getColors() ) )
                     newList.add( product );
@@ -251,11 +267,7 @@ public class Controller
      * @return true si algun color esta en el producto.
      */
     private boolean _searchForColor( Product product, List<String> colors )
-    {
-        LOG.info( " - De los siguientes colores:" );            
-        for ( String color : colors )
-            LOG.info( "   " + color );
-        
+    {        
         boolean bingo = false;
         
         for ( String color : colors )
@@ -277,11 +289,7 @@ public class Controller
      * @return true si alguna seccion esta en el producto.
      */
     private boolean _searchForSection( Product product, List<String> sections )
-    {
-        LOG.info( " - De las siguientes secciones:" );            
-        for ( String section : sections )
-            LOG.info( "   " + section );
-        
+    {        
         boolean bingo = false;
         
         for ( String section : sections )
@@ -293,7 +301,11 @@ public class Controller
                     section.contains( product.getSection().toUpperCase() ); 
             
             if ( bingo )
+            {
+                LOG.info( "Producto encontrado: " + product.getSection().toUpperCase() + " || " + section );
+                
                 return true;
+            }
 
             // Buscamos la seccion en el nombre   
             int i = 0;
@@ -304,11 +316,15 @@ public class Controller
 
                 bingo = single.contains( section ) || section.contains( single );
 
+                if ( bingo )
+                {
+                    LOG.info( "Producto encontrado: " + single + " || " + section );
+
+                    return true;
+                }
+                
                 i++;
             }          
-            
-            if ( bingo )
-                return true;
 
             // Buscamos la seccion en la descripcion
             int j = 0;
@@ -318,11 +334,18 @@ public class Controller
                 String single = decomposedDescription[j].replace( ",", "" ).replace( ".", "" ).toUpperCase();
 
                 bingo = single.contains( section ) || section.contains( single );
+                
+                if ( bingo )
+                {
+                    LOG.info( "Producto encontrado: " + single + " || " + section );
+
+                    return true;
+                }
 
                 j++;
             }
 
-            return bingo;
+            return false;
 
         } // for sections  
         
