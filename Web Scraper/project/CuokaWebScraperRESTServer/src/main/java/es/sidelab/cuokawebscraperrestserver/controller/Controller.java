@@ -163,6 +163,7 @@ public class Controller
     /**
      * Metodo que devuelve una lista de productos que cumplen una serie de condiciones.
      * @param filter: Filtro por el que tienen que pasar los productos.
+     * @param shop: Tienda de la que se quiere filtrar los productos.
      * @return Lista de productos.
      */
     @RequestMapping( value = "/filter/{shop}", method = RequestMethod.POST )
@@ -173,7 +174,6 @@ public class Controller
         
         List<Product> productList = new ArrayList<>();
         
-            
         if ( filter.isMan() )
             LOG.info( " - Solo hombre" );
         else
@@ -193,7 +193,7 @@ public class Controller
         {
             LOG.info( " - Solo novedades" );                                 
 
-            return productsRepository.findByShopInAndManAndNewnessAndPrice( shop
+            productList = productsRepository.findByShopInAndManAndNewnessAndPrice( shop
                                         , filter.isMan()
                                         , 0
                                         , from
@@ -202,29 +202,132 @@ public class Controller
         } else {
             LOG.info( " - Todos los productos" );                                 
 
-            return productsRepository.findByShopInAndManAndPrice( shop
+            productList = productsRepository.findByShopInAndManAndPrice( shop
                                         , filter.isMan()
                                         , from
                                         , to );
-        }           
-            
+        }       
+           
+        List<Product> newList = new ArrayList<>();
         
-        
-        /*if ( ! filter.getSections().isEmpty() )
+        // Buscamos primero si tiene el filtro de color y de secciones
+        if ( ! filter.getSections().isEmpty() && ! filter.getColors().isEmpty() )
         {
-            LOG.info( " - De las siguientes secciones:" );
+            for ( Product product : productList )
+                // OR Perezoso!
+                if ( _searchForSection( product, filter.getSections() ) || _searchForColor( product, filter.getColors() ) )
+                    newList.add( product ); 
             
-            for ( String section : filter.getSections() )
-            {
-                LOG.info( "   " + section );
-            }
+            return newList;
         }
         
-        if ( ! filter.getColors().isEmpty() )
-        {
-            LOG.info( " - Por color" );
-        }          
+        // Buscamos la seccion si no tiene el filtro de color
+        if ( ! filter.getSections().isEmpty() && filter.getColors().isEmpty() )
+        {            
+            for ( Product product : productList )
+                if ( _searchForSection( product, filter.getSections() ) )
+                    newList.add( product );  
+            
+            return newList;
+        }  
+
+        // Buscamos el color si no tiene el filtro de secciones
+        if ( filter.getSections().isEmpty() && ! filter.getColors().isEmpty() )
+        {            
+            for ( Product product : productList )
+                if ( _searchForColor( product, filter.getColors() ) )
+                    newList.add( product );
+            
+            return newList;
+        }         
         
-        return null;*/
+        return productList;
     }
+    
+    /**
+     * Metodo que busca en el producto los colores recibidos.
+     * @param product: producto en el que buscar los colores.
+     * @param colors: colores que buscar en el producto.
+     * @return true si algun color esta en el producto.
+     */
+    private boolean _searchForColor( Product product, List<String> colors )
+    {
+        LOG.info( " - De los siguientes colores:" );            
+        for ( String color : colors )
+            LOG.info( "   " + color );
+        
+        boolean bingo = false;
+        
+        for ( String color : colors )
+        {
+            color = color.toUpperCase();
+
+            
+
+        } // for sections  
+        
+        // No deberia llegar aqui
+        return false;
+    }
+    
+    /**
+     * Metodo que busca en el producto las secciones recibidas.
+     * @param product: producto en el que buscar las secciones.
+     * @param sections: secciones que buscar en el producto.
+     * @return true si alguna seccion esta en el producto.
+     */
+    private boolean _searchForSection( Product product, List<String> sections )
+    {
+        LOG.info( " - De las siguientes secciones:" );            
+        for ( String section : sections )
+            LOG.info( "   " + section );
+        
+        boolean bingo = false;
+        
+        for ( String section : sections )
+        {
+            section = section.toUpperCase();
+
+            // Buscamos la seccion en la seccion
+            bingo = product.getSection().toUpperCase().contains( section ) ||
+                    section.contains( product.getSection().toUpperCase() ); 
+            
+            if ( bingo )
+                return true;
+
+            // Buscamos la seccion en el nombre   
+            int i = 0;
+            String[] decomposedName = product.getName().split( " " );
+            while ( ! bingo && i < decomposedName.length )
+            {
+                String single = decomposedName[i].replace( ",", "" ).replace( ".", "" ).toUpperCase();
+
+                bingo = single.contains( section ) || section.contains( single );
+
+                i++;
+            }          
+            
+            if ( bingo )
+                return true;
+
+            // Buscamos la seccion en la descripcion
+            int j = 0;
+            String[] decomposedDescription = product.getDescription().split( " " );
+            while ( ! bingo && j < decomposedDescription.length )
+            {
+                String single = decomposedDescription[j].replace( ",", "" ).replace( ".", "" ).toUpperCase();
+
+                bingo = single.contains( section ) || section.contains( single );
+
+                j++;
+            }
+
+            return bingo;
+
+        } // for sections  
+        
+        // No deberia llegar aqui
+        return false;
+    }
+    
 }
