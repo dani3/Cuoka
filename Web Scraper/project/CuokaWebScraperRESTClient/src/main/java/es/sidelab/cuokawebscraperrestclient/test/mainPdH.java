@@ -25,7 +25,7 @@ public class mainPdH
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\false\\Pedro Del Hierro_Camisas_false.html" );
+        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Camisas_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "ul.product-listing li div.content_product > a" );
@@ -155,6 +155,8 @@ public class mainPdH
             } catch ( Exception ex ) { ex.printStackTrace(); }
             
         } // for products
+        
+        System.out.println(productList.size());
         
         Product p = productList.get( 0 );
         

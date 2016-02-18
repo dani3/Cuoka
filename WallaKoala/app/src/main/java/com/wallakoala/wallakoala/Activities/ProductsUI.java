@@ -191,6 +191,22 @@ public class ProductsUI extends AppCompatActivity
         Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
+    protected void _reinitializeData()
+    {
+        mProductsListMap         = new ArrayList<>();
+        mFilterMap               = _initFilterMap();
+        mProductsNonFilteredMap  = new HashMap<>();
+        mProductsDisplayedList   = new ArrayList<>();
+        mProductsCandidatesDeque = new ArrayDeque<>();
+
+        start = count = 0;
+        mBackPressed = 0;
+
+        DAYS_OFFSET = 0;
+
+        FIRST_CONNECTION = true;
+    }
+
     /**
      * Metodo que inicializa el mapa de filtros.
      * @return: Mapa con los filtros actuales.
@@ -248,6 +264,7 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
+        mProductsRecyclerView.setVisibility(View.VISIBLE);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
@@ -523,6 +540,36 @@ public class ProductsUI extends AppCompatActivity
                 for (String color : colorsList)
                     Log.d(TAG, "Color = " + color);
 
+            if (shopsList != null)
+                if (shopsList.size() == mShopsList.size())
+                    if (shopsList.containsAll(mShopsList))
+                        shopsList = null;
+
+            boolean newness = (boolean)mFilterMap.get("newness");
+            int from = (int)mFilterMap.get("minPrice");
+            int to = (int)mFilterMap.get("maxPrice");
+
+            // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
+            if ((shopsList == null)
+                    && (colorsList == null)
+                    && (sectionsList == null)
+                    && (!newness)
+                    && (from < 0)
+                    && (to < 0))
+            {
+                Log.d(TAG, "Filtros por defecto");
+
+                _reinitializeData();
+
+                mProductsRecyclerView.setVisibility(View.GONE);
+
+                new ConnectToServer().execute();
+
+            } else {
+                new RetreiveProductsFromServer().execute();
+
+            }
+
         }
 
     }
@@ -564,7 +611,7 @@ public class ProductsUI extends AppCompatActivity
      * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
      * que cumplan los filtros establecidos.
      */
-    private class retreiveProductsFromServer extends AsyncTask<String, Void, Void>
+    private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
     {
         @Override
         protected void onPreExecute()

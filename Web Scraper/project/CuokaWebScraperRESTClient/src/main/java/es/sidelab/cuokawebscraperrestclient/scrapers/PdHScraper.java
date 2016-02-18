@@ -55,7 +55,7 @@ public class PdHScraper implements Scraper
                 // Obtener los atributos propios del producto
                 String link = shop.getURL().toString() + element.attr( "href" );
                 String name = document.select( "#product-information h1" ).first().ownText(); 
-                String price = document.select( "strong.product-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+                String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
                 
@@ -159,7 +159,7 @@ public class PdHScraper implements Scraper
                     }
                 }
                 
-            } catch ( Exception ex ) { prodNOK++; }
+            } catch ( Exception ex ) { ex.printStackTrace(); prodNOK++; }
             
         } // for products
         
