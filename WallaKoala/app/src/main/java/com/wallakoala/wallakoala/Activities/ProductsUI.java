@@ -698,6 +698,9 @@ public class ProductsUI extends AppCompatActivity
 
     } /* [END RetreiveProductsFromServer] */
 
+    /**
+     * Task que realiza una peticion al servidor con los filtros actuales.
+     */
     private class ConnectionFilterTask implements Callable<String>
     {
         private String shop;
@@ -1156,6 +1159,9 @@ public class ProductsUI extends AppCompatActivity
                     new ConnectToServer().execute();
 
                 } else {
+                    if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty() && (DAYS_OFFSET == -1)))
+                        _noData(true);
+
                     _loading(false, true);
 
                 }
@@ -1285,7 +1291,7 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
      * @param noData: true indica que no hay ningun producto que mostrar.
      */
-    protected void _noData( boolean noData )
+    protected void _noData(boolean noData)
     {
         if (!noData)
         {

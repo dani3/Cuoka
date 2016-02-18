@@ -169,7 +169,7 @@ public class Controller
     public List<Product> getProductsByFilter( @RequestBody Filter filter
                                     , @PathVariable String shop )
     {
-        LOG.info( "Peticion GET para obtener los productos que cumplan los siguientes filtros:" );
+        LOG.info( "Peticion GET para obtener los productos de " + shop + " que cumplan los siguientes filtros:" );
         
         List<Product> productList = new ArrayList<>();
         

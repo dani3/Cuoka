@@ -90,7 +90,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected RelativeLayout mFilterSectionItemLayout;
     protected RelativeLayout mFilterPriceItemLayout;
     protected RelativeLayout mFilterColorItemLayout;
-    protected RelativeLayout mFilterNewnessItemLayout;
     protected View mFilterShopMenuLayout;
     protected View mFilterSectionMenuLayout;
     protected View mFilterPriceMenuLayout;
@@ -102,7 +101,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected ImageButton mFilterSectionRemove;
     protected ImageButton mFilterPriceRemove;
     protected ImageButton mFilterColorRemove;
-    protected ImageButton mFilterNewnessRemove;
 
     /* ImageViews */
     protected ImageView mFilterShopImageView;
@@ -396,7 +394,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterSectionItemLayout = (RelativeLayout)findViewById(R.id.filter_section);
         mFilterPriceItemLayout   = (RelativeLayout)findViewById(R.id.filter_price);
         mFilterColorItemLayout   = (RelativeLayout)findViewById(R.id.filter_color);
-        mFilterNewnessItemLayout = (RelativeLayout)findViewById(R.id.filter_newness);
 
         mFilterShopImageView    = (ImageView)findViewById(R.id.filter_image_shop);
         mFilterSectionImageView = (ImageView)findViewById(R.id.filter_image_section);
@@ -414,7 +411,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterSectionItemLayout.setOnClickListener(this);
         mFilterPriceItemLayout.setOnClickListener(this);
         mFilterColorItemLayout.setOnClickListener(this);
-        mFilterNewnessItemLayout.setOnClickListener(this);
     }
 
     /**
@@ -432,13 +428,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterSectionRemove = (ImageButton)findViewById(R.id.filter_item_section_clear);
         mFilterPriceRemove   = (ImageButton)findViewById(R.id.filter_item_price_clear);
         mFilterColorRemove   = (ImageButton)findViewById(R.id.filter_item_color_clear);
-        mFilterNewnessRemove = (ImageButton)findViewById(R.id.filter_item_newness_clear);
 
         mFilterShopRemove.setOnClickListener(this);
         mFilterSectionRemove.setOnClickListener(this);
         mFilterPriceRemove.setOnClickListener(this);
         mFilterColorRemove.setOnClickListener(this);
-        mFilterNewnessRemove.setOnClickListener(this);
 
         _initFilterColor();
         _initFilterSection();
@@ -964,22 +958,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                            .setInterpolator(new OvershootInterpolator());
 
             mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
-
-            mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
-            mSnackbar.show();
-        }
-
-        if (view.getId() == R.id.filter_item_newness_clear)
-        {
-            NEWNESS_FILTER_ACTIVE = false;
-
-            mFilterNewnessImageView.animate().setDuration(250)
-                                             .scaleXBy(-0.1f)
-                                             .scaleYBy(-0.1f)
-                                             .alpha(ALPHA_INACTIVE_FILTER)
-                                             .setInterpolator(new OvershootInterpolator());
-
-            mItemsMenuViewGroup.removeView(mFilterNewnessMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
             mSnackbar.show();
