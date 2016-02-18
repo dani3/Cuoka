@@ -306,6 +306,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View v)
             {
+                boolean OK = true;
+
                 if (!COLOR_FILTER_ACTIVE &&
                     !SHOP_FILTER_ACTIVE &&
                     !SECTION_FILTER_ACTIVE &&
@@ -364,22 +366,36 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     int to = -1;
                     if (PRICE_FILTER_ACTIVE)
                     {
-                        from = (mPriceFromEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
-                        to = (mPriceToEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
+                        int lengthFrom = mPriceFromEditText.getText().length();
+                        int lengthTo = mPriceToEditText.getText().length();
+
+                        from = (lengthFrom == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
+                        to = (lengthTo == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
+
+                        if (lengthFrom == 0 && lengthTo == 0)
+                        {
+                            OK = false;
+
+                            mFilterPriceMenuLayout.startAnimation(AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                        }
                     }
 
-                    boolean newness = mNewnessNewRadioButton.isChecked();
+                    if (OK)
+                    {
+                        boolean newness = mNewnessNewRadioButton.isChecked();
 
-                    intent.putExtra(PACKAGE + ".shops", shopsList);
-                    intent.putExtra(PACKAGE + ".colors", colorsList);
-                    intent.putExtra(PACKAGE + ".sections", sectionsList);
-                    intent.putExtra(PACKAGE + ".minPrice", from);
-                    intent.putExtra(PACKAGE + ".maxPrice", to);
-                    intent.putExtra(PACKAGE + ".newness", newness);
+                        intent.putExtra(PACKAGE + ".shops", shopsList);
+                        intent.putExtra(PACKAGE + ".colors", colorsList);
+                        intent.putExtra(PACKAGE + ".sections", sectionsList);
+                        intent.putExtra(PACKAGE + ".minPrice", from);
+                        intent.putExtra(PACKAGE + ".maxPrice", to);
+                        intent.putExtra(PACKAGE + ".newness", newness);
 
-                    setResult(RESULT_OK, intent);
+                        setResult(RESULT_OK, intent);
 
-                    finish();
+                        finish();
+                    }
+
                 }
             }
         });
@@ -755,10 +771,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 SHOP_FILTER_ACTIVE = true;
 
                 mFilterShopImageView.animate().setDuration(250)
-                                              .scaleXBy(0.1f)
-                                              .scaleYBy(0.1f)
-                                              .alpha(ALPHA_ACTIVE_FILTER)
-                                              .setInterpolator(new OvershootInterpolator());
+                        .scaleXBy(0.1f)
+                        .scaleYBy(0.1f)
+                        .alpha(ALPHA_ACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
@@ -766,10 +782,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 SHOP_FILTER_ACTIVE = false;
 
                 mFilterShopImageView.animate().setDuration(250)
-                                              .scaleXBy(-0.1f)
-                                              .scaleYBy(-0.1f)
-                                              .alpha(ALPHA_INACTIVE_FILTER)
-                                              .setInterpolator(new OvershootInterpolator());
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
@@ -785,10 +801,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 SECTION_FILTER_ACTIVE = true;
 
                 mFilterSectionImageView.animate().setDuration(250)
-                                                 .scaleXBy(0.1f)
-                                                 .scaleYBy(0.1f)
-                                                 .alpha(ALPHA_ACTIVE_FILTER)
-                                                 .setInterpolator(new OvershootInterpolator());
+                        .scaleXBy(0.1f)
+                        .scaleYBy(0.1f)
+                        .alpha(ALPHA_ACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
 
@@ -845,10 +861,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 COLOR_FILTER_ACTIVE = true;
 
                 mFilterColorImageView.animate().setDuration(250)
-                                               .scaleXBy(0.1f)
-                                               .scaleYBy(0.1f)
-                                               .alpha(ALPHA_ACTIVE_FILTER)
-                                               .setInterpolator(new OvershootInterpolator());
+                        .scaleXBy(0.1f)
+                        .scaleYBy(0.1f)
+                        .alpha(ALPHA_ACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
 
                 mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
@@ -904,10 +920,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             SHOP_FILTER_ACTIVE = false;
 
             mFilterShopImageView.animate().setDuration(250)
-                                          .scaleXBy(-0.1f)
-                                          .scaleYBy(-0.1f)
-                                          .alpha(ALPHA_INACTIVE_FILTER)
-                                          .setInterpolator(new OvershootInterpolator());
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
 
             mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
@@ -920,10 +936,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             SECTION_FILTER_ACTIVE = false;
 
             mFilterSectionImageView.animate().setDuration(250)
-                                             .scaleXBy(-0.1f)
-                                             .scaleYBy(-0.1f)
-                                             .alpha(ALPHA_INACTIVE_FILTER)
-                                             .setInterpolator(new OvershootInterpolator());
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
 
             mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
 
@@ -952,10 +968,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             COLOR_FILTER_ACTIVE = false;
 
             mFilterColorImageView.animate().setDuration(250)
-                                           .scaleXBy(-0.1f)
-                                           .scaleYBy(-0.1f)
-                                           .alpha(ALPHA_INACTIVE_FILTER)
-                                           .setInterpolator(new OvershootInterpolator());
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
 
             mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
 
