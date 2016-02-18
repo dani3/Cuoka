@@ -504,7 +504,7 @@ public class ProductsUI extends AppCompatActivity
             mFilterMap.put("minPrice", data.getIntExtra(PACKAGE + ".minPrice", -1));
             mFilterMap.put("maxPrice", data.getIntExtra(PACKAGE + ".maxPrice", -1));
 
-            Log.d(TAG, "Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
+            Log.d(TAG, "Novedades = " + Boolean.toString((boolean)mFilterMap.get("newness")));
             Log.d(TAG, "Precio Min = " + Integer.toString((int)mFilterMap.get("minPrice")));
             Log.d(TAG, "Precio Max = " + Integer.toString((int)mFilterMap.get("maxPrice")));
 
@@ -513,15 +513,18 @@ public class ProductsUI extends AppCompatActivity
                 for (String shop : shopsList)
                     Log.d(TAG, "Tienda = " + shop);
 
+            List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
+            if (sectionsList != null)
+                for (String section : sectionsList)
+                    Log.d(TAG, "Seccion = " + section);
+
             List<String> colorsList = (ArrayList<String>)mFilterMap.get("colors");
             if (colorsList != null)
                 for (String color : colorsList)
                     Log.d(TAG, "Color = " + color);
 
-        } else {
-            Log.d(TAG, "Filtro cancelado");
-
         }
+
     }
 
     @Override
@@ -556,6 +559,33 @@ public class ProductsUI extends AppCompatActivity
     {
         super.onDestroy();
     }
+
+    /**
+     * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
+     * que cumplan los filtros establecidos.
+     */
+    private class retreiveProductsFromServer extends AsyncTask<String, Void, Void>
+    {
+        @Override
+        protected void onPreExecute()
+        {
+
+        }
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+
+        }
+
+    } /* [END retreiveProductsFromServer] */
 
     /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.

@@ -200,7 +200,7 @@ public class Controller
                 
                 productList = productsRepository.findByShopInAndManAndNewnessAndPrice( filter.getShops()
                                             , filter.isMan()
-                                            , 2
+                                            , 0
                                             , from
                                             , to );
                 

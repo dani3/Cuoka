@@ -45,7 +45,28 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final float ALPHA_ACTIVE_FILTER = 0.8f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
+    protected static String SECTION_FILTER_MAN_1;
+    protected static String SECTION_FILTER_MAN_2;
+    protected static String SECTION_FILTER_MAN_3;
+    protected static String SECTION_FILTER_MAN_4;
+    protected static String SECTION_FILTER_MAN_5;
+    protected static String SECTION_FILTER_MAN_6;
+    protected static String SECTION_FILTER_MAN_7;
+    protected static String SECTION_FILTER_MAN_8;
+    protected static String SECTION_FILTER_MAN_9;
+    protected static String SECTION_FILTER_MAN_10;
+    protected static String SECTION_FILTER_WOMAN_1;
+    protected static String SECTION_FILTER_WOMAN_2;
+    protected static String SECTION_FILTER_WOMAN_3;
+    protected static String SECTION_FILTER_WOMAN_4;
+    protected static String SECTION_FILTER_WOMAN_5;
+    protected static String SECTION_FILTER_WOMAN_6;
+    protected static String SECTION_FILTER_WOMAN_7;
+    protected static String SECTION_FILTER_WOMAN_8;
+    protected static String SECTION_FILTER_WOMAN_9;
+    protected static String SECTION_FILTER_WOMAN_10;
     protected static boolean MAN;
+
 
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButton;
@@ -119,6 +140,18 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mColorRedCheckBox;
     protected AppCompatCheckBox mColorPinkCheckBox;
     protected AppCompatCheckBox mColorGreenCheckBox;
+
+    protected List<AppCompatCheckBox> mSectionCheckBoxesList;
+    protected AppCompatCheckBox mSection1CheckBox;
+    protected AppCompatCheckBox mSection2CheckBox;
+    protected AppCompatCheckBox mSection3CheckBox;
+    protected AppCompatCheckBox mSection4CheckBox;
+    protected AppCompatCheckBox mSection5CheckBox;
+    protected AppCompatCheckBox mSection6CheckBox;
+    protected AppCompatCheckBox mSection7CheckBox;
+    protected AppCompatCheckBox mSection8CheckBox;
+    protected AppCompatCheckBox mSection9CheckBox;
+    protected AppCompatCheckBox mSection10CheckBox;
 
     /* RangeSeekBar */
     protected RangeSeekBar mRangeSeekBar;
@@ -199,14 +232,37 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         COLOR_FILTER_ACTIVE   = (mFilterColors != null);
         NEWNESS_FILTER_ACTIVE = true;
 
-        mAllCheckBoxesList   = new ArrayList<>();
-        mMyCheckBoxesList    = new ArrayList<>();
-        mColorCheckBoxesList = new ArrayList<>();
+        mAllCheckBoxesList     = new ArrayList<>();
+        mMyCheckBoxesList      = new ArrayList<>();
+        mColorCheckBoxesList   = new ArrayList<>();
+        mSectionCheckBoxesList = new ArrayList<>();
 
         mShopsList = new ArrayList<>();
         mSharedPreferences = new SharedPreferencesManager(this);
         for (String shop : mSharedPreferences.retreiveShops())
             mShopsList.add(shop);
+
+        SECTION_FILTER_MAN_1 = getResources().getString(R.string.filter_section_abrigos);
+        SECTION_FILTER_MAN_2 = getResources().getString(R.string.filter_section_americanas);
+        SECTION_FILTER_MAN_3 = getResources().getString(R.string.filter_section_camisas);
+        SECTION_FILTER_MAN_4 = getResources().getString(R.string.filter_section_camisetas);
+        SECTION_FILTER_MAN_5 = getResources().getString(R.string.filter_section_chaquetas);
+        SECTION_FILTER_MAN_6 = getResources().getString(R.string.filter_section_jeans);
+        SECTION_FILTER_MAN_7 = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_MAN_8 = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_MAN_9 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_trajes);
+
+        SECTION_FILTER_WOMAN_1 = getResources().getString(R.string.filter_section_abrigos);
+        SECTION_FILTER_WOMAN_2 = getResources().getString(R.string.filter_section_camisas);
+        SECTION_FILTER_WOMAN_3 = getResources().getString(R.string.filter_section_camisetas);
+        SECTION_FILTER_WOMAN_4 = getResources().getString(R.string.filter_section_chaquetas);
+        SECTION_FILTER_WOMAN_5 = getResources().getString(R.string.filter_section_faldas);
+        SECTION_FILTER_WOMAN_6 = getResources().getString(R.string.filter_section_jeans);
+        SECTION_FILTER_WOMAN_7 = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_WOMAN_8 = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_WOMAN_9 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_vestidos);
     }
 
     /**
@@ -293,6 +349,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         }
                     }
 
+                    ArrayList<String> sectionsList = null;
+                    if (SECTION_FILTER_ACTIVE)
+                    {
+                        sectionsList = new ArrayList<>();
+                        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
+                        {
+                            if (checkBox.isChecked())
+                            {
+                                sectionsList.add(checkBox.getText().toString());
+                            }
+                        }
+                    }
+
                     int from = (mPriceFromEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
                     int to = (mPriceToEditText.getText().length() == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
 
@@ -300,11 +369,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     intent.putExtra(PACKAGE + ".shops", shopsList);
                     intent.putExtra(PACKAGE + ".colors", colorsList);
+                    intent.putExtra(PACKAGE + ".sections", sectionsList);
                     intent.putExtra(PACKAGE + ".minPrice", from);
                     intent.putExtra(PACKAGE + ".maxPrice", to);
                     intent.putExtra(PACKAGE + ".newness", newness);
-
-                    intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
 
                     setResult(RESULT_OK, intent);
 
@@ -399,6 +467,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mColorCheckBoxesList.add(mColorGreenCheckBox);
 
         ((ViewGroup) mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
+
         if (COLOR_FILTER_ACTIVE)
         {
             mFilterColorImageView.setScaleX(1.1f);
@@ -432,9 +501,68 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterSection()
     {
+        mSection1CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_1);
+        mSection2CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_2);
+        mSection3CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_3);
+        mSection4CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_4);
+        mSection5CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_5);
+        mSection6CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_6);
+        mSection7CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_7);
+        mSection8CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_8);
+        mSection9CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_9);
+        mSection10CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_10);
+
+        mSectionCheckBoxesList.add(mSection1CheckBox); mSectionCheckBoxesList.add(mSection2CheckBox);
+        mSectionCheckBoxesList.add(mSection3CheckBox); mSectionCheckBoxesList.add(mSection4CheckBox);
+        mSectionCheckBoxesList.add(mSection5CheckBox); mSectionCheckBoxesList.add(mSection6CheckBox);
+        mSectionCheckBoxesList.add(mSection7CheckBox); mSectionCheckBoxesList.add(mSection8CheckBox);
+        mSectionCheckBoxesList.add(mSection9CheckBox); mSectionCheckBoxesList.add(mSection10CheckBox);
+
         ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
+
+        if (MAN)
+        {
+            mSectionCheckBoxesList.get(0).setText(SECTION_FILTER_MAN_1);
+            mSectionCheckBoxesList.get(1).setText(SECTION_FILTER_MAN_2);
+            mSectionCheckBoxesList.get(2).setText(SECTION_FILTER_MAN_3);
+            mSectionCheckBoxesList.get(3).setText(SECTION_FILTER_MAN_4);
+            mSectionCheckBoxesList.get(4).setText(SECTION_FILTER_MAN_5);
+            mSectionCheckBoxesList.get(5).setText(SECTION_FILTER_MAN_6);
+            mSectionCheckBoxesList.get(6).setText(SECTION_FILTER_MAN_7);
+            mSectionCheckBoxesList.get(7).setText(SECTION_FILTER_MAN_8);
+            mSectionCheckBoxesList.get(8).setText(SECTION_FILTER_MAN_9);
+            mSectionCheckBoxesList.get(9).setText(SECTION_FILTER_MAN_10);
+
+        } else {
+            mSectionCheckBoxesList.get(0).setText(SECTION_FILTER_WOMAN_1);
+            mSectionCheckBoxesList.get(1).setText(SECTION_FILTER_WOMAN_2);
+            mSectionCheckBoxesList.get(2).setText(SECTION_FILTER_WOMAN_3);
+            mSectionCheckBoxesList.get(3).setText(SECTION_FILTER_WOMAN_4);
+            mSectionCheckBoxesList.get(4).setText(SECTION_FILTER_WOMAN_5);
+            mSectionCheckBoxesList.get(5).setText(SECTION_FILTER_WOMAN_6);
+            mSectionCheckBoxesList.get(6).setText(SECTION_FILTER_WOMAN_7);
+            mSectionCheckBoxesList.get(7).setText(SECTION_FILTER_WOMAN_8);
+            mSectionCheckBoxesList.get(8).setText(SECTION_FILTER_WOMAN_9);
+            mSectionCheckBoxesList.get(9).setText(SECTION_FILTER_WOMAN_10);
+        }
+
         if (SECTION_FILTER_ACTIVE)
         {
+            mFilterSectionImageView.setScaleX(1.1f);
+            mFilterSectionImageView.setScaleY(1.1f);
+            mFilterSectionImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            for (String section : mFilterSections)
+            {
+                for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
+                {
+                    if (checkBox.getText().toString().equals(section))
+                    {
+                        checkBox.setChecked(true);
+                    }
+                }
+            }
+
             mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
         }
     }
