@@ -66,7 +66,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected static String SECTION_FILTER_WOMAN_10;
     protected static boolean MAN;
 
-
     /* Floating Button */
     protected FloatingActionButton mFloatingActionButton;
 

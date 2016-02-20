@@ -290,66 +290,7 @@ public class Controller
      */
     private boolean _searchForSection( Product product, List<String> sections )
     {        
-        boolean bingo = false;
         
-        for ( String section : sections )
-        {
-            section = section.toUpperCase();
-
-            // Buscamos la seccion en la seccion
-            bingo = product.getSection().toUpperCase().contains( section ) ||
-                    section.contains( product.getSection().toUpperCase() ); 
-            
-            if ( bingo )
-            {
-                LOG.info( "Producto encontrado: " + product.getSection().toUpperCase() + " || " + section );
-                
-                return true;
-            }
-
-            // Buscamos la seccion en el nombre   
-            int i = 0;
-            String[] decomposedName = product.getName().split( " " );
-            while ( ! bingo && i < decomposedName.length )
-            {
-                String single = decomposedName[i].replace( ",", "" ).replace( ".", "" ).toUpperCase();
-
-                bingo = single.contains( section ) || section.contains( single );
-
-                if ( bingo )
-                {
-                    LOG.info( "Producto encontrado: " + single + " || " + section );
-
-                    return true;
-                }
-                
-                i++;
-            }          
-
-            // Buscamos la seccion en la descripcion
-            int j = 0;
-            String[] decomposedDescription = product.getDescription().split( " " );
-            while ( ! bingo && j < decomposedDescription.length )
-            {
-                String single = decomposedDescription[j].replace( ",", "" ).replace( ".", "" ).toUpperCase();
-
-                bingo = single.contains( section ) || section.contains( single );
-                
-                if ( bingo )
-                {
-                    LOG.info( "Producto encontrado: " + single + " || " + section );
-
-                    return true;
-                }
-
-                j++;
-            }
-
-            return false;
-
-        } // for sections  
-        
-        // No deberia llegar aqui
         return false;
     }
     

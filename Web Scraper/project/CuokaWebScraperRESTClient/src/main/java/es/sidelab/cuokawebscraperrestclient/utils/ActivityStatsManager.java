@@ -117,28 +117,29 @@ public class ActivityStatsManager
    
    public static void updateProducts( String shop, Section section, int prodOK, int prodNOK )
    {
-       boolean found = false;
+       boolean shopFound = false;
        int i = 0;
        
        // Buscamos la tienda correspondiente
-       while( ( ! found ) && ( i < shopActivityList.size() ) )
+       while( ( ! shopFound ) && ( i < shopActivityList.size() ) )
        {
            ShopActivityStats shopActivity = shopActivityList.get( i++ );
            if( shopActivity.getShop().equals(shop) )
            {
-               found = true;
-               boolean found2 = false;
+               shopFound = true;
+               boolean sectionFound = false;
                int j = 0;
                
                // Buscamos la seccion correspondiente
-               while( (! found2 ) && ( j < shopActivity.getListSectionStats().size() ) )
+               while( ( ! sectionFound ) && ( j < shopActivity.getListSectionStats().size() ) )
                {
                    SectionActivityStats sectionActivity = shopActivity.getListSectionStats().get( j++ );
                    if( sectionActivity.getSection().equals( section.getName() ) && 
                      ( sectionActivity.isMan() == section.isMan() ) )
                    {
+                       System.out.println("Tienda: " + shop + " - Seccion: " + section + " - " + prodOK + "|" + prodNOK );
                        sectionActivity.updateProducts( prodOK, prodNOK );
-                       found2 = true;
+                       sectionFound = true;
                    }
                    
                } // while #2

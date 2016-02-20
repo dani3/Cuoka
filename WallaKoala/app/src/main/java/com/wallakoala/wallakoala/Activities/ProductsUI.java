@@ -555,7 +555,8 @@ public class ProductsUI extends AppCompatActivity
 
             _reinitializeData();
 
-            mProductsRecyclerView.setVisibility(View.GONE);
+            if (mProductsRecyclerView != null)
+                mProductsRecyclerView.setVisibility(View.GONE);
 
             // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
             if ((shopsList == null)
