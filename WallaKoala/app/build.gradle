@@ -31,5 +31,4 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.github.ozodrukh:CircularReveal:1.1.0'
-    compile 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.1.0'
 }
