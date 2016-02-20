@@ -11,7 +11,10 @@ public class main
     private static final Logger LOG = Logger.getLogger( main.class );   
     
     public static void main( String[] args ) throws Exception
-    {          
+    {       
+        //Process p = Runtime.getRuntime().exec("python C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\renderPages.py");
+        //int exitCode = p.waitFor();
+        
         LOG.info( "Buscamos la lista de tiendas" );
         
         // Sacamos la lista de tiendas

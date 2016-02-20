@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -369,14 +368,15 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         int lengthFrom = mPriceFromEditText.getText().length();
                         int lengthTo = mPriceToEditText.getText().length();
 
-                        from = (lengthFrom == 0) ? -1 : Integer.valueOf(mPriceFromEditText.getText().toString());
-                        to = (lengthTo == 0) ? -1 : Integer.valueOf(mPriceToEditText.getText().toString());
+                        from = (lengthFrom == 0) ? from : Integer.valueOf(mPriceFromEditText.getText().toString());
+                        to = (lengthTo == 0) ? to : Integer.valueOf(mPriceToEditText.getText().toString());
 
                         if (lengthFrom == 0 && lengthTo == 0)
                         {
                             OK = false;
 
-                            mFilterPriceMenuLayout.startAnimation(AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                            mFilterPriceMenuLayout.startAnimation(
+                                                        AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
                         }
                     }
 

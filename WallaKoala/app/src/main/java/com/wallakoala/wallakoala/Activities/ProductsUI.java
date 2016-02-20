@@ -39,10 +39,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -195,6 +193,9 @@ public class ProductsUI extends AppCompatActivity
         Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
+    /**
+     * Metodo que reinicializa ciertas variables.
+     */
     protected void _reinitializeData()
     {
         mProductsListMap         = new ArrayList<>();
@@ -753,7 +754,7 @@ public class ProductsUI extends AppCompatActivity
                     writer = new DataOutputStream(conn.getOutputStream());
 
                     String str = jsonObject.toString();
-                    byte[] data=str.getBytes("UTF-8");
+                    byte[] data = str.getBytes("UTF-8");
 
                     writer.write(data);
                     writer.flush();
@@ -1271,6 +1272,8 @@ public class ProductsUI extends AppCompatActivity
             }
 
         } else if (FIRST_CONNECTION) {
+            _noData(false);
+
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
 
@@ -1316,11 +1319,11 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Metodo que muestra un mensaje cuando se ha producido un error al conectar con el server.
-     * @param filter: true si el error se ha producido con los filtros.
+     * @param isFiltering: true si el error se ha producido con los filtros.
      */
-    protected void _errorConnectingToServer(boolean filter)
+    protected void _errorConnectingToServer(boolean isFiltering)
     {
-        if (!filter)
+        if (!isFiltering)
         {
             mSnackbar = Snackbar.make(mCoordinatorLayout
                     , getResources().getString( R.string.error_message )
