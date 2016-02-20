@@ -1272,7 +1272,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
         } else if (FIRST_CONNECTION) {
-            _noData(false);
+            mNoDataTextView.setVisibility(View.GONE);
 
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
