@@ -1272,7 +1272,7 @@ public class ProductsUI extends AppCompatActivity
             }
 
         } else if (FIRST_CONNECTION) {
-            mNoDataTextView.setVisibility(View.GONE);
+            _noData(false);
 
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
@@ -1298,17 +1298,11 @@ public class ProductsUI extends AppCompatActivity
     {
         if (!noData)
         {
-            if (mProductsRecyclerView != null)
-                mProductsRecyclerView.setVisibility(View.VISIBLE);
-
             mNoDataTextView.setVisibility(View.GONE);
 
             mState = STATE.NORMAL;
 
         } else {
-            if (mProductsRecyclerView != null)
-                mProductsRecyclerView.setVisibility(View.GONE);
-
             mNoDataTextView.setVisibility(View.VISIBLE);
 
             mState = STATE.NODATA;

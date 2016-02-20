@@ -281,6 +281,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Inicializacion de animaciones.
+     */
     protected void _initAnimations()
     {
         mExplode = AnimationUtils.loadAnimation(this, R.anim.explode);
@@ -395,7 +398,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                         finish();
                     }
-
                 }
             }
         });
