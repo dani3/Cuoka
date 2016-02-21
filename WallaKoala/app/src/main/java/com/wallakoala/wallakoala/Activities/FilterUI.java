@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -327,39 +329,75 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     ArrayList<String> shopsList = null;
                     if (SHOP_FILTER_ACTIVE)
                     {
+                        boolean none = true;
+
                         shopsList = new ArrayList<>();
                         for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
                         {
                             if (checkBox.isChecked())
                             {
+                                none = false;
+
                                 shopsList.add(checkBox.getText().toString());
                             }
+                        }
+
+                        if (none)
+                        {
+                            OK = false;
+
+                            mFilterShopMenuLayout.startAnimation(
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
                         }
                     }
 
                     ArrayList<String> colorsList = null;
                     if (COLOR_FILTER_ACTIVE)
                     {
+                        boolean none = true;
+
                         colorsList = new ArrayList<>();
                         for (AppCompatCheckBox checkBox : mColorCheckBoxesList)
                         {
                             if (checkBox.isChecked())
                             {
+                                none = false;
+
                                 colorsList.add(checkBox.getText().toString());
                             }
+                        }
+
+                        if (none)
+                        {
+                            OK = false;
+
+                            mFilterColorMenuLayout.startAnimation(
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
                         }
                     }
 
                     ArrayList<String> sectionsList = null;
                     if (SECTION_FILTER_ACTIVE)
                     {
+                        boolean none = true;
+
                         sectionsList = new ArrayList<>();
                         for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
                         {
                             if (checkBox.isChecked())
                             {
+                                none = false;
+
                                 sectionsList.add(checkBox.getText().toString());
                             }
+                        }
+
+                        if (none)
+                        {
+                            OK = false;
+
+                            mFilterSectionMenuLayout.startAnimation(
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
                         }
                     }
 
@@ -626,6 +664,69 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
 
+        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (!v.getText().toString().isEmpty())
+                {
+                    int from = Integer.valueOf(mPriceFromEditText.getText().toString());
+                    int to = 999;
+
+                    if (mPriceToEditText.getText() != null && !mPriceToEditText.getText().toString().isEmpty())
+                        to = Integer.valueOf(mPriceToEditText.getText().toString());
+
+                    Log.d(TAG, Integer.toString(from) + "|" + Integer.toString(to));
+
+                    if (from > to)
+                    {
+                        mRangeSeekBar.setSelectedMaxValue(from);
+                        mPriceToEditText.setText(Integer.toString(from));
+                    }
+
+
+                    mRangeSeekBar.setSelectedMinValue(from);
+
+                } else {
+                    mRangeSeekBar.setSelectedMinValue(mRangeSeekBar.getAbsoluteMinValue());
+
+                }
+
+                return false;
+            }
+        });
+
+        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (!v.getText().toString().isEmpty())
+                {
+                    int from = -1;
+                    int to = Integer.valueOf(mPriceToEditText.getText().toString());
+
+                    if (mPriceFromEditText.getText() != null && !mPriceFromEditText.getText().toString().isEmpty())
+                        from = Integer.valueOf(mPriceFromEditText.getText().toString());
+
+                    if (from > to)
+                    {
+                        mRangeSeekBar.setSelectedMinValue(to);
+                        mPriceFromEditText.setText(Integer.toString(to));
+                    }
+
+                    mRangeSeekBar.setSelectedMaxValue(to);
+
+                } else {
+                    mRangeSeekBar.setSelectedMaxValue(mRangeSeekBar.getAbsoluteMaxValue());
+
+                }
+
+                return false;
+            }
+        });
+
         ((ViewGroup)mFilterPriceMenuLayout.getParent()).removeView(mFilterPriceMenuLayout);
         if (PRICE_FILTER_ACTIVE)
         {
@@ -706,13 +807,21 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopAllCheckBox)
-                if (!isChecked && !mShopAllCheckBox.isChecked()) {
+                if (!isChecked && !mShopAllCheckBox.isChecked())
+                {
+                    boolean allChecked = true;
                     for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
-                        checkBox.setChecked(false);
+                        if (!checkBox.isChecked())
+                            allChecked = false;
+
+                    if (allChecked)
+                        for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
+                            checkBox.setChecked(false);
                 }
 
                 // Si se marca, desmarco el resto de tiendas y mShopAllCheckBox
-                if (isChecked) {
+                if (isChecked)
+                {
                     mShopAllCheckBox.setChecked(false);
 
                     for (AppCompatCheckBox checkBox : mAllCheckBoxesList)

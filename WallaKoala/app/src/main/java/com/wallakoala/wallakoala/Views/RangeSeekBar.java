@@ -485,7 +485,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             int offset = PixelUtil.dpToPx(getContext(), TEXT_LATERAL_PADDING_IN_DP);
 
             String minText = String.valueOf(getSelectedMinValue());
-            String maxText = String.valueOf(getSelectedMaxValue());
+            String maxText = (getSelectedMaxValue().toString().equals("100")) ? " " : String.valueOf(getSelectedMaxValue());
             float minTextWidth = paint.measureText(minText) + offset;
             float maxTextWidth = paint.measureText(maxText) + offset;
 
