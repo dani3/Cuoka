@@ -10,7 +10,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 /**
- * @class Clase que se encarga de los colores
+ * @class Clase que se encarga de los colores.
  * @author Daniel Mancebo Aldea
  */
 
@@ -26,37 +26,65 @@ public class ColorManager
         colorMap.put( "Amarillos", new String[]{ "Amarillo"
                                         , "Dorado"
                                         , "Oro"
-                                        , "Arena" } );
+                                        , "Arena"
+                                        , "Beige" 
+                                        , "Beis"
+                                        , "Camel" 
+                                        , "Nude"
+                                        , "Maquillaje"
+                                        , "Mostaza"
+                                        , "Crudo" } );
         
         colorMap.put( "Azules", new String[]{ "Azul"
-                                        , "Celeste" } );
+                                        , "Celeste"
+                                        , "Agua"
+                                        , "Turquesa" } );
         
-        colorMap.put( "Beiges", new String[]{ "Beige" } );
+        colorMap.put( "Beiges", new String[]{ "Beige"
+                                        , "Arena"
+                                        , "Beis"
+                                        , "Camel"
+                                        , "Nude"
+                                        , "Maquillaje"
+                                        , "Crudo" } );
         
         colorMap.put( "Blancos", new String[]{ "Blanco"
                                         , "Perla" } );
         
-        colorMap.put( "Grises", new String[]{ "Gris" } );
+        colorMap.put( "Grises", new String[]{ "Gris"
+                                        , "Plata" 
+                                        , "Plateado" } );
         
         colorMap.put( "Marrones", new String[]{ "Marron"
                                         , "Marrón" } );
         
         colorMap.put( "Morados", new String[]{ "Morado"
                                         , "Purpura"
-                                        , "Púrpura" } );
+                                        , "Púrpura"
+                                        , "Berenjena"
+                                        , "Lavanda"
+                                        , "Fucsia" 
+                                        , "Lila" } );
         
         colorMap.put( "Negros", new String[]{ "Negro"
                                         , "Petroleo" 
                                         , "Petróleo" } );
         
-        colorMap.put( "Rojos", new String[]{ "Rojo" } );
+        colorMap.put( "Rojos", new String[]{ "Rojo"
+                                        , "Granate" 
+                                        , "Burdeos" 
+                                        , "Teja"
+                                        , "Naranja"
+                                        , "Coral" } );
         
         colorMap.put( "Rosas", new String[]{ "Rosa"
                                         , "Fresa"
                                         , "Frambuesa" } );
         
         colorMap.put( "Verdes", new String[]{ "Verde"
-                                        , "Caza" } );
+                                        , "Caza"
+                                        , "Caqui" 
+                                        , "Khaki" } );
     }
     
     /**
