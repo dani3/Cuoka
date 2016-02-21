@@ -231,8 +231,14 @@ public class Controller
                 LOG.info( "   " + color );  
             
             for ( Product product : productList )
-                if ( _searchForSection( product, filter.getSections() ) || _searchForColor( product, filter.getColors() ) != null )
-                    newList.add( product ); 
+            {
+                if ( _searchForSection( product, filter.getSections() ) )
+                {
+                    Product aux = _searchForColor( product, filter.getColors() );
+                    if ( aux != null )
+                        newList.add( aux );                     
+                }
+            }
             
             return newList;
         }
