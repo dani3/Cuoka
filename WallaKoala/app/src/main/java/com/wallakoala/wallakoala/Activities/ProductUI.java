@@ -484,7 +484,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         if (!EXITING)
         {
             mContext.deleteFile(mBitmapUri);
-            
+
             runExitAnimation(new Runnable()
             {
                 public void run() {

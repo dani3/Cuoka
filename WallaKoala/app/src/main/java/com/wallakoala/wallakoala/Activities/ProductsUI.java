@@ -739,7 +739,7 @@ public class ProductsUI extends AppCompatActivity
                     // Creamos el JSON con los filtros
                     JSONObject jsonObject = new JSONObject();
 
-                    List<String> sectionsList = new ArrayList<>();
+                    List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
                     List<String> colorsList = new ArrayList<>();
 
                     jsonObject.put("newness", mFilterMap.get("newness"));

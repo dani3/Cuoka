@@ -18,8 +18,10 @@ public class Properties
     public static final int ICON_WIDTH = 50;
     public static final int ICON_HEIGHT = 50;
     
-    public static final double PDH_ASPECT_RATIO = 1.5;
-    public static final double SPRINGFIELD_ASPECT_RATIO = 1.12;
-    public static final double HYM_ASPECT_RATIO = 1.5;
-    public static final double BLANCO_ASPECT_RATIO = 1.28;
+    public static final double PDH_ASPECT_RATIO = 1.5f;
+    public static final double SPRINGFIELD_ASPECT_RATIO = 1.12f;
+    public static final double HYM_ASPECT_RATIO = 1.5f;
+    public static final double BLANCO_ASPECT_RATIO = 1.28f;
+    
+    public static final double MAX_SIMILARITY_THRESHOLD = 0.98f;
 }

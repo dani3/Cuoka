@@ -4,9 +4,11 @@ import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
+import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
+import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -193,7 +195,7 @@ public class Controller
         {
             LOG.info( " - Solo novedades" );                                 
 
-            productList = productsRepository.findByShopInAndManAndNewnessAndPrice( shop
+            productList = productsRepository.findByShopAndManAndNewnessAndPrice( shop
                                         , filter.isMan()
                                         , 0
                                         , from
@@ -202,7 +204,7 @@ public class Controller
         } else {
             LOG.info( " - Todos los productos" );                                 
 
-            productList = productsRepository.findByShopInAndManAndPrice( shop
+            productList = productsRepository.findByShopAndManAndPrice( shop
                                         , filter.isMan()
                                         , from
                                         , to );
@@ -289,7 +291,67 @@ public class Controller
      * @return true si alguna seccion esta en el producto.
      */
     private boolean _searchForSection( Product product, List<String> sections )
-    {        
+    {   
+        boolean bingo = false;
+        
+        // Buscamos primero en el campo seccion
+        for ( String section : sections )
+        {
+            if ( org.apache.commons.lang3.StringUtils
+                                .getJaroWinklerDistance( section
+                                        , product.getSection() ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Seccion '" + section + "' encontrada: " + product.getSection() );
+            }
+        }
+        
+        if ( bingo ) 
+            return true;
+        
+        // Si no encontramos nada en el campo seccion, buscamos en el nombre
+        for ( String section : sections )
+        {
+            String[] decomposedName = product.getName().split( " " );
+            
+            for ( String single : decomposedName )
+            {
+                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+                
+                if ( org.apache.commons.lang3.StringUtils
+                                .getJaroWinklerDistance( section
+                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+                {
+                    bingo = true;
+                    if ( bingo )
+                        LOG.info( "Seccion '" + section + "' encontrada: " + single );
+                }
+            }
+        }
+        
+        if ( bingo )
+            return true;
+        
+        // Si no encontramos nada en el nombre, buscamos por ultimo en la descripcion
+        for ( String section : sections )
+        {
+            String[] decomposedName = product.getDescription().split( " " );
+            
+            for ( String single : decomposedName )
+            {
+                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+                
+                if ( org.apache.commons.lang3.StringUtils
+                                .getJaroWinklerDistance( section
+                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+                {
+                    bingo = true;
+                    if ( bingo )
+                        LOG.info( "Seccion '" + section + "' encontrada: " + single );
+                }
+            }
+        }
         
         return false;
     }
