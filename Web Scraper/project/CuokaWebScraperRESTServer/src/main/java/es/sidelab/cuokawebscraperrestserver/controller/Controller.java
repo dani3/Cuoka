@@ -231,8 +231,7 @@ public class Controller
                 LOG.info( "   " + color );  
             
             for ( Product product : productList )
-                // OR Perezoso!
-                if ( _searchForSection( product, filter.getSections() ) || _searchForColor( product, filter.getColors() ) )
+                if ( _searchForSection( product, filter.getSections() ) || _searchForColor( product, filter.getColors() ) != null )
                     newList.add( product ); 
             
             return newList;
@@ -260,8 +259,11 @@ public class Controller
                 LOG.info( "   " + color );         
             
             for ( Product product : productList )
-                if ( _searchForColor( product, filter.getColors() ) )
+            {
+                Product aux =_searchForColor( product, filter.getColors() );
+                if ( aux != null )
                     newList.add( product );
+            }
             
             return newList;
         }         
@@ -273,11 +275,12 @@ public class Controller
      * Metodo que busca en el producto los colores recibidos.
      * @param product: producto en el que buscar los colores.
      * @param colors: colores que buscar en el producto.
-     * @return true si algun color esta en el producto.
+     * @return producto con el color buscado en primera posicion, null si no esta el color.
      */
-    private boolean _searchForColor( Product product, List<String> colors )
+    private Product _searchForColor( Product product, List<String> colors )
     {        
         boolean bingo = false;
+        int pos = 0;
         
         colors = colorManager.getEquivalentColors( colors );
         
@@ -297,17 +300,19 @@ public class Controller
                         bingo = true;
                         if ( bingo )
                             LOG.info( "Color '" + color + "' encontrado: " + single );
-
-                        return true;
+                        
+                        return _reorderColorVariants( product, pos );
                     }
                 }
+                
+                pos++;
             }            
         } 
         
         // Si no encontramos nada en el color, lo buscamos en el nombre
         for ( String color : colors )
         {
-              String[] decomposedName = product.getName().split( " " );
+            String[] decomposedName = product.getName().split( " " );
             
             for ( String single : decomposedName )
             {
@@ -321,7 +326,7 @@ public class Controller
                     if ( bingo )
                         LOG.info( "Color '" + color + "' encontrado: " + single );
                     
-                    return true;
+                    return product;
                 }
             }  
         }
@@ -343,12 +348,12 @@ public class Controller
                     if ( bingo )
                         LOG.info( "Color '" + color + "' encontrado: " + single );
                     
-                    return true;
+                    return product;
                 }
             }
         }
         
-        return false;
+        return null;
     }
     
     /**
@@ -423,4 +428,24 @@ public class Controller
         return false;
     }
     
+    /**
+     * Metodo que coloca el color especificado en la primera posicion.
+     * @param product: producto.
+     * @param pos: posicion del color que hay que colocar en la primera posicion.
+     * @return producto reordenado.
+     */
+    private Product _reorderColorVariants( Product product, int pos )
+    {        
+        if ( product.getColors().size() > 1 )
+        {
+            List<ColorVariant> aux = product.getColors();
+            
+            aux.add( 0, aux.get( pos ) );
+            aux.remove( pos + 1 );
+            
+            product.setColors( aux );
+        }
+        
+        return product;
+    }
 }

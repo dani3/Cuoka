@@ -104,12 +104,12 @@
 
             <ListView
                 android:id="@+id/product_info_list_colors"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="48dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:scrollbars="vertical"
                 android:smoothScrollbar="true"
                 android:cacheColorHint="#00000000"
