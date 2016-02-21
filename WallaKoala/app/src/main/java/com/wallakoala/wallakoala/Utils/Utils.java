@@ -71,7 +71,7 @@ public class Utils
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            Log.d(TAG, "Error guardando la imagen");
+            Log.e(TAG, "Error guardando la imagen");
 
             return null;
         }

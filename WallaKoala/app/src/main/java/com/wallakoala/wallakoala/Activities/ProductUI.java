@@ -481,8 +481,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @Override
     public void onBackPressed()
     {
-        if ( ! EXITING )
+        if (!EXITING)
         {
+            mContext.deleteFile(mBitmapUri);
+            
             runExitAnimation(new Runnable()
             {
                 public void run() {
