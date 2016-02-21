@@ -286,13 +286,13 @@ public class Controller
     private Product _searchForColor( Product product, List<String> colors )
     {        
         boolean bingo = false;
-        int pos = 0;
         
         colors = colorManager.getEquivalentColors( colors );
         
         // Buscamos primero en el color
         for ( String color : colors )
         {
+            int pos = 0;
             for ( ColorVariant cv : product.getColors() )
             {
                 String[] decomposedColor = cv.getName().split( " " );
