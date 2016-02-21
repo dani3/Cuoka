@@ -372,6 +372,8 @@ public class Controller
     {   
         boolean bingo = false;
         
+        sections = sectionManager.getEquivalentSections( sections );
+        
         // Buscamos primero en el campo seccion
         for ( String section : sections )
         {
