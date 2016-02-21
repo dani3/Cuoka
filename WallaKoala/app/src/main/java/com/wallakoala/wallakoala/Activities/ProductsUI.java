@@ -1162,10 +1162,13 @@ public class ProductsUI extends AppCompatActivity
 
                 } else {
                     if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty() && (DAYS_OFFSET == -1)))
+                    {
                         _noData(true);
 
-                    _loading(false, true);
+                    } else {
+                        _loading(false, true);
 
+                    }
                 }
             }
         }
@@ -1305,6 +1308,7 @@ public class ProductsUI extends AppCompatActivity
 
         } else {
             mNoDataTextView.setVisibility(View.VISIBLE);
+            mLoadingView.setVisibility(View.GONE);
 
             mState = STATE.NODATA;
         }

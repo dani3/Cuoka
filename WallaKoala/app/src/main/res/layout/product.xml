@@ -34,7 +34,7 @@
             android:scaleType="centerCrop"
             android:layout_gravity="top|right|end"
             android:layout_margin="24dp"
-            android:src="@drawable/ic_favorite_border_white"
+            android:src="@drawable/ic_star_border_white"
             android:tint="@color/colorAccent"
             android:background="@android:color/transparent"/>
 
