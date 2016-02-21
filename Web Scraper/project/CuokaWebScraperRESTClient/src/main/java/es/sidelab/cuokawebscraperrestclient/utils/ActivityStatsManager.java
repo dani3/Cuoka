@@ -49,8 +49,8 @@ public class ActivityStatsManager
            file = new FileWriter( Properties.ACTIVITY_PATH );
            pw = new PrintWriter( file );
            
-           pw.println("Numero de tiendas online: "+ onlineShops);
-           pw.println("Numero de tiendas offline: "+ offlineShops);           
+           pw.println( "Numero de tiendas online: " + onlineShops );
+           pw.println( "Numero de tiendas offline: " + offlineShops );           
            pw.println();
            pw.println();           
            
@@ -59,33 +59,35 @@ public class ActivityStatsManager
            {
                 if( shopActivity.isOnline() )
                 {                    
-                    pw.println("ShopActivityStat numero: " + i++);
-                    pw.println("La tienda es " + shopActivity.getShop());
-                    pw.println("URL: " + shopActivity.getUrl());
-                    pw.println("Está online: " + shopActivity.isOnline());
-                    pw.println("Hay hombre: " + shopActivity.isMan());
+                    pw.println( "ShopActivityStat numero: " + i++ );
+                    pw.println( "La tienda es " + shopActivity.getShop() );
+                    pw.println( "URL: " + shopActivity.getUrl() );
+                    pw.println( "Está online: " + shopActivity.isOnline() );
+                    pw.println( "Hay hombre: " + shopActivity.isMan() );
                     
                     List<SectionActivityStats> listSectionStats = shopActivity.getListSectionStats();                   
-                    for ( SectionActivityStats sectionActivity : listSectionStats)
+                    for ( SectionActivityStats sectionActivity : listSectionStats )
                     {
                         if( sectionActivity.isMan() )
                         {
-                            pw.println("        " + sectionActivity.getSection().replaceAll(".txt", "") + "  Html: " + sectionActivity.isHtmlOK());
-                            pw.println("            Productos OK: " + sectionActivity.getProdOK());
-                            pw.println("            Productos NOK: " + sectionActivity.getProdNOK());
+                            pw.println("        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
+                                    + "  Html: " + sectionActivity.isHtmlOK() );
+                            pw.println("            Productos OK: " + sectionActivity.getProdOK() );
+                            pw.println("            Productos NOK: " + sectionActivity.getProdNOK() );
                         }
                     }
                     
                     pw.println();
-                    pw.println("Hay mujer: " + shopActivity.isWoman());
+                    pw.println( "Hay mujer: " + shopActivity.isWoman() );
                     
                     for ( SectionActivityStats sectionActivity : listSectionStats)
                     {
                         if( ! sectionActivity.isMan() )
                         {
-                            pw.println("        " + sectionActivity.getSection().replaceAll(".txt", "") + "  Html: " + sectionActivity.isHtmlOK());
-                            pw.println("            Productos OK: " + sectionActivity.getProdOK());
-                            pw.println("            Productos NOK: " + sectionActivity.getProdNOK());
+                            pw.println( "        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
+                                    + "  Html: " + sectionActivity.isHtmlOK() );
+                            pw.println( "            Productos OK: " + sectionActivity.getProdOK() );
+                            pw.println( "            Productos NOK: " + sectionActivity.getProdNOK() );
                         }
                     }
                     
@@ -105,7 +107,7 @@ public class ActivityStatsManager
                 file.close();
               
            } catch ( Exception e ) {
-              LOG.error("Error cerrando el fichero Activity.txt");
+              LOG.error( "Error cerrando el fichero Activity.txt" );
               
            }
            
@@ -115,28 +117,29 @@ public class ActivityStatsManager
    
    public static void updateProducts( String shop, Section section, int prodOK, int prodNOK )
    {
-       boolean found = false;
+       boolean shopFound = false;
        int i = 0;
        
        // Buscamos la tienda correspondiente
-       while( ( ! found ) && ( i < shopActivityList.size() ) )
+       while( ( ! shopFound ) && ( i < shopActivityList.size() ) )
        {
            ShopActivityStats shopActivity = shopActivityList.get( i++ );
            if( shopActivity.getShop().equals(shop) )
            {
-               found = true;
-               boolean found2 = false;
+               shopFound = true;
+               boolean sectionFound = false;
                int j = 0;
                
                // Buscamos la seccion correspondiente
-               while( (! found2 ) && ( j < shopActivity.getListSectionStats().size() ) )
+               while( ( ! sectionFound ) && ( j < shopActivity.getListSectionStats().size() ) )
                {
                    SectionActivityStats sectionActivity = shopActivity.getListSectionStats().get( j++ );
                    if( sectionActivity.getSection().equals( section.getName() ) && 
                      ( sectionActivity.isMan() == section.isMan() ) )
                    {
+                       System.out.println("Tienda: " + shop + " - Seccion: " + section + " - " + prodOK + "|" + prodNOK );
                        sectionActivity.updateProducts( prodOK, prodNOK );
-                       found2 = true;
+                       sectionFound = true;
                    }
                    
                } // while #2

@@ -1,11 +1,13 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -157,4 +159,139 @@ public class Controller
                         + section + " de la tienda " + shop );
         return productsRepository.findBySectionAndShop( section, shop ) ;
     }
+    
+    /**
+     * Metodo que devuelve una lista de productos que cumplen una serie de condiciones.
+     * @param filter: Filtro por el que tienen que pasar los productos.
+     * @param shop: Tienda de la que se quiere filtrar los productos.
+     * @return Lista de productos.
+     */
+    @RequestMapping( value = "/filter/{shop}", method = RequestMethod.POST )
+    public List<Product> getProductsByFilter( @RequestBody Filter filter
+                                    , @PathVariable String shop )
+    {
+        LOG.info( "Peticion GET para obtener los productos de " + shop + " que cumplan los siguientes filtros:" );
+        
+        List<Product> productList = new ArrayList<>();
+        
+        if ( filter.isMan() )
+            LOG.info( " - Solo hombre" );
+        else
+            LOG.info( " - Solo mujer" ); 
+            
+        if ( filter.getPriceFrom() > 0 )
+            LOG.info( " - Precio minimo = " + filter.getPriceFrom() );
+
+        if ( filter.getPriceTo() > 0 )
+            LOG.info( " - Precio maximo = " + filter.getPriceTo() ); 
+
+        // Ponemos un valor minimo y maximo si no se reciben en el JSON.
+        double from = ( filter.getPriceFrom() > 0 ) ? filter.getPriceFrom() : -1;
+        double to = ( filter.getPriceTo() > 0 ) ? filter.getPriceTo() : 999; 
+
+        if ( filter.isNewness() )
+        {
+            LOG.info( " - Solo novedades" );                                 
+
+            productList = productsRepository.findByShopInAndManAndNewnessAndPrice( shop
+                                        , filter.isMan()
+                                        , 0
+                                        , from
+                                        , to );
+
+        } else {
+            LOG.info( " - Todos los productos" );                                 
+
+            productList = productsRepository.findByShopInAndManAndPrice( shop
+                                        , filter.isMan()
+                                        , from
+                                        , to );
+        }       
+           
+        List<Product> newList = new ArrayList<>();
+        
+        // Buscamos primero si tiene el filtro de color y de secciones
+        if ( ! filter.getSections().isEmpty() && ! filter.getColors().isEmpty() )
+        {
+            LOG.info( " - De las siguientes secciones:" );            
+            for ( String section : filter.getSections() )
+                LOG.info( "   " + section );   
+            
+            LOG.info( " - De los siguientes colores:" );            
+            for ( String color : filter.getColors() )
+                LOG.info( "   " + color );  
+            
+            for ( Product product : productList )
+                // OR Perezoso!
+                if ( _searchForSection( product, filter.getSections() ) || _searchForColor( product, filter.getColors() ) )
+                    newList.add( product ); 
+            
+            return newList;
+        }
+        
+        // Buscamos la seccion si no tiene el filtro de color
+        if ( ! filter.getSections().isEmpty() && filter.getColors().isEmpty() )
+        {         
+            LOG.info( " - De las siguientes secciones:" );            
+            for ( String section : filter.getSections() )
+                LOG.info( "   " + section );   
+            
+            for ( Product product : productList )
+                if ( _searchForSection( product, filter.getSections() ) )
+                    newList.add( product );  
+            
+            return newList;
+        }  
+
+        // Buscamos el color si no tiene el filtro de secciones
+        if ( filter.getSections().isEmpty() && ! filter.getColors().isEmpty() )
+        {   
+            LOG.info( " - De los siguientes colores:" );            
+            for ( String color : filter.getColors() )
+                LOG.info( "   " + color );         
+            
+            for ( Product product : productList )
+                if ( _searchForColor( product, filter.getColors() ) )
+                    newList.add( product );
+            
+            return newList;
+        }         
+        
+        return productList;
+    }
+    
+    /**
+     * Metodo que busca en el producto los colores recibidos.
+     * @param product: producto en el que buscar los colores.
+     * @param colors: colores que buscar en el producto.
+     * @return true si algun color esta en el producto.
+     */
+    private boolean _searchForColor( Product product, List<String> colors )
+    {        
+        boolean bingo = false;
+        
+        for ( String color : colors )
+        {
+            color = color.toUpperCase();
+
+            
+
+        } // for sections  
+        
+        // No deberia llegar aqui
+        return false;
+    }
+    
+    /**
+     * Metodo que busca en el producto las secciones recibidas.
+     * @param product: producto en el que buscar las secciones.
+     * @param sections: secciones que buscar en el producto.
+     * @return true si alguna seccion esta en el producto.
+     */
+    private boolean _searchForSection( Product product, List<String> sections )
+    {        
+        
+        return false;
+    }
+    
 }

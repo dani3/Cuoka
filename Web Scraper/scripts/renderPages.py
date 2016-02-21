@@ -79,7 +79,6 @@ if __name__ == '__main__':
                         items.extend([(url, path_shop_gender, shop, section, man, funcA)])                          
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-    print('Press Ctrl+C to quit\n')
     app = QtGui.QApplication(sys.argv)
     webpage = WebPage()
     webpage.process(items)

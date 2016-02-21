@@ -14,7 +14,7 @@ public class ColorManager
 {
     /**
      * Metodo que averigua el nombre del color de un producto.
-     * @param color_name: nombre del color
+     * @param color_name: nombre del color.
      * @return nombre del fichero al que pertenece el color.
      */
     public static String findOutColor( String color_name )

@@ -16,6 +16,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
 
 /**
  * @class Clase que gestiona todas las tareas que se realicen en paralelo.
@@ -25,6 +27,8 @@ import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 public class MultithreadManager 
 {
     private static final Logger LOG = Logger.getLogger( MultithreadManager.class ); 
+    
+    private static CountDownLatch countDownLatch;
     
     /*
      * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor.
@@ -36,6 +40,9 @@ public class MultithreadManager
         // Creamos un executor que creara un thread por cada tienda que haya.
         ExecutorService executorShops = Executors.newFixedThreadPool( Properties.MAX_THREADS_SHOP );
         
+        countDownLatch = new CountDownLatch( shops.size() );
+        
+        boolean[] finishedShops = new boolean[ shops.size() ];
         for ( int i = 0; i < shops.size(); i++ )
         {
             final int k = i;
@@ -99,6 +106,8 @@ public class MultithreadManager
                             
                             restClient.saveProducts( productList, shop );
                             
+                            countDownLatch.countDown();
+                            
                             LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
                             executorSections.shutdown();
                         }                        
@@ -120,7 +129,17 @@ public class MultithreadManager
             executorShops.execute( task );
         } // for 
         
-        /*Escribimos en fichero la info de como han ido los scrapers*/
+        try {
+            LOG.info( "MAIN THREAD : Esperando a que acaben todas las tiendas..." );
+            countDownLatch.await();
+            LOG.info( "MAIN THREAD : Me despierto..." );
+            
+        } catch (InterruptedException ex) {
+            LOG.error( "ERROR: Se ha producido un error con el CountDownLatch" );
+            
+        }
+        
+        // Escribimos en fichero la info de como han ido los scrapers
         ActivityStatsManager.writeOnFile();
     
         // Detenemos el executor

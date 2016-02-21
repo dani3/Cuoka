@@ -29,12 +29,14 @@ import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -64,8 +66,10 @@ public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
     protected static final String TAG = "CUOKA";
+    protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected static final int FILTER_REQUEST = 1;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
     protected static boolean MAN;
@@ -96,7 +100,7 @@ public class ProductsUI extends AppCompatActivity
     /* Data */
     protected List<ConcurrentMap<String, List<Product>>> mProductsListMap;
     protected Map<String, List<Product>> mProductsNonFilteredMap;
-    protected Map<String, ?> mFilterMap;
+    protected Map<String, Object> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
     protected List<Product> mProductsDisplayedList;
     protected List<String> mShopsList;
@@ -190,14 +194,30 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
+     * Metodo que reinicializa ciertas variables.
+     */
+    protected void _reinitializeData()
+    {
+        mProductsListMap         = new ArrayList<>();
+        mProductsNonFilteredMap  = new HashMap<>();
+        mProductsDisplayedList   = new ArrayList<>();
+        mProductsCandidatesDeque = new ArrayDeque<>();
+
+        start = count = 0;
+        mBackPressed = 0;
+
+        DAYS_OFFSET = 0;
+
+        FIRST_CONNECTION = true;
+    }
+
+    /**
      * Metodo que inicializa el mapa de filtros.
      * @return: Mapa con los filtros actuales.
      */
-    protected Map<String, ?> _initFilterMap()
+    protected Map<String, Object> _initFilterMap()
     {
         Map<String, Object> map = new HashMap<>();
-
-        map.put(getResources().getString(R.string.filter_newness), mSharedPreferences.retreiveNewness());
 
         return map;
     }
@@ -248,6 +268,7 @@ public class ProductsUI extends AppCompatActivity
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
+        mProductsRecyclerView.setVisibility(View.VISIBLE);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int verticalOffset;
             boolean scrollingUp;
@@ -310,7 +331,7 @@ public class ProductsUI extends AppCompatActivity
                             mProductAdapter.notifyItemRangeInserted(start, count);
 
                         } else {
-                            if (mState != STATE.LOADING)
+                            if ((mState != STATE.LOADING) && (DAYS_OFFSET >= 0))
                             {
                                 DAYS_OFFSET++;
 
@@ -469,7 +490,16 @@ public class ProductsUI extends AppCompatActivity
             if (mState != STATE.LOADING)
             {
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
-                startActivity(intent);
+
+                intent.putExtra(PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
+                intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
+                intent.putExtra(PACKAGE + ".colors", (ArrayList<String>)mFilterMap.get("colors"));
+                intent.putExtra(PACKAGE + ".shops", (ArrayList<String>)mFilterMap.get("shops"));
+                intent.putExtra(PACKAGE + ".minPrice", (Integer)mFilterMap.get("minPrice"));
+                intent.putExtra(PACKAGE + ".maxPrice", (Integer)mFilterMap.get("maxPrice"));
+                intent.putExtra(PACKAGE + ".man", MAN);
+
+                startActivityForResult(intent, FILTER_REQUEST);
 
                 // Animacion de transicion para pasar de una activity a otra.
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -477,6 +507,81 @@ public class ProductsUI extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK)
+        {
+            Log.d(TAG, "Filtro establecido:");
+
+            mFilterMap.put("newness", data.getBooleanExtra(PACKAGE + ".newness", false));
+            mFilterMap.put("sections", data.getSerializableExtra(PACKAGE + ".sections"));
+            mFilterMap.put("colors", data.getSerializableExtra(PACKAGE + ".colors"));
+            mFilterMap.put("shops", data.getSerializableExtra(PACKAGE + ".shops"));
+            mFilterMap.put("minPrice", data.getIntExtra(PACKAGE + ".minPrice", -1));
+            mFilterMap.put("maxPrice", data.getIntExtra(PACKAGE + ".maxPrice", -1));
+
+            Log.d(TAG, " Novedades = " + Boolean.toString((boolean)mFilterMap.get("newness")));
+            Log.d(TAG, " Precio Min = " + Integer.toString((int)mFilterMap.get("minPrice")));
+            Log.d(TAG, " Precio Max = " + Integer.toString((int)mFilterMap.get("maxPrice")));
+
+            List<String> shopsList = (ArrayList<String>)mFilterMap.get("shops");
+            if (shopsList != null)
+                for (String shop : shopsList)
+                    Log.d(TAG, " Tienda = " + shop);
+
+            List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
+            if (sectionsList != null)
+                for (String section : sectionsList)
+                    Log.d(TAG, " Seccion = " + section);
+
+            List<String> colorsList = (ArrayList<String>)mFilterMap.get("colors");
+            if (colorsList != null)
+                for (String color : colorsList)
+                    Log.d(TAG, " Color = " + color);
+
+            if (shopsList != null)
+                if (shopsList.size() == mShopsList.size())
+                    if (shopsList.containsAll(mShopsList))
+                        shopsList = null;
+
+            boolean newness = (boolean)mFilterMap.get("newness");
+            int from = (int)mFilterMap.get("minPrice");
+            int to = (int)mFilterMap.get("maxPrice");
+
+            _reinitializeData();
+
+            if (mProductsRecyclerView != null)
+                mProductsRecyclerView.setVisibility(View.GONE);
+
+            // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
+            if ((shopsList == null)
+                    && (colorsList == null)
+                    && (sectionsList == null)
+                    && (!newness)
+                    && (from < 0)
+                    && (to < 0))
+            {
+                Log.d(TAG, "Filtros por defecto");
+
+                mFilterMap = _initFilterMap();
+
+                new ConnectToServer().execute();
+
+            } else {
+                // Lo ponemos a -1 para detectar cuando estamos en los filtros
+                DAYS_OFFSET = -1;
+
+                new RetreiveProductsFromServer().execute();
+
+            }
+
+        }
+
     }
 
     @Override
@@ -513,22 +618,184 @@ public class ProductsUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que determina si un producto pasa el filtro o no.
-     * @param product: Producto a comprobar.
-     * @return: true si el producto ha pasado el filtro y, por tanto, se puede mostrar.
+     * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
+     * que cumplan los filtros establecidos.
      */
-    protected boolean _isDisplayable(Product product)
+    private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
     {
-        boolean displayable = true;
+        private ThreadPoolExecutor executor;
+        private CompletionService<String> completionService;
+        private List<String> content = new ArrayList<>();
+        private String error = null;
+        private boolean EMPTY;
 
-        // Recorremos el mapa de filtros
-        for (String key : mFilterMap.keySet())
+        @Override
+        protected void onPreExecute()
         {
+            if (mState != STATE.LOADING)
+                _loading(true, true);
+
+            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
+            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
+                    , NUMBER_OF_CORES * 4
+                    , 60L
+                    , TimeUnit.SECONDS
+                    , new LinkedBlockingQueue<Runnable>());
+
+            completionService = new ExecutorCompletionService<>(executor);
+        }
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            try
+            {
+                List<String> aux = (ArrayList<String>)mFilterMap.get("shops");
+                List<String> shopsList = (aux == null) ? mShopsList : aux;
+
+                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
+                for (int i = 0; i < shopsList.size(); i++)
+                {
+                    ConnectionFilterTask connectionFilterTask = new ConnectionFilterTask(shopsList.get(i));
+
+                    completionService.submit(connectionFilterTask);
+                }
+
+                // Metemos en content el resultado de cada uno
+                for (int i = 0; i < shopsList.size(); i++)
+                {
+                    String future = completionService.take().get();
+                    if (future != null)
+                        content.add(future);
+                }
+
+                EMPTY = content.isEmpty();
+
+            } catch(Exception ex)  {
+                error = ex.getMessage();
+
+            } finally {
+                executor.shutdown();
+            }
+
+            return null;
 
         }
 
-        return displayable;
-    }
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            if (error != null)
+            {
+                _loading(false, false);
+
+                _errorConnectingToServer(true);
+
+            } else {
+                if (!EMPTY)
+                    new MultithreadConversion().execute(content);
+
+            }
+        }
+
+    } /* [END RetreiveProductsFromServer] */
+
+    /**
+     * Task que realiza una peticion al servidor con los filtros actuales.
+     */
+    private class ConnectionFilterTask implements Callable<String>
+    {
+        private String shop;
+
+        public ConnectionFilterTask(String shop)
+        {
+            this.shop = shop;
+        }
+
+        @Override
+        public String call()
+        {
+            BufferedReader reader = null;
+            DataOutputStream writer = null;
+            URL url;
+
+            try
+            {
+                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT + "/filter/" + shop);
+
+                Log.d(TAG, "Conectando con: " + fixedURL);
+
+                url = new URL(fixedURL);
+
+                if (url != null)
+                {
+                    URLConnection conn = url.openConnection();
+
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setDoOutput(true);
+
+                    conn.connect();
+
+                    // Creamos el JSON con los filtros
+                    JSONObject jsonObject = new JSONObject();
+
+                    List<String> sectionsList = new ArrayList<>();
+                    List<String> colorsList = new ArrayList<>();
+
+                    jsonObject.put("newness", mFilterMap.get("newness"));
+                    jsonObject.put("man", MAN);
+                    jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
+                    jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
+                    jsonObject.put("colors", new JSONArray(colorsList));
+                    jsonObject.put("sections", new JSONArray(sectionsList));
+
+                    Log.d(TAG, "JSON de filtros:\n    " + jsonObject.toString());
+
+                    // Enviamos el JSON
+                    writer = new DataOutputStream(conn.getOutputStream());
+
+                    String str = jsonObject.toString();
+                    byte[] data = str.getBytes("UTF-8");
+
+                    writer.write(data);
+                    writer.flush();
+
+                    // Obtenemos la respuesta del servidor
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
+
+                    // Leemos la respuesta
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
+
+                    return sb.toString();
+                }
+
+            } catch(Exception ex) {
+                Log.d(TAG, "Error conectando con el servidor");
+
+            } finally {
+                try
+                {
+                    if (reader != null)
+                        reader.close();
+
+                    if (writer != null)
+                        writer.close();
+
+                } catch ( IOException e ) {
+                    Log.d(TAG, "Error cerrando conexion");
+
+                }
+
+            }
+
+            return null;
+
+        }
+
+    } /* [END ConnectionFilterTask] */
 
     /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
@@ -559,14 +826,8 @@ public class ProductsUI extends AppCompatActivity
             // Mientras queden productos y no encontremos un producto mostrable.
             while((index < list.size()) && (turn))
             {
-                // Si el producto pasa el filtro, se añade a la cola
-                if (_isDisplayable(list.get(index)))
-                {
-                    mProductsCandidatesDeque.addLast(list.get(index));
-                    turn = false;
-                }
-
-                index++;
+                mProductsCandidatesDeque.addLast(list.get(index++));
+                turn = false;
             } // while #2
 
             // Actualizamos el mapa de indices.
@@ -731,7 +992,7 @@ public class ProductsUI extends AppCompatActivity
             {
                 _loading(false, false);
 
-                _errorConnectingToServer();
+                _errorConnectingToServer(false);
 
             } else
                 new MultithreadConversion().execute(content);
@@ -889,19 +1150,25 @@ public class ProductsUI extends AppCompatActivity
             {
                 _loading(false, false);
 
-                _errorConnectingToServer();
+                _errorConnectingToServer(false);
 
             } else {
 
-                if (mProductsListMap.get(mProductsListMap.size()-1).isEmpty())
+                if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) && (DAYS_OFFSET >= 0))
                 {
                     DAYS_OFFSET++;
 
                     new ConnectToServer().execute();
 
                 } else {
-                    _loading(false, true);
+                    if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty() && (DAYS_OFFSET == -1)))
+                    {
+                        _noData(true);
 
+                    } else {
+                        _loading(false, true);
+
+                    }
                 }
             }
         }
@@ -1009,6 +1276,8 @@ public class ProductsUI extends AppCompatActivity
             }
 
         } else if (FIRST_CONNECTION) {
+            _noData(false);
+
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
 
@@ -1029,22 +1298,17 @@ public class ProductsUI extends AppCompatActivity
      * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
      * @param noData: true indica que no hay ningun producto que mostrar.
      */
-    protected void _noData( boolean noData )
+    protected void _noData(boolean noData)
     {
         if (!noData)
         {
-            if (mProductsRecyclerView != null)
-                mProductsRecyclerView.setVisibility(View.VISIBLE);
-
             mNoDataTextView.setVisibility(View.GONE);
 
             mState = STATE.NORMAL;
 
         } else {
-            if (mProductsRecyclerView != null)
-                mProductsRecyclerView.setVisibility(View.GONE);
-
             mNoDataTextView.setVisibility(View.VISIBLE);
+            mLoadingView.setVisibility(View.GONE);
 
             mState = STATE.NODATA;
         }
@@ -1054,19 +1318,35 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Metodo que muestra un mensaje cuando se ha producido un error al conectar con el server.
+     * @param isFiltering: true si el error se ha producido con los filtros.
      */
-    protected void _errorConnectingToServer()
+    protected void _errorConnectingToServer(boolean isFiltering)
     {
-        mSnackbar = Snackbar.make(mCoordinatorLayout
-                , getResources().getString( R.string.error_message )
-                , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+        if (!isFiltering)
         {
-            @Override
-            public void onClick(View view)
+            mSnackbar = Snackbar.make(mCoordinatorLayout
+                    , getResources().getString( R.string.error_message )
+                    , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
             {
-                new ConnectToServer().execute();
-            }
-        });
+                @Override
+                public void onClick(View view)
+                {
+                    new ConnectToServer().execute();
+                }
+            });
+
+        } else {
+            mSnackbar = Snackbar.make(mCoordinatorLayout
+                    , getResources().getString( R.string.error_message )
+                    , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    new RetreiveProductsFromServer().execute();
+                }
+            });
+        }
 
         mSnackbar.show();
 

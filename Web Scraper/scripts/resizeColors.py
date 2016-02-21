@@ -11,6 +11,9 @@ height = int(sys.argv[3])
 
 for fname in os.listdir(path):
     if 'ICON' in fname:
-        img = Image.open(path + '/' + fname)
-        img = img.resize((width,height), PIL.Image.NEAREST)
-        img.save(path + '/' + fname)
+        try:
+            img = Image.open(path + '/' + fname)
+            img = img.resize((width,height), PIL.Image.NEAREST)
+            img.save(path + '/' + fname)
+        except Exception:
+            pass
