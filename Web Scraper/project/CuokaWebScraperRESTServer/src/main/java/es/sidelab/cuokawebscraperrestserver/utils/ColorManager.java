@@ -3,15 +3,62 @@ package es.sidelab.cuokawebscraperrestserver.utils;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.springframework.stereotype.Component;
 
 /**
  * @class Clase que se encarga de los colores
  * @author Daniel Mancebo Aldea
  */
 
+@Component
 public class ColorManager 
 {
+    private Map<String, String[]> colorMap;
+    
+    public ColorManager()
+    {
+        colorMap = new HashMap<>();
+        
+        colorMap.put( "Amarillos", new String[]{ "Amarillo"
+                                        , "Dorado"
+                                        , "Oro"
+                                        , "Arena" } );
+        
+        colorMap.put( "Azules", new String[]{ "Azul"
+                                        , "Celeste" } );
+        
+        colorMap.put( "Beiges", new String[]{ "Beige" } );
+        
+        colorMap.put( "Blancos", new String[]{ "Blanco"
+                                        , "Perla" } );
+        
+        colorMap.put( "Grises", new String[]{ "Gris" } );
+        
+        colorMap.put( "Marrones", new String[]{ "Marron"
+                                        , "Marrón" } );
+        
+        colorMap.put( "Morados", new String[]{ "Morado"
+                                        , "Purpura"
+                                        , "Púrpura" } );
+        
+        colorMap.put( "Negros", new String[]{ "Negro"
+                                        , "Petroleo" 
+                                        , "Petróleo" } );
+        
+        colorMap.put( "Rojos", new String[]{ "Rojo" } );
+        
+        colorMap.put( "Rosas", new String[]{ "Rosa"
+                                        , "Fresa"
+                                        , "Frambuesa" } );
+        
+        colorMap.put( "Verdes", new String[]{ "Verde"
+                                        , "Caza" } );
+    }
+    
     /**
      * Metodo que averigua el nombre del color de un producto.
      * @param color_name: nombre del color.
@@ -62,5 +109,22 @@ public class ColorManager
         }
         
         return null;
+    }
+    
+    /**
+     * Metodo que recopila todos los colores equivalentes a los recibidos.
+     * @param colors: lista de colores.
+     * @return lista de colores equivalentes a los recibidos.
+     */
+    public List<String> getEquivalentColors( List<String> colors )
+    {
+        List<String> colorList = new ArrayList<>();
+        
+        for ( String color : colors )
+        {
+            colorList.addAll( Arrays.asList( colorMap.get( color ) ) );
+        }
+        
+        return colorList;
     }
 }

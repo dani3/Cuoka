@@ -7,6 +7,7 @@ import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
+import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import java.util.ArrayList;
@@ -39,6 +40,12 @@ public class Controller
     
     @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool( 1 );
+    
+    @Autowired
+    ColorManager colorManager;
+    
+    @Autowired
+    SectionManager sectionManager;
     
     @Autowired
     ProductsRepository productsRepository;
@@ -272,15 +279,75 @@ public class Controller
     {        
         boolean bingo = false;
         
+        colors = colorManager.getEquivalentColors( colors );
+        
+        // Buscamos primero en el color
         for ( String color : colors )
         {
-            color = color.toUpperCase();
+            for ( ColorVariant cv : product.getColors() )
+            {
+                String[] decomposedColor = cv.getName().split( " " );
+                
+                for ( String single : decomposedColor )
+                {
+                    if ( org.apache.commons.lang3.StringUtils
+                                .getJaroWinklerDistance( color
+                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+                    {
+                        bingo = true;
+                        if ( bingo )
+                            LOG.info( "Color '" + color + "' encontrado: " + single );
 
-            
-
-        } // for sections  
+                        return true;
+                    }
+                }
+            }            
+        } 
         
-        // No deberia llegar aqui
+        // Si no encontramos nada en el color, lo buscamos en el nombre
+        for ( String color : colors )
+        {
+              String[] decomposedName = product.getName().split( " " );
+            
+            for ( String single : decomposedName )
+            {
+                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+                
+                if ( org.apache.commons.lang3.StringUtils
+                                .getJaroWinklerDistance( color
+                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+                {
+                    bingo = true;
+                    if ( bingo )
+                        LOG.info( "Color '" + color + "' encontrado: " + single );
+                    
+                    return true;
+                }
+            }  
+        }
+        
+        // Si en el nombre no encontramos nada, lo buscamos por ultimo en la descripcion
+        for ( String color : colors )
+        {
+            String[] decomposedName = product.getDescription().split( " " );
+            
+            for ( String single : decomposedName )
+            {
+                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+                
+                if ( org.apache.commons.lang3.StringUtils
+                                .getJaroWinklerDistance( color
+                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+                {
+                    bingo = true;
+                    if ( bingo )
+                        LOG.info( "Color '" + color + "' encontrado: " + single );
+                    
+                    return true;
+                }
+            }
+        }
+        
         return false;
     }
     
@@ -304,11 +371,10 @@ public class Controller
                 bingo = true;
                 if ( bingo )
                     LOG.info( "Seccion '" + section + "' encontrada: " + product.getSection() );
+                
+                return true;
             }
         }
-        
-        if ( bingo ) 
-            return true;
         
         // Si no encontramos nada en el campo seccion, buscamos en el nombre
         for ( String section : sections )
@@ -326,12 +392,11 @@ public class Controller
                     bingo = true;
                     if ( bingo )
                         LOG.info( "Seccion '" + section + "' encontrada: " + single );
+                    
+                    return true;
                 }
             }
         }
-        
-        if ( bingo )
-            return true;
         
         // Si no encontramos nada en el nombre, buscamos por ultimo en la descripcion
         for ( String section : sections )
@@ -349,6 +414,8 @@ public class Controller
                     bingo = true;
                     if ( bingo )
                         LOG.info( "Seccion '" + section + "' encontrada: " + single );
+                    
+                    return true;
                 }
             }
         }

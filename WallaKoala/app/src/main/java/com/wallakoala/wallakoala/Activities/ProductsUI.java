@@ -740,7 +740,7 @@ public class ProductsUI extends AppCompatActivity
                     JSONObject jsonObject = new JSONObject();
 
                     List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
-                    List<String> colorsList = new ArrayList<>();
+                    List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
 
                     jsonObject.put("newness", mFilterMap.get("newness"));
                     jsonObject.put("man", MAN);

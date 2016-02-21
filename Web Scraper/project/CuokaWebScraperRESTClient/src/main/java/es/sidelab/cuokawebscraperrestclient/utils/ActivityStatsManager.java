@@ -137,7 +137,6 @@ public class ActivityStatsManager
                    if( sectionActivity.getSection().equals( section.getName() ) && 
                      ( sectionActivity.isMan() == section.isMan() ) )
                    {
-                       System.out.println("Tienda: " + shop + " - Seccion: " + section + " - " + prodOK + "|" + prodNOK );
                        sectionActivity.updateProducts( prodOK, prodNOK );
                        sectionFound = true;
                    }
