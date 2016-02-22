@@ -14,7 +14,7 @@ public class main
     
     public static void main( String[] args ) throws Exception
     {       
-        Process p = Runtime.getRuntime().exec( "python "
+        Runtime.getRuntime().exec( "python "
                 + Properties.RENDER_SCRIPT + "renderPages.py" );
         
         File file = new File( Properties.DONE_FILE_PYTHON );
