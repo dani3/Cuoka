@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,9 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -56,6 +59,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected static String SECTION_FILTER_MAN_8;
     protected static String SECTION_FILTER_MAN_9;
     protected static String SECTION_FILTER_MAN_10;
+    protected static String SECTION_FILTER_MAN_11;
+    protected static String SECTION_FILTER_MAN_12;
     protected static String SECTION_FILTER_WOMAN_1;
     protected static String SECTION_FILTER_WOMAN_2;
     protected static String SECTION_FILTER_WOMAN_3;
@@ -66,6 +71,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected static String SECTION_FILTER_WOMAN_8;
     protected static String SECTION_FILTER_WOMAN_9;
     protected static String SECTION_FILTER_WOMAN_10;
+    protected static String SECTION_FILTER_WOMAN_11;
+    protected static String SECTION_FILTER_WOMAN_12;
     protected static boolean MAN;
 
     /* Floating Button */
@@ -150,6 +157,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mSection8CheckBox;
     protected AppCompatCheckBox mSection9CheckBox;
     protected AppCompatCheckBox mSection10CheckBox;
+    protected AppCompatCheckBox mSection11CheckBox;
+    protected AppCompatCheckBox mSection12CheckBox;
 
     /* RangeSeekBar */
     protected RangeSeekBar mRangeSeekBar;
@@ -245,22 +254,26 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         SECTION_FILTER_MAN_3 = getResources().getString(R.string.filter_section_camisas);
         SECTION_FILTER_MAN_4 = getResources().getString(R.string.filter_section_camisetas);
         SECTION_FILTER_MAN_5 = getResources().getString(R.string.filter_section_chaquetas);
-        SECTION_FILTER_MAN_6 = getResources().getString(R.string.filter_section_jeans);
-        SECTION_FILTER_MAN_7 = getResources().getString(R.string.filter_section_jerseis);
-        SECTION_FILTER_MAN_8 = getResources().getString(R.string.filter_section_pantalones);
-        SECTION_FILTER_MAN_9 = getResources().getString(R.string.filter_section_shorts);
-        SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_trajes);
+        SECTION_FILTER_MAN_6 = getResources().getString(R.string.filter_section_chalecos);
+        SECTION_FILTER_MAN_7 = getResources().getString(R.string.filter_section_jeans);
+        SECTION_FILTER_MAN_8 = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_MAN_9 = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_polos);
+        SECTION_FILTER_MAN_11 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_MAN_12 = getResources().getString(R.string.filter_section_trajes);
 
         SECTION_FILTER_WOMAN_1 = getResources().getString(R.string.filter_section_abrigos);
         SECTION_FILTER_WOMAN_2 = getResources().getString(R.string.filter_section_camisas);
         SECTION_FILTER_WOMAN_3 = getResources().getString(R.string.filter_section_camisetas);
         SECTION_FILTER_WOMAN_4 = getResources().getString(R.string.filter_section_chaquetas);
-        SECTION_FILTER_WOMAN_5 = getResources().getString(R.string.filter_section_faldas);
-        SECTION_FILTER_WOMAN_6 = getResources().getString(R.string.filter_section_jeans);
-        SECTION_FILTER_WOMAN_7 = getResources().getString(R.string.filter_section_jerseis);
-        SECTION_FILTER_WOMAN_8 = getResources().getString(R.string.filter_section_pantalones);
-        SECTION_FILTER_WOMAN_9 = getResources().getString(R.string.filter_section_shorts);
-        SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_vestidos);
+        SECTION_FILTER_WOMAN_5 = getResources().getString(R.string.filter_section_chalecos);
+        SECTION_FILTER_WOMAN_6 = getResources().getString(R.string.filter_section_faldas);
+        SECTION_FILTER_WOMAN_7 = getResources().getString(R.string.filter_section_jeans);
+        SECTION_FILTER_WOMAN_8 = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_WOMAN_9 = getResources().getString(R.string.filter_section_monos);
+        SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_WOMAN_11 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_WOMAN_12 = getResources().getString(R.string.filter_section_vestidos);
     }
 
     /**
@@ -558,12 +571,15 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mSection8CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_8);
         mSection9CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_9);
         mSection10CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_10);
+        mSection11CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_11);
+        mSection12CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_12);
 
         mSectionCheckBoxesList.add(mSection1CheckBox); mSectionCheckBoxesList.add(mSection2CheckBox);
         mSectionCheckBoxesList.add(mSection3CheckBox); mSectionCheckBoxesList.add(mSection4CheckBox);
         mSectionCheckBoxesList.add(mSection5CheckBox); mSectionCheckBoxesList.add(mSection6CheckBox);
         mSectionCheckBoxesList.add(mSection7CheckBox); mSectionCheckBoxesList.add(mSection8CheckBox);
         mSectionCheckBoxesList.add(mSection9CheckBox); mSectionCheckBoxesList.add(mSection10CheckBox);
+        mSectionCheckBoxesList.add(mSection11CheckBox); mSectionCheckBoxesList.add(mSection12CheckBox);
 
         ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
 
@@ -579,6 +595,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mSectionCheckBoxesList.get(7).setText(SECTION_FILTER_MAN_8);
             mSectionCheckBoxesList.get(8).setText(SECTION_FILTER_MAN_9);
             mSectionCheckBoxesList.get(9).setText(SECTION_FILTER_MAN_10);
+            mSectionCheckBoxesList.get(10).setText(SECTION_FILTER_MAN_11);
+            mSectionCheckBoxesList.get(11).setText(SECTION_FILTER_MAN_12);
 
         } else {
             mSectionCheckBoxesList.get(0).setText(SECTION_FILTER_WOMAN_1);
@@ -591,6 +609,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mSectionCheckBoxesList.get(7).setText(SECTION_FILTER_WOMAN_8);
             mSectionCheckBoxesList.get(8).setText(SECTION_FILTER_WOMAN_9);
             mSectionCheckBoxesList.get(9).setText(SECTION_FILTER_WOMAN_10);
+            mSectionCheckBoxesList.get(10).setText(SECTION_FILTER_WOMAN_11);
+            mSectionCheckBoxesList.get(11).setText(SECTION_FILTER_WOMAN_12);
         }
 
         if (SECTION_FILTER_ACTIVE)

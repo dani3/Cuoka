@@ -67,6 +67,9 @@
     <string name="filter_section_vestidos">Vestidos</string>
     <string name="filter_section_shorts">Shorts</string>
     <string name="filter_section_jerseis">Jerseis</string>
+    <string name="filter_section_chalecos">Chalecos</string>
+    <string name="filter_section_polos">Polos</string>
+    <string name="filter_section_monos">Monos</string>
 
     <string name="filter_shops_all">Todas las tiendas</string>
     <string name="filter_shops_only_mine">Sólo mis tiendas</string>

@@ -87,6 +87,18 @@ public class SectionManager
         sectionsMap.put( "Faldas", new String[]{ "Faldas"
                                             , "Shorts"
                                             , "Bermuda" } );
+        
+        sectionsMap.put( "Polos", new String[]{ "Polo"
+                                            , "Blusa"
+                                            , "Blusón"
+                                            , "Camisola" } );
+        
+        sectionsMap.put( "Chalecos", new String[]{ "Chaleco" } );
+        
+        sectionsMap.put( "Monos", new String[]{ "Mono"
+                                            , "Kimono"
+                                            , "Quimono"
+                                            , "Peto" } );
     }
     
     /**

@@ -121,6 +121,15 @@
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/filter_section_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_section_chalecos"
+                    android:textColor="@color/colorMediumText"
+                    android:layout_marginBottom="8dp"
+                    app:buttonTint="@color/colorAccent"/>
+
             </LinearLayout>
 
             <!-- Right Column -->
@@ -131,7 +140,7 @@
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_section_6"
+                    android:id="@+id/filter_section_7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_pantalones"
@@ -140,7 +149,7 @@
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_section_7"
+                    android:id="@+id/filter_section_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_sudaderas"
@@ -149,7 +158,7 @@
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_section_8"
+                    android:id="@+id/filter_section_9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_trajes"
@@ -158,7 +167,7 @@
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_section_9"
+                    android:id="@+id/filter_section_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_jeans"
@@ -167,10 +176,19 @@
                     app:buttonTint="@color/colorAccent"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_section_10"
+                    android:id="@+id/filter_section_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_blazers"
+                    android:textColor="@color/colorMediumText"
+                    android:layout_marginBottom="8dp"
+                    app:buttonTint="@color/colorAccent"/>
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/filter_section_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_section_polos"
                     android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
