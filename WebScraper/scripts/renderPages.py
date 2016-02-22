@@ -28,7 +28,7 @@ class WebPage(QtWebKit.QWebPage):
         self._func(self._url, self._path, self._shop, self._section, self._man, self.mainFrame().toHtml())
         if not self.fetchNext():
             print('# processing complete')
-            open('C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\done.dat', 'w')
+            open('C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\done.dat', 'w')
             QtGui.qApp.quit()
 
 
@@ -45,7 +45,7 @@ def funcA(url, path, shop, section, man, html):
 
 if __name__ == '__main__':
 
-    path = 'C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files'
+    path = 'C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops'
     items = []
     
     #Recorremos las tiendas
