@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,11 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -47,7 +44,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /* Constants */
     protected static final String TAG = "CUOKA";
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final float ALPHA_ACTIVE_FILTER = 0.8f;
+    protected static final float ALPHA_ACTIVE_FILTER = 1.0f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
     protected static String SECTION_FILTER_MAN_1;
     protected static String SECTION_FILTER_MAN_2;
@@ -118,6 +115,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /* TextViews */
     protected TextView mToolbarTextView;
+    protected TextView mFilterShopTextView;
+    protected TextView mFilterSectionTextView;
+    protected TextView mFilterColorTextView;
+    protected TextView mFilterPriceTextView;
+    protected TextView mFilterNewnessTextView;
 
     /* RadioButtons */
     protected AppCompatRadioButton mNewnessAllRadioButton;
@@ -533,6 +535,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mColorCheckBoxesList.add(mColorRedCheckBox); mColorCheckBoxesList.add(mColorPinkCheckBox);
         mColorCheckBoxesList.add(mColorGreenCheckBox);
 
+        mFilterColorTextView = (TextView)findViewById(R.id.filter_text_color);
+
         ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
 
         if (COLOR_FILTER_ACTIVE)
@@ -540,6 +544,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterColorImageView.setScaleX(1.1f);
             mFilterColorImageView.setScaleY(1.1f);
             mFilterColorImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
 
             mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
@@ -581,6 +587,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mSectionCheckBoxesList.add(mSection9CheckBox); mSectionCheckBoxesList.add(mSection10CheckBox);
         mSectionCheckBoxesList.add(mSection11CheckBox); mSectionCheckBoxesList.add(mSection12CheckBox);
 
+        mFilterSectionTextView = (TextView)findViewById(R.id.filter_text_section);
+
         ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
 
         if (MAN)
@@ -619,6 +627,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterSectionImageView.setScaleY(1.1f);
             mFilterSectionImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
+            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
             for (String section : mFilterSections)
             {
                 for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
@@ -639,6 +649,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterNewness()
     {
+        mFilterNewnessTextView = (TextView)findViewById(R.id.filter_text_newness);
+
+        mFilterNewnessTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
         if (NEWNESS_FILTER_ACTIVE)
         {
             ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
@@ -667,6 +681,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterPrice()
     {
+        mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
+
         mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
         mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
         {
@@ -754,6 +770,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterPriceImageView.setScaleY(1.1f);
             mFilterPriceImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
+            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
             if (mFilterMinPrice > 0)
             {
                 mPriceFromEditText.setText(Integer.toString(mFilterMinPrice));
@@ -781,6 +799,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
         mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
         mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
+
+        mFilterShopTextView = (TextView)findViewById(R.id.filter_text_shop);
 
         // Metemos en una lista todos los CheckBoxes de todas las tiendas
         mAllCheckBoxesList.add(mShopBlancoCheckBox);
@@ -859,6 +879,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterShopImageView.setScaleY(1.1f);
             mFilterShopImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
+            mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
             ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
 
             mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
@@ -899,6 +921,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .alpha(ALPHA_ACTIVE_FILTER)
                                               .setInterpolator(new OvershootInterpolator());
 
+                mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
             } else {
@@ -909,6 +933,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .scaleYBy(-0.1f)
                                               .alpha(ALPHA_INACTIVE_FILTER)
                                               .setInterpolator(new OvershootInterpolator());
+
+                mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
                 mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
@@ -929,6 +955,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .alpha(ALPHA_ACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
 
+                mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
 
             } else {
@@ -939,6 +967,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .scaleYBy(-0.1f)
                                                  .alpha(ALPHA_INACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
+
+                mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
                 mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
 
@@ -959,6 +989,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
+                mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
 
             } else {
@@ -969,6 +1001,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .scaleYBy(-0.1f)
                                                .alpha(ALPHA_INACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
+
+                mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
                 mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
 
@@ -989,6 +1023,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
+                mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
             } else {
@@ -1000,37 +1036,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_INACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
+                mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
                 mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
-
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
-                mSnackbar.show();
-            }
-        }
-
-        if (view.getId() == R.id.filter_newness)
-        {
-            if (!NEWNESS_FILTER_ACTIVE)
-            {
-                NEWNESS_FILTER_ACTIVE = true;
-
-                mFilterNewnessImageView.animate().setDuration(250)
-                                                 .scaleXBy(0.1f)
-                                                 .scaleYBy(0.1f)
-                                                 .alpha(ALPHA_ACTIVE_FILTER)
-                                                 .setInterpolator(new OvershootInterpolator());
-
-                mItemsMenuViewGroup.addView(mFilterNewnessMenuLayout, 0);
-
-            } else {
-                NEWNESS_FILTER_ACTIVE = false;
-
-                mFilterNewnessImageView.animate().setDuration(250)
-                                                 .scaleXBy(-0.1f)
-                                                 .scaleYBy(-0.1f)
-                                                 .alpha(ALPHA_INACTIVE_FILTER)
-                                                 .setInterpolator(new OvershootInterpolator());
-
-                mItemsMenuViewGroup.removeView(mFilterNewnessMenuLayout);
 
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
                 mSnackbar.show();
