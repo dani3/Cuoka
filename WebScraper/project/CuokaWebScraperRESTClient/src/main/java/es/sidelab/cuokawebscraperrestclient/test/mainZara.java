@@ -23,11 +23,11 @@ public class mainZara
     {
         String shop = "http://www.zara.com/es/es/";
         String section = "Bomber";
-        String htmlPath = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\Zara_true\\true";
+        String htmlPath = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true";
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\Zara_true\\true\\Zara_Bombers_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Zara_Bombers_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "#main-product-list li.product > a" );
