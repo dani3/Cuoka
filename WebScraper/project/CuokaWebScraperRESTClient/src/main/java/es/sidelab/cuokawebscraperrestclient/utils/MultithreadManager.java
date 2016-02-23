@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
 
 /**
  * @class Clase que gestiona todas las tareas que se realicen en paralelo.

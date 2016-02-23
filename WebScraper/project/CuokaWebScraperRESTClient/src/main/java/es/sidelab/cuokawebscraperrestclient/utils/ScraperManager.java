@@ -76,7 +76,8 @@ public class ScraperManager
             // Sacamos el nombre de la tienda ('tienda_online')
             String folderName = folder.getName();
             
-            ShopActivityStats shopActivity = new ShopActivityStats(folderName.substring(0,folderName.indexOf("_")));
+            ShopActivityStats shopActivity = new ShopActivityStats( 
+                                                        folderName.substring( 0, folderName.indexOf( "_" ) ) );
             shopActivity.setOnline( folderName.contains( "true" ) );
             
             if ( folderName.contains( "true" ) )

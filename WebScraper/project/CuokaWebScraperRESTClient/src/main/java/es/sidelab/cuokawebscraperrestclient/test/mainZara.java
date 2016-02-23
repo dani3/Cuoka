@@ -22,10 +22,12 @@ public class mainZara
     public static void main(String[] args) throws Exception 
     {
         String shop = "http://www.zara.com/es/es/";
+        String section = "Bomber";
+        String htmlPath = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\Zara_true\\true";
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Zara_true\\true\\Zara_Bombers_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\Zara_true\\true\\Zara_Bombers_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "#main-product-list li.product > a" );
@@ -33,23 +35,34 @@ public class mainZara
         // Recorremos todos los productos y sacamos sus atributos
         for ( Element element : products )
         {
+            File file = new File( htmlPath + "\\" + section + ".html" );
+            
             try 
-            {
+            {               
                 List<ColorVariant> variants = new ArrayList<>();
 
-                // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                document = Jsoup.connect( element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                                  .header( "Accept-Language", "es" )
-                                                                  .ignoreHttpErrors( true ).get();
+                // Si hace falta ejecutar Python
+                Runtime.getRuntime().exec( "python "
+                            + Properties.RENDER_SCRIPT + "renderProduct.py " 
+                            +  element.attr( "href" ) + " " + htmlPath + "\\" + section + ".html" );
+                
+                while ( ! file.exists() ) 
+                {
+                    file = new File( htmlPath + "\\" + section + ".html" );
+                }
+                
+                document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
                 String different_price = null;
                 String link = element.attr( "href" );                 
-                String name = document.select( "div.right header h1" ).first().ownText(); 
+                String name = document.select( "div header > h1" ).first().ownText(); 
                 String price = document.select( "span.price" ).first().attr( "data-price" ).replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
-                String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll("Ref. ", "").replaceAll( "/", "-" );
+                String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll( "Ref. ", "" ).replaceAll( "/", "-" );
                 String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\n", " "); 
                         
+                System.out.println(link);
+                
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
                     different_price = document.select( "strong.product-price span" ).first()
@@ -105,6 +118,7 @@ public class mainZara
                 }
                 
             } catch ( Exception e ) { e.printStackTrace(); }
+              finally { file.delete(); }
             
         } // for products
         
