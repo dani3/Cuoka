@@ -70,10 +70,10 @@ public class ActivityStatsManager
                     {
                         if( sectionActivity.isMan() )
                         {
-                            pw.println("        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
-                                    + "  Html: " + sectionActivity.isHtmlOK() );
-                            pw.println("            Productos OK: " + sectionActivity.getProdOK() );
-                            pw.println("            Productos NOK: " + sectionActivity.getProdNOK() );
+                            pw.println( "        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
+                                      + "  Html: " + sectionActivity.isHtmlOK() );
+                            pw.println( "            Productos OK: " + sectionActivity.getProdOK() );
+                            pw.println( "            Productos NOK: " + sectionActivity.getProdNOK() );
                         }
                     }
                     
@@ -85,7 +85,7 @@ public class ActivityStatsManager
                         if( ! sectionActivity.isMan() )
                         {
                             pw.println( "        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
-                                    + "  Html: " + sectionActivity.isHtmlOK() );
+                                      + "  Html: " + sectionActivity.isHtmlOK() );
                             pw.println( "            Productos OK: " + sectionActivity.getProdOK() );
                             pw.println( "            Productos NOK: " + sectionActivity.getProdNOK() );
                         }
@@ -97,7 +97,8 @@ public class ActivityStatsManager
             } 
            
        } catch ( Exception e ) {
-            LOG.error("Error en fichero Activity");
+           e.printStackTrace();
+           LOG.error( "Error en fichero Activity" );
             
        } finally {
            

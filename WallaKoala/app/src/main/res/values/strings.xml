@@ -37,6 +37,8 @@
     <string name="filter_item_colors">Colores</string>
     <string name="filter_item_newness">Novedades</string>
 
+    <string name="filter_default">Reestablecer filtros</string>
+
     <string name="filter_newness_1">Sólo novedades</string>
     <string name="filter_newness_2">Todos los productos</string>
 

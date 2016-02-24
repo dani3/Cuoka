@@ -76,7 +76,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@android:color/holo_purple"/>
+                        android:src="@drawable/ic_filter_section"/>
 
                     <TextView
                         android:id="@+id/filter_text_section"
@@ -105,7 +105,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@android:color/holo_green_light"/>
+                        android:src="@drawable/ic_filter_price"/>
 
                     <TextView
                         android:id="@+id/filter_text_price"
@@ -134,7 +134,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@android:color/holo_orange_light"/>
+                        android:src="@drawable/ic_filter_color"/>
 
                     <TextView
                         android:id="@+id/filter_text_color"
@@ -163,7 +163,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@android:color/darker_gray"/>
+                        android:src="@drawable/ic_filter_newness"/>
 
                     <TextView
                         android:id="@+id/filter_text_newness"
