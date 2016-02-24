@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -881,8 +885,65 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Metodo que resetea el filtro de tiendas.
+     */
+    protected void _resetFilterShop()
+    {
+        for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+        {
+            checkBox.setChecked(false);
+        }
+
+        mShopMyCheckBox.setChecked(false);
+        mShopAllCheckBox.setChecked(false);
+        mShopMyCheckBox.setChecked(true);
+    }
+
+    /**
+     * Metodo que resetea el filtro de secciones.
+     */
+    protected void _resetFilterSection()
+    {
+        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
+        {
+            checkBox.setChecked(false);
+        }
+    }
+
+    /**
+     * Metodo que resetea el filtro de colores.
+     */
+    protected void _resetFilterColor()
+    {
+        for (AppCompatCheckBox checkBox : mColorCheckBoxesList)
+        {
+            checkBox.setChecked(false);
+        }
+    }
+
+    /**
+     * Metodo que resetea el filtro de precios.
+     */
+    protected void _resetFilterPrice()
+    {
+        mRangeSeekBar.setSelectedMaxValue(mRangeSeekBar.getAbsoluteMaxValue());
+        mRangeSeekBar.setSelectedMinValue(mRangeSeekBar.getAbsoluteMinValue());
+
+        mPriceFromEditText.setText("");
+        mPriceToEditText.setText("");
+    }
+
+    /**
+     * Metodo que resetea todos los filtros.
+     */
     protected void _resetFilter()
     {
+        mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtros restablecidos", Snackbar.LENGTH_SHORT);
+
+        mSnackbar.show();
+
+        _resetFilterShop();
         if (SHOP_FILTER_ACTIVE)
         {
             SHOP_FILTER_ACTIVE = false;
@@ -896,7 +957,54 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
             mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
+        }
 
+        _resetFilterSection();
+        if (SECTION_FILTER_ACTIVE)
+        {
+            SECTION_FILTER_ACTIVE = false;
+
+            mFilterSectionImageView.animate().setDuration(250)
+                                             .scaleXBy(-0.1f)
+                                             .scaleYBy(-0.1f)
+                                             .alpha(ALPHA_INACTIVE_FILTER)
+                                             .setInterpolator(new OvershootInterpolator());
+
+            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
+        }
+
+        _resetFilterColor();
+        if (COLOR_FILTER_ACTIVE)
+        {
+            COLOR_FILTER_ACTIVE = false;
+
+            mFilterColorImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
+        }
+
+        _resetFilterPrice();
+        if (PRICE_FILTER_ACTIVE)
+        {
+            PRICE_FILTER_ACTIVE = false;
+
+            mFilterPriceImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
         }
     }
 

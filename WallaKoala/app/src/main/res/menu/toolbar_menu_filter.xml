@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FilterUI">
 
-    <item android:id="@+id/menu_item_options"
-        android:icon="@drawable/ic_more_vert_white"
-        android:title="@string/filter_default">
-    </item>
-
     <item android:id="@+id/menu_item_search"
         android:title="Search"
         android:icon="@drawable/ic_search_white"
         android:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:id="@+id/menu_item_options"
+        android:icon="@drawable/ic_clear_all_white"
+        app:showAsAction="always"
+        android:title="@string/filter_default"/>
 
 </menu>

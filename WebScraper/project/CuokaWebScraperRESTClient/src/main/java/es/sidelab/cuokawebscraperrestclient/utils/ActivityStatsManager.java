@@ -6,6 +6,9 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.log4j.Logger;
@@ -46,7 +49,10 @@ public class ActivityStatsManager
        
        try
        {
-           file = new FileWriter( Properties.ACTIVITY_PATH );
+           DateFormat df = new SimpleDateFormat( "yyyyMMdd" );
+           Date today = new Date();
+           
+           file = new FileWriter( Properties.ACTIVITY_PATH + "ActivityFile." + df.format( today ) + ".txt" );
            pw = new PrintWriter( file );
            
            pw.println( "Numero de tiendas online: " + onlineShops );
