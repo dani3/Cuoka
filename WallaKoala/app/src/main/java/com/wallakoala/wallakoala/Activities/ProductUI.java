@@ -4,15 +4,18 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,6 +88,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /* Views */
     protected ImageView mImageView;
     protected ImageButton mFavoriteImageButton;
+    protected ImageButton mCartImageButton;
 
     /* TextViews */
     protected TextView mProductNameTextView;
@@ -223,6 +227,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
         mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
         mFavoriteImageButton        = (ImageButton)findViewById(R.id.product_favorite);
+        mCartImageButton            = (ImageButton)findViewById(R.id.product_info_cart);
 
         /* Inicializamos la info del producto */
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
@@ -241,12 +246,22 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mFloatingActionButtonPlus.setVisibility(View.GONE);
         mFloatingActionButtonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
                     expandInfo();
                 else
                     collapseInfo();
+            }
+        });
+
+        /* Listener del boton de la cesta */
+        mCartImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mProduct.getLink()));
+                startActivity(browserIntent);
             }
         });
 

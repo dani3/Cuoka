@@ -19,10 +19,4 @@ public class Properties
     public static final String ACTIVITY_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
 
     public static final String DONE_FILE_PYTHON = HTML_PATH + "done.dat";
-    
-    public static final boolean JAVASCRIPT_NEEDED_SPRINGFIELD = false;
-    public static final boolean JAVASCRIPT_NEEDED_PDH = false;
-    public static final boolean JAVASCRIPT_NEEDED_HYM = false;
-    public static final boolean JAVASCRIPT_NEEDED_BLANCO = false;
-    public static final boolean JAVASCRIPT_NEEDED_ZARA = true;
 }

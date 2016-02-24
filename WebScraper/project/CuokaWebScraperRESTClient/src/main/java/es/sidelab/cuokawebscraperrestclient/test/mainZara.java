@@ -4,6 +4,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,33 +24,24 @@ public class mainZara
     {
         String shop = "http://www.zara.com/es/es/";
         String section = "Bomber";
-        String htmlPath = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true";
+        String htmlPath = "C:\\Users\\Dani\\Documents\\shops\\Zara_false\\true";
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Zara_Bombers_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Zara_false\\true\\Zara_Bombers_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "#main-product-list li.product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
         for ( Element element : products )
-        {
-            File file = new File( htmlPath + "\\" + section + ".html" );
-            
+        {            
             try 
             {               
                 List<ColorVariant> variants = new ArrayList<>();
 
-                // Si hace falta ejecutar Python
-                Runtime.getRuntime().exec( "python "
-                            + Properties.RENDER_SCRIPT + "renderProduct.py " 
-                            +  element.attr( "href" ) + " " + htmlPath + "\\" + section + ".html" );
-                
-                while ( ! file.exists() ) 
-                {
-                    file = new File( htmlPath + "\\" + section + ".html" );
-                }
+                File file = PythonManager.executeRenderProduct( element.attr( "href" )
+                                                , htmlPath + "\\" + section + ".html" );
                 
                 document = Jsoup.parse( file, "UTF-8" );
                 
@@ -60,8 +52,6 @@ public class mainZara
                 String price = document.select( "span.price" ).first().attr( "data-price" ).replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll( "Ref. ", "" ).replaceAll( "/", "-" );
                 String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\n", " "); 
-                        
-                System.out.println(link);
                 
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
@@ -71,7 +61,7 @@ public class mainZara
                                                                                     .replaceAll( ",", "." ).trim();
                                 
                 if ( description.length() > 255 )
-                    description = description.substring(0, 255);
+                    description = description.substring( 0, 255 );
                 
                 String colorReference = reference;
                 String colorName = document.select( "div.colors label" ).first()
@@ -117,8 +107,12 @@ public class mainZara
                     }
                 }
                 
-            } catch ( Exception e ) { e.printStackTrace(); }
-              finally { file.delete(); }
+            } catch ( Exception e ) { 
+                e.printStackTrace(); 
+                
+            } finally {
+                PythonManager.deleteFile( htmlPath + "\\" + section + ".html" );
+            }
             
         } // for products
         
