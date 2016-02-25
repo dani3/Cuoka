@@ -85,4 +85,6 @@
 
     <string name="accesibility_favorite">Favorito</string>
 
+    <string name="search_hint">Secciones, colores, etc.</string>
+
 </resources>
