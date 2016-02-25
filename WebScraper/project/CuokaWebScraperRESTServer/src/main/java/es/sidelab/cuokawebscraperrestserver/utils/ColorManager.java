@@ -38,7 +38,8 @@ public class ColorManager
         colorMap.put( "Azules", new String[]{ "Azul"
                                         , "Celeste"
                                         , "Agua"
-                                        , "Turquesa" } );
+                                        , "Turquesa"
+                                        , "Navy" } );
         
         colorMap.put( "Beiges", new String[]{ "Beige"
                                         , "Arena"
