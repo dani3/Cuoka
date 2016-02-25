@@ -50,34 +50,35 @@ if __name__ == '__main__':
     
     #Recorremos las tiendas
     for folder in os.listdir(path):
-        shop = folder[:folder.index('_')]
-        online = folder[folder.index('_')+1:]
-        
-        #Si la tienda esta activa...
-        if (online == 'true'):
-          path_shop = path + '\\' + folder
-          
-          #Recorremos los dos generos
-          for manAux in os.listdir(path_shop):
-              man = manAux
-              if (".txt" not in man):
-                  path_shop_gender = path_shop + '\\' + man
+        if os.path.isdir(path + "\\" + folder):
+            shop = folder[:folder.index('_')]
+            online = folder[folder.index('_')+1:]
+            
+            #Si la tienda esta activa...
+            if (online == 'true'):
+              path_shop = path + '\\' + folder
+              
+              #Recorremos los dos generos
+              for manAux in os.listdir(path_shop):
+                  man = manAux
+                  if (".txt" not in man):
+                      path_shop_gender = path_shop + '\\' + man
 
-                  #Recorremos cada seccion y borramos los htmls antiguos
-                  for section in os.listdir(path_shop_gender):
-                      if '.html' in section:
-                          os.remove(path_shop_gender + '\\' + section)
-                  
-                  #Recorremos cada seccion para cada genero
-                  for section in os.listdir(path_shop_gender):
+                      #Recorremos cada seccion y borramos los htmls antiguos
+                      for section in os.listdir(path_shop_gender):
+                          if '.html' in section:
+                              os.remove(path_shop_gender + '\\' + section)
                       
-                    #Si es archivo .txt, asi ignoramos los htmls que se van creando
-                    if ".txt" in section: 
-                        file = open(path_shop_gender + '\\' + section, 'r')
-                      
-                        url = file.readline().rstrip()
+                      #Recorremos cada seccion para cada genero
+                      for section in os.listdir(path_shop_gender):
+                          
+                        #Si es archivo .txt, asi ignoramos los htmls que se van creando
+                        if ".txt" in section: 
+                            file = open(path_shop_gender + '\\' + section, 'r')
+                          
+                            url = file.readline().rstrip()
 
-                        items.extend([(url, path_shop_gender, shop, section, man, funcA)])                          
+                            items.extend([(url, path_shop_gender, shop, section, man, funcA)])                          
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QtGui.QApplication(sys.argv)

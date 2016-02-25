@@ -18,8 +18,8 @@ public class PythonManager
      */
     public static boolean executeRenderPages() throws IOException
     {
-        Runtime.getRuntime().exec( "python "
-                + Properties.RENDER_SCRIPT + "renderPages.py" );
+        Process p = Runtime.getRuntime().exec( "python "
+                            + Properties.RENDER_SCRIPT + "renderPages.py" );
         
         File file = new File( Properties.DONE_FILE_PYTHON );
         while ( ! file.exists() ) 
