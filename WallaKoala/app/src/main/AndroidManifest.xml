@@ -41,7 +41,7 @@
 
         <activity android:name=".Activities.FilterUI"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation"
             android:windowSoftInputMode="adjustNothing">
 
             <meta-data android:name="android.app.searchable"

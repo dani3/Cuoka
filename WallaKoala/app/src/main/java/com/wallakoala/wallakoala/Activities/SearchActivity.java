@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by Dani on 25/02/2016.
+ * Created by Daniel Mancebo Aldea on 25/02/2016.
  */
 
 public class SearchActivity extends AppCompatActivity
