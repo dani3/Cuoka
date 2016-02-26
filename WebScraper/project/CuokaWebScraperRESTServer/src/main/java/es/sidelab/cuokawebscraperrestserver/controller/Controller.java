@@ -341,6 +341,9 @@ public class Controller
                 if ( color.isEmpty() && section.isEmpty() )
                 {
                     candidate = _searchForKeyword( product, keyword );
+                    
+                    if ( ! candidate )
+                        break;
                 }
                 
             }
