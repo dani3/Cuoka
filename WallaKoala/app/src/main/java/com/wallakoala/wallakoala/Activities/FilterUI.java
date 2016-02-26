@@ -1232,6 +1232,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                Log.d(TAG, "onQueryTextSubmit: " + query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                Log.d(TAG, "onQueryTextChange: " + newText);
+                return true;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 

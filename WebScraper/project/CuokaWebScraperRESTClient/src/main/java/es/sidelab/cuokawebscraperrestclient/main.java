@@ -1,11 +1,9 @@
 package es.sidelab.cuokawebscraperrestclient;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
-import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.MultithreadManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import es.sidelab.cuokawebscraperrestclient.utils.ScraperManager;
-import java.io.File;
 import java.util.List;
 import org.apache.log4j.Logger;
 
