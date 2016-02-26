@@ -277,6 +277,81 @@ public class Controller
         return productList;
     }
     
+    @RequestMapping( value = "/search/{shop}/{man}/{search}", method = RequestMethod.GET )
+    public List<Product> getProductsBySearch( @PathVariable String shop
+                                , @PathVariable String man
+                                , @PathVariable String search )
+    {
+        List<Product> productList = new ArrayList<>();
+        List<Product> newList = new ArrayList<>();
+        String[] aux = search.split( " " ); 
+        
+        // Sacamos los productos de la tienda
+        productList = productsRepository.findByManAndShop( Boolean.valueOf( man ), shop );
+        
+        // Eliminamos palabras irrelevantes ('a', 'de', etc)
+        List<String> keywords = new ArrayList<>();
+        for ( String keyword : aux )
+        {
+            if ( keyword.length() > 2 )
+            {
+                keywords.add( keyword );
+            }
+        }
+        
+        // Recorremos los productos 
+        for ( Product product : productList )
+        {
+            boolean candidate = true;            
+            Product paux = null;
+            
+            // Recorremos las palabras buscadas
+            for ( String keyword : keywords )
+            {
+                // Comprobamos si es una seccion
+                List<String> section = new ArrayList<>();
+                String saux = sectionManager.getSection( keyword );
+                if ( saux != null )
+                    section.add( saux );
+                    
+                if ( ! section.isEmpty() )
+                {
+                    candidate = _searchForSection( product, section );
+                    
+                    if ( ! candidate )
+                        break;
+                }
+                
+                // Comprobamos si es un color
+                List<String> color = new ArrayList<>();
+                String caux = colorManager.getColor( keyword );
+                if ( caux != null )
+                    color.add( caux );
+                
+                if ( ! color.isEmpty() )
+                {
+                    paux = _searchForColor( product, color );
+                    
+                    candidate = ( paux != null );
+                    if ( ! candidate )
+                        break;
+                }
+                
+                // Si no es ni seccion ni color
+                if ( color.isEmpty() && section.isEmpty() )
+                {
+                    candidate = _searchForKeyword( product, keyword );
+                }
+                
+            }
+            
+            if ( candidate )
+                newList.add( ( paux == null ) ? product : paux );
+        }
+        
+        return newList;
+    }
+    
     /**
      * Metodo que busca en el producto los colores recibidos.
      * @param product: producto en el que buscar los colores.
@@ -299,6 +374,8 @@ public class Controller
                 
                 for ( String single : decomposedColor )
                 {
+                    single = single.replaceAll( "[0-9]" , "" );
+                    
                     if ( org.apache.commons.lang3.StringUtils
                                 .getJaroWinklerDistance( color
                                         , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
@@ -455,5 +532,76 @@ public class Controller
         }
         
         return product;
+    }
+    
+    /**
+     * Metodo que busca una palabra clave en el producto.
+     * @param product: producto donde buscar la palabra.
+     * @param keyword: palabra a buscar.
+     * @return true si el producto contiene la palabra.
+     */
+    private boolean _searchForKeyword( Product product, String keyword )
+    {
+        boolean bingo = false;
+        
+        // Buscamos la palabra en el nombre.        
+        String[] decomposedName = product.getName().split( " " );
+        for ( String single : decomposedName )
+        {
+            single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+
+            if ( org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance( keyword
+                                    , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+
+                return true;
+            }
+            
+            if ( org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance( keyword
+                                    , single ) >= Properties.MEDIUM_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+
+                return true;
+            }
+        }  
+        
+        // Si no la encontramos en el nombre, la buscamos en la descripcion.
+        decomposedName = product.getDescription().split( " " );            
+        for ( String single : decomposedName )
+        {
+            single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+
+            if ( org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance( keyword
+                                    , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+
+                return true;
+            }
+            
+            if ( org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance( keyword
+                                    , single ) >= Properties.MEDIUM_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

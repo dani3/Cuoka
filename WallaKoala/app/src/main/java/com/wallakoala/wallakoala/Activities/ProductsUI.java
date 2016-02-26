@@ -885,9 +885,10 @@ public class ProductsUI extends AppCompatActivity
             jsonList.add(js);
         }
 
-        for( JSONObject jsonObject : jsonList )
+        for(JSONObject jsonObject : jsonList)
         {
             String name = jsonObject.getString("2");
+
             String shop = key = jsonObject.getString("3");
             String section = jsonObject.getString("4");
             double price = jsonObject.getDouble("1");
@@ -905,13 +906,13 @@ public class ProductsUI extends AppCompatActivity
                 String colorPath = jsColor.getString("4");
                 short numerOfImages = (short)jsColor.getInt("3");
 
-                colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
+                colors.add( new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
-            Product product = new Product( name, shop, section, price, link, description, colors );
+            Product product = new Product(name, shop, section, price, link, description, colors);
 
             if (product.isOkay())
-                productsList.add( new Product( name, shop, section, price, link, description, colors ) );
+                productsList.add(new Product(name, shop, section, price, link, description, colors));
 
         }
 

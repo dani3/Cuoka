@@ -1253,7 +1253,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         if (item.getItemId() == android.R.id.home)
         {
             onBackPressed();
