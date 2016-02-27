@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.RangeSeekBar;
 
 import java.util.ArrayList;
@@ -1239,21 +1240,25 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             {
                 Log.d(TAG, "onQueryTextSubmit: " + query);
 
-                Intent intent = new Intent();
+                if (Utils.isQueryOk(query))
+                {
+                    Intent intent = new Intent();
 
-                ArrayList<String> aux = null;
+                    ArrayList<String> aux = null;
 
-                intent.putExtra(PACKAGE + ".shops", aux);
-                intent.putExtra(PACKAGE + ".colors", aux);
-                intent.putExtra(PACKAGE + ".sections", aux);
-                intent.putExtra(PACKAGE + ".minPrice", -1);
-                intent.putExtra(PACKAGE + ".maxPrice", -1);
-                intent.putExtra(PACKAGE + ".newness", false);
-                intent.putExtra(PACKAGE + ".search", query);
+                    intent.putExtra(PACKAGE + ".shops", aux);
+                    intent.putExtra(PACKAGE + ".colors", aux);
+                    intent.putExtra(PACKAGE + ".sections", aux);
+                    intent.putExtra(PACKAGE + ".minPrice", -1);
+                    intent.putExtra(PACKAGE + ".maxPrice", -1);
+                    intent.putExtra(PACKAGE + ".newness", false);
+                    intent.putExtra(PACKAGE + ".search", query);
 
-                setResult(RESULT_OK, intent);
+                    setResult(RESULT_OK, intent);
 
-                finish();
+                    finish();
+
+                }
 
                 return true;
             }

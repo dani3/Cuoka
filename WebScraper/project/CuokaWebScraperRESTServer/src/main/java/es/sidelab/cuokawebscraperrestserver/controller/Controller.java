@@ -552,17 +552,6 @@ public class Controller
         for ( String single : decomposedName )
         {
             single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
-
-            if ( org.apache.commons.lang3.StringUtils
-                            .getJaroWinklerDistance( keyword
-                                    , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
-            {
-                bingo = true;
-                if ( bingo )
-                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
-
-                return true;
-            }
             
             if ( org.apache.commons.lang3.StringUtils
                             .getJaroWinklerDistance( keyword
@@ -581,17 +570,6 @@ public class Controller
         for ( String single : decomposedName )
         {
             single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
-
-            if ( org.apache.commons.lang3.StringUtils
-                            .getJaroWinklerDistance( keyword
-                                    , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
-            {
-                bingo = true;
-                if ( bingo )
-                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
-
-                return true;
-            }
             
             if ( org.apache.commons.lang3.StringUtils
                             .getJaroWinklerDistance( keyword
