@@ -490,7 +490,7 @@ public class ProductsUI extends AppCompatActivity
     {
         if (item.getItemId() == R.id.menu_item_filter)
         {
-            if (mState != STATE.LOADING)
+            if ((mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE))
             {
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
 
