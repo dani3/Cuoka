@@ -29,3 +29,5 @@ result = r.frame.toHtml()
 html_file = open(path, "w")
 html_file.write("%s" % result.encode("utf-8"))
 html_file.close()
+
+sys.exit(app.exec_())

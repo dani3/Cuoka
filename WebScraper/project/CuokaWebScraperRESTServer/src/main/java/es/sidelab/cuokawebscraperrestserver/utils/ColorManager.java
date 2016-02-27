@@ -75,6 +75,7 @@ public class ColorManager
         colorMap.put( "Rojos", new String[]{ "Rojo", "Rojos"
                                         , "Granate", "Granates"
                                         , "Burdeos"
+                                        , "Terracota", "Terracotas"
                                         , "Teja", "Tejas"
                                         , "Naranja", "Naranjas"
                                         , "Coral", "Corales" } );

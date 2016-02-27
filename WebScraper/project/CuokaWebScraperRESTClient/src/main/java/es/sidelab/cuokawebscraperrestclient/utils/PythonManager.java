@@ -33,21 +33,20 @@ public class PythonManager
     /**
      * Metodo que ejecuta el script 'RenderProduct'.
      * @param url: URL del producto.
-     * @param html: fichero html donde se debe dejar el resultado.
+     * @param path: fichero html donde se debe dejar el resultado.
      * @return file del html.
      * @throws IOException 
      */
-    public static File executeRenderProduct( String url, String html ) throws IOException
-    {
-        File file = new File( html );
-        
-        Runtime.getRuntime().exec( "python "
-                            + Properties.RENDER_SCRIPT + "renderProduct.py " 
-                            +  url + " " + html );
-                
+    public static File executeRenderProduct( String url, String path ) throws IOException
+    {                
+        Process p = Runtime.getRuntime().exec( new String[]{ "python",
+                            Properties.RENDER_SCRIPT + "renderProduct.py", 
+                            url, path } );
+           
+        File file = new File( path );     
         while ( ! file.exists() ) 
         {
-            file = new File( html );
+            file = new File( path );
         }
         
         return file;
@@ -55,11 +54,11 @@ public class PythonManager
     
     /**
      * Metodo que elimina un fichero html dado.
-     * @param html: ruta del fichero html.
+     * @param path: ruta del fichero html.
      * @return true si se ha borrado correctamente.
      */
-    public static boolean deleteFile( String html )
-    {
-        return new File( html ).delete();
+    public static boolean deleteFile( String path )
+    {        
+        return new File( path ).delete();
     }
 }
