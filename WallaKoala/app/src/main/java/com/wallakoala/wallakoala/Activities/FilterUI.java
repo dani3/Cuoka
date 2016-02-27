@@ -1277,7 +1277,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             public boolean onQueryTextChange(String newText)
             {
                 Log.d(TAG, "onQueryTextChange: " + newText);
-                
+
                 return true;
             }
         });

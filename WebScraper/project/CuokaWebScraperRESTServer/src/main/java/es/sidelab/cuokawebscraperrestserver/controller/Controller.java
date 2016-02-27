@@ -159,7 +159,6 @@ public class Controller
      * @param section: Seccion de la que se quieren los productos.
      * @return Lista de productos.
      */
-    @Cacheable( value = "products", key = "#shop.toString() + #section.toString()" )
     @RequestMapping( value = "/products/{shop}/{section}", method = RequestMethod.GET )
     public List<Product> getProductsBySection( @PathVariable String shop
                                 , @PathVariable String section )
@@ -293,7 +292,7 @@ public class Controller
         List<String> keywords = new ArrayList<>();
         for ( String keyword : aux )
         {
-            if ( keyword.length() > 2 )
+            if ( ( keyword.length() > 2 ) && ( ! keyword.equalsIgnoreCase( "Con" ) ) )
             {
                 keywords.add( keyword );
             }
@@ -473,28 +472,6 @@ public class Controller
         for ( String section : sections )
         {
             String[] decomposedName = product.getName().split( " " );
-            
-            for ( String single : decomposedName )
-            {
-                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
-                
-                if ( org.apache.commons.lang3.StringUtils
-                                .getJaroWinklerDistance( section
-                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
-                {
-                    bingo = true;
-                    if ( bingo )
-                        LOG.info( "Seccion '" + section + "' encontrada: " + single );
-                    
-                    return true;
-                }
-            }
-        }
-        
-        // Si no encontramos nada en el nombre, buscamos por ultimo en la descripcion
-        for ( String section : sections )
-        {
-            String[] decomposedName = product.getDescription().split( " " );
             
             for ( String single : decomposedName )
             {
