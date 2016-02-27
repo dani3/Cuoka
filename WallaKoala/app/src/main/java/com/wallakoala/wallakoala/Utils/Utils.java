@@ -63,7 +63,7 @@ public class Utils
         char[] chars = query.toCharArray();
 
         for (char c : chars)
-            if(!Character.isLetter(c) && !Character.isSpaceChar(c))
+            if (!Character.isLetter(c) && !Character.isSpaceChar(c))
                 return false;
 
         return true;

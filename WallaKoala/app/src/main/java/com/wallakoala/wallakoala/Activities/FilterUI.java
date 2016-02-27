@@ -938,6 +938,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     }
 
     /**
+     * Metodo que resetea el filtro de novedades.
+     */
+    protected void _resetFilterNewness()
+    {
+        mShopAllCheckBox.setChecked(true);
+    }
+
+    /**
      * Metodo que resetea todos los filtros.
      */
     protected void _resetFilter()
@@ -952,10 +960,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             SHOP_FILTER_ACTIVE = false;
 
             mFilterShopImageView.animate().setDuration(250)
-                                          .scaleXBy(-0.1f)
-                                          .scaleYBy(-0.1f)
-                                          .alpha(ALPHA_INACTIVE_FILTER)
-                                          .setInterpolator(new OvershootInterpolator());
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
 
             mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
@@ -968,10 +976,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             SECTION_FILTER_ACTIVE = false;
 
             mFilterSectionImageView.animate().setDuration(250)
-                                             .scaleXBy(-0.1f)
-                                             .scaleYBy(-0.1f)
-                                             .alpha(ALPHA_INACTIVE_FILTER)
-                                             .setInterpolator(new OvershootInterpolator());
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
 
             mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
@@ -1009,6 +1017,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
         }
+
+        _resetFilterNewness();
     }
 
     @Override
@@ -1267,6 +1277,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             public boolean onQueryTextChange(String newText)
             {
                 Log.d(TAG, "onQueryTextChange: " + newText);
+                
                 return true;
             }
         });
