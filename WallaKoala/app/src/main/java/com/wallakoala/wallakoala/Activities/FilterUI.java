@@ -141,6 +141,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mShopPedroDelHierroCheckBox;
     protected AppCompatCheckBox mShopSpringfieldCheckBox;
     protected AppCompatCheckBox mShopHyMCheckBox;
+    protected AppCompatCheckBox mShopZaraCheckBox;
 
     protected List<AppCompatCheckBox> mColorCheckBoxesList;
     protected AppCompatCheckBox mColorYellowCheckBox;
@@ -788,6 +789,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
         mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
         mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
+        mShopZaraCheckBox           = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_zara);
 
         mFilterShopTextView = (TextView)findViewById(R.id.filter_text_shop);
 
@@ -796,6 +798,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mAllCheckBoxesList.add(mShopSpringfieldCheckBox);
         mAllCheckBoxesList.add(mShopPedroDelHierroCheckBox);
         mAllCheckBoxesList.add(mShopHyMCheckBox);
+        mAllCheckBoxesList.add(mShopZaraCheckBox);
 
         // Metemos en una lista todos los CheckBoxes de mis tiendas
         for (String shop : mShopsList)

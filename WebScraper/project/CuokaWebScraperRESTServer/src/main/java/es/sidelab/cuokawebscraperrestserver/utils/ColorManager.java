@@ -40,8 +40,9 @@ public class ColorManager
                                         , "Celeste", "Celestes"
                                         , "Agua", "Aguas"
                                         , "Turquesa", "Turquesas"
-                                        , "Navy" } );
-        
+                                        , "Navy"
+                                        , "Marino", "Marinos" } );
+         
         colorMap.put( "Beiges", new String[]{ "Beige", "Beiges"
                                         , "Arena", "Arenas"
                                         , "Beis"
@@ -51,11 +52,13 @@ public class ColorManager
                                         , "Crudo", "Crudos" } );
         
         colorMap.put( "Blancos", new String[]{ "Blanco", "Blancos"
-                                        , "Perla", "Perlas" } );
+                                        , "Perla", "Perlas"
+                                        , "Hielo" } );
         
         colorMap.put( "Grises", new String[]{ "Gris", "Grises"
                                         , "Plata", "Platas"
-                                        , "Plateado", "Plateados" } );
+                                        , "Plateado", "Plateados"
+                                        , "Marengo", "Marengos" } );
         
         colorMap.put( "Marrones", new String[]{ "Marron", "Marrones"
                                         , "Marrón" } );

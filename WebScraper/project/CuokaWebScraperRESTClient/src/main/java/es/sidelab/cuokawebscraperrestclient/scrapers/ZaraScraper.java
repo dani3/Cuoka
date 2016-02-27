@@ -1,42 +1,56 @@
-package es.sidelab.cuokawebscraperrestclient.test;
+
+package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *
+ * @class Scraper especifico de Zara
  * @author Daniel Mancebo Aldea
  */
 
-public class mainZara 
-{    
-    public static void main(String[] args) throws Exception 
-    {
-        String shop = "http://www.zara.com/es/es/";
-        String section = "Bomber";
-        String htmlPath = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true";
-        List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Zara_Camisas_true.html" );
+public class ZaraScraper implements Scraper 
+{
+    // Lista preparada para la concurrencia donde escribiran todos los scrapers
+    private static List<Product> productList = new CopyOnWriteArrayList<>();
+    
+    private static final Logger LOG = Logger.getLogger( SpringfieldScraper.class );
+    
+    @Override
+    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
+    {        
+        List<String> pages = new ArrayList<>();
+        
+        int prodOK = 0;
+        int prodNOK = 0;
+        
+        File html = new File( htmlPath );
+        
+        // Parseamos el html producido por python
         Document document = Jsoup.parse( html, "UTF-8" );
-                  
+        
         Elements products = document.select( "#main-product-list li.product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
         int j = 0;
         for ( Element element : products )
         {        
-            String path = htmlPath + "\\" + (section + "_" + j + ".html");
+            String path = htmlPath.replaceAll( ".html" , "_" + j + ".html" );
             
             try 
             {               
@@ -85,17 +99,23 @@ public class mainZara
 
                 variants.add( new ColorVariant( colorReference, colorName, null, imagesURL ) );   
                 
-                productList.add( new Product( Double.parseDouble( price )
-                                            , name
-                                            , shop
-                                            , ""
-                                            , link 
-                                            , description
-                                            , true
-                                            , variants ) );            
+                if ( ! variants.isEmpty() )
+                {
+                    productList.add( new Product( Double.parseDouble( price )
+                                        , name
+                                        , shop.getName()
+                                        , section.getName()
+                                        , link 
+                                        , description
+                                        , section.isMan()
+                                        , variants ) );
+                    prodOK++;
+                }
+                else
+                    prodNOK++;           
                 
             } catch ( Exception e ) { 
-                e.printStackTrace(); 
+                prodNOK++; 
                 
             } finally {
                 // CRUCIAL llamar al recolector de basura
@@ -108,43 +128,20 @@ public class mainZara
             
         } // for products
         
-        System.out.println(productList.size());
+        ActivityStatsManager.updateProducts( shop.getName(), section, prodOK, prodNOK );  
         
-        Product p = productList.get( 0 );
-        
-        System.out.println( "-------- INFO PRODUCTO ----------" );
-        System.out.println( "Nombre: " + p.getName() );
-        System.out.println( "Link: " + p.getLink() );
-        System.out.println( "Description: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() + " €" );
-        System.out.println( "-------- INFO COLORES -----------" );
-        for ( ColorVariant cv : p.getColors() )
-        {
-            System.out.println( " - Color: " + cv.getName() );
-            System.out.println( " - Icono: " + cv.getColorURL() );
-            System.out.println( " - Referencia: " + cv.getReference() );
-            for ( Image image : cv.getImages() )
-                System.out.println( " - " + image.getUrl() );
-            
-            System.out.println( "\n" );            
-        }
-    }        
+        return productList;
+    }
     
-    public static String fixURL( String url )
+    /*
+     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios
+     */
+    @Override
+    public String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
-    }    
-    
-    private static boolean containsProduct( List<Product> productList, String reference )
-    {
-        for ( Product p : productList )
-            for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
-                    return true;
-        
-        return false;
-    }
+    }   
 }

@@ -23,6 +23,7 @@ public class Properties
     public static final double SPRINGFIELD_ASPECT_RATIO = 1.12f;
     public static final double HYM_ASPECT_RATIO         = 1.5f;
     public static final double BLANCO_ASPECT_RATIO      = 1.28f;
+    public static final double ZARA_ASPECT_RATIO        = 1.24f;
     
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;
     public static final double MEDIUM_SIMILARITY_THRESHOLD = 0.925f;

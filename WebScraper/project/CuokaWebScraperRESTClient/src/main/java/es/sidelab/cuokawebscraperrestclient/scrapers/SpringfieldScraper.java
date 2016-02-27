@@ -161,7 +161,7 @@ public class SpringfieldScraper implements Scraper
             
         } // while
         
-        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK );  
+        ActivityStatsManager.updateProducts( shop.getName(), section, prodOK, prodNOK );  
         
         return productList;
     }
