@@ -69,6 +69,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected static final int MIN_PRODUCTS = 6;
     protected static final int FILTER_REQUEST = 1;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
@@ -1249,7 +1250,7 @@ public class ProductsUI extends AppCompatActivity
 
             } else {
 
-                if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) && (DAYS_OFFSET >= 0))
+                if (((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) || (!_enoughProducts())) && (DAYS_OFFSET >= 0))
                 {
                     DAYS_OFFSET++;
 
@@ -1467,6 +1468,26 @@ public class ProductsUI extends AppCompatActivity
         }
 
         return finished;
+    }
+
+    /**
+     * Metodo que comprueba si hay suficientes productos.
+     * @return true si hay suficientes productos.
+     */
+    protected boolean _enoughProducts()
+    {
+        Map<String, List<Product>> map = mProductsListMap.get(mProductsListMap.size()-1);
+
+        int cont = 0;
+        for (Map.Entry<String, List<Product>> entry : map.entrySet())
+        {
+            cont += entry.getValue().size();
+
+            if (cont >= MIN_PRODUCTS)
+                return true;
+        }
+
+        return false;
     }
 
 } // Activity

@@ -47,6 +47,8 @@ public class mainZara
                 // CRUCIAL para que al abrir el fichero este todo escrito.
                 Thread.sleep(500);
                 
+                file = new File( path );
+                
                 document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
