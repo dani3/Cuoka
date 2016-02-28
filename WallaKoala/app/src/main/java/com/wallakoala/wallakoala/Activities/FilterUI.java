@@ -1270,7 +1270,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     setResult(RESULT_OK, intent);
 
                     finish();
-
                 }
 
                 return true;

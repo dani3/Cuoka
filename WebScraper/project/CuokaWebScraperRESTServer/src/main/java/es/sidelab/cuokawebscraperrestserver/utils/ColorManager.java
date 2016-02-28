@@ -24,8 +24,8 @@ public class ColorManager
     {
         colorMap = new HashMap<>();
         
-        colorMap.put( "Amarillos", new String[]{ "Amarillo", "Amarillos"
-                                        , "Dorado", "Dorados"
+        colorMap.put( "Amarillos", new String[]{ "Amarillo", "Amarillos", "Amarilla", "Amarillas"
+                                        , "Dorado", "Dorados", "Dorada", "Doradas"
                                         , "Oro", "Oros"
                                         , "Arena", "Arenas"
                                         , "Beige", "Beiges"
@@ -34,9 +34,9 @@ public class ColorManager
                                         , "Nude"
                                         , "Maquillaje"
                                         , "Mostaza", "Mostazas"
-                                        , "Crudo", "Crudos" } );
+                                        , "Crudo", "Crudos", "Cruda", "Crudas" } );
         
-        colorMap.put( "Azules", new String[]{ "Azul", "Azules"
+        colorMap.put( "Azules", new String[]{ "Azul", "Azules", "Azulada"
                                         , "Celeste", "Celestes"
                                         , "Agua", "Aguas"
                                         , "Turquesa", "Turquesas"
@@ -49,9 +49,9 @@ public class ColorManager
                                         , "Camel"
                                         , "Nude"
                                         , "Maquillaje"
-                                        , "Crudo", "Crudos" } );
+                                        , "Crudo", "Crudos", "Cruda", "Crudas" } );
         
-        colorMap.put( "Blancos", new String[]{ "Blanco", "Blancos"
+        colorMap.put( "Blancos", new String[]{ "Blanco", "Blancos", "Blanca", "Blancas"
                                         , "Perla", "Perlas"
                                         , "Hielo" } );
         
@@ -63,7 +63,7 @@ public class ColorManager
         colorMap.put( "Marrones", new String[]{ "Marron", "Marrones"
                                         , "Marrón" } );
         
-        colorMap.put( "Morados", new String[]{ "Morado", "Morados"
+        colorMap.put( "Morados", new String[]{ "Morado", "Morados", "Morada", "Moradas"
                                         , "Purpura", "Purpuras"
                                         , "Púrpura", "Púrpuras"
                                         , "Berenjena", "Berenjenas"
@@ -71,11 +71,11 @@ public class ColorManager
                                         , "Fucsia", "Fucsias"
                                         , "Lila", "Lilas" } );
         
-        colorMap.put( "Negros", new String[]{ "Negro", "Negros"
+        colorMap.put( "Negros", new String[]{ "Negro", "Negros", "Negra", "Negras"
                                         , "Petroleo", "Petroleos"
                                         , "Petróleo", "Petróleos" } );
         
-        colorMap.put( "Rojos", new String[]{ "Rojo", "Rojos"
+        colorMap.put( "Rojos", new String[]{ "Rojo", "Rojos", "Roja", "Rojas"
                                         , "Granate", "Granates"
                                         , "Burdeos"
                                         , "Terracota", "Terracotas"

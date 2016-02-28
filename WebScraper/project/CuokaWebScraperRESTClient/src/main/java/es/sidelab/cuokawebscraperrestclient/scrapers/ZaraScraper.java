@@ -1,4 +1,3 @@
-
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
@@ -47,10 +46,9 @@ public class ZaraScraper implements Scraper
         Elements products = document.select( "#main-product-list li.product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
-        int j = 0;
         for ( Element element : products )
         {        
-            String path = htmlPath.replaceAll( ".html" , "_" + j + ".html" );
+            String path = htmlPath.replaceAll( ".html" , "_AUX.html" );
             
             try 
             {               
@@ -66,10 +64,22 @@ public class ZaraScraper implements Scraper
                 // Obtener los atributos propios del producto
                 String different_price = null;
                 String link = element.attr( "href" );                 
-                String name = document.select( "div header > h1" ).first().text().replaceAll( "\\\\[nt]", "" ).toUpperCase(); 
-                String price = document.select( "span.price" ).first().attr( "data-price" ).replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
-                String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll( "Ref. ", "" ).replaceAll( "/", "" ).replaceAll( "\\\\[nt]", "" );
-                String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\\\\[nt]", "" ); 
+                String name = document.select( "div header > h1" ).first().ownText()
+                                                                          .replaceAll( "\\\\[nt]", "" )
+                                                                          .toUpperCase(); 
+                
+                String price = document.select( "span.price" ).first().attr( "data-price" )
+                                                                      .replaceAll( "EUR", "" )
+                                                                      .replaceAll( ",", "." )
+                                                                      .trim();
+                
+                String reference = document.select( "div.right p.reference" ).first().ownText()
+                                                                                     .replaceAll( "Ref. ", "" )
+                                                                                     .replaceAll( "/", "" )
+                                                                                     .replaceAll( "\\\\[nt]", "" );
+                
+                String description = document.select( "#description p.description span" ).first().ownText()
+                                                                                                 .replaceAll( "\\\\[nt]", "" ); 
                      
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
@@ -82,11 +92,10 @@ public class ZaraScraper implements Scraper
                     description = description.substring( 0, 255 );
                 
                 String colorReference = reference;
-                String colorName = document.select( "div.colors label" ).first()
-                                                                        .select( "div.imgCont" )
-                                                                        .attr( "title" ).toUpperCase()
-                                                                                        .trim()
-                                                                                        .replace('\\', '-');
+                String colorName = document.select( "div.colors label" ).first().select( "div.imgCont" ).attr( "title" )
+                                                                                                        .toUpperCase()
+                                                                                                        .trim()
+                                                                                                        .replace('\\', '-');
                 
                 List<Image> imagesURL = new ArrayList<>();
                 Elements images = document.select( "#main-images div.media-wrap" );
@@ -122,8 +131,6 @@ public class ZaraScraper implements Scraper
                 System.gc();
                 
                 PythonManager.deleteFile( path );
-                
-                j++;
             }
             
         } // for products
@@ -134,7 +141,7 @@ public class ZaraScraper implements Scraper
     }
     
     /*
-     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios
+     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios.
      */
     @Override
     public String fixURL( String url )
