@@ -48,9 +48,9 @@ public class IntroUI extends AppCompatActivity
             {
                 Set<String> shops = new HashSet<>();
                 //shops.add( "Blanco" );
-                shops.add("HyM");
-                shops.add("Springfield");
-                shops.add("Pedro Del Hierro");
+                //shops.add("HyM");
+                //shops.add("Springfield");
+                //shops.add("Pedro Del Hierro");
                 shops.add("Blanco");
 
                 mSharedPreferencesManager.insertMan(man.isChecked());

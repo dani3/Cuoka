@@ -1250,13 +1250,20 @@ public class ProductsUI extends AppCompatActivity
 
             } else {
 
-                if (((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) || (!_enoughProducts())) && (DAYS_OFFSET >= 0))
+                if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) && (DAYS_OFFSET >= 0))
                 {
                     DAYS_OFFSET++;
 
                     new ConnectToServer().execute();
 
+                } else if (mProductsCandidatesDeque.isEmpty() && mProductsDisplayedList.size() < MIN_PRODUCTS && (DAYS_OFFSET >= 0)) {
+
+                    DAYS_OFFSET++;
+
+                    new ConnectToServer().execute();
+
                 } else {
+
                     if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty() && (DAYS_OFFSET == -1)))
                     {
                         _noData(true);
@@ -1468,26 +1475,6 @@ public class ProductsUI extends AppCompatActivity
         }
 
         return finished;
-    }
-
-    /**
-     * Metodo que comprueba si hay suficientes productos.
-     * @return true si hay suficientes productos.
-     */
-    protected boolean _enoughProducts()
-    {
-        Map<String, List<Product>> map = mProductsListMap.get(mProductsListMap.size()-1);
-
-        int cont = 0;
-        for (Map.Entry<String, List<Product>> entry : map.entrySet())
-        {
-            cont += entry.getValue().size();
-
-            if (cont >= MIN_PRODUCTS)
-                return true;
-        }
-
-        return false;
     }
 
 } // Activity
