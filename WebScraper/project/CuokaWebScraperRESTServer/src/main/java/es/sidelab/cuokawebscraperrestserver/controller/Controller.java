@@ -276,6 +276,13 @@ public class Controller
         return productList;
     }
     
+    /**
+     * 
+     * @param shop
+     * @param man
+     * @param search
+     * @return 
+     */
     @RequestMapping( value = "/search/{shop}/{man}/{search}", method = RequestMethod.GET )
     public List<Product> getProductsBySearch( @PathVariable String shop
                                 , @PathVariable String man
@@ -354,6 +361,11 @@ public class Controller
         return newList;
     }
     
+    /**
+     * 
+     * @param word
+     * @return 
+     */
     @RequestMapping( value = "/suggest/{word}", method = RequestMethod.GET )
     public List<String> getSuggestions( @PathVariable String word )
     {
@@ -364,6 +376,26 @@ public class Controller
         if ( words.length == 1 )
         {            
             suggestions = sectionManager.getSectionsStartingWith( word );
+        }
+        
+        // Si recibimos dos palabras, buscamos la primera palabra como seccion
+        // la segunda se busca como color
+        if ( words.length == 2 )
+        {
+            List<String> firstWordSuggestions = sectionManager.getSectionsStartingWith( words[0] );
+            
+            if ( firstWordSuggestions.isEmpty() )
+                return null;
+            
+            String color = colorManager.getColorStartingWith( words[1] );
+            
+            if ( color == null )
+                return null;
+            
+            for ( String firstWordSuggestion : firstWordSuggestions )
+            {
+                suggestions.add( firstWordSuggestion + " " + color );
+            }
         }
         
         return suggestions;

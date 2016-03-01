@@ -19,86 +19,43 @@ import org.springframework.stereotype.Component;
 public class ColorManager 
 {
     private Map<String, String[]> colorMap;
+    private List<String> suggestedColors;
     
     public ColorManager()
     {
         colorMap = new HashMap<>();
+        suggestedColors = new ArrayList<>();
         
-        colorMap.put( "Amarillos", new String[]{ "Amarillo", "Amarillos"
-                                        , "Amarilla", "Amarillas"
-                                        , "Dorado", "Dorados"
-                                        , "Dorada", "Doradas"
-                                        , "Oro", "Oros"
-                                        , "Arena", "Arenas"
-                                        , "Beige", "Beiges"
-                                        , "Beis"
-                                        , "Camel"
-                                        , "Nude"
-                                        , "Maquillaje"
-                                        , "Mostaza", "Mostazas"
-                                        , "Crudo", "Crudos"
-                                        , "Cruda", "Crudas" } );
+        colorMap.put( "Amarillos", new String[]{ "Amarillo", "Amarillos", "Amarilla", "Amarillas", "Dorado", "Dorados", "Dorada", "Doradas"
+                                        , "Oro", "Oros", "Arena", "Arenas", "Beige", "Beiges", "Beis", "Camel", "Nude", "Maquillaje"
+                                        , "Mostaza", "Mostazas", "Crudo", "Crudos", "Cruda", "Crudas" } );
         
-        colorMap.put( "Azules", new String[]{ "Azul", "Azules", "Azulada"
-                                        , "Celeste", "Celestes"
-                                        , "Agua", "Aguas"
-                                        , "Turquesa", "Turquesas"
-                                        , "Navy"
-                                        , "Marino", "Marinos" } );
+        colorMap.put( "Azules", new String[]{ "Azul", "Azules", "Azulada", "Celeste", "Celestes", "Agua", "Aguas"
+                                        , "Turquesa", "Turquesas", "Navy", "Marino", "Marinos" } );
          
-        colorMap.put( "Beiges", new String[]{ "Beige", "Beiges"
-                                        , "Arena", "Arenas"
-                                        , "Beis"
-                                        , "Camel"
-                                        , "Nude"
-                                        , "Maquillaje"
-                                        , "Crudo", "Crudos"
-                                        , "Cruda", "Crudas" } );
+        colorMap.put( "Beiges", new String[]{ "Beige", "Beiges", "Arena", "Arenas", "Beis", "Camel", "Nude", "Maquillaje"
+                                        , "Crudo", "Crudos", "Cruda", "Crudas" } );
         
-        colorMap.put( "Blancos", new String[]{ "Blanco", "Blancos"
-                                        , "Blanca", "Blancas"
-                                        , "Perla", "Perlas"
-                                        , "Hielo" } );
+        colorMap.put( "Blancos", new String[]{ "Blanco", "Blancos", "Blanca", "Blancas", "Perla", "Perlas", "Hielo" } );
         
-        colorMap.put( "Grises", new String[]{ "Gris", "Grises"
-                                        , "Plata", "Platas"
-                                        , "Plateado", "Plateados"
-                                        , "Marengo", "Marengos" } );
+        colorMap.put( "Grises", new String[]{ "Gris", "Grises", "Plata", "Platas", "Plateado", "Plateados", "Marengo", "Marengos" } );
         
-        colorMap.put( "Marrones", new String[]{ "Marron", "Marrones"
-                                        , "Marrón" } );
+        colorMap.put( "Marrones", new String[]{ "Marron", "Marrones", "Marrón" } );
         
-        colorMap.put( "Morados", new String[]{ "Morado", "Morados"
-                                        , "Morada", "Moradas"
-                                        , "Purpura", "Purpuras"
-                                        , "Púrpura", "Púrpuras"
-                                        , "Berenjena", "Berenjenas"
-                                        , "Lavanda", "Lavandas"
-                                        , "Fucsia", "Fucsias"
-                                        , "Lila", "Lilas" } );
+        colorMap.put( "Morados", new String[]{ "Morado", "Morados", "Morada", "Moradas", "Purpura", "Purpuras", "Púrpura", "Púrpuras"
+                                        , "Berenjena", "Berenjenas", "Lavanda", "Lavandas", "Fucsia", "Fucsias", "Lila", "Lilas" } );
         
-        colorMap.put( "Negros", new String[]{ "Negro", "Negros"
-                                        , "Negra", "Negras"
-                                        , "Petroleo", "Petroleos"
-                                        , "Petróleo", "Petróleos" } );
+        colorMap.put( "Negros", new String[]{ "Negro", "Negros", "Negra", "Negras", "Petroleo", "Petroleos", "Petróleo", "Petróleos" } );
         
-        colorMap.put( "Rojos", new String[]{ "Rojo", "Rojos"
-                                        , "Roja", "Rojas"
-                                        , "Granate", "Granates"
-                                        , "Burdeos"
-                                        , "Terracota", "Terracotas"
-                                        , "Teja", "Tejas"
-                                        , "Naranja", "Naranjas"
-                                        , "Coral", "Corales" } );
+        colorMap.put( "Rojos", new String[]{ "Rojo", "Rojos", "Roja", "Rojas", "Granate", "Granates", "Burdeos", "Terracota", "Terracotas"
+                                        , "Teja", "Tejas", "Naranja", "Naranjas", "Coral", "Corales" } );
         
-        colorMap.put( "Rosas", new String[]{ "Rosa", "Rosas"
-                                        , "Fresa", "Fresas"
-                                        , "Frambuesa", "Frambuesas" } );
+        colorMap.put( "Rosas", new String[]{ "Rosa", "Rosas", "Fresa", "Fresas", "Frambuesa", "Frambuesas" } );
         
-        colorMap.put( "Verdes", new String[]{ "Verde", "Verdes"
-                                        , "Caza", "Cazas"
-                                        , "Caqui", "Caquis" 
-                                        , "Khaki", "Khakis" } );
+        colorMap.put( "Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" } );
+        
+        suggestedColors = Arrays.asList( new String[] { "Amarillo", "Dorado", "Azul", "Celeste", "Blanco", "Gris", "Plateado"
+                                    , "Marrón", "Morado", "Negro", "Rojo", "Rosa", "Granate", "Naranja", "Verde", "Jersey" } );
     }
     
     /**
@@ -204,6 +161,32 @@ public class ColorManager
                 {
                     return entry.getKey();
                 }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Metodo que devuelve un color sugerido.
+     * @param word: palabra relacionada con el color.
+     * @return color sugerido.
+     */
+    public String getColorStartingWith( String word )
+    {        
+        for ( String color : suggestedColors )
+        {
+            if ( color.toUpperCase().startsWith( word.toUpperCase() ) )
+            {
+                return color;
+            }
+        }    
+        
+        for ( String color : suggestedColors )
+        {
+            if ( color.toUpperCase().contains( word.toUpperCase() ) )
+            {
+                return color;
             }
         }
         

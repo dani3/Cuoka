@@ -61,10 +61,12 @@ public class SectionManager
         
         sectionsMap.put( "Monos", new String[]{ "Mono", "Monos", "Kimono", "Kimonos", "Quimono", "Quimonos", "Peto", "Petos" } );
         
-        sectionsMap.put( "Sport", new String[]{ "Leggin", "Leggins", "Sport", "Gym", "Gimnasia"
-                                            , "Jogging" , "Easywear", "Deportivo", "Deportivos" } );
+        sectionsMap.put( "Sport", new String[]{ "Leggin", "Leggins", "Sport", "Gym", "Gimnasia", "Jogging" , "Easywear", "Deportivo", "Deportivos" } );
         
-        suggestedSections = Arrays.asList( new String[] {  } );
+        suggestedSections = Arrays.asList( new String[] { "Cazadora", "Bomber", "Chaqueta", "Chaquetón", "Abrigo", "Blazer"
+                                        , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"
+                                        , "Sudadera", "Cardigan", "Chinos", "Pantalones", "Pantalones cortos", "Bermuda", "Shorts", "Traje" 
+                                        , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"} );
     }
     
     /**
@@ -144,7 +146,23 @@ public class SectionManager
             {
                 return sections;
             }
-        }        
+        }    
+        
+        if ( sections.isEmpty() )
+        {
+            for ( String section : suggestedSections )
+            {
+                if ( section.toUpperCase().contains( word.toUpperCase() ) )
+                {
+                    sections.add( section );
+                }
+
+                if ( sections.size() == Properties.MAX_SUGGESTIONS )
+                {
+                    return sections;
+                }
+            }   
+        }
         
         return sections;
     }
