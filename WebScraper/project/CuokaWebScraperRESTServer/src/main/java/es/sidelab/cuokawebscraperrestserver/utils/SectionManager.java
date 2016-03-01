@@ -20,11 +20,13 @@ public class SectionManager
 {
     private Map<String, String[]> sectionsMap;
     private List<String> suggestedSections;
+    private List<String> maleSections;
     
     public SectionManager()
     {
-        sectionsMap = new HashMap<>();
+        sectionsMap       = new HashMap<>();
         suggestedSections = new ArrayList<>();
+        maleSections      = new ArrayList<>();
         
         sectionsMap.put( "Abrigos", new String[]{ "Cazadora", "Cazadoras", "Capa", "Capas", "Bomber", "Bombers"
                                             , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetones", "Abrigo", "Abrigos" } );
@@ -67,6 +69,10 @@ public class SectionManager
                                         , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"
                                         , "Sudadera", "Cardigan", "Chinos", "Pantalones", "Pantalones cortos", "Bermuda", "Shorts", "Traje" 
                                         , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"} );
+    
+        maleSections = Arrays.asList( new String[] { "Chaquetón", "Abrigo", "Polo", "Top", "Vaqueros", "Jeans", "Jersey", "Cardigan"
+                                  , "Chinos", "Pantalones", "Pantalones cortos", "Shorts", "Traje", "Vestido", "Chaleco", "Mono"
+                                  , "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym" } );
     }
     
     /**
@@ -165,5 +171,23 @@ public class SectionManager
         }
         
         return sections;
+    }
+    
+    /**
+     * Metodo que devuelve true si la seccion es de hombre.
+     * @param section: seccion a buscar.
+     * @return true si la seccion es de hombre
+     */
+    public boolean getSectionGender( String section )
+    {
+        for ( String male : maleSections )
+        {
+            if ( section.equals( male ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

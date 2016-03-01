@@ -19,12 +19,14 @@ import org.springframework.stereotype.Component;
 public class ColorManager 
 {
     private Map<String, String[]> colorMap;
-    private List<String> suggestedColors;
+    private List<String> suggestedMaleColors;
+    private List<String> suggestedFemaleColors;
     
     public ColorManager()
     {
-        colorMap = new HashMap<>();
-        suggestedColors = new ArrayList<>();
+        colorMap              = new HashMap<>();
+        suggestedMaleColors   = new ArrayList<>();
+        suggestedFemaleColors = new ArrayList<>();
         
         colorMap.put( "Amarillos", new String[]{ "Amarillo", "Amarillos", "Amarilla", "Amarillas", "Dorado", "Dorados", "Dorada", "Doradas"
                                         , "Oro", "Oros", "Arena", "Arenas", "Beige", "Beiges", "Beis", "Camel", "Nude", "Maquillaje"
@@ -54,8 +56,11 @@ public class ColorManager
         
         colorMap.put( "Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" } );
         
-        suggestedColors = Arrays.asList( new String[] { "Amarillo", "Dorado", "Azul", "Celeste", "Blanco", "Gris", "Plateado"
-                                    , "Marrón", "Morado", "Negro", "Rojo", "Rosa", "Granate", "Naranja", "Verde", "Jersey" } );
+        suggestedMaleColors = Arrays.asList( new String[] { "Amarillo", "Dorado", "Azul", "Celeste", "Blanco", "Gris", "Plateado"
+                                    , "Marrón", "Morado", "Negro", "Rojo", "Rosa", "Granate", "Naranja", "Verde" } );
+        
+        suggestedFemaleColors = Arrays.asList( new String[] { "Amarilla", "Dorada", "Azul", "Celeste", "Blanca", "Gris", "Plateada"
+                                    , "Marrón", "Morada", "Negra", "Roja", "Rosa", "Granate", "Naranja", "Verde" } );
     }
     
     /**
@@ -174,7 +179,7 @@ public class ColorManager
      */
     public String getColorStartingWith( String word )
     {        
-        for ( String color : suggestedColors )
+        for ( String color : suggestedMaleColors )
         {
             if ( color.toUpperCase().startsWith( word.toUpperCase() ) )
             {
@@ -182,7 +187,7 @@ public class ColorManager
             }
         }    
         
-        for ( String color : suggestedColors )
+        for ( String color : suggestedMaleColors )
         {
             if ( color.toUpperCase().contains( word.toUpperCase() ) )
             {
@@ -191,5 +196,23 @@ public class ColorManager
         }
         
         return null;
+    }
+    
+    /**
+     * Metodo que devuelve la version femenina del color.
+     * @param color: color a convertir.
+     * @return color convertido a femenino.
+     */
+    public String getFemaleColor( String color )
+    {
+        for ( String male : suggestedMaleColors )
+        {
+            if ( color.equals( male ) )
+            {
+                return suggestedFemaleColors.get( suggestedMaleColors.indexOf( color ) );
+            }
+        }
+        
+        return color;
     }
 }

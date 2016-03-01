@@ -277,11 +277,11 @@ public class Controller
     }
     
     /**
-     * 
-     * @param shop
-     * @param man
-     * @param search
-     * @return 
+     * Metodo que realiza una busqueda de productos.
+     * @param shop: tienda de la que se quieren los productos.
+     * @param man: hombre o mujer.
+     * @param search: productos a buscar.
+     * @return lista de productos encontrados.
      */
     @RequestMapping( value = "/search/{shop}/{man}/{search}", method = RequestMethod.GET )
     public List<Product> getProductsBySearch( @PathVariable String shop
@@ -362,9 +362,9 @@ public class Controller
     }
     
     /**
-     * 
-     * @param word
-     * @return 
+     * Metodo que devuelve una lista de sugerencias.
+     * @param word palabras buscadas.
+     * @return lista de sugerencias.
      */
     @RequestMapping( value = "/suggest/{word}", method = RequestMethod.GET )
     public List<String> getSuggestions( @PathVariable String word )
@@ -394,7 +394,8 @@ public class Controller
             
             for ( String firstWordSuggestion : firstWordSuggestions )
             {
-                suggestions.add( firstWordSuggestion + " " + color );
+                suggestions.add( firstWordSuggestion + " " 
+                        + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? color : colorManager.getFemaleColor( color ) ) );
             }
         }
         
