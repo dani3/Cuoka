@@ -12,6 +12,7 @@ es\sidelab\cuokawebscraperrestserver\repositories\ColorVariantsRepository.class
 es\sidelab\cuokawebscraperrestserver\repositories\HistoricProductsRepository.class
 es\sidelab\cuokawebscraperrestserver\beans\HistoricProduct.class
 es\sidelab\cuokawebscraperrestserver\main.class
+es\sidelab\cuokawebscraperrestserver\beans\Suggestion.class
 es\sidelab\cuokawebscraperrestserver\beans\Image.class
 es\sidelab\cuokawebscraperrestserver\repositories\ImagesRepository.class
 es\sidelab\cuokawebscraperrestserver\beans\Product.class

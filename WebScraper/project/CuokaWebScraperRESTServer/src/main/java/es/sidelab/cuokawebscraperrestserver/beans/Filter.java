@@ -3,7 +3,7 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 import java.util.List;
 
 /**
- *
+ * @class Clase que representa el estado de un filtro.
  * @author Daniel Mancebo Aldea
  */
 

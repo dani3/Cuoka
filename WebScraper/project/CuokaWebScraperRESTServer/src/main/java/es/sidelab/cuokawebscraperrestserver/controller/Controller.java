@@ -354,6 +354,21 @@ public class Controller
         return newList;
     }
     
+    @RequestMapping( value = "/suggest/{word}", method = RequestMethod.GET )
+    public List<String> getSuggestions( @PathVariable String word )
+    {
+        List<String> suggestions = new ArrayList<>();
+        String[] words = word.split( " " );
+        
+        // Si solo recibimos un palabra, buscamos una seccion.
+        if ( words.length == 1 )
+        {            
+            suggestions = sectionManager.getSectionsStartingWith( word );
+        }
+        
+        return suggestions;
+    }
+    
     /**
      * Metodo que busca en el producto los colores recibidos.
      * @param product: producto en el que buscar los colores.
@@ -414,28 +429,6 @@ public class Controller
                     return product;
                 }
             }  
-        }
-        
-        // Si en el nombre no encontramos nada, lo buscamos por ultimo en la descripcion
-        for ( String color : colors )
-        {
-            String[] decomposedName = product.getDescription().split( " " );
-            
-            for ( String single : decomposedName )
-            {
-                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
-                
-                if ( org.apache.commons.lang3.StringUtils
-                                .getJaroWinklerDistance( color
-                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
-                {
-                    bingo = true;
-                    if ( bingo )
-                        LOG.info( "Color '" + color + "' encontrado: " + single );
-                    
-                    return product;
-                }
-            }
         }
         
         return null;
