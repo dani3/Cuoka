@@ -387,15 +387,18 @@ public class Controller
             if ( firstWordSuggestions.isEmpty() )
                 return new ArrayList<>();
             
-            String color = colorManager.getColorStartingWith( words[1] );
+            List<String> colors = colorManager.getColorStartingWith( words[1] );
             
-            if ( color == null )
+            if ( colors == null )
                 return new ArrayList<>();
             
             for ( String firstWordSuggestion : firstWordSuggestions )
             {
-                suggestions.add( firstWordSuggestion + " " 
-                        + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? color : colorManager.getFemaleColor( color ) ) );
+                for ( String color : colors )
+                {
+                    suggestions.add( firstWordSuggestion + " " 
+                        + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? colors : colorManager.getFemaleColor( color ) ) );
+                }    
             }
         }
         

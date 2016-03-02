@@ -1255,10 +1255,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (Utils.isQueryOk(query)) {
+            public boolean onQueryTextSubmit(String query)
+            {
+                if (Utils.isQueryOk(query))
+                {
                     Intent intent = new Intent();
 
                     ArrayList<String> aux = null;
@@ -1280,10 +1283,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 1) {
+            public boolean onQueryTextChange(String newText)
+            {
+                if (newText.length() > 1)
+                {
                     new GetSuggestionsFromServer().execute(newText);
-
                 }
 
                 return true;
@@ -1327,6 +1331,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
+    /**
+     * Tarea en segundo plano para traer las sugerencias del servidor.
+     */
     private class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
     {
         List<String> suggestions;

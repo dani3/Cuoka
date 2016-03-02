@@ -56,11 +56,11 @@ public class ColorManager
         
         colorMap.put( "Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" } );
         
-        suggestedMaleColors = Arrays.asList( new String[] { "Amarillo", "Dorado", "Azul", "Celeste", "Blanco", "Gris", "Plateado"
-                                    , "Marrón", "Morado", "Negro", "Rojo", "Rosa", "Granate", "Naranja", "Verde" } );
+        suggestedMaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "liso", "amarillo", "dorado", "azul"
+                                    , "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro", "rojo", "rosa", "granate", "naranja", "verde" } );
         
-        suggestedFemaleColors = Arrays.asList( new String[] { "Amarilla", "Dorada", "Azul", "Celeste", "Blanca", "Gris", "Plateada"
-                                    , "Marrón", "Morada", "Negra", "Roja", "Rosa", "Granate", "Naranja", "Verde" } );
+        suggestedFemaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "lisa","amarilla", "dorada", "azul"
+                                    , "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra", "roja", "rosa", "granate", "naranja", "verde" } );
     }
     
     /**
@@ -177,13 +177,20 @@ public class ColorManager
      * @param word: palabra relacionada con el color.
      * @return color sugerido.
      */
-    public String getColorStartingWith( String word )
+    public List<String> getColorStartingWith( String word )
     {        
+        List<String> suggestedColors = new ArrayList<>();
+        
         for ( String color : suggestedMaleColors )
         {
             if ( color.toUpperCase().startsWith( word.toUpperCase() ) )
             {
-                return color;
+                suggestedColors.add( color );
+            }
+            
+            if ( suggestedColors.size() >= Properties.MAX_SUGGESTIONS )
+            {
+                return suggestedColors;
             }
         }    
         
@@ -191,7 +198,12 @@ public class ColorManager
         {
             if ( color.toUpperCase().contains( word.toUpperCase() ) )
             {
-                return color;
+                suggestedColors.add( color );
+            }
+            
+            if ( suggestedColors.size() >= Properties.MAX_SUGGESTIONS )
+            {
+                return suggestedColors;
             }
         }
         
