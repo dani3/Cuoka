@@ -46,6 +46,11 @@ public class IntroUI extends AppCompatActivity
         pdh      = (AppCompatCheckBox)findViewById(R.id.pdh);
         enter    = (Button)findViewById(R.id.enter);
 
+        blanco.setChecked(true);
+        hm.setChecked(true);
+        pdh.setChecked(true);
+        spf.setChecked(true);
+
         enter.setOnClickListener(new View.OnClickListener()
         {
             @Override

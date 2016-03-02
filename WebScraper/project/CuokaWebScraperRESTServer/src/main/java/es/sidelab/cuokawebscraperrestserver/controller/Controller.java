@@ -385,12 +385,12 @@ public class Controller
             List<String> firstWordSuggestions = sectionManager.getSectionsStartingWith( words[0] );
             
             if ( firstWordSuggestions.isEmpty() )
-                return null;
+                return new ArrayList<>();
             
             String color = colorManager.getColorStartingWith( words[1] );
             
             if ( color == null )
-                return null;
+                return new ArrayList<>();
             
             for ( String firstWordSuggestion : firstWordSuggestions )
             {

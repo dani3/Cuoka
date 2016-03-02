@@ -1,13 +1,17 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.animation.LayoutTransition;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
@@ -15,6 +19,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +27,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +41,13 @@ import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.RangeSeekBar;
 
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +63,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /* Constants */
     protected static final String TAG = "CUOKA";
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String SERVER_SPRING_PORT = "8080";
     protected static final float ALPHA_ACTIVE_FILTER = 1.0f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
     protected static String SECTION_FILTER_MAN_1;
@@ -93,6 +107,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /* Animations */
     protected Animation mExplode;
+
+    /* Menu */
+    protected Menu mMenu;
 
     /* Container Views */
     protected ViewGroup mItemsMenuViewGroup;
@@ -674,13 +691,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
 
         mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
-        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
-        {
+        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue)
-            {
-                int from = (int)bar.getSelectedMinValue();
-                int to = (int)bar.getSelectedMaxValue();
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                int from = (int) bar.getSelectedMinValue();
+                int to = (int) bar.getSelectedMaxValue();
 
                 mPriceFromEditText.setText((from == 0) ? "" : Integer.toString(from));
                 mPriceToEditText.setText((to == 100) ? "" : Integer.toString(to));
@@ -690,13 +705,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
 
-        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                if (!v.getText().toString().isEmpty())
-                {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (!v.getText().toString().isEmpty()) {
                     int from = Integer.valueOf(mPriceFromEditText.getText().toString());
                     int to = 999;
 
@@ -705,8 +717,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     Log.d(TAG, Integer.toString(from) + "|" + Integer.toString(to));
 
-                    if (from > to)
-                    {
+                    if (from > to) {
                         mRangeSeekBar.setSelectedMaxValue(from);
                         mPriceToEditText.setText(Integer.toString(from));
                     }
@@ -723,21 +734,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                if (!v.getText().toString().isEmpty())
-                {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (!v.getText().toString().isEmpty()) {
                     int from = -1;
                     int to = Integer.valueOf(mPriceToEditText.getText().toString());
 
                     if (mPriceFromEditText.getText() != null && !mPriceFromEditText.getText().toString().isEmpty())
                         from = Integer.valueOf(mPriceFromEditText.getText().toString());
 
-                    if (from > to)
-                    {
+                    if (from > to) {
                         mRangeSeekBar.setSelectedMinValue(to);
                         mPriceFromEditText.setText(Integer.toString(to));
                     }
@@ -1236,25 +1243,22 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         getMenuInflater().inflate(R.menu.toolbar_menu_filter, menu);
 
+        mMenu = menu;
+
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
+        final SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
+        final SearchView searchView =
                 (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-        {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query)
-            {
-                Log.d(TAG, "onQueryTextSubmit: " + query);
-
-                if (Utils.isQueryOk(query))
-                {
+            public boolean onQueryTextSubmit(String query) {
+                if (Utils.isQueryOk(query)) {
                     Intent intent = new Intent();
 
                     ArrayList<String> aux = null;
@@ -1276,9 +1280,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
 
             @Override
-            public boolean onQueryTextChange(String newText)
-            {
-                Log.d(TAG, "onQueryTextChange: " + newText);
+            public boolean onQueryTextChange(String newText) {
+                if (newText.length() > 1) {
+                    new GetSuggestionsFromServer().execute(newText);
+
+                }
 
                 return true;
             }
@@ -1320,5 +1326,162 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+    private class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
+    {
+        List<String> suggestions;
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            BufferedReader reader = null;
+            URL url = null;
+
+            try {
+                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT
+                        + "/suggest/" + params[0]);
+
+                Log.d(TAG, "Conectando con: " + fixedURL
+                        + " para buscar '" + params[0] + "'");
+
+                url = new URL(fixedURL);
+
+                if (url != null)
+                {
+                    URLConnection conn = url.openConnection();
+
+                    // Obtenemos la respuesta del servidor
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
+
+                    // Leemos la respuesta
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
+
+                    // Devolvemos la respuesta
+                    String content =  sb.toString();
+
+                    Log.d(TAG, content);
+
+                    JSONArray jsonArray = new JSONArray(content);
+                    suggestions = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++)
+                    {
+                        suggestions.add(jsonArray.getString(i));
+                    }
+                }
+
+            } catch (Exception e) {
+                Log.d(TAG, "Error conectando realizando busqueda");
+
+            } finally {
+                try {
+                    if (reader != null)
+                        reader.close();
+
+                } catch (IOException e) {
+                    Log.d(TAG, "Error cerrando conexion con el servidor");
+
+                }
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            String[] columns = new String[] { "_id", "text" };
+            Object[] temp = new Object[] { 0, "default" };
+
+            MatrixCursor cursor = new MatrixCursor(columns);
+
+            for(int i = 0; i < suggestions.size(); i++)
+            {
+                temp[0] = i;
+                temp[1] = suggestions.get(i);
+
+                cursor.addRow(temp);
+            }
+
+            final SearchView search = (SearchView)mMenu.findItem(R.id.menu_item_search).getActionView();
+
+            search.setSuggestionsAdapter(new SuggestionAdapter(FilterUI.this, cursor, suggestions));
+            search.getSuggestionsAdapter().notifyDataSetChanged();
+        }
+
+    } /* [END getSuggestionsFromServer] */
+
+    /**
+     * Metodo llamado cuando se hace click en el texto de la sugerencia.
+     * @param view
+     */
+    public void onClickText(View view)
+    {
+        TextView textView = (TextView)view;
+
+        Log.d(TAG, textView.getText().toString());
+
+
+    }
+
+    /**
+     * Metodo llamado cuando se hace click en el boton de la sugerencia.
+     * @param view
+     */
+    public void onClickButton(View view)
+    {
+        ImageButton imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
+
+        final SearchView search = (SearchView)mMenu.findItem(R.id.menu_item_search).getActionView();
+
+        search.setQuery(imageButton.getContentDescription().toString(), false);
+    }
+
+    /**
+     * Adapter para las sugerencias.
+     */
+    public class SuggestionAdapter extends CursorAdapter
+    {
+        private List<String> items;
+        private TextView text;
+        private ImageButton imageButton;
+
+        public SuggestionAdapter(Context context, Cursor cursor, List<String> items)
+        {
+            super(context, cursor, false);
+
+            this.items = items;
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor)
+        {
+            text.setText(items.get(cursor.getPosition()));
+            imageButton.setContentDescription(text.getText());
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent)
+        {
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View view = inflater.inflate(R.layout.suggestion_item, parent, false);
+
+            text = (TextView)view.findViewById(R.id.suggestion_item);
+            imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
+
+            return view;
+        }
+
+        @Override
+        public int getCount()
+        {
+            return items.size();
+        }
+
+    } /* [END SuggestionAdapter] */
 
 }
