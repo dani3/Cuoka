@@ -1422,9 +1422,24 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         TextView textView = (TextView)view;
 
-        Log.d(TAG, textView.getText().toString());
+        if (Utils.isQueryOk(textView.getText().toString()))
+        {
+            Intent intent = new Intent();
 
+            ArrayList<String> aux = null;
 
+            intent.putExtra(PACKAGE + ".shops", aux);
+            intent.putExtra(PACKAGE + ".colors", aux);
+            intent.putExtra(PACKAGE + ".sections", aux);
+            intent.putExtra(PACKAGE + ".minPrice", -1);
+            intent.putExtra(PACKAGE + ".maxPrice", -1);
+            intent.putExtra(PACKAGE + ".newness", false);
+            intent.putExtra(PACKAGE + ".search", textView.getText().toString());
+
+            setResult(RESULT_OK, intent);
+
+            finish();
+        }
     }
 
     /**
