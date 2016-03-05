@@ -398,7 +398,6 @@ public class Controller
                 {
                     suggestions.add( firstWordSuggestion + " " 
                         + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? color : colorManager.getFemaleColor( color ) ) );
-                    
                 }    
             }
         }
