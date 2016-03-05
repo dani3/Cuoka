@@ -393,11 +393,12 @@ public class Controller
                 return new ArrayList<>();
             
             for ( String firstWordSuggestion : firstWordSuggestions )
-            {
+            {                
                 for ( String color : colors )
                 {
                     suggestions.add( firstWordSuggestion + " " 
-                        + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? colors : colorManager.getFemaleColor( color ) ) );
+                        + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? color : colorManager.getFemaleColor( color ) ) );
+                    
                 }    
             }
         }
