@@ -69,6 +69,7 @@ public class ProductsUI extends AppCompatActivity
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected static final int MIN_PRODUCTS = 6;
     protected static final int FILTER_REQUEST = 1;
     protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
     protected static final String SERVER_SPRING_PORT = "8080";
@@ -77,6 +78,7 @@ public class ProductsUI extends AppCompatActivity
     protected static boolean ON_CREATE_FLAG;
     protected static int NUMBER_OF_CORES;
     protected static int DAYS_OFFSET;
+    protected static String SEARCH_QUERY;
     protected enum STATE
     {
         ERROR
@@ -181,6 +183,8 @@ public class ProductsUI extends AppCompatActivity
 
         start = count = 0;
         mBackPressed = 0;
+
+        SEARCH_QUERY = null;
 
         DAYS_OFFSET = 0;
         MAN = mSharedPreferences.retreiveMan();
@@ -487,7 +491,7 @@ public class ProductsUI extends AppCompatActivity
     {
         if (item.getItemId() == R.id.menu_item_filter)
         {
-            if (mState != STATE.LOADING)
+            if ((mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE))
             {
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
 
@@ -516,63 +520,82 @@ public class ProductsUI extends AppCompatActivity
 
         if (resultCode == RESULT_OK)
         {
-            Log.d(TAG, "Filtro establecido:");
+            SEARCH_QUERY = data.getStringExtra(PACKAGE + ".search");
 
-            mFilterMap.put("newness", data.getBooleanExtra(PACKAGE + ".newness", false));
-            mFilterMap.put("sections", data.getSerializableExtra(PACKAGE + ".sections"));
-            mFilterMap.put("colors", data.getSerializableExtra(PACKAGE + ".colors"));
-            mFilterMap.put("shops", data.getSerializableExtra(PACKAGE + ".shops"));
-            mFilterMap.put("minPrice", data.getIntExtra(PACKAGE + ".minPrice", -1));
-            mFilterMap.put("maxPrice", data.getIntExtra(PACKAGE + ".maxPrice", -1));
-
-            Log.d(TAG, " Novedades = " + Boolean.toString((boolean)mFilterMap.get("newness")));
-            Log.d(TAG, " Precio Min = " + Integer.toString((int)mFilterMap.get("minPrice")));
-            Log.d(TAG, " Precio Max = " + Integer.toString((int)mFilterMap.get("maxPrice")));
-
-            List<String> shopsList = (ArrayList<String>)mFilterMap.get("shops");
-            if (shopsList != null)
-                for (String shop : shopsList)
-                    Log.d(TAG, " Tienda = " + shop);
-
-            List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
-            if (sectionsList != null)
-                for (String section : sectionsList)
-                    Log.d(TAG, " Seccion = " + section);
-
-            List<String> colorsList = (ArrayList<String>)mFilterMap.get("colors");
-            if (colorsList != null)
-                for (String color : colorsList)
-                    Log.d(TAG, " Color = " + color);
-
-            if (shopsList != null)
-                if (shopsList.size() == mShopsList.size())
-                    if (shopsList.containsAll(mShopsList))
-                        shopsList = null;
-
-            boolean newness = (boolean)mFilterMap.get("newness");
-            int from = (int)mFilterMap.get("minPrice");
-            int to = (int)mFilterMap.get("maxPrice");
-
-            _reinitializeData();
-
-            if (mProductsRecyclerView != null)
-                mProductsRecyclerView.setVisibility(View.GONE);
-
-            // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
-            if ((shopsList == null)
-                    && (colorsList == null)
-                    && (sectionsList == null)
-                    && (!newness)
-                    && (from < 0)
-                    && (to < 0))
+            if (SEARCH_QUERY == null)
             {
-                Log.d(TAG, "Filtros por defecto");
+                Log.d(TAG, "Filtro establecido:");
 
-                mFilterMap = _initFilterMap();
+                mFilterMap.put("newness", data.getBooleanExtra(PACKAGE + ".newness", false));
+                mFilterMap.put("sections", data.getSerializableExtra(PACKAGE + ".sections"));
+                mFilterMap.put("colors", data.getSerializableExtra(PACKAGE + ".colors"));
+                mFilterMap.put("shops", data.getSerializableExtra(PACKAGE + ".shops"));
+                mFilterMap.put("minPrice", data.getIntExtra(PACKAGE + ".minPrice", -1));
+                mFilterMap.put("maxPrice", data.getIntExtra(PACKAGE + ".maxPrice", -1));
 
-                new ConnectToServer().execute();
+                Log.d(TAG, " Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
+                Log.d(TAG, " Precio Min = " + Integer.toString((int) mFilterMap.get("minPrice")));
+                Log.d(TAG, " Precio Max = " + Integer.toString((int) mFilterMap.get("maxPrice")));
+
+                List<String> shopsList = (ArrayList<String>) mFilterMap.get("shops");
+                if (shopsList != null)
+                    for (String shop : shopsList)
+                        Log.d(TAG, " Tienda = " + shop);
+
+                List<String> sectionsList = (ArrayList<String>) mFilterMap.get("sections");
+                if (sectionsList != null)
+                    for (String section : sectionsList)
+                        Log.d(TAG, " Seccion = " + section);
+
+                List<String> colorsList = (ArrayList<String>) mFilterMap.get("colors");
+                if (colorsList != null)
+                    for (String color : colorsList)
+                        Log.d(TAG, " Color = " + color);
+
+                if (shopsList != null)
+                    if (shopsList.size() == mShopsList.size())
+                        if (shopsList.containsAll(mShopsList))
+                            shopsList = null;
+
+                boolean newness = (boolean) mFilterMap.get("newness");
+                int from = (int) mFilterMap.get("minPrice");
+                int to = (int) mFilterMap.get("maxPrice");
+
+                _reinitializeData();
+
+                if (mProductsRecyclerView != null)
+                    mProductsRecyclerView.setVisibility(View.GONE);
+
+                // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
+                if ((shopsList == null)
+                        && (colorsList == null)
+                        && (sectionsList == null)
+                        && (!newness)
+                        && (from < 0)
+                        && (to < 0))
+                {
+                    Log.d(TAG, "Filtros por defecto");
+
+                    mFilterMap = _initFilterMap();
+
+                    new ConnectToServer().execute();
+
+                } else {
+                    // Lo ponemos a -1 para detectar cuando estamos en los filtros
+                    DAYS_OFFSET = -1;
+
+                    new RetreiveProductsFromServer().execute();
+
+                }
 
             } else {
+                Log.d(TAG, "Busqueda: " + SEARCH_QUERY);
+
+                _reinitializeData();
+
+                if (mProductsRecyclerView != null)
+                    mProductsRecyclerView.setVisibility(View.GONE);
+
                 // Lo ponemos a -1 para detectar cuando estamos en los filtros
                 DAYS_OFFSET = -1;
 
@@ -656,9 +679,19 @@ public class ProductsUI extends AppCompatActivity
                 // Creamos un thread por cada tienda a la que tenemos que conectarnos.
                 for (int i = 0; i < shopsList.size(); i++)
                 {
-                    ConnectionFilterTask connectionFilterTask = new ConnectionFilterTask(shopsList.get(i));
+                    ConnectionFilterTask connectionFilterTask = null;
+                    ConnectionSearchTask connectionSearchTask = null;
 
-                    completionService.submit(connectionFilterTask);
+                    if (SEARCH_QUERY == null)
+                    {
+                        connectionFilterTask = new ConnectionFilterTask(shopsList.get(i));
+                        completionService.submit(connectionFilterTask);
+
+                    } else {
+                        connectionSearchTask = new ConnectionSearchTask(shopsList.get(i));
+                        completionService.submit(connectionSearchTask);
+                    }
+
                 }
 
                 // Metemos en content el resultado de cada uno
@@ -798,6 +831,68 @@ public class ProductsUI extends AppCompatActivity
     } /* [END ConnectionFilterTask] */
 
     /**
+     * Task que realiza una peticion al servidor con la busqueda introducida.
+     */
+    private class ConnectionSearchTask implements Callable<String>
+    {
+        private String shop;
+
+        public ConnectionSearchTask(String shop)
+        {
+            this.shop = shop;
+        }
+
+        @Override
+        public String call()
+        {
+            BufferedReader reader = null;
+            URL url = null;
+
+            try {
+                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT
+                        + "/search/" + shop + "/" + MAN + "/" + SEARCH_QUERY);
+
+                Log.d(TAG, "Realizando busqueda: " + fixedURL);
+
+                url = new URL(fixedURL);
+
+                if (url != null)
+                {
+                    URLConnection conn = url.openConnection();
+
+                    // Obtenemos la respuesta del servidor
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
+
+                    // Leemos la respuesta
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
+
+                    // Devolvemos la respuesta
+                    return sb.toString();
+                }
+
+            } catch (Exception e) {
+                Log.d(TAG, "Error realizando busqueda con " + shop);
+
+            } finally {
+                try {
+                    if (reader != null)
+                        reader.close();
+
+                } catch (IOException e) {
+                    Log.d(TAG, "Error cerrando conexion con " + shop);
+
+                }
+
+            }
+
+            return null;
+        }
+    }
+
+    /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
      * Solo se queda con los productos que pasen el filtro.
      */
@@ -885,9 +980,10 @@ public class ProductsUI extends AppCompatActivity
             jsonList.add(js);
         }
 
-        for( JSONObject jsonObject : jsonList )
+        for(JSONObject jsonObject : jsonList)
         {
             String name = jsonObject.getString("2");
+
             String shop = key = jsonObject.getString("3");
             String section = jsonObject.getString("4");
             double price = jsonObject.getDouble("1");
@@ -905,13 +1001,13 @@ public class ProductsUI extends AppCompatActivity
                 String colorPath = jsColor.getString("4");
                 short numerOfImages = (short)jsColor.getInt("3");
 
-                colors.add( new ColorVariant( reference, colorName, colorPath, numerOfImages ) );
+                colors.add( new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
-            Product product = new Product( name, shop, section, price, link, description, colors );
+            Product product = new Product(name, shop, section, price, link, description, colors);
 
             if (product.isOkay())
-                productsList.add( new Product( name, shop, section, price, link, description, colors ) );
+                productsList.add(new Product(name, shop, section, price, link, description, colors));
 
         }
 
@@ -1160,7 +1256,14 @@ public class ProductsUI extends AppCompatActivity
 
                     new ConnectToServer().execute();
 
+                } else if (mProductsCandidatesDeque.isEmpty() && mProductsDisplayedList.size() < MIN_PRODUCTS && (DAYS_OFFSET >= 0)) {
+
+                    DAYS_OFFSET++;
+
+                    new ConnectToServer().execute();
+
                 } else {
+
                     if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty() && (DAYS_OFFSET == -1)))
                     {
                         _noData(true);

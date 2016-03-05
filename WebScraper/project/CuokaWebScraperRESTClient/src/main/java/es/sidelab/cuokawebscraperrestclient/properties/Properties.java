@@ -13,10 +13,10 @@ public class Properties
     public static final String SERVER = "http://cuoka-ws.cloudapp.net:8080";
     public static final int TIMEOUT = 60000;   
     
-    public static final String HTML_PATH = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\";
+    public static final String HTML_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
     public static final String RENDER_SCRIPT = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\scripts\\";
     
-    public static final String ACTIVITY_PATH = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\shops\\";
+    public static final String ACTIVITY_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
 
     public static final String DONE_FILE_PYTHON = HTML_PATH + "done.dat";
 }

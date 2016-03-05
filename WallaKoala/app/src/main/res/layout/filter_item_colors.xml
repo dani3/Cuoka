@@ -76,59 +76,145 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_yellow"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_yellow"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_blue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_blue"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_yellow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_yellow"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_beige"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_beige"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@android:color/holo_orange_light"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_white"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                </LinearLayout>
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_grey"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_grey"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_brown"
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_blue"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@android:color/holo_blue_bright"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_brown"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_beige"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_beige"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/color_beige"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_white"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:alpha="0.1"
+                        android:src="@android:color/holo_green_light"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_grey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_grey"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:alpha="0.7"
+                        android:src="@android:color/darker_gray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_brown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_brown"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/color_brown"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -139,50 +225,120 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_purple"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_purple"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_black"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_purple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_purple"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_red"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_red"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@android:color/holo_purple"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_pink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_pink"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                </LinearLayout>
 
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/filter_color_green"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_color_green"
-                    android:textColor="@color/colorMediumText"
-                    android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_black"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@android:color/black"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_red"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@android:color/holo_red_light"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_pink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_pink"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/color_pink"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/filter_color_green"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_color_green"
+                        android:textColor="@color/colorMediumText"
+                        android:layout_marginBottom="8dp"
+                        app:buttonTint="@color/colorAccent"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:src="@android:color/holo_green_light"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

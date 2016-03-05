@@ -61,9 +61,6 @@ public class Product implements Serializable
 		if ((this.section == null) || (this.section.isEmpty()))
 			return false;
 
-        if ((this.description == null) || (this.description.isEmpty()))
-            return false;
-
 		if (this.price <= 0.0f)
 			return false;
 

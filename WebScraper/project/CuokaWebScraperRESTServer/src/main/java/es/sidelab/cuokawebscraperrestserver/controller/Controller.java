@@ -159,7 +159,6 @@ public class Controller
      * @param section: Seccion de la que se quieren los productos.
      * @return Lista de productos.
      */
-    @Cacheable( value = "products", key = "#shop.toString() + #section.toString()" )
     @RequestMapping( value = "/products/{shop}/{section}", method = RequestMethod.GET )
     public List<Product> getProductsBySection( @PathVariable String shop
                                 , @PathVariable String section )
@@ -278,6 +277,135 @@ public class Controller
     }
     
     /**
+     * Metodo que realiza una busqueda de productos.
+     * @param shop: tienda de la que se quieren los productos.
+     * @param man: hombre o mujer.
+     * @param search: productos a buscar.
+     * @return lista de productos encontrados.
+     */
+    @RequestMapping( value = "/search/{shop}/{man}/{search}", method = RequestMethod.GET )
+    public List<Product> getProductsBySearch( @PathVariable String shop
+                                , @PathVariable String man
+                                , @PathVariable String search )
+    {
+        List<Product> productList = new ArrayList<>();
+        List<Product> newList = new ArrayList<>();
+        String[] aux = search.split( " " ); 
+        
+        // Sacamos los productos de la tienda
+        productList = productsRepository.findByManAndShop( Boolean.valueOf( man ), shop );
+        
+        // Eliminamos palabras irrelevantes ('a', 'de', etc)
+        List<String> keywords = new ArrayList<>();
+        for ( String keyword : aux )
+        {
+            if ( ( keyword.length() > 2 ) && ( ! keyword.equalsIgnoreCase( "Con" ) ) )
+            {
+                keywords.add( keyword );
+            }
+        }
+        
+        // Recorremos los productos 
+        for ( Product product : productList )
+        {
+            boolean candidate = true;            
+            Product paux = null;
+            
+            // Recorremos las palabras buscadas
+            for ( String keyword : keywords )
+            {
+                // Comprobamos si es una seccion
+                List<String> section = new ArrayList<>();
+                String saux = sectionManager.getSection( keyword );
+                if ( saux != null )
+                    section.add( saux );
+                    
+                if ( ! section.isEmpty() )
+                {
+                    candidate = _searchForSection( product, section );
+                    
+                    if ( ! candidate )
+                        break;
+                }
+                
+                // Comprobamos si es un color
+                List<String> color = new ArrayList<>();
+                String caux = colorManager.getColor( keyword );
+                if ( caux != null )
+                    color.add( caux );
+                
+                if ( ! color.isEmpty() )
+                {
+                    paux = _searchForColor( product, color );
+                    
+                    candidate = ( paux != null );
+                    if ( ! candidate )
+                        break;
+                }
+                
+                // Si no es ni seccion ni color
+                if ( color.isEmpty() && section.isEmpty() )
+                {
+                    candidate = _searchForKeyword( product, keyword );
+                    
+                    if ( ! candidate )
+                        break;
+                }
+                
+            }
+            
+            if ( candidate )
+                newList.add( ( paux == null ) ? product : paux );
+        }
+        
+        return newList;
+    }
+    
+    /**
+     * Metodo que devuelve una lista de sugerencias.
+     * @param word palabras buscadas.
+     * @return lista de sugerencias.
+     */
+    @RequestMapping( value = "/suggest/{word}", method = RequestMethod.GET )
+    public List<String> getSuggestions( @PathVariable String word )
+    {
+        List<String> suggestions = new ArrayList<>();
+        String[] words = word.split( " " );
+        
+        // Si solo recibimos un palabra, buscamos una seccion.
+        if ( words.length == 1 )
+        {            
+            suggestions = sectionManager.getSectionsStartingWith( word );
+        }
+        
+        // Si recibimos dos palabras, buscamos la primera palabra como seccion
+        // la segunda se busca como color
+        if ( words.length == 2 )
+        {
+            List<String> firstWordSuggestions = sectionManager.getSectionsStartingWith( words[0] );
+            
+            if ( firstWordSuggestions.isEmpty() )
+                return new ArrayList<>();
+            
+            List<String> colors = colorManager.getColorStartingWith( words[1] );
+            
+            if ( colors == null )
+                return new ArrayList<>();
+            
+            for ( String firstWordSuggestion : firstWordSuggestions )
+            {                
+                for ( String color : colors )
+                {
+                    suggestions.add( firstWordSuggestion + " " 
+                        + ( ( sectionManager.getSectionGender( firstWordSuggestion ) ) ? color : colorManager.getFemaleColor( color ) ) );
+                }    
+            }
+        }
+        
+        return suggestions;
+    }
+    
+    /**
      * Metodo que busca en el producto los colores recibidos.
      * @param product: producto en el que buscar los colores.
      * @param colors: colores que buscar en el producto.
@@ -299,6 +427,8 @@ public class Controller
                 
                 for ( String single : decomposedColor )
                 {
+                    single = single.replaceAll( "[0-9]" , "" );
+                    
                     if ( org.apache.commons.lang3.StringUtils
                                 .getJaroWinklerDistance( color
                                         , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
@@ -335,28 +465,6 @@ public class Controller
                     return product;
                 }
             }  
-        }
-        
-        // Si en el nombre no encontramos nada, lo buscamos por ultimo en la descripcion
-        for ( String color : colors )
-        {
-            String[] decomposedName = product.getDescription().split( " " );
-            
-            for ( String single : decomposedName )
-            {
-                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
-                
-                if ( org.apache.commons.lang3.StringUtils
-                                .getJaroWinklerDistance( color
-                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
-                {
-                    bingo = true;
-                    if ( bingo )
-                        LOG.info( "Color '" + color + "' encontrado: " + single );
-                    
-                    return product;
-                }
-            }
         }
         
         return null;
@@ -411,28 +519,6 @@ public class Controller
             }
         }
         
-        // Si no encontramos nada en el nombre, buscamos por ultimo en la descripcion
-        for ( String section : sections )
-        {
-            String[] decomposedName = product.getDescription().split( " " );
-            
-            for ( String single : decomposedName )
-            {
-                single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
-                
-                if ( org.apache.commons.lang3.StringUtils
-                                .getJaroWinklerDistance( section
-                                        , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
-                {
-                    bingo = true;
-                    if ( bingo )
-                        LOG.info( "Seccion '" + section + "' encontrada: " + single );
-                    
-                    return true;
-                }
-            }
-        }
-        
         return false;
     }
     
@@ -455,5 +541,54 @@ public class Controller
         }
         
         return product;
+    }
+    
+    /**
+     * Metodo que busca una palabra clave en el producto.
+     * @param product: producto donde buscar la palabra.
+     * @param keyword: palabra a buscar.
+     * @return true si el producto contiene la palabra.
+     */
+    private boolean _searchForKeyword( Product product, String keyword )
+    {
+        boolean bingo = false;
+        
+        // Buscamos la palabra en el nombre.        
+        String[] decomposedName = product.getName().split( " " );
+        for ( String single : decomposedName )
+        {
+            single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+            
+            if ( org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance( keyword
+                                    , single ) >= Properties.MEDIUM_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+
+                return true;
+            }
+        }  
+        
+        // Si no la encontramos en el nombre, la buscamos en la descripcion.
+        decomposedName = product.getDescription().split( " " );            
+        for ( String single : decomposedName )
+        {
+            single = single.replace( "," , "" ).replace( "." , "" ).replace( "\n", "" ).trim();
+            
+            if ( org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance( keyword
+                                    , single ) >= Properties.MEDIUM_SIMILARITY_THRESHOLD )
+            {
+                bingo = true;
+                if ( bingo )
+                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

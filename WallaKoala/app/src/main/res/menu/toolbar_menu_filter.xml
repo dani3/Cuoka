@@ -6,6 +6,12 @@
     <item android:id="@+id/menu_item_search"
         android:title="Search"
         android:icon="@drawable/ic_search_white"
-        app:showAsAction="ifRoom"/>
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:id="@+id/menu_item_options"
+        android:icon="@drawable/ic_clear_all_white"
+        app:showAsAction="ifRoom"
+        android:title="@string/filter_default"/>
 
 </menu>

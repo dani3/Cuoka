@@ -53,6 +53,22 @@ public class Utils
         return sS;
     }
 
+    /**
+     * Metodo que comprueba si un string contiene solo letras.
+     * @param query: string a comprobar.
+     * @return true si el string es correcto.
+     */
+    public static boolean isQueryOk(String query)
+    {
+        char[] chars = query.toCharArray();
+
+        for (char c : chars)
+            if (!Character.isLetter(c) && !Character.isSpaceChar(c))
+                return false;
+
+        return true;
+    }
+
     @Nullable
     public static String saveImage(Context context, Bitmap bitmap, int pos, String TAG)
     {

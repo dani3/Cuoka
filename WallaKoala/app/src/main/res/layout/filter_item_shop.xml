@@ -103,6 +103,15 @@
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
 
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_filter_shop_zara"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_shops_zara"
+                    android:textColor="@color/colorMediumText"
+                    android:layout_marginBottom="8dp"
+                    app:buttonTint="@color/colorAccent"/>
+
             </LinearLayout>
 
             <!-- Right Column -->

@@ -1,37 +1,53 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.RangeSeekBar;
 
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +63,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /* Constants */
     protected static final String TAG = "CUOKA";
     protected static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final float ALPHA_ACTIVE_FILTER = 0.8f;
+    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
+    protected static final String SERVER_SPRING_PORT = "8080";
+    protected static final float ALPHA_ACTIVE_FILTER = 1.0f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
     protected static String SECTION_FILTER_MAN_1;
     protected static String SECTION_FILTER_MAN_2;
@@ -90,6 +108,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /* Animations */
     protected Animation mExplode;
 
+    /* Menu */
+    protected Menu mMenu;
+
     /* Container Views */
     protected ViewGroup mItemsMenuViewGroup;
     protected CoordinatorLayout mCoordinatorLayout;
@@ -118,6 +139,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /* TextViews */
     protected TextView mToolbarTextView;
+    protected TextView mFilterShopTextView;
+    protected TextView mFilterSectionTextView;
+    protected TextView mFilterColorTextView;
+    protected TextView mFilterPriceTextView;
+    protected TextView mFilterNewnessTextView;
 
     /* RadioButtons */
     protected AppCompatRadioButton mNewnessAllRadioButton;
@@ -132,6 +158,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mShopPedroDelHierroCheckBox;
     protected AppCompatCheckBox mShopSpringfieldCheckBox;
     protected AppCompatCheckBox mShopHyMCheckBox;
+    protected AppCompatCheckBox mShopZaraCheckBox;
 
     protected List<AppCompatCheckBox> mColorCheckBoxesList;
     protected AppCompatCheckBox mColorYellowCheckBox;
@@ -317,22 +344,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFloatingActionButton.setVisibility(View.VISIBLE);
         mFloatingActionButton.startAnimation(mExplode);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 boolean OK = true;
 
                 if (!COLOR_FILTER_ACTIVE &&
-                    !SHOP_FILTER_ACTIVE &&
-                    !SECTION_FILTER_ACTIVE &&
-                    !PRICE_FILTER_ACTIVE &&
-                    !NEWNESS_FILTER_ACTIVE)
-                {
+                        !SHOP_FILTER_ACTIVE &&
+                        !SECTION_FILTER_ACTIVE &&
+                        !PRICE_FILTER_ACTIVE &&
+                        !NEWNESS_FILTER_ACTIVE) {
                     mSnackbar = Snackbar.make(mCoordinatorLayout
-                                    , "No se ha establecido ningún filtro"
-                                    , Snackbar.LENGTH_SHORT);
+                            , "No se ha establecido ningún filtro"
+                            , Snackbar.LENGTH_SHORT);
 
                     mSnackbar.show();
 
@@ -340,23 +364,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     Intent intent = new Intent();
 
                     ArrayList<String> shopsList = null;
-                    if (SHOP_FILTER_ACTIVE)
-                    {
+                    if (SHOP_FILTER_ACTIVE) {
                         boolean none = true;
 
                         shopsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
-                        {
-                            if (checkBox.isChecked())
-                            {
+                        for (AppCompatCheckBox checkBox : mAllCheckBoxesList) {
+                            if (checkBox.isChecked()) {
                                 none = false;
 
                                 shopsList.add(checkBox.getText().toString());
                             }
                         }
 
-                        if (none)
-                        {
+                        if (none) {
                             OK = false;
 
                             mFilterShopMenuLayout.startAnimation(
@@ -365,23 +385,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     }
 
                     ArrayList<String> colorsList = null;
-                    if (COLOR_FILTER_ACTIVE)
-                    {
+                    if (COLOR_FILTER_ACTIVE) {
                         boolean none = true;
 
                         colorsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mColorCheckBoxesList)
-                        {
-                            if (checkBox.isChecked())
-                            {
+                        for (AppCompatCheckBox checkBox : mColorCheckBoxesList) {
+                            if (checkBox.isChecked()) {
                                 none = false;
 
                                 colorsList.add(checkBox.getText().toString());
                             }
                         }
 
-                        if (none)
-                        {
+                        if (none) {
                             OK = false;
 
                             mFilterColorMenuLayout.startAnimation(
@@ -390,23 +406,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     }
 
                     ArrayList<String> sectionsList = null;
-                    if (SECTION_FILTER_ACTIVE)
-                    {
+                    if (SECTION_FILTER_ACTIVE) {
                         boolean none = true;
 
                         sectionsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
-                        {
-                            if (checkBox.isChecked())
-                            {
+                        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList) {
+                            if (checkBox.isChecked()) {
                                 none = false;
 
                                 sectionsList.add(checkBox.getText().toString());
                             }
                         }
 
-                        if (none)
-                        {
+                        if (none) {
                             OK = false;
 
                             mFilterSectionMenuLayout.startAnimation(
@@ -416,25 +428,22 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     int from = -1;
                     int to = -1;
-                    if (PRICE_FILTER_ACTIVE)
-                    {
+                    if (PRICE_FILTER_ACTIVE) {
                         int lengthFrom = mPriceFromEditText.getText().length();
                         int lengthTo = mPriceToEditText.getText().length();
 
                         from = (lengthFrom == 0) ? from : Integer.valueOf(mPriceFromEditText.getText().toString());
                         to = (lengthTo == 0) ? to : Integer.valueOf(mPriceToEditText.getText().toString());
 
-                        if (lengthFrom == 0 && lengthTo == 0)
-                        {
+                        if (lengthFrom == 0 && lengthTo == 0) {
                             OK = false;
 
                             mFilterPriceMenuLayout.startAnimation(
-                                                        AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
                         }
                     }
 
-                    if (OK)
-                    {
+                    if (OK) {
                         boolean newness = mNewnessNewRadioButton.isChecked();
 
                         intent.putExtra(PACKAGE + ".shops", shopsList);
@@ -533,6 +542,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mColorCheckBoxesList.add(mColorRedCheckBox); mColorCheckBoxesList.add(mColorPinkCheckBox);
         mColorCheckBoxesList.add(mColorGreenCheckBox);
 
+        mFilterColorTextView = (TextView)findViewById(R.id.filter_text_color);
+
         ((ViewGroup)mFilterColorMenuLayout.getParent()).removeView(mFilterColorMenuLayout);
 
         if (COLOR_FILTER_ACTIVE)
@@ -540,6 +551,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterColorImageView.setScaleX(1.1f);
             mFilterColorImageView.setScaleY(1.1f);
             mFilterColorImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
 
             mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
@@ -581,6 +594,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mSectionCheckBoxesList.add(mSection9CheckBox); mSectionCheckBoxesList.add(mSection10CheckBox);
         mSectionCheckBoxesList.add(mSection11CheckBox); mSectionCheckBoxesList.add(mSection12CheckBox);
 
+        mFilterSectionTextView = (TextView)findViewById(R.id.filter_text_section);
+
         ((ViewGroup)mFilterSectionMenuLayout.getParent()).removeView(mFilterSectionMenuLayout);
 
         if (MAN)
@@ -619,6 +634,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterSectionImageView.setScaleY(1.1f);
             mFilterSectionImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
+            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
             for (String section : mFilterSections)
             {
                 for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
@@ -639,6 +656,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterNewness()
     {
+        mFilterNewnessTextView = (TextView)findViewById(R.id.filter_text_newness);
+
+        mFilterNewnessTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
         if (NEWNESS_FILTER_ACTIVE)
         {
             ((ViewGroup)mFilterNewnessMenuLayout.getParent()).removeView(mFilterNewnessMenuLayout);
@@ -667,14 +688,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterPrice()
     {
+        mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
+
         mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
-        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
-        {
+        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue)
-            {
-                int from = (int)bar.getSelectedMinValue();
-                int to = (int)bar.getSelectedMaxValue();
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                int from = (int) bar.getSelectedMinValue();
+                int to = (int) bar.getSelectedMaxValue();
 
                 mPriceFromEditText.setText((from == 0) ? "" : Integer.toString(from));
                 mPriceToEditText.setText((to == 100) ? "" : Integer.toString(to));
@@ -684,13 +705,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
 
-        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                if (!v.getText().toString().isEmpty())
-                {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (!v.getText().toString().isEmpty()) {
                     int from = Integer.valueOf(mPriceFromEditText.getText().toString());
                     int to = 999;
 
@@ -699,8 +717,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     Log.d(TAG, Integer.toString(from) + "|" + Integer.toString(to));
 
-                    if (from > to)
-                    {
+                    if (from > to) {
                         mRangeSeekBar.setSelectedMaxValue(from);
                         mPriceToEditText.setText(Integer.toString(from));
                     }
@@ -717,21 +734,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                if (!v.getText().toString().isEmpty())
-                {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (!v.getText().toString().isEmpty()) {
                     int from = -1;
                     int to = Integer.valueOf(mPriceToEditText.getText().toString());
 
                     if (mPriceFromEditText.getText() != null && !mPriceFromEditText.getText().toString().isEmpty())
                         from = Integer.valueOf(mPriceFromEditText.getText().toString());
 
-                    if (from > to)
-                    {
+                    if (from > to) {
                         mRangeSeekBar.setSelectedMinValue(to);
                         mPriceFromEditText.setText(Integer.toString(to));
                     }
@@ -753,6 +766,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterPriceImageView.setScaleX(1.1f);
             mFilterPriceImageView.setScaleY(1.1f);
             mFilterPriceImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
 
             if (mFilterMinPrice > 0)
             {
@@ -781,12 +796,16 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
         mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
         mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
+        mShopZaraCheckBox           = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_zara);
+
+        mFilterShopTextView = (TextView)findViewById(R.id.filter_text_shop);
 
         // Metemos en una lista todos los CheckBoxes de todas las tiendas
         mAllCheckBoxesList.add(mShopBlancoCheckBox);
         mAllCheckBoxesList.add(mShopSpringfieldCheckBox);
         mAllCheckBoxesList.add(mShopPedroDelHierroCheckBox);
         mAllCheckBoxesList.add(mShopHyMCheckBox);
+        mAllCheckBoxesList.add(mShopZaraCheckBox);
 
         // Metemos en una lista todos los CheckBoxes de mis tiendas
         for (String shop : mShopsList)
@@ -800,21 +819,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         }
 
-        mShopAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        mShopAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopMyCheckBox)
-                if (!isChecked && !mShopMyCheckBox.isChecked())
-                {
+                if (!isChecked && !mShopMyCheckBox.isChecked()) {
                     for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
                         checkBox.setChecked(false);
                 }
 
                 // Si se marca, se marcan todas las tiendas y se desmarca mShopMyCheckBox
-                if (isChecked)
-                {
+                if (isChecked) {
                     mShopMyCheckBox.setChecked(false);
 
                     for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
@@ -827,8 +842,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopAllCheckBox)
-                if (!isChecked && !mShopAllCheckBox.isChecked())
-                {
+                if (!isChecked && !mShopAllCheckBox.isChecked()) {
                     boolean allChecked = true;
                     for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
                         if (!checkBox.isChecked())
@@ -840,8 +854,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 }
 
                 // Si se marca, desmarco el resto de tiendas y mShopAllCheckBox
-                if (isChecked)
-                {
+                if (isChecked) {
                     mShopAllCheckBox.setChecked(false);
 
                     for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
@@ -858,6 +871,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterShopImageView.setScaleX(1.1f);
             mFilterShopImageView.setScaleY(1.1f);
             mFilterShopImageView.setAlpha(ALPHA_ACTIVE_FILTER);
+
+            mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
 
             ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
 
@@ -883,6 +898,140 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Metodo que resetea el filtro de tiendas.
+     */
+    protected void _resetFilterShop()
+    {
+        for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+        {
+            checkBox.setChecked(false);
+        }
+
+        mShopMyCheckBox.setChecked(false);
+        mShopAllCheckBox.setChecked(false);
+        mShopMyCheckBox.setChecked(true);
+    }
+
+    /**
+     * Metodo que resetea el filtro de secciones.
+     */
+    protected void _resetFilterSection()
+    {
+        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
+        {
+            checkBox.setChecked(false);
+        }
+    }
+
+    /**
+     * Metodo que resetea el filtro de colores.
+     */
+    protected void _resetFilterColor()
+    {
+        for (AppCompatCheckBox checkBox : mColorCheckBoxesList)
+        {
+            checkBox.setChecked(false);
+        }
+    }
+
+    /**
+     * Metodo que resetea el filtro de precios.
+     */
+    protected void _resetFilterPrice()
+    {
+        mRangeSeekBar.setSelectedMaxValue(mRangeSeekBar.getAbsoluteMaxValue());
+        mRangeSeekBar.setSelectedMinValue(mRangeSeekBar.getAbsoluteMinValue());
+
+        mPriceFromEditText.setText("");
+        mPriceToEditText.setText("");
+    }
+
+    /**
+     * Metodo que resetea el filtro de novedades.
+     */
+    protected void _resetFilterNewness()
+    {
+        mNewnessNewRadioButton.setChecked(false);
+        mNewnessAllRadioButton.setChecked(true);
+    }
+
+    /**
+     * Metodo que resetea todos los filtros.
+     */
+    protected void _resetFilter()
+    {
+        mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtros restablecidos", Snackbar.LENGTH_SHORT);
+
+        mSnackbar.show();
+
+        _resetFilterShop();
+        if (SHOP_FILTER_ACTIVE)
+        {
+            SHOP_FILTER_ACTIVE = false;
+
+            mFilterShopImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
+        }
+
+        _resetFilterSection();
+        if (SECTION_FILTER_ACTIVE)
+        {
+            SECTION_FILTER_ACTIVE = false;
+
+            mFilterSectionImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
+        }
+
+        _resetFilterColor();
+        if (COLOR_FILTER_ACTIVE)
+        {
+            COLOR_FILTER_ACTIVE = false;
+
+            mFilterColorImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
+        }
+
+        _resetFilterPrice();
+        if (PRICE_FILTER_ACTIVE)
+        {
+            PRICE_FILTER_ACTIVE = false;
+
+            mFilterPriceImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
+        }
+
+        _resetFilterNewness();
+    }
+
     @Override
     public void onClick(View view)
     {
@@ -899,6 +1048,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .alpha(ALPHA_ACTIVE_FILTER)
                                               .setInterpolator(new OvershootInterpolator());
 
+                mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
             } else {
@@ -909,6 +1060,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .scaleYBy(-0.1f)
                                               .alpha(ALPHA_INACTIVE_FILTER)
                                               .setInterpolator(new OvershootInterpolator());
+
+                mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
                 mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
@@ -929,6 +1082,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .alpha(ALPHA_ACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
 
+                mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
 
             } else {
@@ -939,6 +1094,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .scaleYBy(-0.1f)
                                                  .alpha(ALPHA_INACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
+
+                mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
                 mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
 
@@ -959,6 +1116,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
+                mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
 
             } else {
@@ -969,6 +1128,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .scaleYBy(-0.1f)
                                                .alpha(ALPHA_INACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
+
+                mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
                 mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
 
@@ -989,6 +1150,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
+                mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+
                 mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
             } else {
@@ -1000,37 +1163,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_INACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
+                mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
                 mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
-
-                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
-                mSnackbar.show();
-            }
-        }
-
-        if (view.getId() == R.id.filter_newness)
-        {
-            if (!NEWNESS_FILTER_ACTIVE)
-            {
-                NEWNESS_FILTER_ACTIVE = true;
-
-                mFilterNewnessImageView.animate().setDuration(250)
-                                                 .scaleXBy(0.1f)
-                                                 .scaleYBy(0.1f)
-                                                 .alpha(ALPHA_ACTIVE_FILTER)
-                                                 .setInterpolator(new OvershootInterpolator());
-
-                mItemsMenuViewGroup.addView(mFilterNewnessMenuLayout, 0);
-
-            } else {
-                NEWNESS_FILTER_ACTIVE = false;
-
-                mFilterNewnessImageView.animate().setDuration(250)
-                                                 .scaleXBy(-0.1f)
-                                                 .scaleYBy(-0.1f)
-                                                 .alpha(ALPHA_INACTIVE_FILTER)
-                                                 .setInterpolator(new OvershootInterpolator());
-
-                mItemsMenuViewGroup.removeView(mFilterNewnessMenuLayout);
 
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
                 mSnackbar.show();
@@ -1109,6 +1244,57 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         getMenuInflater().inflate(R.menu.toolbar_menu_filter, menu);
 
+        mMenu = menu;
+
+        // Associate searchable configuration with the SearchView
+        final SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView =
+                (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                if (Utils.isQueryOk(query))
+                {
+                    Intent intent = new Intent();
+
+                    ArrayList<String> aux = null;
+
+                    intent.putExtra(PACKAGE + ".shops", aux);
+                    intent.putExtra(PACKAGE + ".colors", aux);
+                    intent.putExtra(PACKAGE + ".sections", aux);
+                    intent.putExtra(PACKAGE + ".minPrice", -1);
+                    intent.putExtra(PACKAGE + ".maxPrice", -1);
+                    intent.putExtra(PACKAGE + ".newness", false);
+                    intent.putExtra(PACKAGE + ".search", query);
+
+                    setResult(RESULT_OK, intent);
+
+                    finish();
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                if (newText.length() > 1)
+                {
+                    new GetSuggestionsFromServer().execute(newText);
+                }
+
+                return true;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -1120,6 +1306,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             onBackPressed();
 
             return true;
+        }
+
+        if (item.getItemId() == R.id.menu_item_options)
+        {
+            _resetFilter();
         }
 
         return super.onOptionsItemSelected(item);
@@ -1140,5 +1331,180 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+    /**
+     * Tarea en segundo plano para traer las sugerencias del servidor.
+     */
+    private class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
+    {
+        List<String> suggestions;
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            BufferedReader reader = null;
+            URL url = null;
+
+            try {
+                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT
+                        + "/suggest/" + params[0]);
+
+                Log.d(TAG, "Conectando con: " + fixedURL
+                        + " para buscar '" + params[0] + "'");
+
+                url = new URL(fixedURL);
+
+                if (url != null)
+                {
+                    URLConnection conn = url.openConnection();
+
+                    // Obtenemos la respuesta del servidor
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = "";
+
+                    // Leemos la respuesta
+                    while ((line = reader.readLine()) != null)
+                        sb.append(line + "");
+
+                    // Devolvemos la respuesta
+                    String content =  sb.toString();
+
+                    Log.d(TAG, content);
+
+                    JSONArray jsonArray = new JSONArray(content);
+                    suggestions = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++)
+                    {
+                        suggestions.add(jsonArray.getString(i));
+                    }
+                }
+
+            } catch (Exception e) {
+                Log.d(TAG, "Error conectando realizando busqueda");
+
+            } finally {
+                try {
+                    if (reader != null)
+                        reader.close();
+
+                } catch (IOException e) {
+                    Log.d(TAG, "Error cerrando conexion con el servidor");
+
+                }
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            String[] columns = new String[] { "_id", "text" };
+            Object[] temp = new Object[] { 0, "default" };
+
+            MatrixCursor cursor = new MatrixCursor(columns);
+
+            for(int i = 0; i < suggestions.size(); i++)
+            {
+                temp[0] = i;
+                temp[1] = suggestions.get(i);
+
+                cursor.addRow(temp);
+            }
+
+            final SearchView search = (SearchView)mMenu.findItem(R.id.menu_item_search).getActionView();
+
+            search.setSuggestionsAdapter(new SuggestionAdapter(FilterUI.this, cursor, suggestions));
+            search.getSuggestionsAdapter().notifyDataSetChanged();
+        }
+
+    } /* [END getSuggestionsFromServer] */
+
+    /**
+     * Metodo llamado cuando se hace click en el texto de la sugerencia.
+     * @param view
+     */
+    public void onClickText(View view)
+    {
+        TextView textView = (TextView)view;
+
+        if (Utils.isQueryOk(textView.getText().toString()))
+        {
+            Intent intent = new Intent();
+
+            ArrayList<String> aux = null;
+
+            intent.putExtra(PACKAGE + ".shops", aux);
+            intent.putExtra(PACKAGE + ".colors", aux);
+            intent.putExtra(PACKAGE + ".sections", aux);
+            intent.putExtra(PACKAGE + ".minPrice", -1);
+            intent.putExtra(PACKAGE + ".maxPrice", -1);
+            intent.putExtra(PACKAGE + ".newness", false);
+            intent.putExtra(PACKAGE + ".search", textView.getText().toString());
+
+            setResult(RESULT_OK, intent);
+
+            finish();
+        }
+    }
+
+    /**
+     * Metodo llamado cuando se hace click en el boton de la sugerencia.
+     * @param view
+     */
+    public void onClickButton(View view)
+    {
+        ImageButton imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
+
+        final SearchView search = (SearchView)mMenu.findItem(R.id.menu_item_search).getActionView();
+
+        search.setQuery(imageButton.getContentDescription().toString(), false);
+    }
+
+    /**
+     * Adapter para las sugerencias.
+     */
+    public class SuggestionAdapter extends CursorAdapter
+    {
+        private List<String> items;
+        private TextView text;
+        private ImageButton imageButton;
+
+        public SuggestionAdapter(Context context, Cursor cursor, List<String> items)
+        {
+            super(context, cursor, false);
+
+            this.items = items;
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor)
+        {
+            text.setText(items.get(cursor.getPosition()));
+            imageButton.setContentDescription(text.getText());
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent)
+        {
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View view = inflater.inflate(R.layout.suggestion_item, parent, false);
+
+            text = (TextView)view.findViewById(R.id.suggestion_item);
+            imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
+
+            return view;
+        }
+
+        @Override
+        public int getCount()
+        {
+            return items.size();
+        }
+
+    } /* [END SuggestionAdapter] */
 
 }

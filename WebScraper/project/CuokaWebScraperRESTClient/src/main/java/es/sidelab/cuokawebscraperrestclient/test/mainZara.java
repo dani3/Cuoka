@@ -3,7 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
-import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,34 +22,43 @@ public class mainZara
     public static void main(String[] args) throws Exception 
     {
         String shop = "http://www.zara.com/es/es/";
+        String section = "Bomber";
+        String htmlPath = "C:\\Users\\Dani\\Documents\\shops\\Zara_false\\true";
         List<Product> productList = new ArrayList<>();
       
         // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Zara_true\\true\\Zara_Bombers_true.html" );
+        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Zara_false\\true\\Zara_Camisas_true.html" );
         Document document = Jsoup.parse( html, "UTF-8" );
                   
         Elements products = document.select( "#main-product-list li.product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
+        int j = 0;
         for ( Element element : products )
-        {
+        {        
+            String path = htmlPath + "\\" + (section + "_" + j + ".html");
+            
             try 
-            {
-                List<ColorVariant> variants = new ArrayList<>();
-
-                // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                document = Jsoup.connect( element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                                  .header( "Accept-Language", "es" )
-                                                                  .ignoreHttpErrors( true ).get();
+            {               
+                List<ColorVariant> variants = new ArrayList<>();               
+                
+                File file = PythonManager.executeRenderProduct( element.attr( "href" ), path );
+                
+                // CRUCIAL para que al abrir el fichero este todo escrito.
+                Thread.sleep(2000);
+                
+                file = new File( path );
+                
+                document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
                 String different_price = null;
                 String link = element.attr( "href" );                 
-                String name = document.select( "div.right header h1" ).first().ownText(); 
+                String name = document.select( "div header > h1" ).first().text().replaceAll( "\\\\[nt]", "" ).toUpperCase(); 
                 String price = document.select( "span.price" ).first().attr( "data-price" ).replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
-                String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll("Ref. ", "").replaceAll( "/", "-" );
-                String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\n", " "); 
-                        
+                String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll( "Ref. ", "" ).replaceAll( "/", "" ).replaceAll( "\\\\[nt]", "" );
+                String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\\\\[nt]", "" ); 
+                     
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
                     different_price = document.select( "strong.product-price span" ).first()
@@ -58,12 +67,14 @@ public class mainZara
                                                                                     .replaceAll( ",", "." ).trim();
                                 
                 if ( description.length() > 255 )
-                    description = description.substring(0, 255);
+                    description = description.substring( 0, 255 );
                 
                 String colorReference = reference;
                 String colorName = document.select( "div.colors label" ).first()
                                                                         .select( "div.imgCont" )
-                                                                        .attr( "title" ).toUpperCase();
+                                                                        .attr( "title" ).toUpperCase()
+                                                                                        .trim()
+                                                                                        .replace('\\', '-');
                 
                 List<Image> imagesURL = new ArrayList<>();
                 Elements images = document.select( "#main-images div.media-wrap" );
@@ -76,37 +87,30 @@ public class mainZara
 
                 variants.add( new ColorVariant( colorReference, colorName, null, imagesURL ) );   
                 
-                // Si el producto es nuevo, se inserta directamente, si no, se actualiza con el nuevo color
-                if ( ! containsProduct( productList, reference ) )
-                {
-                    productList.add( new Product( Double.parseDouble( price )
+                productList.add( new Product( Double.parseDouble( price )
                                             , name
                                             , shop
                                             , ""
                                             , link 
                                             , description
                                             , true
-                                            , variants ) );                
-                } else {
-                    // Buscamos el producto
-                    for ( Product product : productList )
-                    {
-                        for ( int i = 0; i < product.getColors().size(); i++ )
-                        {
-                            ColorVariant color = product.getColors().get( i );
-
-                            if ( color.getReference().equals( reference ) )
-                            {
-                                product.getColors().addAll( variants );                            
-                                break;
-                            }                        
-                        }
-                    }
-                }
+                                            , variants ) );            
                 
-            } catch ( Exception e ) { e.printStackTrace(); }
+            } catch ( Exception e ) { 
+                e.printStackTrace(); 
+                
+            } finally {
+                // CRUCIAL llamar al recolector de basura
+                System.gc();
+                
+                PythonManager.deleteFile( path );
+                
+                j++;
+            }
             
         } // for products
+        
+        System.out.println(productList.size());
         
         Product p = productList.get( 0 );
         
@@ -134,8 +138,8 @@ public class mainZara
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
-    }     
-     
+    }    
+    
     private static boolean containsProduct( List<Product> productList, String reference )
     {
         for ( Product p : productList )
