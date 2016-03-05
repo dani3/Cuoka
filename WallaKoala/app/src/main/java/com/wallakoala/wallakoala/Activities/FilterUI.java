@@ -952,7 +952,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _resetFilterNewness()
     {
-        mShopAllCheckBox.setChecked(true);
+        mNewnessNewRadioButton.setChecked(false);
+        mNewnessAllRadioButton.setChecked(true);
     }
 
     /**
