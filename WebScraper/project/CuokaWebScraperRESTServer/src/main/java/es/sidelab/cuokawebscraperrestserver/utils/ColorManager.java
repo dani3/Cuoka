@@ -193,11 +193,11 @@ public class ColorManager
             {
                 return suggestedColors;
             }
-        }    
+        }   
         
         for ( String color : suggestedMaleColors )
         {
-            if ( color.toUpperCase().contains( word.toUpperCase() ) )
+            if ( color.toUpperCase().contains( word.toUpperCase() ) && ( ! suggestedColors.contains( color ) )  )
             {
                 suggestedColors.add( color );
             }
@@ -208,7 +208,7 @@ public class ColorManager
             }
         }
         
-        return null;
+        return suggestedColors;
     }
     
     /**

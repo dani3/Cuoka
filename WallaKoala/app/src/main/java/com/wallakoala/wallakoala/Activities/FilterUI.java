@@ -280,27 +280,27 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         SECTION_FILTER_MAN_2 = getResources().getString(R.string.filter_section_americanas);
         SECTION_FILTER_MAN_3 = getResources().getString(R.string.filter_section_camisas);
         SECTION_FILTER_MAN_4 = getResources().getString(R.string.filter_section_camisetas);
-        SECTION_FILTER_MAN_5 = getResources().getString(R.string.filter_section_chaquetas);
-        SECTION_FILTER_MAN_6 = getResources().getString(R.string.filter_section_chalecos);
-        SECTION_FILTER_MAN_7 = getResources().getString(R.string.filter_section_jeans);
-        SECTION_FILTER_MAN_8 = getResources().getString(R.string.filter_section_jerseis);
-        SECTION_FILTER_MAN_9 = getResources().getString(R.string.filter_section_pantalones);
-        SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_polos);
-        SECTION_FILTER_MAN_11 = getResources().getString(R.string.filter_section_shorts);
-        SECTION_FILTER_MAN_12 = getResources().getString(R.string.filter_section_trajes);
+        SECTION_FILTER_MAN_5 = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_MAN_6 = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_MAN_7 = getResources().getString(R.string.filter_section_polos);
+        SECTION_FILTER_MAN_8 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_MAN_9 = getResources().getString(R.string.filter_section_sport);
+        SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_sudaderas);
+        SECTION_FILTER_MAN_11 = getResources().getString(R.string.filter_section_trajes);
+        SECTION_FILTER_MAN_12 = getResources().getString(R.string.filter_section_zapatos);
 
         SECTION_FILTER_WOMAN_1 = getResources().getString(R.string.filter_section_abrigos);
-        SECTION_FILTER_WOMAN_2 = getResources().getString(R.string.filter_section_camisas);
-        SECTION_FILTER_WOMAN_3 = getResources().getString(R.string.filter_section_camisetas);
-        SECTION_FILTER_WOMAN_4 = getResources().getString(R.string.filter_section_chaquetas);
-        SECTION_FILTER_WOMAN_5 = getResources().getString(R.string.filter_section_chalecos);
-        SECTION_FILTER_WOMAN_6 = getResources().getString(R.string.filter_section_faldas);
-        SECTION_FILTER_WOMAN_7 = getResources().getString(R.string.filter_section_jeans);
-        SECTION_FILTER_WOMAN_8 = getResources().getString(R.string.filter_section_jerseis);
-        SECTION_FILTER_WOMAN_9 = getResources().getString(R.string.filter_section_monos);
-        SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_pantalones);
-        SECTION_FILTER_WOMAN_11 = getResources().getString(R.string.filter_section_shorts);
-        SECTION_FILTER_WOMAN_12 = getResources().getString(R.string.filter_section_vestidos);
+        SECTION_FILTER_WOMAN_2 = getResources().getString(R.string.filter_section_americanas);
+        SECTION_FILTER_WOMAN_3 = getResources().getString(R.string.filter_section_camisas);
+        SECTION_FILTER_WOMAN_4 = getResources().getString(R.string.filter_section_camisetas);
+        SECTION_FILTER_WOMAN_5 = getResources().getString(R.string.filter_section_faldas);
+        SECTION_FILTER_WOMAN_6 = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_WOMAN_7 = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_WOMAN_8 = getResources().getString(R.string.filter_section_monos);
+        SECTION_FILTER_WOMAN_9 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_sport);
+        SECTION_FILTER_WOMAN_11 = getResources().getString(R.string.filter_section_vestidos);
+        SECTION_FILTER_WOMAN_12 = getResources().getString(R.string.filter_section_zapatos);
     }
 
     /**
