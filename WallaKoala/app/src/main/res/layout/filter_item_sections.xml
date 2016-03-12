@@ -125,7 +125,7 @@
                     android:id="@+id/filter_section_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/filter_section_chalecos"
+                    android:text="@string/filter_section_jerseis"
                     android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
@@ -170,7 +170,7 @@
                     android:id="@+id/filter_section_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/filter_section_jeans"
+                    android:text="@string/filter_section_zapatos"
                     android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>
@@ -179,7 +179,7 @@
                     android:id="@+id/filter_section_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/filter_section_blazers"
+                    android:text="@string/filter_section_sport"
                     android:textColor="@color/colorMediumText"
                     android:layout_marginBottom="8dp"
                     app:buttonTint="@color/colorAccent"/>

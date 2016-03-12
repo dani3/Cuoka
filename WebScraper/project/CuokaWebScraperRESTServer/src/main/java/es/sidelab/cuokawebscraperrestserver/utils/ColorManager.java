@@ -57,11 +57,13 @@ public class ColorManager
         
         colorMap.put( "Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" } );
         
-        suggestedMaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "liso", "amarillo", "dorado", "azul"
-                                    , "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro", "rojo", "rosa", "granate", "naranja", "verde" } );
+        suggestedMaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
+                                    , "amarillo", "dorado", "azul", "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro"
+                                    , "rojo", "rosa", "granate", "naranja", "verde" } );
         
-        suggestedFemaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "lisa","amarilla", "dorada", "azul"
-                                    , "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra", "roja", "rosa", "granate", "naranja", "verde" } );
+        suggestedFemaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "lisa"
+                                    ,"amarilla", "dorada", "azul", "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra"
+                                    , "roja", "rosa", "granate", "naranja", "verde" } );
     }
     
     /**
@@ -193,11 +195,11 @@ public class ColorManager
             {
                 return suggestedColors;
             }
-        }    
+        }   
         
         for ( String color : suggestedMaleColors )
         {
-            if ( color.toUpperCase().contains( word.toUpperCase() ) )
+            if ( color.toUpperCase().contains( word.toUpperCase() ) && ( ! suggestedColors.contains( color ) )  )
             {
                 suggestedColors.add( color );
             }
@@ -208,7 +210,7 @@ public class ColorManager
             }
         }
         
-        return null;
+        return suggestedColors;
     }
     
     /**

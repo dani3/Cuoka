@@ -28,51 +28,52 @@ public class SectionManager
         suggestedSections = new ArrayList<>();
         maleSections      = new ArrayList<>();
         
-        sectionsMap.put( "Abrigos", new String[]{ "Cazadora", "Cazadoras", "Capa", "Capas", "Bomber", "Bombers"
-                                            , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetones", "Abrigo", "Abrigos" } );
+        sectionsMap.put( "Abrigos", new String[]{ "Cazadora", "Cazadoras", "Capa", "Capas", "Bomber", "Bombers", "Parka", "Parkas"
+                                            , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cardigans" } );
         
-        sectionsMap.put( "Americanas", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Chaqueton", "Chaquetones"
+        sectionsMap.put( "Americanas", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Chaleco", "Chalecos"
                                             , "Cazadora", "Cazadoras", "Bomber", "Bombers", "Americana", "Americanas" } );
         
         sectionsMap.put( "Camisas", new String[]{ "Blusa", "Blusas", "Camisola", "Camisolas"
-                                            , "Bluson", "Blusones", "Polo", "Polos", "Camisa", "Camisas" } );
+                                            , "Bluson", "Blusones", "Camisa", "Camisas" } );
         
-        sectionsMap.put( "Camisetas", new String[]{ "Top", "Tops", "Bodies", "Polo", "Polos", "Camiseta", "Camisetas" } );
+        sectionsMap.put( "Polos", new String[]{ "Polo", "Polos" } );
         
-        sectionsMap.put( "Chaquetas", new String[]{ "Cazadora", "Cazadoras", "Bomber", "Bombers"
-                                            , "Chaqueton", "Chaquetones", "Abrigo", "Abrigos", "Chaqueta", "Chaquetas" } );
-        
-        sectionsMap.put( "Jeans", new String[]{ "Vaqueros", "Vaquero", "Jeans", "Jean" } );
+        sectionsMap.put( "Camisetas", new String[]{ "Top", "Tops", "Bodies", "Camiseta", "Camisetas", "Henley", "T-Shirt" } );
         
         sectionsMap.put( "Jerseis", new String[]{ "Jersey", "Jerseys", "Sudadera", "Sudaderas", "Cardigan", "Cardigans", "Jersei", "Jerseis" } );
         
-        sectionsMap.put( "Pantalones", new String[]{ "Vaqueros", "Vaquero", "Jeans", "Jean", "Chinos", "Chinos", "Pantalon", "Pantalones" } );
+        sectionsMap.put( "Pantalones", new String[]{ "Vaqueros", "Vaquero", "Jeans", "Jean", "Chinos", "Chinos", "Pantalon", "Pantalones", "Leggins" } );
         
         sectionsMap.put( "Shorts", new String[]{ "Shorts", "Short" , "Pantalones cortos", "Pantalon corto", "Bermuda", "Bermudas" } );
         
-        sectionsMap.put( "Trajes", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Chaqueton", "Chaquetones", "Cazadora" , "Cazadoras" 
-                                            , "Bomber", "Bombers", "Americana", "Americanas", "Traje", "Trajes" } );
+        sectionsMap.put( "Trajes", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Americana", "Americanas", "Traje", "Trajes" } );
         
         sectionsMap.put( "Vestidos", new String[]{ "Vestido", "Vestidos" } );
         
         sectionsMap.put( "Faldas", new String[]{ "Falda", "Faldas", "Shorts", "Short", "Bermuda", "Bermudas" } );
         
-        sectionsMap.put( "Polos", new String[]{ "Polo", "Polos", "Blusa", "Blusas", "Bluson", "Blusones", "Camisola", "Camisolas" } );
+        sectionsMap.put( "Ponchos y Monos", new String[]{ "Mono", "Monos", "Kimono", "Kimonos", "Quimono", "Quimonos"
+                                        , "Peto", "Petos", "Poncho", "Poncho" } );
         
-        sectionsMap.put( "Chalecos", new String[]{ "Chaleco", "Chalecos" } );
+        sectionsMap.put( "Sudaderas", new String[]{ "Sudadera", "Sudaderas", "Jersey", "Jerseys", "Jersei", "Jerseis" } );
         
-        sectionsMap.put( "Monos", new String[]{ "Mono", "Monos", "Kimono", "Kimonos", "Quimono", "Quimonos", "Peto", "Petos" } );
+        sectionsMap.put( "Sport", new String[]{ "Leggin", "Leggins", "Sport", "Gym", "Gimnasia", "Jogging", "Easywear"
+                                        , "Deportivo", "Deportivos", "Sportwear", "Beachwear" } );
         
-        sectionsMap.put( "Sport", new String[]{ "Leggin", "Leggins", "Sport", "Gym", "Gimnasia", "Jogging" , "Easywear", "Deportivo", "Deportivos" } );
+        sectionsMap.put( "Zapatos", new String[]{ "Zapato", "Zapatos", "Calzado", "Bota", "Botas", "Botin", "Botines", "Sandalia", "Sandalias"
+                                        , "Manoletina", "Manoletinas", "Bailarina", "Zapatilla", "Zapatillas", "Zueco", "Zuecos", "Cuñas"
+                                        , "Chancla", "Chanclas", "Chancleta", "Chancletas" } );
         
         suggestedSections = Arrays.asList( new String[] { "Cazadora", "Bomber", "Chaqueta", "Chaquetón", "Abrigo", "Blazer"
                                         , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"
                                         , "Sudadera", "Cardigan", "Chinos", "Pantalones", "Pantalones cortos", "Bermuda", "Shorts", "Traje" 
-                                        , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"} );
+                                        , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"
+                                        , "Poncho", "Parka", "Zapatos", "Botas", "Sandalias", "Zapatillas" } );
     
         maleSections = Arrays.asList( new String[] { "Chaquetón", "Abrigo", "Polo", "Top", "Vaqueros", "Jeans", "Jersey", "Cardigan"
                                   , "Chinos", "Pantalones", "Pantalones cortos", "Shorts", "Traje", "Vestido", "Chaleco", "Mono"
-                                  , "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym" } );
+                                  , "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Poncho", "Zapatos" } );
     }
     
     /**

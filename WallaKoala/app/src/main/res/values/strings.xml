@@ -60,18 +60,16 @@
     <string name="filter_section_trajes">Trajes</string>
     <string name="filter_section_americanas">Americanas</string>
     <string name="filter_section_pantalones">Pantalones</string>
-    <string name="filter_section_jeans">Jeans</string>
     <string name="filter_section_abrigos">Abrigos</string>
     <string name="filter_section_sudaderas">Sudaderas</string>
-    <string name="filter_section_blazers">Blazers</string>
-    <string name="filter_section_chaquetas">Chaquetas</string>
     <string name="filter_section_faldas">Faldas</string>
     <string name="filter_section_vestidos">Vestidos</string>
     <string name="filter_section_shorts">Shorts</string>
     <string name="filter_section_jerseis">Jerseis</string>
-    <string name="filter_section_chalecos">Chalecos</string>
     <string name="filter_section_polos">Polos</string>
-    <string name="filter_section_monos">Monos</string>
+    <string name="filter_section_monos">Ponchos y Monos</string>
+    <string name="filter_section_sport">Sport</string>
+    <string name="filter_section_zapatos">Zapatos</string>
 
     <string name="filter_shops_all">Todas las tiendas</string>
     <string name="filter_shops_only_mine">Sólo mis tiendas</string>
