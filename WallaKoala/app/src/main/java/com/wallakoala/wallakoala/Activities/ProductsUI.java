@@ -593,6 +593,8 @@ public class ProductsUI extends AppCompatActivity
 
                 _reinitializeData();
 
+                mFilterMap = _initFilterMap();
+
                 if (mProductsRecyclerView != null)
                     mProductsRecyclerView.setVisibility(View.GONE);
 

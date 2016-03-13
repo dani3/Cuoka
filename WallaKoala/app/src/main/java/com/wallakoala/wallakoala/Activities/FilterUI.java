@@ -353,7 +353,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         !SHOP_FILTER_ACTIVE &&
                         !SECTION_FILTER_ACTIVE &&
                         !PRICE_FILTER_ACTIVE &&
-                        !NEWNESS_FILTER_ACTIVE) {
+                        !NEWNESS_FILTER_ACTIVE)
+                {
                     mSnackbar = Snackbar.make(mCoordinatorLayout
                             , "No se ha establecido ningún filtro"
                             , Snackbar.LENGTH_SHORT);
