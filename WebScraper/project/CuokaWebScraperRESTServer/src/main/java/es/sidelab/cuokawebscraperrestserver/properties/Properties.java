@@ -28,5 +28,5 @@ public class Properties
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;
     public static final double MEDIUM_SIMILARITY_THRESHOLD = 0.925f;
     
-    public static final short MAX_SUGGESTIONS = 5;
+    public static final short MAX_SUGGESTIONS = 4;
 }

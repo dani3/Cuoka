@@ -561,7 +561,7 @@ public class Controller
             
             if ( org.apache.commons.lang3.StringUtils
                             .getJaroWinklerDistance( keyword
-                                    , single ) >= Properties.MEDIUM_SIMILARITY_THRESHOLD )
+                                    , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
             {
                 bingo = true;
                 if ( bingo )
@@ -579,7 +579,7 @@ public class Controller
             
             if ( org.apache.commons.lang3.StringUtils
                             .getJaroWinklerDistance( keyword
-                                    , single ) >= Properties.MEDIUM_SIMILARITY_THRESHOLD )
+                                    , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
             {
                 bingo = true;
                 if ( bingo )
