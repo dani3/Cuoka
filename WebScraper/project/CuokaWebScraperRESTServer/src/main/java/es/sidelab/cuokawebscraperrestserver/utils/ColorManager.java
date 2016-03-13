@@ -57,6 +57,14 @@ public class ColorManager
         
         colorMap.put( "Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" } );
         
+        colorMap.put( "Cuadros", new String[]{ "Cuadro", "Cuadros" } );
+        
+        colorMap.put( "Rayas", new String[]{ "Raya", "Rayas" } );
+        
+        colorMap.put( "Flores", new String[]{ "Flor", "Flores", "Floral" } );
+        
+        colorMap.put( "Estampado", new String[]{ "Estampado", "Estampados" } );
+        
         suggestedMaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
                                     , "amarillo", "dorado", "azul", "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro"
                                     , "rojo", "rosa", "granate", "naranja", "verde" } );
