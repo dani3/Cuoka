@@ -141,6 +141,9 @@ public class ProductsUI extends AppCompatActivity
     /* SharedPreferences */
     protected SharedPreferencesManager mSharedPreferences;
 
+    /* AsynTasks */
+    protected AsyncTask mConnectToServer, mRetreiveProductsFromServer;
+
     /* Others */
     protected Menu mMenu;
     protected STATE mState;
@@ -161,7 +164,7 @@ public class ProductsUI extends AppCompatActivity
         _initNavigationDrawers();
         _initAnimations();
 
-        new ConnectToServer().execute();
+        mConnectToServer = new ConnectToServer().execute();
     }
 
     /**
@@ -339,7 +342,7 @@ public class ProductsUI extends AppCompatActivity
                             {
                                 DAYS_OFFSET++;
 
-                                new ConnectToServer().execute();
+                                mConnectToServer = new ConnectToServer().execute();
                             }
                         }
                     }
@@ -578,13 +581,13 @@ public class ProductsUI extends AppCompatActivity
 
                     mFilterMap = _initFilterMap();
 
-                    new ConnectToServer().execute();
+                    mConnectToServer = new ConnectToServer().execute();
 
                 } else {
                     // Lo ponemos a -1 para detectar cuando estamos en los filtros
                     DAYS_OFFSET = -1;
 
-                    new RetreiveProductsFromServer().execute();
+                    mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
 
                 }
 
@@ -601,7 +604,7 @@ public class ProductsUI extends AppCompatActivity
                 // Lo ponemos a -1 para detectar cuando estamos en los filtros
                 DAYS_OFFSET = -1;
 
-                new RetreiveProductsFromServer().execute();
+                mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
 
             }
 
@@ -640,6 +643,14 @@ public class ProductsUI extends AppCompatActivity
     public void onDestroy()
     {
         super.onDestroy();
+
+        if (mConnectToServer != null)
+            if (!mConnectToServer.isCancelled())
+                mConnectToServer.cancel(true);
+
+        if (mRetreiveProductsFromServer != null)
+            if (!mRetreiveProductsFromServer.isCancelled())
+                mRetreiveProductsFromServer.cancel(true);
     }
 
     /**
@@ -694,6 +705,8 @@ public class ProductsUI extends AppCompatActivity
                         completionService.submit(connectionSearchTask);
                     }
 
+                    if (isCancelled())
+                        return null;
                 }
 
                 // Metemos en content el resultado de cada uno
@@ -702,6 +715,9 @@ public class ProductsUI extends AppCompatActivity
                     String future = completionService.take().get();
                     if (future != null)
                         content.add(future);
+
+                    if (isCancelled())
+                        return null;
                 }
 
                 EMPTY = content.isEmpty();
@@ -1055,6 +1071,9 @@ public class ProductsUI extends AppCompatActivity
                     ConnectionTask connectionTask = new ConnectionTask(i);
 
                     completionService.submit(connectionTask);
+
+                    if (isCancelled())
+                        return null;
                 }
 
                 // Metemos en content el resultado de cada uno
@@ -1063,6 +1082,9 @@ public class ProductsUI extends AppCompatActivity
                     String future = completionService.take().get();
                     if (future != null)
                         content.add(future);
+
+                    if (isCancelled())
+                        return null;
                 }
 
                 // Si content es vacio, es que han fallado todas las conexiones.
@@ -1256,13 +1278,13 @@ public class ProductsUI extends AppCompatActivity
                 {
                     DAYS_OFFSET++;
 
-                    new ConnectToServer().execute();
+                    mConnectToServer = new ConnectToServer().execute();
 
                 } else if (mProductsCandidatesDeque.isEmpty() && mProductsDisplayedList.size() < MIN_PRODUCTS && (DAYS_OFFSET >= 0)) {
 
                     DAYS_OFFSET++;
 
-                    new ConnectToServer().execute();
+                    mConnectToServer = new ConnectToServer().execute();
 
                 } else {
 
@@ -1436,7 +1458,7 @@ public class ProductsUI extends AppCompatActivity
                 @Override
                 public void onClick(View view)
                 {
-                    new ConnectToServer().execute();
+                    mConnectToServer = new ConnectToServer().execute();
                 }
             });
 
@@ -1448,7 +1470,7 @@ public class ProductsUI extends AppCompatActivity
                 @Override
                 public void onClick(View view)
                 {
-                    new RetreiveProductsFromServer().execute();
+                    mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
                 }
             });
         }
