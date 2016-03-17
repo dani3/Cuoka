@@ -44,9 +44,6 @@ public class mainZara
                 
                 File file = PythonManager.executeRenderProduct( element.attr( "href" ), path );
                 
-                // CRUCIAL para que al abrir el fichero este todo escrito.
-                Thread.sleep(2000);
-                
                 file = new File( path );
                 
                 document = Jsoup.parse( file, "UTF-8" );

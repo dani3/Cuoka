@@ -57,13 +57,25 @@ public class ColorManager
         
         colorMap.put( "Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" } );
         
+        colorMap.put( "Cuadros", new String[]{ "Cuadro", "Cuadros" } );
+        
+        colorMap.put( "Rayas", new String[]{ "Raya", "Rayas" } );
+        
+        colorMap.put( "Lunares", new String[]{ "Lunares", "Moteado", "Moteados" } );
+        
+        colorMap.put( "Flores", new String[]{ "Flor", "Flores", "Floral" } );
+        
+        colorMap.put( "Estampado", new String[]{ "Estampado", "Estampados" } );
+        
+        colorMap.put( "Cuero", new String[]{ "Cuero", "Leather", "Piel", "Pieles" } );
+        
         suggestedMaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
                                     , "amarillo", "dorado", "azul", "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro"
-                                    , "rojo", "rosa", "granate", "naranja", "verde" } );
+                                    , "rojo", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" } );
         
         suggestedFemaleColors = Arrays.asList( new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "lisa"
                                     ,"amarilla", "dorada", "azul", "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra"
-                                    , "roja", "rosa", "granate", "naranja", "verde" } );
+                                    , "roja", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" } );
     }
     
     /**
