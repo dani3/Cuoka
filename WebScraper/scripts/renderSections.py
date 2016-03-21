@@ -1,3 +1,4 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -14,7 +15,7 @@ dr = webdriver.PhantomJS()
 
 # Eliminamos todos los ficheros antiguos
 for file in os.listdir(path):
-    if (".txt" in file)
+    if (".txt" in file):
         os.remove(file)
 
 for k,v in urls:    
