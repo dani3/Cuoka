@@ -66,7 +66,7 @@ public class ScraperManager
         LOG.info( "Buscando tiendas online..." );
         
         List<Shop> shops = new ArrayList<>();
-        File[] folders = new File( Properties.HTML_PATH ).listFiles();
+        File[] folders = new File( Properties.SHOPS_PATH ).listFiles();
         
         // Recorremos las tiendas
         for ( File folder : folders )
@@ -86,7 +86,7 @@ public class ScraperManager
                 {               
                     LOG.info( folderName.replace( "_true" , "" ) + " esta ONLINE" );
                     // Recorremos hombre y mujer si esta online
-                    File[] subFolders = new File( Properties.HTML_PATH + "\\" + folderName ).listFiles();
+                    File[] subFolders = new File( Properties.SHOPS_PATH + "\\" + folderName ).listFiles();
                     List<Section> sectionsList = new ArrayList<>();
 
                     for( File subFolder : subFolders )
@@ -102,55 +102,25 @@ public class ScraperManager
                             if ( man.equals( "false" ) )
                                 shopActivity.setWoman( true);
 
-                            // Recorremos los htmls dentro
-                            File[] sections = new File( Properties.HTML_PATH + "\\" 
+                            // Recorremos los txt dentro
+                            File[] sections = new File( Properties.SHOPS_PATH + "\\" 
                                                     + folderName + "\\" + man ).listFiles();
-
 
                             for ( File section : sections )
                             {      
-                                if ( section.getName().contains( ".html" ) )
+                                if ( section.getName().contains( ".txt" ) )
                                 {                             
                                     Section s = new Section();
-                                    String sectionName = section.getName()
-                                                                .substring( section.getName().indexOf( "_" ) + 1
-                                                                        , section.getName().lastIndexOf( "_" ) );
+                                    String sectionName = section.getName().replace( ".txt", "" );
 
                                     s.setMan( Boolean.valueOf( man ) );
                                     s.setName( sectionName );
                                     s.setPath( section.getAbsolutePath() );
 
                                     sectionsList.add( s );
-
-                                } else {
-                                    SectionActivityStats sectionActivity = 
-                                                            new SectionActivityStats( 
-                                                                        section.getName().replaceAll( ".txt", "" ) );
-
-                                    boolean found = false;
-                                    int i = 0;
-
-                                    while ( ( ! found ) && ( i < sections.length ) )
-                                    {
-                                        String shopName = folderName.replace( "_true" , "" );
-                                        String total = shopName + "_" 
-                                                            + section.getName().replaceAll( ".txt", "" ) 
-                                                            + "_" + man + ".html";
-
-                                        if( total.equals( sections[i++].getName() ) )
-                                        {
-                                            found = true;
-                                        }
-                                    }
-
-
-                                    sectionActivity.setHtmlOK( found );
-                                    sectionActivity.setMan( Boolean.valueOf( man ) );
-
-                                    sectionsActivityList.add( sectionActivity );
-                                }
-                            } // for htmls                    
-                        }
+                                } 
+                            } // for txts    
+                        }                   
                     } // for hombre/mujer
 
                     try 
@@ -164,7 +134,7 @@ public class ScraperManager
                                         , sectionsList
                                         , true ) );
 
-                        shopActivity.setUrl(url);
+                        shopActivity.setUrl( url );
 
                     } catch ( FileNotFoundException ex ) {
                         LOG.error( "Error abriendo el fichero de 'url.txt'" );
@@ -179,9 +149,8 @@ public class ScraperManager
                         ActivityStatsManager.addShopActivity( shopActivity );
                     }     
 
-                }
-                else{
-                    shopActivity.setOnline(false);
+                } else {
+                    shopActivity.setOnline( false );
                     ActivityStatsManager.addShopActivity( shopActivity );
                 }
             }
