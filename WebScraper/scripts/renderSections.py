@@ -12,6 +12,11 @@ urls = [("Seccion 1", "URL"),
 
 dr = webdriver.PhantomJS()
 
+# Eliminamos todos los ficheros antiguos
+for file in os.listdir(path):
+    if (".txt" in file)
+        os.remove(file)
+
 for k,v in urls:    
     dr.get(v)
 
