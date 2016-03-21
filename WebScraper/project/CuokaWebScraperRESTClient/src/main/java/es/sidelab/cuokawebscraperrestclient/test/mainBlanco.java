@@ -4,7 +4,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import java.io.File;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -18,24 +18,19 @@ public class mainBlanco
     {        
         // Lista preparada para la concurrencia donde escribiran todos los scrapers
         List<Product> productList = new ArrayList<>();
-        
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\Blanco_true\\false\\Blanco_Blazers_false.html" );
-        
-        Document document = Jsoup.parse( html, "UTF-8" );
-        
-        // Guardamos los links de los productos
-        Elements products = document.select( "div.cell-1 a.cell-link" );
+        // Lista con los links de cada producto
+        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Camisas_true.html" );
             
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
-            document = Jsoup.connect( "https://www.blanco.com/" +  element.attr( "href" ) )
+            Document document = Jsoup.connect( productLink )
                                 .header( "Accept-Language", "es" )
                                 .timeout( Properties.TIMEOUT )
                                 .ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
             String different_price = null;
-            String link = "https://www.blanco.com/" + element.attr( "href" );
+            String link = productLink;
             String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
             String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
             String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );

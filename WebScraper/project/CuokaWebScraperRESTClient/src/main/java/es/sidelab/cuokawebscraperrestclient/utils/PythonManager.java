@@ -12,22 +12,54 @@ import java.io.IOException;
 public class PythonManager 
 {
     /**
-     * Metodo que ejecuta el script 'RenderPages'.
+     * Metodo que ejecuta el script 'renderSections.py'.
      * @return true si se ha ejecutado correctamente.
      * @throws IOException 
      */
-    public static boolean executeRenderPages() throws IOException
+    public static boolean executeRenderSections() throws IOException
     {
-        Process p = Runtime.getRuntime().exec( "python "
-                            + Properties.RENDER_SCRIPT + "renderPages.py" );
+        File[] folders = new File( Properties.SHOPS_PATH ).listFiles();
         
-        File file = new File( Properties.DONE_FILE_PYTHON );
-        while ( ! file.exists() ) 
+        // Recorremos las tiendas
+        for ( File folder : folders )
         {
-            file = new File( Properties.DONE_FILE_PYTHON );
+            if ( folder.isDirectory() )
+            {
+                // Sacamos el nombre de la tienda ('tienda_online')
+                String folderName = folder.getName();
+                
+                if ( folderName.contains( "true" ) )
+                {  
+                    // Recorremos hombre y mujer si esta online
+                    File[] subFolders = new File( Properties.SHOPS_PATH + "\\" + folderName ).listFiles();
+                    
+                    for( File subFolder : subFolders )
+                    {
+                        if ( subFolder.isDirectory() )
+                        {
+                            // Sacamos si es hombre o mujer
+                            String man = subFolder.getName();                            
+                            String path = Properties.SHOPS_PATH + folderName + "\\" + man + "\\";
+                            
+                            // Ejecutamos el script de la tienda
+                            Process p = Runtime.getRuntime().exec( "python "
+                                                    + path + "renderSections.py" );
+                            
+                            // Nos quedamos esperando hasta que termine
+                            File file = new File( path + "done.dat" );
+                            while ( ! file.exists() ) 
+                            {
+                                file = new File( path + "done.dat" );
+                            }
+                            
+                            file.delete();
+                        }
+                    }
+                }
+            }
         }
         
-        return file.delete();
+        return true;
     }
     
     /**

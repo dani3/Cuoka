@@ -15,7 +15,7 @@ public class main
     {    
         LOG.info( "Renderizando paginas" );
         
-        if ( PythonManager.executeRenderPages() )
+        if ( PythonManager.executeRenderSections() )
         {
             LOG.info( "Buscamos la lista de tiendas" );
 
