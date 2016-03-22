@@ -7,7 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
-import java.io.File;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,28 +30,25 @@ public class BlancoScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
+    public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException
     {        
-        File html = new File( htmlPath );
-        Document document = Jsoup.parse( html, "UTF-8" );
+        // Lista con los links de cada producto
+        List<String> productsLink = FileManager.getListOfLinks( filePath );
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        // Guardamos los links de los productos
-        Elements products = document.select( "div.cell-1 a.cell-link" );
             
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
             try 
             {
-                document = Jsoup.connect( shop.getURL().toString() +  element.attr( "href" ) )
+                Document document = Jsoup.connect( productLink )
                                     .header( "Accept-Language", "es" )
                                     .timeout( Properties.TIMEOUT )
                                     .ignoreHttpErrors( true ).get();
 
                 // Obtener todos los atributos propios del producto
-                String link = shop.getURL().toString() + element.attr( "href" );
+                String link = productLink;
                 String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
                 String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
                 String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );

@@ -19,14 +19,14 @@ public class mainBlanco
         // Lista preparada para la concurrencia donde escribiran todos los scrapers
         List<Product> productList = new ArrayList<>();
         // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Camisas_true.html" );
+        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\Camisas.txt" );
             
         for ( String productLink : productsLink )
         {
             Document document = Jsoup.connect( productLink )
-                                .header( "Accept-Language", "es" )
-                                .timeout( Properties.TIMEOUT )
-                                .ignoreHttpErrors( true ).get();
+                                     .header( "Accept-Language", "es" )
+                                     .timeout( Properties.TIMEOUT )
+                                     .ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
             String different_price = null;

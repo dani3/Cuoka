@@ -4,6 +4,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +15,26 @@ import org.jsoup.select.Elements;
 
 public class mainHyM 
 {    
-    public static void main(String[] args) throws Exception {
-        
+    public static void main(String[] args) throws Exception 
+    {        
         // Lista de productos
         List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\HyM_true\\true\\HyM_Jerseis_true.html");
-        Document document = Jsoup.parse( html, "UTF-8" );
-          
-        // Obtener los links a todos los productos. 
-        // En este caso, los links estan en el 'a' que hay dentro de los 'h3' llamado 'product-item-headline'.
-        // Los links los guardamos en una lista de Element llamada 'products'.
-        Elements products = document.select( "h3.product-item-headline > a" );
-          
-        // Recorremos todos los productos y sacamos sus atributos
-        for ( Element element : products )
+        // Lista con los links de cada producto
+        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\Monos.txt" );
+            
+        for ( String productLink : productsLink )
         {
             // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-            document = Jsoup.connect( "http://www2.hm.com/"
-                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                      .header( "Accept-Language", "es" )
-                                                      .ignoreHttpErrors( true ).get();
+            Document document = Jsoup.connect( productLink )
+                                     .timeout( Properties.TIMEOUT )
+                                     .header( "Accept-Language", "es" )
+                                     .ignoreHttpErrors( true ).get();
 
             // Obtener los atributos propios del producto
-            String link = "http://www2.hm.com/" + element.attr( "href" );
+            String link = productLink;
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
             String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
+            String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
             String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
             
             if ( description.length() > 255 )

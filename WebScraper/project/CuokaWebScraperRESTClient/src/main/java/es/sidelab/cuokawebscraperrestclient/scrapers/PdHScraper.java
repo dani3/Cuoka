@@ -7,7 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
-import java.io.File;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,32 +28,29 @@ public class PdHScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
-    {        
-        File html = new File( htmlPath );
-        Document document = Jsoup.parse( html, "UTF-8" );
+    public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException
+    {                
+        // Lista con los links de cada producto
+        List<String> productsLink = FileManager.getListOfLinks( filePath );
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
         int colorId = 1;
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
             try 
             {
                 List<ColorVariant> variants = new ArrayList<>();
 
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                document = Jsoup.connect( shop.getURL().toString()
-                                + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                          .header( "Accept-Language", "es" )
-                                                          .ignoreHttpErrors( true ).get();
+                Document document = Jsoup.connect( productLink ).timeout( Properties.TIMEOUT )
+                                                                .header( "Accept-Language", "es" )
+                                                                .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
-                String link = shop.getURL().toString() + element.attr( "href" );
+                String link = productLink;
                 String name = document.select( "#product-information h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
