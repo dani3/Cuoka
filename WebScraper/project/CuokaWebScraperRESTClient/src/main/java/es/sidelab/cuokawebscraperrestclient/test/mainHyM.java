@@ -4,6 +4,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class mainHyM
                                      .header( "Accept-Language", "es" )
                                      .ignoreHttpErrors( true ).get();
 
+            Printer.print(document.html());
+            
             // Obtener los atributos propios del producto
             String link = productLink;
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 

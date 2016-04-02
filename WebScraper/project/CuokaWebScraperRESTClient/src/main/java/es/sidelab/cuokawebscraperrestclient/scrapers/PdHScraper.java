@@ -7,7 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class PdHScraper implements Scraper
     public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException
     {                
         // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( filePath );
+        List<String> productsLink = getListOfLinks( filePath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
@@ -45,9 +45,10 @@ public class PdHScraper implements Scraper
                 List<ColorVariant> variants = new ArrayList<>();
 
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                Document document = Jsoup.connect( productLink ).timeout( Properties.TIMEOUT )
-                                                                .header( "Accept-Language", "es" )
-                                                                .ignoreHttpErrors( true ).get();
+                Document document = Jsoup.connect( productLink )
+                                         .timeout( Properties.TIMEOUT )
+                                         .header( "Accept-Language", "es" )
+                                         .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
@@ -174,6 +175,27 @@ public class PdHScraper implements Scraper
         return url;
     } 
     
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "ul.product-listing div.content_product a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
+    
+    /*
+     * Metodo que devuelve true si el producto esta ya en la lista
+     */
     private static boolean containsProduct( List<Product> productList, String reference, String section )
     {
         for ( Product p : productList )

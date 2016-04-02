@@ -28,8 +28,6 @@ public class ZaraScraper implements Scraper
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
-    private static final Logger LOG = Logger.getLogger( SpringfieldScraper.class );
-    
     @Override
     public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
     {        

@@ -7,7 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,6 @@ import org.jsoup.select.Elements;
 
 public class BlancoScraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger( BlancoScraper.class );
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
@@ -33,7 +32,7 @@ public class BlancoScraper implements Scraper
     public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException
     {        
         // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( filePath );
+        List<String> productsLink = getListOfLinks( filePath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
@@ -43,9 +42,9 @@ public class BlancoScraper implements Scraper
             try 
             {
                 Document document = Jsoup.connect( productLink )
-                                    .header( "Accept-Language", "es" )
-                                    .timeout( Properties.TIMEOUT )
-                                    .ignoreHttpErrors( true ).get();
+                                         .header( "Accept-Language", "es" )
+                                         .timeout( Properties.TIMEOUT )
+                                         .ignoreHttpErrors( true ).get();
 
                 // Obtener todos los atributos propios del producto
                 String link = productLink;
@@ -117,4 +116,22 @@ public class BlancoScraper implements Scraper
         
         return url;
     } 
+    
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "div.products-list a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
 }

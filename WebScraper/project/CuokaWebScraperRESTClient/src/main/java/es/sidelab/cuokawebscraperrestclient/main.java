@@ -25,7 +25,7 @@ public class main
             LOG.info( "Se han encontrado " + shops.size() + " tiendas" );
 
             // Ejecutamos concurrentemente los scrapers
-            MultithreadManager.parallelScrap( shops );
+            //MultithreadManager.parallelScrap( shops );
         }        
     }    
 }

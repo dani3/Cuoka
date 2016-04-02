@@ -28,147 +28,95 @@ public class SpringfieldScraper implements Scraper
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
-    private static final Logger LOG = Logger.getLogger( SpringfieldScraper.class );
-    
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
-    {        
-        List<String> pages = new ArrayList<>();
+    public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException
+    {       
+        // Lista con los links de cada producto
+        List<String> productsLink = getListOfLinks( filePath, shop.getURL().toString() ); 
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        boolean finished = false;
-        int i = 0;
-        
-        File html = new File( htmlPath );
-        
-        // Parseamos el html producido por python
-        Document document = Jsoup.parse( html, "UTF-8" );
-        
-        // Nos quedamos con las paginas si las hay
-        Elements pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
-        
-        // Si hay varias paginas...
-        for ( Element page : pagesElements )
-            pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
             
-        // Si solo hay una pagina, solo se iterara una vez
-        while ( ! finished )
+        for ( String productLink : productsLink )
         {
-            // Obtener el campo info de todos los productos
-            Elements products = document.select( "div.product-name > a.name-link" );
+            try {
+                // Obtener el HTML del producto
+                Document document = Jsoup.connect( productLink )
+                                         .timeout( Properties.TIMEOUT )
+                                         .header( "Accept-Language", "es" )
+                                         .ignoreHttpErrors( true ).get();
 
-            for ( Element element : products )
-            {
-                try {
-                    // Obtener el HTML del producto
-                    document = Jsoup.connect( element.attr( "href" ) )
-                                    .timeout( Properties.TIMEOUT )
-                                    .header( "Accept-Language", "es" )
-                                    .ignoreHttpErrors( true ).get();
+                // Obtener los atributos del producto
+                String link = productLink;
+                String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
+                String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+                String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
+                String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
 
-                    // Obtener los atributos del producto
-                    String link = element.attr( "href" );
-                    String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
-                    String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-                    String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
-                    String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
-                    
-                    if ( description.length() > 255 )
-                        description = description.substring(0, 255);
-                    
-                    // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
-                    if ( ! containsProduct( productList, reference ) )
-                    {
-                        List<ColorVariant> variants = new ArrayList<>();
+                if ( description.length() > 255 )
+                    description = description.substring(0, 255);
 
-                        // Obtener los colores disponibles
-                        Elements colors = document.select( "ul.c02__swatch-list > li" );
-
-                        for ( Element color : colors )
-                        {                    
-                            // Sacamos el link del color y nos conectamos
-                            String colorLink = color.select( "a.swatchanchor" ).attr( "href" );
-                            document = Jsoup.connect( colorLink )   
-                                        .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
-
-                            // Obtenemos el nombre del color y la URL del icono 
-                            String colorName = color.select("span.screen-reader-text").first().ownText().toUpperCase();
-                            String colorURL = color.select( "span.c02__square" ).attr( "style" );
-                            
-                            if ( ( colorURL != null ) && ( ! colorURL.isEmpty() ) )
-                                colorURL = colorURL.replace( "background: url(" , "" ).replace( ")", "" );  
-                            else
-                                colorURL = null;                     
-
-                            // Si hay varios colores, nos quedamos solo con las imagenes del color actual
-                            Elements images = document.select( "div.c01--navdots div.c01__media" );
-
-                            // Sacamos las URLs de las imagenes anteriores
-                            List<Image> imagesURL = new ArrayList<>();
-                            for ( Element img : images )
-                                imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );                            
-
-                            // Añadimos un nuevo ColorVariant a la lista 
-                            variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
-                        }
-
-                        if ( ! colors.isEmpty() )
-                        {
-                            productList.add( new Product( Double.parseDouble( price )
-                                                , name
-                                                , shop.getName()
-                                                , section.getName()
-                                                , link 
-                                                , description
-                                                , section.isMan()
-                                                , variants ) );
-                            prodOK++;
-                        }
-                        else
-                            prodNOK++;
-                    }
-
-                } catch ( Exception e ) { prodNOK++; }
-
-            } // for products
-            
-            // Si hay varias paginas, nos conectamos a la que toque
-            if ( ! pagesElements.isEmpty() )
-            {
-                if ( i < pages.size() )
+                // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
+                if ( ! containsProduct( productList, reference ) )
                 {
-                    document = Jsoup.connect( pages.get( i ) ).timeout( Properties.TIMEOUT ).get();
+                    List<ColorVariant> variants = new ArrayList<>();
 
-                    // Sacamos nuevas paginas si las hay
-                    pagesElements = document.select( "ul.pagination__list li.pagination__list-item a" );
-                    for ( Element page : pagesElements )
-                    {
-                        // Anadimos solo las que no esten ya
-                        if ( ! pages.contains( page.attr( "href" ).concat( "&format=ajax" ) ) && 
-                           ( ! page.ownText().equals( "1" ) ) )
-                        {
-                            pages.add( page.attr( "href" ).concat( "&format=ajax" ) );
-                        }
+                    // Obtener los colores disponibles
+                    Elements colors = document.select( "ul.c02__swatch-list > li" );
+
+                    for ( Element color : colors )
+                    {                    
+                        // Sacamos el link del color y nos conectamos
+                        String colorLink = color.select( "a.swatchanchor" ).attr( "href" );
+                        document = Jsoup.connect( colorLink )   
+                                    .timeout( Properties.TIMEOUT ).ignoreHttpErrors( true ).get();
+
+                        // Obtenemos el nombre del color y la URL del icono 
+                        String colorName = color.select("span.screen-reader-text").first().ownText().toUpperCase();
+                        String colorURL = color.select( "span.c02__square" ).attr( "style" );
+
+                        if ( ( colorURL != null ) && ( ! colorURL.isEmpty() ) )
+                            colorURL = colorURL.replace( "background: url(" , "" ).replace( ")", "" );  
+                        else
+                            colorURL = null;                     
+
+                        // Si hay varios colores, nos quedamos solo con las imagenes del color actual
+                        Elements images = document.select( "div.c01--navdots div.c01__media" );
+
+                        // Sacamos las URLs de las imagenes anteriores
+                        List<Image> imagesURL = new ArrayList<>();
+                        for ( Element img : images )
+                            imagesURL.add( new Image( img.select( "img" ).first().attr( "src" ) ) );                            
+
+                        // Añadimos un nuevo ColorVariant a la lista 
+                        variants.add( new ColorVariant( reference, colorName, colorURL, imagesURL ) );
                     }
+
+                    if ( ! colors.isEmpty() )
+                    {
+                        productList.add( new Product( Double.parseDouble( price )
+                                            , name
+                                            , shop.getName()
+                                            , section.getName()
+                                            , link 
+                                            , description
+                                            , section.isMan()
+                                            , variants ) );
+                        prodOK++;
+                    }
+                    else
+                        prodNOK++;
                 }
-                
-                finished = ( ++i > pages.size() );
-                
-            } else 
-                finished = true;
-            
-        } // while
+
+            } catch ( Exception e ) { prodNOK++; }
+
+        } // for products
         
         ActivityStatsManager.updateProducts( shop.getName(), section, prodOK, prodNOK );  
         
         return productList;
     }
     
-    /*
-     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios
-     */
     @Override
     public String fixURL( String url )
     {
@@ -177,6 +125,24 @@ public class SpringfieldScraper implements Scraper
         
         return url;
     } 
+    
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "a.c05__thumb-link" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
     
     /*
      * Metodo que devuelve true si el producto esta ya en la lista
