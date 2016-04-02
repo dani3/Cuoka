@@ -1,7 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient.beans;
 
 /**
- * @class Clase que representa una sección de una tienda, contendrá el path al fichero,
+ * @class Clase que representa una sección de una tienda, contendrá el path,
  *        el nombre y el sexo.
  * 
  * @author Daniel Mancebo Aldea

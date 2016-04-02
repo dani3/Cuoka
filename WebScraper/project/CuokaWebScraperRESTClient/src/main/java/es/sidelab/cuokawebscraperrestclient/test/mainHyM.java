@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.Printer;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,28 +19,29 @@ public class mainHyM
 {    
     public static void main(String[] args) throws Exception 
     {        
-        String url = "http://www2.hm.com/es_es/";
+        String url = "http://www2.hm.com/";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\";
+        String sectionName = "Americanas";
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( 
-                "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Camisas.html", url );
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
             
         for ( String productLink : productsLink )
         {
-            // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-            Document document = Jsoup.connect( productLink )
-                                     .timeout( Properties.TIMEOUT )
-                                     .header( "Accept-Language", "es" )
-                                     .ignoreHttpErrors( true ).get();
-
-            Printer.print(document.html());
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Americanas_PRODUCTO.html";
+            
+            File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
+            
+            Document document = Jsoup.parse( file, "UTF-8" );
             
             // Obtener los atributos propios del producto
             String link = productLink;
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "\\u20AC", "" ).replaceAll( ",", "." ).trim();
             String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
             String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
+            
+            Printer.print(price);
             
             if ( description.length() > 255 )
                 description = description.substring(0, 255);
@@ -77,6 +79,11 @@ public class mainHyM
                                     , true
                                     , variants ) );
             }
+            
+            // CRUCIAL llamar al recolector de basura
+            System.gc();
+                
+            PythonManager.deleteFile( pathProduct );
             
         } // for products
         

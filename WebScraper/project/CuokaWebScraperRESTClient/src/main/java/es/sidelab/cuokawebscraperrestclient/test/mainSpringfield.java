@@ -18,10 +18,11 @@ public class mainSpringfield
     public static void main(String[] args) throws Exception 
     {        
         String url = "http://myspringfield.com/es/es/";
+        String sectionName = "Jeans";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\";
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( 
-                "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\Jeans.html", url );
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
         
         for ( String productLink : productsLink )
         {

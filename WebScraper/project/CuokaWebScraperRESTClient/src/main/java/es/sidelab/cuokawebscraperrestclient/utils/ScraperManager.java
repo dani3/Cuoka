@@ -108,14 +108,14 @@ public class ScraperManager
 
                             for ( File section : sections )
                             {      
-                                if ( section.getName().contains( ".txt" ) )
+                                if ( section.getName().contains( ".html" ) )
                                 {                             
                                     Section s = new Section();
-                                    String sectionName = section.getName().replace( ".txt", "" );
+                                    String sectionName = section.getName().replace( ".html", "" );
 
                                     s.setMan( Boolean.valueOf( man ) );
                                     s.setName( sectionName );
-                                    s.setPath( section.getAbsolutePath() );
+                                    s.setPath( section.getAbsolutePath().replace( section.getName(), "" ) );
 
                                     sectionsList.add( s );
                                 } 

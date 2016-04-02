@@ -18,10 +18,11 @@ public class mainBlanco
     public static void main(String[] args) throws Exception 
     {        
         String url = "https://www.blanco.com/";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\";
+        String sectionName = "Camisas";
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( 
-                "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\Camisas.html", url );
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
             
         for ( String productLink : productsLink )
         {
@@ -69,7 +70,7 @@ public class mainBlanco
                 {
                     Elements images = document.select( "#product-gallery-list img" );
                     for ( Element img : images )
-                        imagesURL.add( new Image( fixURL( "https://www.blanco.com/" + img.attr( "src" ) ) ) );                    
+                        imagesURL.add( new Image( fixURL( url + img.attr( "src" ) ) ) );                    
                     
                     first = false;
             

@@ -1,8 +1,10 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import org.apache.log4j.Logger;
 
 /**
@@ -84,20 +86,27 @@ public class PythonManager
     /**
      * Metodo que ejecuta el script 'RenderProduct'.
      * @param url: URL del producto.
-     * @param path: fichero html donde se debe dejar el resultado.
+     * @param path: ruta donde se encuentra el script.
+     * @param html: fichero html donde se debe dejar el resultado.
      * @return file del html.
      * @throws IOException 
      */
-    public static File executeRenderProduct( String url, String path ) throws IOException
-    {                
+    public static File executeRenderProduct( String url, String path, String html ) throws IOException
+    {      
         Process p = Runtime.getRuntime().exec( new String[]{ "python",
-                            Properties.RENDER_SCRIPT + "renderProduct.py", 
-                            url, path } );
-           
-        File file = new File( path );     
+                            path + "renderProduct.py", 
+                            html, url } );   
+        
+        BufferedReader stdError = new BufferedReader( new InputStreamReader( p.getErrorStream() ) );
+        
+        String s = null;
+        while ((s = stdError.readLine()) != null)
+            Printer.print(s);    
+        
+        File file = new File( html );     
         while ( ! file.exists() ) 
         {
-            file = new File( path );
+            file = new File( html );
         }
         
         return file;

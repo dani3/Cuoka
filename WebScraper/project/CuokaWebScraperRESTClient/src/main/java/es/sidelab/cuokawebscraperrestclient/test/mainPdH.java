@@ -23,10 +23,11 @@ public class mainPdH
     public static void main(String[] args) throws Exception 
     {
         String url = "http://pedrodelhierro.com";
+        String sectionName = "Jeans";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\";
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( 
-                "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\Jeans.html", url );
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
           
         // Recorremos todos los productos y sacamos sus atributos
         int colorId = 1;
@@ -36,7 +37,7 @@ public class mainPdH
             {
                 List<ColorVariant> variants = new ArrayList<>();
 
-                // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
+                // Obtener el HTML del producto conectandonos al link
                 Document document = Jsoup.connect( productLink ).timeout( Properties.TIMEOUT )
                                                                 .header( "Accept-Language", "es" )
                                                                 .ignoreHttpErrors( true ).get();

@@ -7,7 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,11 @@ public class HyMScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException 
+    public List<Product> scrap( Shop shop, Section section ) throws IOException 
     {    
         // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( filePath );
+        String htmlPath = section.getPath() + section.getName() + ".html";
+        List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
@@ -109,9 +110,6 @@ public class HyMScraper implements Scraper
         return productList;
     }
     
-    /*
-     * Metodo que arregla la URL, aÃ±ade el protocolo si no esta presente, y codifica los espacios
-     */
     @Override
     public String fixURL( String url )
     {
@@ -121,9 +119,24 @@ public class HyMScraper implements Scraper
         return url.replace( " " , "%20" );
     }    
     
-    /*
-     * Metodo que devuelve true si el producto esta ya en la lista
-     */
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath);
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "h3.product-item-headline a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
+    
     private boolean containsProduct( List<Product> productList, String reference )
     {
         for ( Product p : productList )

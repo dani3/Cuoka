@@ -28,10 +28,11 @@ public class PdHScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String filePath ) throws IOException
+    public List<Product> scrap( Shop shop, Section section ) throws IOException
     {                
         // Lista con los links de cada producto
-        List<String> productsLink = getListOfLinks( filePath, shop.getURL().toString() );
+        String htmlPath = section.getPath() + section.getName() + ".html";
+        List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
@@ -193,9 +194,6 @@ public class PdHScraper implements Scraper
         return links;
     }
     
-    /*
-     * Metodo que devuelve true si el producto esta ya en la lista
-     */
     private static boolean containsProduct( List<Product> productList, String reference, String section )
     {
         for ( Product p : productList )
