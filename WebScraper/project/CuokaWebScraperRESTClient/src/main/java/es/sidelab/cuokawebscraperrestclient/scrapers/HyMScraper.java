@@ -18,8 +18,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico para HyM, la pagina esta desarrollada con AJAX
- * @author Daniel Mancebo
+ * @class Scraper especifico para HyM.
+ * @author Daniel Mancebo Aldea
  */
 
 public class HyMScraper implements Scraper

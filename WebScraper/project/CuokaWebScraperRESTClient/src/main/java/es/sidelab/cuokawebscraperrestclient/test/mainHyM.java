@@ -4,8 +4,8 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -17,10 +17,11 @@ public class mainHyM
 {    
     public static void main(String[] args) throws Exception 
     {        
-        // Lista de productos
+        String url = "http://www2.hm.com/es_es/";
         List<Product> productList = new ArrayList<>();
-        // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\Monos.txt" );
+        
+        List<String> productsLink = getListOfLinks( 
+                "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Camisas.html", url );
             
         for ( String productLink : productsLink )
         {
@@ -97,7 +98,7 @@ public class mainHyM
         
     }
     
-    public static String fixURL( String url )
+    private static String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
@@ -113,5 +114,22 @@ public class mainHyM
                     return true;
         
         return false;
+    }
+    
+    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath);
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "h3.product-item-headline a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
     }
 }

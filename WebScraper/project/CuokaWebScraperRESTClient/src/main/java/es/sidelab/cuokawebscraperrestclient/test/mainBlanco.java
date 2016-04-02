@@ -4,7 +4,8 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -16,10 +17,11 @@ public class mainBlanco
 {
     public static void main(String[] args) throws Exception 
     {        
-        // Lista preparada para la concurrencia donde escribiran todos los scrapers
+        String url = "https://www.blanco.com/";
         List<Product> productList = new ArrayList<>();
-        // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\Camisas.txt" );
+        
+        List<String> productsLink = getListOfLinks( 
+                "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\Camisas.html", url );
             
         for ( String productLink : productsLink )
         {
@@ -108,11 +110,28 @@ public class mainBlanco
         }
     }
     
-    public static String fixURL( String url )
+    private static String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
         return url;
     }   
+    
+    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "div.products-list a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
 }

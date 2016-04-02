@@ -141,7 +141,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     Intent intent = new Intent(mContext, ProductUI.class);
 
                     /* Enviamos toda la informacion necesaria para que la siguiente activity
-                    * realice la animacion */
+                     * realice la animacion */
                     intent.putExtra(PACKAGE + ".Beans.Product", mProduct)
                           .putExtra(PACKAGE + ".bitmap", mBitmapFileName)
                           .putExtra(PACKAGE + ".leftFav", favoriteScreenLocation[0])

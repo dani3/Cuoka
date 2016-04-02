@@ -15,4 +15,5 @@ public interface Scraper
 {
     public List<Product> scrap( Shop shop, Section section, String html ) throws IOException;    
     public String fixURL( String url );
+    public List<String> getListOfLinks( String htmlPath, String shopUrl );
 }

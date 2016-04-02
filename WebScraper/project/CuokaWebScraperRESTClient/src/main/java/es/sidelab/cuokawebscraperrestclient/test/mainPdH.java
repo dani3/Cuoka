@@ -4,8 +4,9 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
+import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -22,10 +23,11 @@ public class mainPdH
 {    
     public static void main(String[] args) throws Exception 
     {
-        String shop = "http://pedrodelhierro.com";
+        String url = "http://pedrodelhierro.com";
         List<Product> productList = new ArrayList<>();
-        // Lista con los links de cada producto
-        List<String> productsLink = FileManager.getListOfLinks( "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\Americanas.txt" );
+        
+        List<String> productsLink = getListOfLinks( 
+                "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\Jeans.html", url );
           
         // Recorremos todos los productos y sacamos sus atributos
         int colorId = 1;
@@ -47,7 +49,7 @@ public class mainPdH
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
-                
+                                
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
                     different_price = document.select( "strong.product-price span" ).first()
@@ -190,5 +192,22 @@ public class mainPdH
                     return true;
         
         return false;
+    }
+    
+    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "ul.product-listing div.content_product a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
     }
 }

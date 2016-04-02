@@ -48,7 +48,7 @@ public class PythonManager
                             // Borramos los txt antes
                             for ( File file : subFolder.listFiles() )
                             {
-                                if ( file.getName().contains( ".txt" ) )
+                                if ( file.getName().contains( ".html" ) )
                                 {
                                     file.delete();
                                 }
