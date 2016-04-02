@@ -1,40 +1,33 @@
-import os
+import os, time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-path = "C:\\....."
+path_to_chromedriver = 'C:\\..\\chromedriver'
 
-url = "www.url.com"
+path = "C:\\..."
 
-urls = [("Seccion 1", "URL"),
-        ("Seccion 2", "URL")]
+urls = [("Seccion 1", "url"),
+        ("Seccion 2", "url")]
 
-dr = webdriver.PhantomJS()
-
-# Eliminamos todos los ficheros antiguos
-for file in os.listdir(path):
-    if (".txt" in file):
-        os.remove(file)
+dr = webdriver.Chrome(executable_path = path_to_chromedriver)
 
 for k,v in urls:    
     dr.get(v)
 
-    # Esperamos a que aparezcan los productos un maximo de 5 segundos.
-    element = WebDriverWait(dr, 5).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "LINK"))
+    # Esperamos a que aparezcan los productos un maximo de 60 segundos.
+    element = WebDriverWait(dr, 60).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "link"))
     )
 
-    # Sacamos la lista de links de los productos.
-    product_links = [a.get_attribute('href') for a in dr.find_elements_by_xpath("//a[@class='LINK']")]
-
-    # Los escribimos en fichero.
-    file = open(path + k + ".txt", 'w')
-    for link in product_links: 
-        file.write(link + "\n")
-
+    # Escribimos el HTML en fichero.
+    file = open(path + k + ".html", 'w')
+    file.write(dr.page_source)
     file.close()
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + 'done.dat', 'w')
+
+dr.quit()
