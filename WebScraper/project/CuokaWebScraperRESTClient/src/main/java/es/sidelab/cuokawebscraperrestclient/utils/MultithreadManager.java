@@ -66,7 +66,7 @@ public class MultithreadManager
                     final Section section = shop.getSections().get( j );
                     
                     // Tarea de cada scraper
-                    Callable< List<Product> > taskSection = () -> scraper.scrap( shop, section, section.getPath() );
+                    Callable< List<Product> > taskSection = () -> scraper.scrap( shop, section );
                     
                     // Ejecucion de cada tarea
                     LOG.info( "Se inicia el scraping de la seccion " 

@@ -12,14 +12,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico de Zara
+ * @class Scraper especifico de Zara.
  * @author Daniel Mancebo Aldea
  */
 
@@ -28,42 +27,32 @@ public class ZaraScraper implements Scraper
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
-    private static final Logger LOG = Logger.getLogger( SpringfieldScraper.class );
-    
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
+    public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
-        List<String> pages = new ArrayList<>();
+        // Lista con los links de cada producto
+        String htmlPath = section.getPath() + section.getName() + ".html";
+        List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        File html = new File( htmlPath );
-        
-        // Parseamos el html producido por python
-        Document document = Jsoup.parse( html, "UTF-8" );
-        
-        Elements products = document.select( "#main-product-list li.product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {        
-            String path = htmlPath.replaceAll( ".html" , "_AUX.html" );
+            String pathProduct = section.getPath() + section.getName() + "_PRODUCTO.html";
             
             try 
             {               
                 List<ColorVariant> variants = new ArrayList<>();               
                 
-                File file = PythonManager.executeRenderProduct( element.attr( "href" ), path );
+                File file = PythonManager.executeRenderProduct( productLink, section.getPath(), pathProduct );
                 
-                // CRUCIAL para que al abrir el fichero este todo escrito.
-                Thread.sleep(500);
-                
-                document = Jsoup.parse( file, "UTF-8" );
+                Document document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
                 String different_price = null;
-                String link = element.attr( "href" );                 
+                String link = productLink;                 
                 String name = document.select( "div header > h1" ).first().ownText()
                                                                           .replaceAll( "\\\\[nt]", "" )
                                                                           .toUpperCase(); 
@@ -130,7 +119,7 @@ public class ZaraScraper implements Scraper
                 // CRUCIAL llamar al recolector de basura
                 System.gc();
                 
-                PythonManager.deleteFile( path );
+                PythonManager.deleteFile( pathProduct );
             }
             
         } // for products
@@ -140,9 +129,6 @@ public class ZaraScraper implements Scraper
         return productList;
     }
     
-    /*
-     * Metodo que arregla la URL, añade el protocolo si no esta presente, y codifica los espacios.
-     */
     @Override
     public String fixURL( String url )
     {
@@ -151,4 +137,22 @@ public class ZaraScraper implements Scraper
         
         return url;
     }   
+    
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath);
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "a.item" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
 }

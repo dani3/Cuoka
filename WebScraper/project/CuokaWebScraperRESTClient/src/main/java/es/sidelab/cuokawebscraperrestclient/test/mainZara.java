@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -21,38 +22,32 @@ public class mainZara
 {    
     public static void main(String[] args) throws Exception 
     {
-        String shop = "http://www.zara.com/es/es/";
-        String section = "Bomber";
-        String htmlPath = "C:\\Users\\Dani\\Documents\\shops\\Zara_false\\true";
+        String url = "http://www.zara.com/es/";
+        String sectionName = "Vestidos";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\";
         List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Zara_false\\true\\Zara_Camisas_true.html" );
-        Document document = Jsoup.parse( html, "UTF-8" );
-                  
-        Elements products = document.select( "#main-product-list li.product > a" );
+        
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
           
         // Recorremos todos los productos y sacamos sus atributos
         int j = 0;
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {        
-            String path = htmlPath + "\\" + (section + "_" + j + ".html");
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_PRODUCTO.html";
             
             try 
             {               
                 List<ColorVariant> variants = new ArrayList<>();               
                 
-                File file = PythonManager.executeRenderProduct( element.attr( "href" ), path );
-                
-                file = new File( path );
-                
-                document = Jsoup.parse( file, "UTF-8" );
+                File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
+            
+                Document document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
                 String different_price = null;
-                String link = element.attr( "href" );                 
+                String link = productLink;                 
                 String name = document.select( "div header > h1" ).first().text().replaceAll( "\\\\[nt]", "" ).toUpperCase(); 
-                String price = document.select( "span.price" ).first().attr( "data-price" ).replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
+                String price = document.select( "div.price span" ).first().ownText().replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll( "Ref. ", "" ).replaceAll( "/", "" ).replaceAll( "\\\\[nt]", "" );
                 String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\\\\[nt]", "" ); 
                      
@@ -86,7 +81,7 @@ public class mainZara
                 
                 productList.add( new Product( Double.parseDouble( price )
                                             , name
-                                            , shop
+                                            , ""
                                             , ""
                                             , link 
                                             , description
@@ -107,7 +102,7 @@ public class mainZara
             
         } // for products
         
-        System.out.println(productList.size());
+        System.out.println( productList.size() );
         
         Product p = productList.get( 0 );
         
@@ -115,7 +110,7 @@ public class mainZara
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
         System.out.println( "Description: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() + " €" );
+        System.out.println( "Precio: " + p.getPrice() );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {
@@ -145,5 +140,22 @@ public class mainZara
                     return true;
         
         return false;
+    }
+    
+    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath);
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "a.item" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( element.attr( "href" ) ) );
+        }
+        
+        return links;
     }
 }

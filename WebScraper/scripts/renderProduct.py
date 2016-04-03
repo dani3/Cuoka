@@ -1,33 +1,25 @@
-import sys  
-from PyQt4.QtGui import *  
-from PyQt4.QtCore import *  
-from PyQt4.QtWebKit import *
-from PyQt4 import QtNetwork
-from PyQt4 import QtCore
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-url = sys.argv[1]
-path = sys.argv[2]
+path_to_chromedriver = 'C:\\Users\\Dani\\Documents\\chromedriver'
 
-class Render(QWebPage):  
-  def __init__(self, url):  
-    self.app = QApplication(sys.argv)  
-    QWebPage.__init__(self)  
-    self.loadFinished.connect(self._loadFinished)
-    self.request = QtNetwork.QNetworkRequest() 
-    self.request.setUrl(QtCore.QUrl(url)) 
-    self.request.setRawHeader("Accept-Language", QtCore.QByteArray ("es ,*"))
-    self.mainFrame().load(self.request)
-    self.app.exec_()  
-  
-  def _loadFinished(self, result):  
-    self.frame = self.mainFrame()  
-    self.app.quit()  
+path = sys.argv[1]
+url = sys.argv[2]
 
-r = Render(url)  
-result = r.frame.toHtml()
+dr = webdriver.Chrome(executable_path = path_to_chromedriver)
 
-html_file = open(path, "w")
-html_file.write("%s" % result.encode("utf-8"))
-html_file.close()
+dr.get(url)
 
-sys.exit(app.exec_())
+# Esperamos a que aparezca la imagen un maximo de 60 segundos.
+element = WebDriverWait(dr, 60).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "imageLink"))
+)
+
+# Los escribimos en fichero.
+file = open(path, 'w')
+file.write(dr.page_source)
+file.close()
+
+dr.quit()

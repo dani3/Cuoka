@@ -28,33 +28,32 @@ public class PdHScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
-    {        
-        File html = new File( htmlPath );
-        Document document = Jsoup.parse( html, "UTF-8" );
+    public List<Product> scrap( Shop shop, Section section ) throws IOException
+    {                
+        // Lista con los links de cada producto
+        String htmlPath = section.getPath() + section.getName() + ".html";
+        List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        Elements products = document.select( "ul.product-listing li div.content_product > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
         int colorId = 1;
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
             try 
             {
                 List<ColorVariant> variants = new ArrayList<>();
 
                 // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                document = Jsoup.connect( shop.getURL().toString()
-                                + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                          .header( "Accept-Language", "es" )
-                                                          .ignoreHttpErrors( true ).get();
+                Document document = Jsoup.connect( productLink )
+                                         .timeout( Properties.TIMEOUT )
+                                         .header( "Accept-Language", "es" )
+                                         .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
-                String link = shop.getURL().toString() + element.attr( "href" );
-                String name = document.select( "#product-information h1" ).first().ownText(); 
+                String link = productLink;
+                String name = document.select( "fieldset h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
@@ -176,6 +175,24 @@ public class PdHScraper implements Scraper
         
         return url;
     } 
+    
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "ul.product-listing div.content_product a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
     
     private static boolean containsProduct( List<Product> productList, String reference, String section )
     {

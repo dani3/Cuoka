@@ -7,6 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico para HyM, la pagina esta desarrollada con AJAX
- * @author Daniel Mancebo
+ * @class Scraper especifico para HyM.
+ * @author Daniel Mancebo Aldea
  */
 
 public class HyMScraper implements Scraper
@@ -28,35 +29,37 @@ public class HyMScraper implements Scraper
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException 
+    public List<Product> scrap( Shop shop, Section section ) throws IOException 
     {    
-        File html = new File( htmlPath );
-        Document document = Jsoup.parse( html, "UTF-8" );
+        // Lista con los links de cada producto
+        String htmlPath = section.getPath() + section.getName() + ".html";
+        List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        // Obtener los links a todos los productos
-        Elements products = document.select( "h3.product-item-headline > a" );
           
         // Recorremos todos los productos y sacamos sus atributos
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
+            String pathProduct = section.getPath() + section.getName() + "_PRODUCTO.html";
+            
             try 
             {
-                // Obtener el HTML del producto
-                document = Jsoup.connect( shop.getURL().toString()
-                                + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                          .header( "Accept-Language", "es" )
-                                                          .ignoreHttpErrors( true ).get();
+                File file = PythonManager.executeRenderProduct( productLink, section.getPath(), pathProduct );
+            
+                Document document = Jsoup.parse( file, "UTF-8" );
 
                 // Obtener los atributos propios del producto
-                String link = shop.getURL().toString() + element.attr( "href" );
-                String name = document.select( "h1.product-item-headline" ).first().ownText().toUpperCase(); 
-                String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-                String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
-                String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
-                
+                String link = productLink;
+                String name = document.select( "h1.product-item-headline" ).first().ownText(); 
+                String price = document.select( "div.product-item-price span" ).first().ownText()
+                                                                                       .replaceAll( "[^,.0-9]", "" )
+                                                                                       .replaceAll( ",", "." )
+                                                                                       .trim();
+                String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
+                String description = document.select( "p.product-detail-description-text" ).first().ownText()
+                                                                                               .replaceAll( "\n", " " );
+            
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
                 
@@ -77,7 +80,7 @@ public class HyMScraper implements Scraper
                         // Esto no produce excepcion, se puede enviar la URL como null
                         String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
 
-                        // Sacamos las imagenes, solo sacar la URL de las miniaturas, asi que tenemos
+                        // Sacamos las imagenes, solo se puede sacar la URL de las miniaturas, asi que tenemos
                         // que cambiar en la URL thumb por main para sacar la imagen grande
                         List<Image> imagesURL = new ArrayList<>();
                         Elements images = document.select( "div.product-detail-thumbnails li img" );
@@ -105,7 +108,15 @@ public class HyMScraper implements Scraper
                     
                 } 
                 
-            } catch ( Exception e ) { prodNOK++; }
+            } catch ( Exception e ) { 
+                prodNOK++; 
+                
+            } finally {
+                // CRUCIAL llamar al recolector de basura
+                System.gc();
+                
+                PythonManager.deleteFile( pathProduct );
+            }
         }
         
         ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK ); 
@@ -113,9 +124,6 @@ public class HyMScraper implements Scraper
         return productList;
     }
     
-    /*
-     * Metodo que arregla la URL, aÃ±ade el protocolo si no esta presente, y codifica los espacios
-     */
     @Override
     public String fixURL( String url )
     {
@@ -125,9 +133,24 @@ public class HyMScraper implements Scraper
         return url.replace( " " , "%20" );
     }    
     
-    /*
-     * Metodo que devuelve true si el producto esta ya en la lista
-     */
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath);
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "h3.product-item-headline a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
+    
     private boolean containsProduct( List<Product> productList, String reference )
     {
         for ( Product p : productList )

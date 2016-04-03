@@ -12,53 +12,60 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico para SuiteBlanco
+ * @class Scraper especifico para Blanco.
  * @author Daniel Mancebo Aldea
  */
 
 public class BlancoScraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger( BlancoScraper.class );
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
-    public List<Product> scrap( Shop shop, Section section, String htmlPath ) throws IOException
+    public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
-        File html = new File( htmlPath );
-        Document document = Jsoup.parse( html, "UTF-8" );
+        // Lista con los links de cada producto
+        String htmlPath = section.getPath() + section.getName() + ".html";
+        List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
         int prodNOK = 0;
-        
-        // Guardamos los links de los productos
-        Elements products = document.select( "div.cell-1 a.cell-link" );
             
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
             try 
             {
-                document = Jsoup.connect( shop.getURL().toString() +  element.attr( "href" ) )
-                                    .header( "Accept-Language", "es" )
-                                    .timeout( Properties.TIMEOUT )
-                                    .ignoreHttpErrors( true ).get();
+                Document document = Jsoup.connect( productLink )
+                                         .header( "Accept-Language", "es" )
+                                         .timeout( Properties.TIMEOUT )
+                                         .ignoreHttpErrors( true ).get();
 
                 // Obtener todos los atributos propios del producto
-                String link = shop.getURL().toString() + element.attr( "href" );
-                String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-                String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
-                String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
-                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).trim();
-                String decimals = document.select( "p.product-price small" ).first().ownText().replaceAll( ",", "." ).trim();
+                String link = productLink;
+                // El nombre se pone todo en mayusculas
+                String name = document.select( "h1.product-name" ).first().ownText()
+                                                                          .toUpperCase(); 
+                // De la referencia se quitan todos los caracteres no numericos
+                String reference = document.select( "p.product-number" ).first().ownText()
+                                                                                .replaceAll( "[^0-9]", "" );
+                // De la descripcion se cambian los saltos de linea por espacios
+                String description = document.select( "p.product-description" ).first().ownText()
+                                                                                       .replaceAll( "\n", " " );
+                // El precio esta desglosado en la parte entera y la decimal
+                String price = document.select( "p.product-price" ).first().ownText()
+                                                                           .replaceAll( "[^0-9]", "" );
+                String decimals = document.select( "p.product-price small" ).first().ownText()
+                                                                                    .replaceAll( ",", "." )
+                                                                                    .trim();
                 price = price + decimals;
                 
+                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
                 
@@ -120,4 +127,22 @@ public class BlancoScraper implements Scraper
         
         return url;
     } 
+    
+    @Override
+    public List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "div.products-list a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
+    }
 }

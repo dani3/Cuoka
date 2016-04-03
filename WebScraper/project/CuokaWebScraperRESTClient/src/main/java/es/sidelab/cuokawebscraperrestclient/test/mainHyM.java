@@ -4,7 +4,10 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.Printer;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -14,36 +17,34 @@ import org.jsoup.select.Elements;
 
 public class mainHyM 
 {    
-    public static void main(String[] args) throws Exception {
-        
-        // Lista de productos
+    public static void main(String[] args) throws Exception 
+    {        
+        String url = "http://www2.hm.com/";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\";
+        String sectionName = "Americanas";
         List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Dropbox\\Cuoka\\scrapers_files\\HyM_true\\true\\HyM_Jerseis_true.html");
-        Document document = Jsoup.parse( html, "UTF-8" );
-          
-        // Obtener los links a todos los productos. 
-        // En este caso, los links estan en el 'a' que hay dentro de los 'h3' llamado 'product-item-headline'.
-        // Los links los guardamos en una lista de Element llamada 'products'.
-        Elements products = document.select( "h3.product-item-headline > a" );
-          
-        // Recorremos todos los productos y sacamos sus atributos
-        for ( Element element : products )
-        {
-            // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-            document = Jsoup.connect( "http://www2.hm.com/"
-                            + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                      .header( "Accept-Language", "es" )
-                                                      .ignoreHttpErrors( true ).get();
-
-            // Obtener los atributos propios del producto
-            String link = "http://www2.hm.com/" + element.attr( "href" );
-            String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-            String reference = element.attr( "href" ).substring( element.attr( "href" ).indexOf( "." ) + 1 , element.attr( "href" ).lastIndexOf( "." ) );
-            String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
+        
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
             
+        for ( String productLink : productsLink )
+        {
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Americanas_PRODUCTO.html";
+            
+            File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
+            
+            Document document = Jsoup.parse( file, "UTF-8" );
+            
+            // Obtener los atributos propios del producto
+            String link = productLink;
+            String name = document.select( "h1.product-item-headline" ).first().ownText(); 
+            String price = document.select( "div.product-item-price span" ).first().ownText()
+                                                                                   .replaceAll( "[^,.0-9]", "" )
+                                                                                   .replaceAll( ",", "." )
+                                                                                   .trim();
+            String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
+            String description = document.select( "p.product-detail-description-text" ).first().ownText()
+                                                                                               .replaceAll( "\n", " " );
+                        
             if ( description.length() > 255 )
                 description = description.substring(0, 255);
             
@@ -81,7 +82,14 @@ public class mainHyM
                                     , variants ) );
             }
             
+            // CRUCIAL llamar al recolector de basura
+            System.gc();
+                
+            PythonManager.deleteFile( pathProduct );
+            
         } // for products
+        
+        Printer.print( Integer.toString( productList.size() ) );
         
         Product p = productList.get( 2 );
         
@@ -104,7 +112,7 @@ public class mainHyM
         
     }
     
-    public static String fixURL( String url )
+    private static String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
@@ -120,5 +128,22 @@ public class mainHyM
                     return true;
         
         return false;
+    }
+    
+    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath);
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "h3.product-item-headline a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
     }
 }

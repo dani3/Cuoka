@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -21,37 +22,35 @@ public class mainPdH
 {    
     public static void main(String[] args) throws Exception 
     {
-        String shop = "http://pedrodelhierro.com";
+        String url = "http://pedrodelhierro.com";
+        String sectionName = "Jeans";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\";
         List<Product> productList = new ArrayList<>();
-      
-        // Obtener el HTML, JSoup se conecta a la URL indicada y descarga el HTML.
-        File html = new File( "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\true\\Pedro Del Hierro_Camisas_true.html" );
-        Document document = Jsoup.parse( html, "UTF-8" );
-                  
-        Elements products = document.select( "ul.product-listing li div.content_product > a" );
+        
+        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
           
         // Recorremos todos los productos y sacamos sus atributos
         int colorId = 1;
-        for ( Element element : products )
+        for ( String productLink : productsLink )
         {
             try 
             {
                 List<ColorVariant> variants = new ArrayList<>();
 
-                // Obtener el HTML del producto conectandonos al link que hemos sacado antes (atributo 'href')
-                document = Jsoup.connect( shop 
-                                + element.attr( "href" ) ).timeout( Properties.TIMEOUT )
-                                                          .header( "Accept-Language", "es" )
-                                                          .ignoreHttpErrors( true ).get();
+                // Obtener el HTML del producto conectandonos al link
+                Document document = Jsoup.connect( productLink )
+                                         .timeout( Properties.TIMEOUT )
+                                         .header( "Accept-Language", "es" )
+                                         .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
                 String different_price = null;
-                String link = shop + element.attr( "href" );
-                String name = document.select( "#product-information h1" ).first().ownText(); 
+                String link = productLink;
+                String name = document.select( "fieldset h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
-                
+                                       
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
                     different_price = document.select( "strong.product-price span" ).first()
@@ -194,5 +193,22 @@ public class mainPdH
                     return true;
         
         return false;
+    }
+    
+    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    {
+        List<String> links = new ArrayList<>();        
+        
+        File html = new File( htmlPath );
+        Document document = Jsoup.parse( html, "UTF-8" );
+                  
+        Elements products = document.select( "ul.product-listing div.content_product a" );
+        
+        for( Element element : products )
+        {
+            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+        }
+        
+        return links;
     }
 }
