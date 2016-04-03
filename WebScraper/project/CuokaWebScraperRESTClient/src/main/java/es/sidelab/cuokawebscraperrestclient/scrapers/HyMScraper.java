@@ -51,11 +51,15 @@ public class HyMScraper implements Scraper
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
-                String name = document.select( "h1.product-item-headline" ).first().ownText().toUpperCase(); 
-                String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+                String name = document.select( "h1.product-item-headline" ).first().ownText(); 
+                String price = document.select( "div.product-item-price span" ).first().ownText()
+                                                                                       .replaceAll( "[^,.0-9]", "" )
+                                                                                       .replaceAll( ",", "." )
+                                                                                       .trim();
                 String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
-                String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
-                
+                String description = document.select( "p.product-detail-description-text" ).first().ownText()
+                                                                                               .replaceAll( "\n", " " );
+            
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
                 
@@ -76,7 +80,7 @@ public class HyMScraper implements Scraper
                         // Esto no produce excepcion, se puede enviar la URL como null
                         String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
 
-                        // Sacamos las imagenes, solo sacar la URL de las miniaturas, asi que tenemos
+                        // Sacamos las imagenes, solo se puede sacar la URL de las miniaturas, asi que tenemos
                         // que cambiar en la URL thumb por main para sacar la imagen grande
                         List<Image> imagesURL = new ArrayList<>();
                         Elements images = document.select( "div.product-detail-thumbnails li img" );

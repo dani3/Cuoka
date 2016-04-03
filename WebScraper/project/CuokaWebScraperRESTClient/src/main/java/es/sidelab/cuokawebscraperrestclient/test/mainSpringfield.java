@@ -93,7 +93,7 @@ public class mainSpringfield
 
         } // for products
         
-        Product p = productList.get( 5 );
+        Product p = productList.get( 0 );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );

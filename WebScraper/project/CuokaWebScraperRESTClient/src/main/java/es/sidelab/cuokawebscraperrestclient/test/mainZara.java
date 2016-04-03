@@ -110,7 +110,7 @@ public class mainZara
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
         System.out.println( "Description: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() + " €" );
+        System.out.println( "Precio: " + p.getPrice() );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {

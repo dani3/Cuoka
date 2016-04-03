@@ -37,12 +37,14 @@ public class mainHyM
             // Obtener los atributos propios del producto
             String link = productLink;
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
+            String price = document.select( "div.product-item-price span" ).first().ownText()
+                                                                                   .replaceAll( "[^,.0-9]", "" )
+                                                                                   .replaceAll( ",", "." )
+                                                                                   .trim();
             String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
-            String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
-            
-            Printer.print(price);
-            
+            String description = document.select( "p.product-detail-description-text" ).first().ownText()
+                                                                                               .replaceAll( "\n", " " );
+                        
             if ( description.length() > 255 )
                 description = description.substring(0, 255);
             
@@ -86,6 +88,8 @@ public class mainHyM
             PythonManager.deleteFile( pathProduct );
             
         } // for products
+        
+        Printer.print( Integer.toString( productList.size() ) );
         
         Product p = productList.get( 2 );
         

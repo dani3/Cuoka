@@ -4,6 +4,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,25 +33,22 @@ public class mainBlanco
                                      .ignoreHttpErrors( true ).get();
             
             // Obtener todos los atributos propios del producto
-            String different_price = null;
             String link = productLink;
-            String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-            String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
-            String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
-            String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).trim();
-            String decimals = document.select( "p.product-price small" ).first().ownText().replaceAll( ",", "." ).trim();
+            String name = document.select( "h1.product-name" ).first().ownText()
+                                                                      .toUpperCase(); 
+            String reference = document.select( "p.product-number" ).first().ownText()
+                                                                            .replaceAll( "[^0-9]", "" );
+            String description = document.select( "p.product-description" ).first().ownText()
+                                                                                   .replaceAll( "\n", " " );
+            String price = document.select( "p.product-price" ).first().ownText()
+                                                                       .replaceAll( "[^0-9]", "" );
+            String decimals = document.select( "p.product-price small" ).first().ownText()
+                                                                                .replaceAll( ",", "." )
+                                                                                .trim();
             price = price + decimals;
             
-            // Sacamos el descuento si lo hay
-            if ( ! document.select( "span.product-price-sale" ).isEmpty() )
-            {
-                different_price = document.select( "span.product-price-sale" ).first().ownText().replaceAll( "€", "" ).trim();
-                decimals = document.select( "span.product-price-sale small" ).first().ownText().replaceAll( ",", "." ).trim();
-                different_price = different_price + decimals;
-            }
-            
             if ( description.length() > 255 )
-                description = description.substring(0, 255);
+                description = description.substring( 0, 255 );
             
             // Obtenemos los colores del producto
             boolean first = true;
@@ -89,6 +87,8 @@ public class mainBlanco
             
             
         } // for products
+        
+        Printer.print(Integer.toString(productList.size()));
         
         Product p = productList.get( 0 );
         

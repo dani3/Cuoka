@@ -48,13 +48,24 @@ public class BlancoScraper implements Scraper
 
                 // Obtener todos los atributos propios del producto
                 String link = productLink;
-                String name = document.select( "h1.product-name" ).first().ownText().toUpperCase(); 
-                String reference = document.select( "p.product-number" ).first().ownText().replaceAll( "Product: ", "" );
-                String description = document.select( "p.product-description" ).first().ownText().replaceAll( "\n", " " );
-                String price = document.select( "p.product-price" ).first().ownText().replaceAll( "€", "" ).trim();
-                String decimals = document.select( "p.product-price small" ).first().ownText().replaceAll( ",", "." ).trim();
+                // El nombre se pone todo en mayusculas
+                String name = document.select( "h1.product-name" ).first().ownText()
+                                                                          .toUpperCase(); 
+                // De la referencia se quitan todos los caracteres no numericos
+                String reference = document.select( "p.product-number" ).first().ownText()
+                                                                                .replaceAll( "[^0-9]", "" );
+                // De la descripcion se cambian los saltos de linea por espacios
+                String description = document.select( "p.product-description" ).first().ownText()
+                                                                                       .replaceAll( "\n", " " );
+                // El precio esta desglosado en la parte entera y la decimal
+                String price = document.select( "p.product-price" ).first().ownText()
+                                                                           .replaceAll( "[^0-9]", "" );
+                String decimals = document.select( "p.product-price small" ).first().ownText()
+                                                                                    .replaceAll( ",", "." )
+                                                                                    .trim();
                 price = price + decimals;
                 
+                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
                 
