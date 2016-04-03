@@ -53,7 +53,7 @@ public class PdHScraper implements Scraper
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
-                String name = document.select( "#product-information h1" ).first().ownText(); 
+                String name = document.select( "fieldset h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 

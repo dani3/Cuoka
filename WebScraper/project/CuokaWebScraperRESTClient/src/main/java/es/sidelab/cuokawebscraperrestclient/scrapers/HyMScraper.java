@@ -7,6 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,12 +41,13 @@ public class HyMScraper implements Scraper
         // Recorremos todos los productos y sacamos sus atributos
         for ( String productLink : productsLink )
         {
+            String pathProduct = section.getPath() + section.getName() + "_PRODUCTO.html";
+            
             try 
             {
-                // Obtener el HTML del producto
-                Document document = Jsoup.connect( productLink ).timeout( Properties.TIMEOUT )
-                                                                .header( "Accept-Language", "es" )
-                                                                .ignoreHttpErrors( true ).get();
+                File file = PythonManager.executeRenderProduct( productLink, section.getPath(), pathProduct );
+            
+                Document document = Jsoup.parse( file, "UTF-8" );
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
@@ -102,7 +104,15 @@ public class HyMScraper implements Scraper
                     
                 } 
                 
-            } catch ( Exception e ) { prodNOK++; }
+            } catch ( Exception e ) { 
+                prodNOK++; 
+                
+            } finally {
+                // CRUCIAL llamar al recolector de basura
+                System.gc();
+                
+                PythonManager.deleteFile( pathProduct );
+            }
         }
         
         ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK ); 

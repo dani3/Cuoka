@@ -38,18 +38,19 @@ public class mainPdH
                 List<ColorVariant> variants = new ArrayList<>();
 
                 // Obtener el HTML del producto conectandonos al link
-                Document document = Jsoup.connect( productLink ).timeout( Properties.TIMEOUT )
-                                                                .header( "Accept-Language", "es" )
-                                                                .ignoreHttpErrors( true ).get();
+                Document document = Jsoup.connect( productLink )
+                                         .timeout( Properties.TIMEOUT )
+                                         .header( "Accept-Language", "es" )
+                                         .ignoreHttpErrors( true ).get();
 
                 // Obtener los atributos propios del producto
                 String different_price = null;
                 String link = productLink;
-                String name = document.select( "#product-information h1" ).first().ownText(); 
+                String name = document.select( "fieldset h1" ).first().ownText(); 
                 String price = document.select( "strong.product-price" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
                 String reference = document.select( "div.m_tabs_cont p.patron" ).first().ownText().replaceAll("Ref:", "");
                 String description = document.select( "div.m_tabs_cont div p" ).first().ownText().replaceAll( "\n", " "); 
-                                
+                                       
                 // Sacamos el descuento si lo hay
                 if ( ! document.select( "strong.product-price span" ).isEmpty() )
                     different_price = document.select( "strong.product-price span" ).first()

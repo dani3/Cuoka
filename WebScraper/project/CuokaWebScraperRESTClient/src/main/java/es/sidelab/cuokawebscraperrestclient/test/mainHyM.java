@@ -37,7 +37,7 @@ public class mainHyM
             // Obtener los atributos propios del producto
             String link = productLink;
             String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "\\u20AC", "" ).replaceAll( ",", "." ).trim();
+            String price = document.select( "div.product-item-price span" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
             String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
             String description = document.select( "p.product-detail-description-text" ).first().ownText().replaceAll( "\n", " " );
             

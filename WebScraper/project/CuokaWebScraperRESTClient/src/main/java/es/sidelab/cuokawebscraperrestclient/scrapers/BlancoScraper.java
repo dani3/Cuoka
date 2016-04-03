@@ -18,7 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico para SuiteBlanco
+ * @class Scraper especifico para Blanco.
  * @author Daniel Mancebo Aldea
  */
 

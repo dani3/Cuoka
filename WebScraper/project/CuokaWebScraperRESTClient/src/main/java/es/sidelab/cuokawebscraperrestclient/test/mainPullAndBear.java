@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.Printer;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,18 +34,16 @@ public class mainPullAndBear
         // Recorremos todos los productos y sacamos sus atributos
         for ( String productLink : productsLink )
         {
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\Pull&Bear_true\\false\\Jeans_PRODUCTO.html";
+            
             try 
             {
                 // Lista para introducir cada color y lo relacionado a él
                 List<ColorVariant> variants = new ArrayList<>();
 
-                // Obtener el HTML del producto conectandonos al link
-                Document document = Jsoup.connect( productLink )
-                                         .timeout( Properties.TIMEOUT )
-                                         .header( "Accept-Language", "es" )
-                                         .ignoreHttpErrors( true ).get();
-                
-                Printer.print( productLink );
+                File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
+            
+                Document document = Jsoup.parse( file, "UTF-8" );
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
@@ -63,9 +62,9 @@ public class mainPullAndBear
                 // Se cogen los colores
                 Elements colors = document.select( "#Product_ColorContainer > div");
                   
-                  //Si hay varios colores
-                  if ( colors.size() > 1 )
-                  {                    
+                //Si hay varios colores
+                if ( colors.size() > 1 )
+                {                    
                     // este bool se usa para coger el color por defecto en caso de que haya más de uno  
                     boolean first = true;
                     String colorRefDefault = "";
@@ -106,7 +105,7 @@ public class mainPullAndBear
                             else 
                                 imageUrlMod = imageUrl;
                                                         
-                            imagesURL.add( new Image( fixURL( imageUrlMod  ) ) );                    
+                            imagesURL.add( new Image( fixURL( imageUrlMod ) ) );                    
 
 
                         } // for images
@@ -115,30 +114,30 @@ public class mainPullAndBear
                         
                     } // for colors
 
-                  } else { // si solo hay un color...
+                } else { // si solo hay un color...
                       
                     List<Image> imagesURL = new ArrayList<>();
-  
+
                     Element color = colors.first();
 
                     Elements e = color.select("div[title]");
-                        
+
                     String colorName = e.attr("title"); 
                     String colorUrl = e.attr("style").replace("background-image: url(\"","").replace("\");",""); 
-                       
+
                     int colorRefLength = reference.length();
                     String colorRef =  colorUrl.substring((colorUrl.indexOf( reference  ) + colorRefLength)).replaceAll("_(.*)", ""); 
-                    
+
                     //imágenes del producto
                     Elements images = document.select( "#Product_ImagesContainer > img");
-                        
-                        for (Element image : images)
-                        {
-                            Elements im = image.select("img[src]");
-                            String imageUrl = im.attr("src"); 
-                                            
-                            imagesURL.add( new Image( fixURL( imageUrl  ) ) );                    
-                        } // for images
+
+                    for (Element image : images)
+                    {
+                        Elements im = image.select("img[src]");
+                        String imageUrl = im.attr("src"); 
+
+                        imagesURL.add( new Image( fixURL( imageUrl  ) ) );                    
+                    } // for images
 
                     variants.add( new ColorVariant( colorRef, colorName, colorUrl, imagesURL ) );
                 }                  
