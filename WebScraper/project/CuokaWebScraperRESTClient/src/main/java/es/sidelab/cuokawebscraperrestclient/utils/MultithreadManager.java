@@ -41,12 +41,11 @@ public class MultithreadManager
         
         countDownLatch = new CountDownLatch( shops.size() );
         
-        boolean[] finishedShops = new boolean[ shops.size() ];
         for ( int i = 0; i < shops.size(); i++ )
         {
             final int k = i;
             
-            final Shop shop = shops.get(i);
+            final Shop shop = shops.get( i );
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
                 LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );

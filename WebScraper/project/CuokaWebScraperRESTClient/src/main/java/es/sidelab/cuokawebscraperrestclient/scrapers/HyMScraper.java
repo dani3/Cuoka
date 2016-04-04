@@ -7,6 +7,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
@@ -31,37 +32,57 @@ public class HyMScraper implements Scraper
     @Override
     public List<Product> scrap( Shop shop, Section section ) throws IOException 
     {    
+        int prodOK = 0;
+        int prodNOK = 0;
+        
+        int cont = 0;
+        
         // Lista con los links de cada producto
         String htmlPath = section.getPath() + section.getName() + ".html";
         List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
-        int prodOK = 0;
-        int prodNOK = 0;
+        // Escribimos en fichero todos los links de la seccion
+        FileManager.writeLinksToFile( productsLink, section );
+        // Ejecutamos el script que renderiza todos los productos
+        PythonManager.executeRenderProducts( section );
           
         // Recorremos todos los productos y sacamos sus atributos
         for ( String productLink : productsLink )
         {
-            String pathProduct = section.getPath() + section.getName() + "_PRODUCTO.html";
+            String pathProduct = section.getPath() + section.getName() + "_" + cont + ".html";
             
             try 
             {
-                File file = PythonManager.executeRenderProduct( productLink, section.getPath(), pathProduct );
+                File file = new File( pathProduct );
+            
+                // Esperamos a que python cree el fichero
+                while ( ! file.exists() ) {}
+
+                // Se realiza una espera de medio segundo para que no pillemos el fichero nada mas ser creado (estara vacio)
+                Thread.sleep( 500 );
+                file = new File( pathProduct );
             
                 Document document = Jsoup.parse( file, "UTF-8" );
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
-                String name = document.select( "h1.product-item-headline" ).first().ownText(); 
+                // El nombre se pasa a mayusculas
+                String name = document.select( "h1.product-item-headline" ).first().ownText()
+                                                                                   .toUpperCase(); 
+                // Del precio eliminamos lo que no sea numerico 
                 String price = document.select( "div.product-item-price span" ).first().ownText()
                                                                                        .replaceAll( "[^,.0-9]", "" )
                                                                                        .replaceAll( ",", "." )
                                                                                        .trim();
+                // La referencia la sacamos de la URL
                 String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
+                // De la descripcion sustituimos los saltos de linea por espacios
                 String description = document.select( "p.product-detail-description-text" ).first().ownText()
                                                                                                .replaceAll( "\n", " " );
             
+                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
                 if ( description.length() > 255 )
-                    description = description.substring(0, 255);
+                    description = description.substring( 0, 255 );
                 
                 if ( ! containsProduct( productList, reference ) )
                 {
@@ -115,9 +136,14 @@ public class HyMScraper implements Scraper
                 // CRUCIAL llamar al recolector de basura
                 System.gc();
                 
-                PythonManager.deleteFile( pathProduct );
+                FileManager.deleteFile( pathProduct );
+                
+                cont++;
             }
         }
+        
+        // Borramos el fichero de links
+        FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
         
         ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK ); 
         

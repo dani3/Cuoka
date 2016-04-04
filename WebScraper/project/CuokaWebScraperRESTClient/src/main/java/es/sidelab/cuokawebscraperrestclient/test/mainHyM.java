@@ -3,7 +3,9 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
@@ -21,16 +23,27 @@ public class mainHyM
     {        
         String url = "http://www2.hm.com/";
         String path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\";
-        String sectionName = "Americanas";
+        String sectionName = "Americanas";        
+        Section section = new Section( sectionName, path, true );
         List<Product> productList = new ArrayList<>();
         
         List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
-            
+        
+        // Escribimos en fichero todos los links de la seccion
+        FileManager.writeLinksToFile( productsLink, section );
+        // Ejecutamos el script que renderiza todos los productos
+        PythonManager.executeRenderProducts( section );
+        
+        int cont = 0;
         for ( String productLink : productsLink )
         {
-            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Americanas_PRODUCTO.html";
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Americanas_" + cont + ".html";
+            File file = new File( pathProduct );
             
-            File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
+            while ( ! file.exists() ) {}
+            
+            Thread.sleep( 500 );
+            file = new File( pathProduct );
             
             Document document = Jsoup.parse( file, "UTF-8" );
             
@@ -85,9 +98,14 @@ public class mainHyM
             // CRUCIAL llamar al recolector de basura
             System.gc();
                 
-            PythonManager.deleteFile( pathProduct );
+            FileManager.deleteFile( pathProduct );
+            
+            cont++;
             
         } // for products
+        
+        // Borramos el fichero de links
+        FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
         
         Printer.print( Integer.toString( productList.size() ) );
         

@@ -51,40 +51,32 @@ public class ZaraScraper implements Scraper
                 Document document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
-                String different_price = null;
                 String link = productLink;                 
+                // El nombre se pasa a mayusculas
                 String name = document.select( "div header > h1" ).first().ownText()
                                                                           .replaceAll( "\\\\[nt]", "" )
                                                                           .toUpperCase(); 
-                
-                String price = document.select( "span.price" ).first().attr( "data-price" )
-                                                                      .replaceAll( "EUR", "" )
-                                                                      .replaceAll( ",", "." )
-                                                                      .trim();
-                
+                // Del precio solo nos quedamos con los numeros
+                String price = document.select( "div.price span" ).first().ownText()
+                                                                          .replaceAll( "[^,.0-9]", "" )
+                                                                          .replaceAll( ",", "." );
+                // De la referencia eliminamos todo lo que no sean numeros
                 String reference = document.select( "div.right p.reference" ).first().ownText()
-                                                                                     .replaceAll( "Ref. ", "" )
-                                                                                     .replaceAll( "/", "" )
+                                                                                     .replaceAll( "[^0-9]", "" )
                                                                                      .replaceAll( "\\\\[nt]", "" );
-                
+                // En la descripcion eliminamos los saltos de linea y las tabulaciones
                 String description = document.select( "#description p.description span" ).first().ownText()
                                                                                                  .replaceAll( "\\\\[nt]", "" ); 
-                     
-                // Sacamos el descuento si lo hay
-                if ( ! document.select( "strong.product-price span" ).isEmpty() )
-                    different_price = document.select( "strong.product-price span" ).first()
-                                                                                    .ownText()
-                                                                                    .replaceAll( "€", "" )
-                                                                                    .replaceAll( ",", "." ).trim();
-                                
+               
+                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
                 if ( description.length() > 255 )
                     description = description.substring( 0, 255 );
                 
                 String colorReference = reference;
-                String colorName = document.select( "div.colors label" ).first().select( "div.imgCont" ).attr( "title" )
-                                                                                                        .toUpperCase()
-                                                                                                        .trim()
-                                                                                                        .replace('\\', '-');
+                // Se eliminan primero los espacios y luego se sustituye la barra por un espacio
+                String colorName = document.select( "span.color-description" ).first().ownText().toUpperCase()
+                                                                                                .trim()
+                                                                                                .replaceAll( "/" , " " );
                 
                 List<Image> imagesURL = new ArrayList<>();
                 Elements images = document.select( "#main-images div.media-wrap" );

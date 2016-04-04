@@ -48,13 +48,24 @@ public class SpringfieldScraper implements Scraper
 
                 // Obtener los atributos del producto
                 String link = productLink;
-                String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
-                String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-                String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
-                String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
+                // El nombre se pasa a mayusculas
+                String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText()
+                                                                                                  .toUpperCase();
+                // Del precio solo nos quedamos con los numeros
+                String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText()
+                                                                                                   .replaceAll( "[^,.0-9]", "" )
+                                                                                                   .replaceAll( ",", "." )
+                                                                                                   .trim();
+                // De la referencia eliminamos todo lo que no sean numeros
+                String reference = document.select( "div.c02__article-number" ).first().ownText()
+                                                                                       .replaceAll( "[^0-9]" , "" );
+                // En la descripcion sustituimos los saltos de linea por espacios
+                String description = document.select( "div.c02__product-description" ).first().ownText()
+                                                                                              .replaceAll( "\n" , " " );
 
+                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
                 if ( description.length() > 255 )
-                    description = description.substring(0, 255);
+                    description = description.substring( 0, 255 );
 
                 // Los productos con la misma referencia se ignoran ya que ya se han tenido que insertar antes
                 if ( ! containsProduct( productList, reference ) )

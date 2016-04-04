@@ -14,6 +14,13 @@ public class Section
     private boolean man;
     
     public Section() {}
+    
+    public Section( String name, String path, boolean man )
+    {
+        this.name = name;
+        this.path = path;
+        this.man = man;
+    }
 
     public void setName( String name ) { this.name = name; }
     public void setPath( String path ) { this.path = path; }
