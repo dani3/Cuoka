@@ -133,13 +133,15 @@ public class HyMScraper implements Scraper
                 prodNOK++; 
                 
             } finally {
-                // CRUCIAL llamar al recolector de basura
-                System.gc();
-                
-                FileManager.deleteFile( pathProduct );
                 
                 cont++;
             }
+        }
+        
+        System.gc();
+        for ( int i = 0; i < productsLink.size(); i++ )
+        {
+            FileManager.deleteFile( section.getPath() + section.getName() + "_" + i + ".html" );
         }
         
         // Borramos el fichero de links

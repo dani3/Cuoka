@@ -19,7 +19,7 @@ public class mainBlanco
     public static void main(String[] args) throws Exception 
     {        
         String url = "https://www.blanco.com/";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_false\\false\\";
         String sectionName = "Camisas";
         List<Product> productList = new ArrayList<>();
         

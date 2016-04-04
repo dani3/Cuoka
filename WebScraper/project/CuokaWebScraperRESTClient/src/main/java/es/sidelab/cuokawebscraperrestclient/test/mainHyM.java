@@ -23,7 +23,7 @@ public class mainHyM
     {        
         String url = "http://www2.hm.com/";
         String path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\";
-        String sectionName = "Americanas";        
+        String sectionName = "Camisas";        
         Section section = new Section( sectionName, path, true );
         List<Product> productList = new ArrayList<>();
         
@@ -37,7 +37,7 @@ public class mainHyM
         int cont = 0;
         for ( String productLink : productsLink )
         {
-            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Americanas_" + cont + ".html";
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Camisas_" + cont + ".html";
             File file = new File( pathProduct );
             
             while ( ! file.exists() ) {}
@@ -57,9 +57,9 @@ public class mainHyM
             String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
             String description = document.select( "p.product-detail-description-text" ).first().ownText()
                                                                                                .replaceAll( "\n", " " );
-                        
+                                    
             if ( description.length() > 255 )
-                description = description.substring(0, 255);
+                description = description.substring( 0, 255 );
             
             if ( ! containsProduct( productList, reference ) )
             {
@@ -95,14 +95,15 @@ public class mainHyM
                                     , variants ) );
             }
             
-            // CRUCIAL llamar al recolector de basura
-            System.gc();
-                
-            FileManager.deleteFile( pathProduct );
-            
             cont++;
             
         } // for products
+        
+        System.gc();
+        for ( int i = 0; i < productsLink.size(); i++ )
+        {
+            FileManager.deleteFile( "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\Camisas_" + i + ".html" );
+        }
         
         // Borramos el fichero de links
         FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
