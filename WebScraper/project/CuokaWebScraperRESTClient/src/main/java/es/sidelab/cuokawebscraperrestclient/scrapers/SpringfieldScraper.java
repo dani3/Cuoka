@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,6 +25,8 @@ import org.jsoup.select.Elements;
 
 public class SpringfieldScraper implements Scraper 
 {
+    private static final Logger LOG = Logger.getLogger( SpringfieldScraper.class );
+    
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
@@ -40,6 +43,8 @@ public class SpringfieldScraper implements Scraper
         for ( String productLink : productsLink )
         {
             try {
+                LOG.info( "Scraping: " + productLink );
+                
                 // Obtener el HTML del producto
                 Document document = Jsoup.connect( productLink )
                                          .timeout( Properties.TIMEOUT )
@@ -119,7 +124,11 @@ public class SpringfieldScraper implements Scraper
                         prodNOK++;
                 }
 
-            } catch ( Exception e ) { prodNOK++; }
+            } catch ( Exception e ) { 
+                LOG.error( "Excepcion en producto: " + productLink + " (" + e.toString() + ")" );
+                
+                prodNOK++; 
+            }
 
         } // for products
         

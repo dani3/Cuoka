@@ -6,12 +6,15 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
+import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,29 +27,45 @@ import org.jsoup.select.Elements;
 
 public class ZaraScraper implements Scraper 
 {
+    private static final Logger LOG = Logger.getLogger( ZaraScraper.class );
+    
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
     @Override
     public List<Product> scrap( Shop shop, Section section ) throws IOException
     {        
+        int prodOK = 0;
+        int prodNOK = 0;
+        
+        int cont = 0;
+        
         // Lista con los links de cada producto
         String htmlPath = section.getPath() + section.getName() + ".html";
         List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
-        int prodOK = 0;
-        int prodNOK = 0;
+        // Escribimos en fichero todos los links de la seccion
+        FileManager.writeLinksToFile( productsLink, section );
+        // Ejecutamos el script que renderiza todos los productos
+        PythonManager.executeRenderProducts( section );
           
         // Recorremos todos los productos y sacamos sus atributos
         for ( String productLink : productsLink )
         {        
-            String pathProduct = section.getPath() + section.getName() + "_PRODUCTO.html";
+            String pathProduct = section.getPath() + section.getName() + "_" + cont + ".html";
             
             try 
             {               
-                List<ColorVariant> variants = new ArrayList<>();               
-                
-                File file = PythonManager.executeRenderProduct( productLink, section.getPath(), pathProduct );
+                File file = new File( pathProduct );
+            
+                // Esperamos a que python cree el fichero
+                while ( ! file.exists() ) {}
+
+                // Se realiza una espera de medio segundo para que no pillemos el fichero nada mas ser creado (estara vacio)
+                Thread.sleep( 1000 );
+                file = new File( pathProduct );
+            
+                LOG.info( "Scraping: " + pathProduct );
                 
                 Document document = Jsoup.parse( file, "UTF-8" );
                 
@@ -78,6 +97,8 @@ public class ZaraScraper implements Scraper
                                                                                                 .trim()
                                                                                                 .replaceAll( "/" , " " );
                 
+                List<ColorVariant> variants = new ArrayList<>();
+                
                 List<Image> imagesURL = new ArrayList<>();
                 Elements images = document.select( "#main-images div.media-wrap" );
                 for ( Element img : images ) 
@@ -105,16 +126,27 @@ public class ZaraScraper implements Scraper
                     prodNOK++;           
                 
             } catch ( Exception e ) { 
+                LOG.error( "Excepcion en producto: " + pathProduct + " (" + e.toString() + ")" );
+                
                 prodNOK++; 
                 
             } finally {
-                // CRUCIAL llamar al recolector de basura
-                System.gc();
+                cont++;
                 
-                PythonManager.deleteFile( pathProduct );
             }
             
         } // for products
+        
+        System.gc();
+        
+        // Borramos todos los htmls de la seccion
+        for ( int i = 0; i < productsLink.size(); i++ )
+        {
+            FileManager.deleteFile( section.getPath() + section.getName() + "_" + i + ".html" );
+        }
+        
+        // Borramos el fichero de links
+        FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
         
         ActivityStatsManager.updateProducts( shop.getName(), section, prodOK, prodNOK );  
         

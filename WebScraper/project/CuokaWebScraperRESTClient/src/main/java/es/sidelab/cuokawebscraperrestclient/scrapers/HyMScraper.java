@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,6 +27,8 @@ import org.jsoup.select.Elements;
 
 public class HyMScraper implements Scraper
 {
+    private static final Logger LOG = Logger.getLogger( HyMScraper.class );
+    
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
@@ -59,8 +62,10 @@ public class HyMScraper implements Scraper
                 while ( ! file.exists() ) {}
 
                 // Se realiza una espera de medio segundo para que no pillemos el fichero nada mas ser creado (estara vacio)
-                Thread.sleep( 500 );
+                Thread.sleep( 1000 );
                 file = new File( pathProduct );
+                
+                LOG.info( "Scraping: " + pathProduct );
             
                 Document document = Jsoup.parse( file, "UTF-8" );
 
@@ -130,15 +135,19 @@ public class HyMScraper implements Scraper
                 } 
                 
             } catch ( Exception e ) { 
+                LOG.error( "Excepcion en producto: " + pathProduct + " (" + e.toString() + ")" );
+                
                 prodNOK++; 
                 
-            } finally {
-                
+            } finally {                
                 cont++;
+                
             }
         }
         
         System.gc();
+        
+        // Borramos todos los htmls de la seccion
         for ( int i = 0; i < productsLink.size(); i++ )
         {
             FileManager.deleteFile( section.getPath() + section.getName() + "_" + i + ".html" );

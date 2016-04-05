@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,6 +25,8 @@ import org.jsoup.select.Elements;
 
 public class BlancoScraper implements Scraper
 {
+    private static final Logger LOG = Logger.getLogger( BlancoScraper.class );
+    
     // Lista preparada para la concurrencia donde escribiran todos los scrapers
     private static List<Product> productList = new CopyOnWriteArrayList<>();
     
@@ -41,6 +44,8 @@ public class BlancoScraper implements Scraper
         {
             try 
             {
+                LOG.info( "Scraping: " + productLink );
+                
                 Document document = Jsoup.connect( productLink )
                                          .header( "Accept-Language", "es" )
                                          .timeout( Properties.TIMEOUT )
@@ -110,7 +115,12 @@ public class BlancoScraper implements Scraper
                 } else
                     prodNOK++;
                 
-            } catch ( Exception e ) { prodNOK++; }
+            } catch ( Exception e ) { 
+                LOG.error( "Excepcion en producto: " + productLink + " (" + e.toString() + ")" );                
+                
+                prodNOK++; 
+                
+            }
             
         } // for products
         

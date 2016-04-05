@@ -84,7 +84,7 @@ public class MultithreadManager
                         LOG.info( "A la espera de que acabe un thread..." );
                         Future< List<Product> > future = completionSections.take();
                         List<Product> productList = future.get();  
-                        LOG.info( "Ha acabado un thread de " + shop.getName() 
+                        LOG.info( "Ha acabado la seccion de " + shop.getSections().get( j ).getName() + " de " + shop.getName()
                                 + "... Ha sacado " + productList.size() + " productos!" );
                         
                         // Ponemos nuestra posicion a true indicando que hemos terminado

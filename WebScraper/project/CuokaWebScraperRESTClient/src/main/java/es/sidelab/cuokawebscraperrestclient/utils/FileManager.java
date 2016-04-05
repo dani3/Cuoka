@@ -29,17 +29,24 @@ public class FileManager
         try {            
             File file = new File( section.getPath() + section.getName() + "_LINKS.txt" );
             
+            LOG.info( "Escribiendo fichero de links: '" + section.getPath() + section.getName() + "_LINKS.txt'" );
+            
             if( ! file.exists() )
                 file.createNewFile();
             
             // El segundo parametro debe estar a false para que se sobreescriba el contenido
             FileWriter fw = new FileWriter( file, false );
             bw = new BufferedWriter( fw );
-            for ( String link : listOfLinks )
+            for( int i = 0; i < listOfLinks.size(); i++ )
             {
-                bw.write( link );
-                bw.write( "\n" );
+                bw.write( listOfLinks.get( i ) );
+                
+                if( i != ( listOfLinks.size() - 1 ) )
+                    bw.write( "\n" );
             }
+            
+            LOG.info( "Fichero de links: '" + section.getPath() + section.getName() + "_LINKS.txt" 
+                    + "' escrito correctamente" );
             
         } catch ( IOException ex ) {
             LOG.error( "Error escribiendo el fichero '" + section.getPath() + section.getName() + "_LINKS.txt'" );
@@ -64,6 +71,17 @@ public class FileManager
      */
     public static boolean deleteFile( String path )
     {        
-        return new File( path ).delete();
+        LOG.info( "Borrando fichero: " + path );
+        
+        if ( new File( path ).delete() )
+        {
+            LOG.info( "Fichero " + path + " borrado correctamente" );
+            
+            return true;
+        }
+        
+        LOG.error( "No ha sido posible borrar el fichero: " + path );
+        
+        return false;
     }
 }

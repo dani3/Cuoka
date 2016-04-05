@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
@@ -25,23 +26,32 @@ public class mainZara
     {
         String url = "http://www.zara.com/es/";
         String sectionName = "Vestidos";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\";
+        String path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\";
+        Section section = new Section( sectionName, path, true );
         List<Product> productList = new ArrayList<>();
         
         List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
-          
-        // Recorremos todos los productos y sacamos sus atributos
-        int j = 0;
+        
+        // Escribimos en fichero todos los links de la seccion
+        FileManager.writeLinksToFile( productsLink, section );
+        // Ejecutamos el script que renderiza todos los productos
+        PythonManager.executeRenderProducts( section );
+        
+        int cont = 0;
         for ( String productLink : productsLink )
         {        
-            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_PRODUCTO.html";
+            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_" + cont + ".html";
             
             try 
             {               
                 List<ColorVariant> variants = new ArrayList<>();               
-                
-                File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
-            
+                File file = new File( pathProduct );
+
+                while ( ! file.exists() ) {}
+
+                Thread.sleep( 500 );
+                file = new File( pathProduct );
+
                 Document document = Jsoup.parse( file, "UTF-8" );
                 
                 // Obtener los atributos propios del producto
@@ -93,15 +103,20 @@ public class mainZara
                 e.printStackTrace(); 
                 
             } finally {
-                // CRUCIAL llamar al recolector de basura
-                System.gc();
                 
-                FileManager.deleteFile( path );
-                
-                j++;
+                cont++;
             }
             
         } // for products
+        
+        System.gc();
+        for ( int i = 0; i < productsLink.size(); i++ )
+        {
+            FileManager.deleteFile( "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_" + cont + ".html" );
+        }
+        
+        // Borramos el fichero de links
+        FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
         
         System.out.println( productList.size() );
         
