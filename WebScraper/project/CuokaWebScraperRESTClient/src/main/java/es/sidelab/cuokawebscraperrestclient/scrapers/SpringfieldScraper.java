@@ -35,6 +35,7 @@ public class SpringfieldScraper implements Scraper
     {       
         // Lista con los links de cada producto
         String htmlPath = section.getPath() + section.getName() + ".html";
+        // Sacamos los links de los productos
         List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;

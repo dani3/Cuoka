@@ -67,7 +67,7 @@ public class HyMScraper implements Scraper
                 
                 LOG.info( "Scraping: " + pathProduct );
             
-                Document document = Jsoup.parse( file, "UTF-8" );
+                Document document = Jsoup.parse( file, "ISO-8859-1" );
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
@@ -143,7 +143,8 @@ public class HyMScraper implements Scraper
                 cont++;
                 
             }
-        }
+            
+        } // for products
         
         System.gc();
         

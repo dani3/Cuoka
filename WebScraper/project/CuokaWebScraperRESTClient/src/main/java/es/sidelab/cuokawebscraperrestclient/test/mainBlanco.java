@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import java.io.File;
@@ -19,11 +20,10 @@ public class mainBlanco
     public static void main(String[] args) throws Exception 
     {        
         String url = "https://www.blanco.com/";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_false\\false\\";
-        String sectionName = "Camisas";
+        Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_false\\false\\", false );
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
+        List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".html" , url );
             
         for ( String productLink : productsLink )
         {

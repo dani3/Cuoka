@@ -35,6 +35,7 @@ public class BlancoScraper implements Scraper
     {        
         // Lista con los links de cada producto
         String htmlPath = section.getPath() + section.getName() + ".html";
+        // Sacamos los links de cada producto
         List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         int prodOK = 0;
@@ -116,7 +117,7 @@ public class BlancoScraper implements Scraper
                     prodNOK++;
                 
             } catch ( Exception e ) { 
-                LOG.error( "Excepcion en producto: " + productLink + " (" + e.toString() + ")" );                
+                LOG.error( "Excepcion en producto: " + productLink + " (" + e.toString() + ")" );
                 
                 prodNOK++; 
                 

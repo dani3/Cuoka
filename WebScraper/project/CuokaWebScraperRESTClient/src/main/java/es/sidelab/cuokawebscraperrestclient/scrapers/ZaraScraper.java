@@ -7,7 +7,6 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
 import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
-import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +41,7 @@ public class ZaraScraper implements Scraper
         
         // Lista con los links de cada producto
         String htmlPath = section.getPath() + section.getName() + ".html";
+        // Sacamos los links de cada producto
         List<String> productsLink = getListOfLinks( htmlPath, shop.getURL().toString() );
         
         // Escribimos en fichero todos los links de la seccion
@@ -67,7 +67,7 @@ public class ZaraScraper implements Scraper
             
                 LOG.info( "Scraping: " + pathProduct );
                 
-                Document document = Jsoup.parse( file, "UTF-8" );
+                Document document = Jsoup.parse( file, "ISO-8859-1" );
                 
                 // Obtener los atributos propios del producto
                 String link = productLink;                 

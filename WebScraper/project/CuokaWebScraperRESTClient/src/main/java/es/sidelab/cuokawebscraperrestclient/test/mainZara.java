@@ -25,12 +25,10 @@ public class mainZara
     public static void main(String[] args) throws Exception 
     {
         String url = "http://www.zara.com/es/";
-        String sectionName = "Vestidos";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\";
-        Section section = new Section( sectionName, path, true );
+        Section section = new Section( "Sudaderas", "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\", true );
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
+        List<String> productsLink = getListOfLinks( section.getName() + section.getPath() + ".html" , url );
         
         // Escribimos en fichero todos los links de la seccion
         FileManager.writeLinksToFile( productsLink, section );
@@ -40,7 +38,7 @@ public class mainZara
         int cont = 0;
         for ( String productLink : productsLink )
         {        
-            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_" + cont + ".html";
+            String pathProduct = section.getPath() + section.getName() + "_" + cont + ".html";
             
             try 
             {               
@@ -52,7 +50,7 @@ public class mainZara
                 Thread.sleep( 500 );
                 file = new File( pathProduct );
 
-                Document document = Jsoup.parse( file, "UTF-8" );
+                Document document = Jsoup.parse( file, "ISO-8859-1" );
                 
                 // Obtener los atributos propios del producto
                 String link = productLink;                 
@@ -77,8 +75,6 @@ public class mainZara
                                                                                                 .trim()
                                                                                                 .replaceAll( "/" , " " );
                 
-                System.out.println(colorName);
-                
                 List<Image> imagesURL = new ArrayList<>();
                 Elements images = document.select( "#main-images div.media-wrap" );
                 for ( Element img : images ) 
@@ -102,9 +98,9 @@ public class mainZara
             } catch ( Exception e ) { 
                 e.printStackTrace(); 
                 
-            } finally {
-                
+            } finally {                
                 cont++;
+                
             }
             
         } // for products
@@ -112,7 +108,7 @@ public class mainZara
         System.gc();
         for ( int i = 0; i < productsLink.size(); i++ )
         {
-            FileManager.deleteFile( "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_" + cont + ".html" );
+            FileManager.deleteFile( section.getPath() + section.getName() + "_" + i + ".html" );
         }
         
         // Borramos el fichero de links
@@ -126,7 +122,7 @@ public class mainZara
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
         System.out.println( "Description: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() );
+        System.out.println( "Precio: " + p.getPrice() + " €" );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {

@@ -15,8 +15,8 @@ public class main
     {    
         LOG.info( "Renderizando paginas" );
         
-        //if ( PythonManager.executeRenderSections() )
-        //{
+        if ( PythonManager.executeRenderSections() )
+        {
             LOG.info( "Buscamos la lista de tiendas" );
 
             // Sacamos la lista de tiendas
@@ -26,6 +26,6 @@ public class main
 
             // Ejecutamos concurrentemente los scrapers
             MultithreadManager.parallelScrap( shops );
-       // }        
+        }        
     }    
 }

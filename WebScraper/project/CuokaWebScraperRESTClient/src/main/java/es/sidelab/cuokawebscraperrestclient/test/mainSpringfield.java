@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +19,10 @@ public class mainSpringfield
     public static void main(String[] args) throws Exception 
     {        
         String url = "http://myspringfield.com/es/es/";
-        String sectionName = "Jeans";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\";
+        Section section = new Section( "Jeans", "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\", false );
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
+        List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".html" , url );
         
         for ( String productLink : productsLink )
         {
@@ -104,6 +104,8 @@ public class mainSpringfield
         } // for products
         
         Product p = productList.get( 0 );
+        
+        System.out.println( productList.size() );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );
