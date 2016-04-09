@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +19,10 @@ public class mainSpringfield
     public static void main(String[] args) throws Exception 
     {        
         String url = "http://myspringfield.com/es/es/";
-        String sectionName = "Jeans";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\";
+        Section section = new Section( "Jeans", "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\", false );
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
+        List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".html" , url );
         
         for ( String productLink : productsLink )
         {
@@ -35,10 +35,20 @@ public class mainSpringfield
 
                 // Obtener los atributos del producto
                 String link = productLink;
-                String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText().toUpperCase();
-                String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText().replaceAll( "€", "" ).replaceAll( ",", "." ).trim();
-                String reference = document.select( "div.c02__article-number" ).first().ownText().replaceAll( "Ref. " , "" ).trim();
-                String description = document.select( "div.c02__product-description" ).first().ownText().replaceAll( "\n" , " " );
+                // El nombre se pasa a mayusculas
+                String name = document.select( "div.c02__product > h1.c02__product-name" ).first().ownText()
+                                                                                                  .toUpperCase();
+                // Del precio solo nos quedamos con los numeros
+                String price = document.select( "div.small-only > span.c02__pricing-item" ).first().ownText()
+                                                                                                   .replaceAll( "[^,.0-9]", "" )
+                                                                                                   .replaceAll( ",", "." )
+                                                                                                   .trim();
+                // De la referencia eliminamos todo lo que no sean numeros
+                String reference = document.select( "div.c02__article-number" ).first().ownText()
+                                                                                       .replaceAll( "[^0-9]" , "" );
+                // En la descripcion sustituimos los saltos de linea por espacios
+                String description = document.select( "div.c02__product-description" ).first().ownText()
+                                                                                              .replaceAll( "\n" , " " );
 
                 if ( description.length() > 255 )
                     description = description.substring(0, 255);
@@ -94,6 +104,8 @@ public class mainSpringfield
         } // for products
         
         Product p = productList.get( 0 );
+        
+        System.out.println( productList.size() );
         
         System.out.println( "-------- INFO PRODUCTO ----------" );
         System.out.println( "Nombre: " + p.getName() );

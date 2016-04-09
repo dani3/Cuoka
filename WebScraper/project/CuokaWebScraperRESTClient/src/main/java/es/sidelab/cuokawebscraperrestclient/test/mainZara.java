@@ -3,6 +3,8 @@ package es.sidelab.cuokawebscraperrestclient.test;
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
@@ -23,50 +25,55 @@ public class mainZara
     public static void main(String[] args) throws Exception 
     {
         String url = "http://www.zara.com/es/";
-        String sectionName = "Vestidos";
-        String path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\";
+        Section section = new Section( "Sudaderas", "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\", true );
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( path + sectionName + ".html" , url );
-          
-        // Recorremos todos los productos y sacamos sus atributos
-        int j = 0;
+        List<String> productsLink = getListOfLinks( section.getName() + section.getPath() + ".html" , url );
+        
+        // Escribimos en fichero todos los links de la seccion
+        FileManager.writeLinksToFile( productsLink, section );
+        // Ejecutamos el script que renderiza todos los productos
+        PythonManager.executeRenderProducts( section );
+        
+        int cont = 0;
         for ( String productLink : productsLink )
         {        
-            String pathProduct = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\true\\Vestidos_PRODUCTO.html";
+            String pathProduct = section.getPath() + section.getName() + "_" + cont + ".html";
             
             try 
             {               
                 List<ColorVariant> variants = new ArrayList<>();               
-                
-                File file = PythonManager.executeRenderProduct( productLink, path, pathProduct );
-            
-                Document document = Jsoup.parse( file, "UTF-8" );
+                File file = new File( pathProduct );
+
+                while ( ! file.exists() ) {}
+
+                Thread.sleep( 500 );
+                file = new File( pathProduct );
+
+                Document document = Jsoup.parse( file, "ISO-8859-1" );
                 
                 // Obtener los atributos propios del producto
-                String different_price = null;
                 String link = productLink;                 
-                String name = document.select( "div header > h1" ).first().text().replaceAll( "\\\\[nt]", "" ).toUpperCase(); 
-                String price = document.select( "div.price span" ).first().ownText().replaceAll( "EUR", "" ).replaceAll( ",", "." ).trim();
-                String reference = document.select( "div.right p.reference" ).first().ownText().replaceAll( "Ref. ", "" ).replaceAll( "/", "" ).replaceAll( "\\\\[nt]", "" );
-                String description = document.select( "#description p.description span" ).first().ownText().replaceAll( "\\\\[nt]", "" ); 
-                     
-                // Sacamos el descuento si lo hay
-                if ( ! document.select( "strong.product-price span" ).isEmpty() )
-                    different_price = document.select( "strong.product-price span" ).first()
-                                                                                    .ownText()
-                                                                                    .replaceAll( "€", "" )
-                                                                                    .replaceAll( ",", "." ).trim();
-                                
+                String name = document.select( "div header > h1" ).first().ownText()
+                                                                          .replaceAll( "\\\\[nt]", "" )
+                                                                          .toUpperCase(); 
+                String price = document.select( "div.price span" ).first().ownText()
+                                                                          .replaceAll( "[^,.0-9]", "" )
+                                                                          .replaceAll( ",", "." );
+                String reference = document.select( "div.right p.reference" ).first().ownText()
+                                                                                     .replaceAll( "[^0-9]", "" )
+                                                                                     .replaceAll( "\\\\[nt]", "" );
+                String description = document.select( "#description p.description span" ).first().ownText()
+                                                                                                 .replaceAll( "\\\\[nt]", "" ); 
+               
+                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
                 if ( description.length() > 255 )
                     description = description.substring( 0, 255 );
                 
                 String colorReference = reference;
-                String colorName = document.select( "div.colors label" ).first()
-                                                                        .select( "div.imgCont" )
-                                                                        .attr( "title" ).toUpperCase()
-                                                                                        .trim()
-                                                                                        .replace('\\', '-');
+                String colorName = document.select( "span.color-description" ).first().ownText().toUpperCase()
+                                                                                                .trim()
+                                                                                                .replaceAll( "/" , " " );
                 
                 List<Image> imagesURL = new ArrayList<>();
                 Elements images = document.select( "#main-images div.media-wrap" );
@@ -91,16 +98,21 @@ public class mainZara
             } catch ( Exception e ) { 
                 e.printStackTrace(); 
                 
-            } finally {
-                // CRUCIAL llamar al recolector de basura
-                System.gc();
+            } finally {                
+                cont++;
                 
-                PythonManager.deleteFile( path );
-                
-                j++;
             }
             
         } // for products
+        
+        System.gc();
+        for ( int i = 0; i < productsLink.size(); i++ )
+        {
+            FileManager.deleteFile( section.getPath() + section.getName() + "_" + i + ".html" );
+        }
+        
+        // Borramos el fichero de links
+        FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
         
         System.out.println( productList.size() );
         
@@ -110,7 +122,7 @@ public class mainZara
         System.out.println( "Nombre: " + p.getName() );
         System.out.println( "Link: " + p.getLink() );
         System.out.println( "Description: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() );
+        System.out.println( "Precio: " + p.getPrice() + " €" );
         System.out.println( "-------- INFO COLORES -----------" );
         for ( ColorVariant cv : p.getColors() )
         {

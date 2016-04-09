@@ -41,12 +41,11 @@ public class MultithreadManager
         
         countDownLatch = new CountDownLatch( shops.size() );
         
-        boolean[] finishedShops = new boolean[ shops.size() ];
         for ( int i = 0; i < shops.size(); i++ )
         {
             final int k = i;
             
-            final Shop shop = shops.get(i);
+            final Shop shop = shops.get( i );
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
                 LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );
@@ -85,7 +84,7 @@ public class MultithreadManager
                         LOG.info( "A la espera de que acabe un thread..." );
                         Future< List<Product> > future = completionSections.take();
                         List<Product> productList = future.get();  
-                        LOG.info( "Ha acabado un thread de " + shop.getName() 
+                        LOG.info( "Ha acabado la seccion de " + shop.getSections().get( j ).getName() + " de " + shop.getName()
                                 + "... Ha sacado " + productList.size() + " productos!" );
                         
                         // Ponemos nuestra posicion a true indicando que hemos terminado

@@ -1,5 +1,6 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
+import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.BufferedReader;
 import java.io.File;
@@ -84,41 +85,16 @@ public class PythonManager
     }
     
     /**
-     * Metodo que ejecuta el script 'RenderProduct'.
-     * @param url: URL del producto.
-     * @param path: ruta donde se encuentra el script.
-     * @param html: fichero html donde se debe dejar el resultado.
-     * @return file del html.
+     * Metodo que llama al script de python 'renderProducts'
+     * @param section: seccion a la que pertenecen los productos.
      * @throws IOException 
      */
-    public static File executeRenderProduct( String url, String path, String html ) throws IOException
-    {      
+    public static void executeRenderProducts( Section section ) throws IOException
+    {
         Process p = Runtime.getRuntime().exec( new String[]{ "python",
-                            path + "renderProduct.py", 
-                            html, url } );   
-        
-        BufferedReader stdError = new BufferedReader( new InputStreamReader( p.getErrorStream() ) );
-        
-        String s = null;
-        while ((s = stdError.readLine()) != null)
-            Printer.print(s);    
-        
-        File file = new File( html );     
-        while ( ! file.exists() ) 
-        {
-            file = new File( html );
-        }
-        
-        return file;
-    }
-    
-    /**
-     * Metodo que elimina un fichero html dado.
-     * @param path: ruta del fichero html.
-     * @return true si se ha borrado correctamente.
-     */
-    public static boolean deleteFile( String path )
-    {        
-        return new File( path ).delete();
+                            section.getPath() + "renderProducts.py", 
+                            section.getName(),
+                            section.getPath(),
+                            section.getPath() + section.getName() + "_LINKS.txt" } ); 
     }
 }
