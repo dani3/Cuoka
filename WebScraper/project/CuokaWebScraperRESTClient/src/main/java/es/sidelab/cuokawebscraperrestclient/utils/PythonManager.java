@@ -2,10 +2,8 @@ package es.sidelab.cuokawebscraperrestclient.utils;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import org.apache.log4j.Logger;
 
 /**
@@ -21,7 +19,7 @@ public class PythonManager
      * Metodo que ejecuta el script 'renderSections.py'.
      * @return true si se ha ejecutado correctamente.
      * @throws IOException 
-     * @throws java.lang.InterruptedException 
+     * @throws java.lang.InterruptedException
      */
     public static boolean executeRenderSections() throws IOException, InterruptedException
     {
@@ -59,11 +57,13 @@ public class PythonManager
                             
                             // Encapsulamos el path entre comillas para que los espacios no afecten                            
                             LOG.info( "Ejecutando: " + "python "
-                                                    + "\"" + path + "renderSections.py" + "\""  );
+                                                    + "\"" + path + "renderSections.py" + "\"" + " " + Properties.CHROME_DRIVER + " \"" + path + "\"" );
                             
                             // Ejecutamos el script de la tienda
-                            Process p = Runtime.getRuntime().exec( "python "
-                                                    + "\"" + path + "renderSections.py" + "\""  );
+                            Process p = Runtime.getRuntime().exec( new String[] { "python"
+                                                    , path + "renderSections.py"
+                                                    , Properties.CHROME_DRIVER
+                                                    , path } );
                             
                             Thread.sleep( 2500 );
                             
@@ -91,10 +91,26 @@ public class PythonManager
      */
     public static void executeRenderProducts( Section section ) throws IOException
     {
-        Process p = Runtime.getRuntime().exec( new String[]{ "python",
-                            section.getPath() + "renderProducts.py", 
-                            section.getName(),
-                            section.getPath(),
-                            section.getPath() + section.getName() + "_LINKS.txt" } ); 
+        Process p = Runtime.getRuntime().exec( new String[]{ "python"
+                            , section.getPath() + "renderProducts.py"
+                            , Properties.CHROME_DRIVER
+                            , section.getName()
+                            , section.getPath()
+                            , section.getPath() + section.getName() + "_LINKS.txt" } ); 
+    }
+    
+    /**
+     * Metodo que llama al script de python 'renderColors'
+     * @param section: seccion a la que pertenecen los productos.
+     * @throws IOException 
+     */
+    public static void executeRenderColors( Section section ) throws IOException
+    {
+        Process p = Runtime.getRuntime().exec( new String[]{ "python"
+                            , section.getPath() + "renderColors.py"
+                            , Properties.CHROME_DRIVER
+                            , section.getName()
+                            , section.getPath()
+                            , section.getPath() + section.getName() + "_LINKS.txt" } ); 
     }
 }

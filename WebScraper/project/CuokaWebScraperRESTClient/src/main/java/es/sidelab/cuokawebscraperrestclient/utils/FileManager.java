@@ -19,7 +19,7 @@ public class FileManager
     
     /**
      * Metodo que crea un fichero de texto con todos los links recibidos.
-     * @param listOfLinks: lista de links a escribir
+     * @param listOfLinks: lista de links a escribir.
      * @param section: seccion a la que pertenecen los productos.
      */
     public static void writeLinksToFile( List<String> listOfLinks, Section section )
@@ -39,10 +39,16 @@ public class FileManager
             bw = new BufferedWriter( fw );
             for( int i = 0; i < listOfLinks.size(); i++ )
             {
-                bw.write( listOfLinks.get( i ) );
+                // Comprobamos que no escribimos repetido el link (NECESARIO para los colores)
+                if( ( i == 0 ) || ( ! listOfLinks.get( i - 1 ).equals( listOfLinks.get( i ) ) ) )
+                {
+                    bw.write( listOfLinks.get( i ) );
+                    
+                    // Evitamos escribir un salto de linea si es el ultimo producto
+                    if( i != ( listOfLinks.size() - 1 ) )
+                        bw.write( "\n" );
+                }              
                 
-                if( i != ( listOfLinks.size() - 1 ) )
-                    bw.write( "\n" );
             }
             
             LOG.info( "Fichero de links: '" + section.getPath() + section.getName() + "_LINKS.txt" 

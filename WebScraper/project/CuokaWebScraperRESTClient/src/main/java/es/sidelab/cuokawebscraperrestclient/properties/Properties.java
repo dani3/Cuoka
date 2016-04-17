@@ -15,6 +15,7 @@ public class Properties
     
     public static final String SHOPS_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
     public static final String RENDER_SCRIPT = "C:\\Users\\Dani\\Documents\\GitHub\\Cuokka\\WebScraper\\scripts\\";
+    public static final String CHROME_DRIVER = "C:\\Users\\Dani\\Documents\\chromedriver";
     
     public static final String ACTIVITY_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
 
