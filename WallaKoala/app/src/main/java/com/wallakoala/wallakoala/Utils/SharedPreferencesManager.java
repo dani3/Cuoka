@@ -22,7 +22,7 @@ public class SharedPreferencesManager
 
     private static Context mContext;
 
-    public SharedPreferencesManager( Context context )
+    public SharedPreferencesManager(Context context)
     {
         mContext = context;
         mSharedPreferences = mContext.getSharedPreferences("cuoka_preferences", Context.MODE_PRIVATE);
@@ -33,7 +33,7 @@ public class SharedPreferencesManager
      * @param shops: conjunto de tiendas.
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertShops( Set<String> shops )
+    public boolean insertShops(Set<String> shops)
     {
         mEditor = mSharedPreferences.edit();
         mEditor.putStringSet( KEY_SHOPS, shops );
@@ -55,10 +55,10 @@ public class SharedPreferencesManager
      * @param man: true si es hombre.
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertMan( boolean man )
+    public boolean insertMan(boolean man)
     {
         mEditor = mSharedPreferences.edit();
-        mEditor.putBoolean( KEY_MAN, man );
+        mEditor.putBoolean(KEY_MAN, man);
 
         return mEditor.commit();
     }
@@ -69,7 +69,7 @@ public class SharedPreferencesManager
      */
     public boolean retreiveMan()
     {
-        return mSharedPreferences.getBoolean( KEY_MAN, false );
+        return mSharedPreferences.getBoolean(KEY_MAN, false);
     }
 
     /**
@@ -77,10 +77,10 @@ public class SharedPreferencesManager
      * @param newness: true si se quiere las novedades.
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertNewness( boolean newness )
+    public boolean insertNewness(boolean newness)
     {
         mEditor = mSharedPreferences.edit();
-        mEditor.putBoolean( KEY_NEWNESS, newness );
+        mEditor.putBoolean(KEY_NEWNESS, newness);
 
         return mEditor.commit();
     }
@@ -91,7 +91,7 @@ public class SharedPreferencesManager
      */
     public boolean retreiveNewness()
     {
-        return mSharedPreferences.getBoolean( KEY_NEWNESS, false );
+        return mSharedPreferences.getBoolean(KEY_NEWNESS, false);
     }
 
 }

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -65,14 +66,10 @@ import java.util.concurrent.TimeUnit;
 public class ProductsUI extends AppCompatActivity
 {
     /* Constants */
-    protected static final String TAG = "CUOKA";
-    protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static final int NUM_PRODUCTS_DISPLAYED = 10;
-    protected static final int MIN_PRODUCTS = 6;
+    protected static final int MIN_PRODUCTS = 8;
     protected static final int FILTER_REQUEST = 1;
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    protected static final String SERVER_SPRING_PORT = "8080";
     protected static boolean MAN;
     protected static boolean FIRST_CONNECTION;
     protected static boolean ON_CREATE_FLAG;
@@ -197,7 +194,7 @@ public class ProductsUI extends AppCompatActivity
         FIRST_CONNECTION = true;
         ON_CREATE_FLAG = true;
 
-        Log.d(TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
+        Log.d(Properties.TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
     /**
@@ -447,7 +444,7 @@ public class ProductsUI extends AppCompatActivity
         // la pantalla de un producto, por lo que hay que restaurar el pie de foto.
         if ((!ON_CREATE_FLAG) && (mProductAdapter != null) && (mProductAdapter.productClicked()))
         {
-            Log.d(TAG, "Volviendo de ProductUI");
+            Log.d(Properties.TAG, "Volviendo de ProductUI");
             mProductAdapter.restoreProductFooter();
 
         } else if (ON_CREATE_FLAG) {
@@ -498,13 +495,13 @@ public class ProductsUI extends AppCompatActivity
             {
                 Intent intent = new Intent(ProductsUI.this, FilterUI.class);
 
-                intent.putExtra(PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
-                intent.putExtra(PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
-                intent.putExtra(PACKAGE + ".colors", (ArrayList<String>)mFilterMap.get("colors"));
-                intent.putExtra(PACKAGE + ".shops", (ArrayList<String>)mFilterMap.get("shops"));
-                intent.putExtra(PACKAGE + ".minPrice", (Integer)mFilterMap.get("minPrice"));
-                intent.putExtra(PACKAGE + ".maxPrice", (Integer)mFilterMap.get("maxPrice"));
-                intent.putExtra(PACKAGE + ".man", MAN);
+                intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
+                intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
+                intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)mFilterMap.get("colors"));
+                intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)mFilterMap.get("shops"));
+                intent.putExtra(Properties.PACKAGE + ".minPrice", (Integer)mFilterMap.get("minPrice"));
+                intent.putExtra(Properties.PACKAGE + ".maxPrice", (Integer)mFilterMap.get("maxPrice"));
+                intent.putExtra(Properties.PACKAGE + ".man", MAN);
 
                 startActivityForResult(intent, FILTER_REQUEST);
 
@@ -523,37 +520,37 @@ public class ProductsUI extends AppCompatActivity
 
         if (resultCode == RESULT_OK)
         {
-            SEARCH_QUERY = data.getStringExtra(PACKAGE + ".search");
+            SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
 
             if (SEARCH_QUERY == null)
             {
-                Log.d(TAG, "Filtro establecido:");
+                Log.d(Properties.TAG, "Filtro establecido:");
 
-                mFilterMap.put("newness", data.getBooleanExtra(PACKAGE + ".newness", false));
-                mFilterMap.put("sections", data.getSerializableExtra(PACKAGE + ".sections"));
-                mFilterMap.put("colors", data.getSerializableExtra(PACKAGE + ".colors"));
-                mFilterMap.put("shops", data.getSerializableExtra(PACKAGE + ".shops"));
-                mFilterMap.put("minPrice", data.getIntExtra(PACKAGE + ".minPrice", -1));
-                mFilterMap.put("maxPrice", data.getIntExtra(PACKAGE + ".maxPrice", -1));
+                mFilterMap.put("newness", data.getBooleanExtra(Properties.PACKAGE + ".newness", false));
+                mFilterMap.put("sections", data.getSerializableExtra(Properties.PACKAGE + ".sections"));
+                mFilterMap.put("colors", data.getSerializableExtra(Properties.PACKAGE + ".colors"));
+                mFilterMap.put("shops", data.getSerializableExtra(Properties.PACKAGE + ".shops"));
+                mFilterMap.put("minPrice", data.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
+                mFilterMap.put("maxPrice", data.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
 
-                Log.d(TAG, " Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
-                Log.d(TAG, " Precio Min = " + Integer.toString((int) mFilterMap.get("minPrice")));
-                Log.d(TAG, " Precio Max = " + Integer.toString((int) mFilterMap.get("maxPrice")));
+                Log.d(Properties.TAG, " Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
+                Log.d(Properties.TAG, " Precio Min = " + Integer.toString((int) mFilterMap.get("minPrice")));
+                Log.d(Properties.TAG, " Precio Max = " + Integer.toString((int) mFilterMap.get("maxPrice")));
 
                 List<String> shopsList = (ArrayList<String>) mFilterMap.get("shops");
                 if (shopsList != null)
                     for (String shop : shopsList)
-                        Log.d(TAG, " Tienda = " + shop);
+                        Log.d(Properties.TAG, " Tienda = " + shop);
 
                 List<String> sectionsList = (ArrayList<String>) mFilterMap.get("sections");
                 if (sectionsList != null)
                     for (String section : sectionsList)
-                        Log.d(TAG, " Seccion = " + section);
+                        Log.d(Properties.TAG, " Seccion = " + section);
 
                 List<String> colorsList = (ArrayList<String>) mFilterMap.get("colors");
                 if (colorsList != null)
                     for (String color : colorsList)
-                        Log.d(TAG, " Color = " + color);
+                        Log.d(Properties.TAG, " Color = " + color);
 
                 if (shopsList != null)
                     if (shopsList.size() == mShopsList.size())
@@ -577,7 +574,7 @@ public class ProductsUI extends AppCompatActivity
                         && (from < 0)
                         && (to < 0))
                 {
-                    Log.d(TAG, "Filtros por defecto");
+                    Log.d(Properties.TAG, "Filtros por defecto");
 
                     mFilterMap = _initFilterMap();
 
@@ -592,7 +589,7 @@ public class ProductsUI extends AppCompatActivity
                 }
 
             } else {
-                Log.d(TAG, "Busqueda: " + SEARCH_QUERY);
+                Log.d(Properties.TAG, "Busqueda: " + SEARCH_QUERY);
 
                 _reinitializeData();
 
@@ -772,9 +769,9 @@ public class ProductsUI extends AppCompatActivity
 
             try
             {
-                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT + "/filter/" + shop);
+                String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shop);
 
-                Log.d(TAG, "Conectando con: " + fixedURL);
+                Log.d(Properties.TAG, "Conectando con: " + fixedURL);
 
                 url = new URL(fixedURL);
 
@@ -800,7 +797,7 @@ public class ProductsUI extends AppCompatActivity
                     jsonObject.put("colors", new JSONArray(colorsList));
                     jsonObject.put("sections", new JSONArray(sectionsList));
 
-                    Log.d(TAG, "JSON de filtros:\n    " + jsonObject.toString());
+                    Log.d(Properties.TAG, "JSON de filtros:\n    " + jsonObject.toString());
 
                     // Enviamos el JSON
                     writer = new DataOutputStream(conn.getOutputStream());
@@ -824,7 +821,7 @@ public class ProductsUI extends AppCompatActivity
                 }
 
             } catch(Exception ex) {
-                Log.d(TAG, "Error conectando con el servidor");
+                Log.d(Properties.TAG, "Error conectando con el servidor");
 
             } finally {
                 try
@@ -836,7 +833,7 @@ public class ProductsUI extends AppCompatActivity
                         writer.close();
 
                 } catch ( IOException e ) {
-                    Log.d(TAG, "Error cerrando conexion");
+                    Log.d(Properties.TAG, "Error cerrando conexion");
 
                 }
 
@@ -867,10 +864,10 @@ public class ProductsUI extends AppCompatActivity
             URL url = null;
 
             try {
-                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT
+                String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                         + "/search/" + shop + "/" + MAN + "/" + SEARCH_QUERY);
 
-                Log.d(TAG, "Realizando busqueda: " + fixedURL);
+                Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
 
                 url = new URL(fixedURL);
 
@@ -892,7 +889,7 @@ public class ProductsUI extends AppCompatActivity
                 }
 
             } catch (Exception e) {
-                Log.d(TAG, "Error realizando busqueda con " + shop);
+                Log.d(Properties.TAG, "Error realizando busqueda con " + shop);
 
             } finally {
                 try {
@@ -900,7 +897,7 @@ public class ProductsUI extends AppCompatActivity
                         reader.close();
 
                 } catch (IOException e) {
-                    Log.d(TAG, "Error cerrando conexion con " + shop);
+                    Log.d(Properties.TAG, "Error cerrando conexion con " + shop);
 
                 }
 
@@ -955,7 +952,7 @@ public class ProductsUI extends AppCompatActivity
 
         } // while #1
 
-        Log.d(TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
+        Log.d(Properties.TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
     }
 
     /**
@@ -976,8 +973,8 @@ public class ProductsUI extends AppCompatActivity
             mProductsCandidatesDeque.removeFirst();
         }
 
-        Log.d(TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
-        Log.d(TAG, "Lista de mostrados: " + mProductsDisplayedList.size());
+        Log.d(Properties.TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
+        Log.d(Properties.TAG, "Lista de mostrados: " + mProductsDisplayedList.size());
     }
 
     /**
@@ -1091,7 +1088,7 @@ public class ProductsUI extends AppCompatActivity
                 if (content.isEmpty())
                 {
                     error = "Imposible conectar con el servidor";
-                    Log.d(TAG, error);
+                    Log.d(Properties.TAG, error);
                 }
 
             } catch(Exception ex)  {
@@ -1142,10 +1139,10 @@ public class ProductsUI extends AppCompatActivity
             URL url = null;
 
             try {
-                String fixedURL = SERVER_URL + ":" + SERVER_SPRING_PORT
+                String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                         + "/products/" + mShopsList.get(myPos).replaceAll(" ", "%20") + "/" + MAN + "/" + DAYS_OFFSET;
 
-                Log.d(TAG, "Conectando con: " + fixedURL
+                Log.d(Properties.TAG, "Conectando con: " + fixedURL
                         + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
 
                 url = new URL(fixedURL);
@@ -1168,7 +1165,7 @@ public class ProductsUI extends AppCompatActivity
                 }
 
             } catch ( Exception e ) {
-                Log.d( TAG, "Error conectando con " + mShopsList.get(myPos) );
+                Log.d( Properties.TAG, "Error conectando con " + mShopsList.get(myPos) );
 
             } finally {
                 try {
@@ -1176,7 +1173,7 @@ public class ProductsUI extends AppCompatActivity
                         reader.close();
 
                 } catch ( IOException e ) {
-                    Log.d(TAG, "Error cerrando conexion con " + mShopsList.get(myPos));
+                    Log.d(Properties.TAG, "Error cerrando conexion con " + mShopsList.get(myPos));
 
                 }
 
@@ -1222,7 +1219,7 @@ public class ProductsUI extends AppCompatActivity
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
-                    Log.d(TAG, "Tamano en bytes: " + (content.get(i).getBytes().length / 1000 ) + "kB");
+                    Log.d(Properties.TAG, "Tamano en bytes: " + (content.get(i).getBytes().length / 1000 ) + "kB");
 
                     ConversionTask task = new ConversionTask(new JSONArray(content.get(i)));
 
@@ -1418,7 +1415,7 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.LOADING;
         }
 
-        Log.d(TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "Estado = " + mState.toString());
     }
 
     /**
@@ -1440,7 +1437,7 @@ public class ProductsUI extends AppCompatActivity
             mState = STATE.NODATA;
         }
 
-        Log.d(TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "Estado = " + mState.toString());
     }
 
     /**
@@ -1479,7 +1476,7 @@ public class ProductsUI extends AppCompatActivity
 
         mState = STATE.ERROR;
 
-        Log.d(TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "Estado = " + mState.toString());
     }
 
     /**

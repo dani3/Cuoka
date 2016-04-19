@@ -5,20 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,27 +21,19 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 /**
- * @class Adapter para el grid de productos
+ * @class Adapter para el grid de productos.
  * Created by Daniel Mancebo Aldea on 10/11/2015.
  */
 
 public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapter.ProductHolder>
 {
-    /* Constants */
-    private static final String TAG = "CUOKA";
-    private static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    protected static final String IMAGES_PATH = "/images/products/";
-
     /* Context */
     private static Context mContext;
 
@@ -142,16 +128,16 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     /* Enviamos toda la informacion necesaria para que la siguiente activity
                      * realice la animacion */
-                    intent.putExtra(PACKAGE + ".Beans.Product", mProduct)
-                          .putExtra(PACKAGE + ".bitmap", mBitmapFileName)
-                          .putExtra(PACKAGE + ".leftFav", favoriteScreenLocation[0])
-                          .putExtra(PACKAGE + ".topFav", favoriteScreenLocation[1])
-                          .putExtra(PACKAGE + ".widthFav", mProductFavoriteImageButton.getWidth())
-                          .putExtra(PACKAGE + ".heightFav", mProductFavoriteImageButton.getHeight())
-                          .putExtra(PACKAGE + ".left", imageScreenLocation[0])
-                          .putExtra(PACKAGE + ".top", imageScreenLocation[1])
-                          .putExtra(PACKAGE + ".width", mProductImageView.getWidth())
-                          .putExtra(PACKAGE + ".height", mProductImageView.getHeight());
+                    intent.putExtra(Properties.PACKAGE + ".Beans.Product", mProduct)
+                          .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
+                          .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
+                          .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
+                          .putExtra(Properties.PACKAGE + ".widthFav", mProductFavoriteImageButton.getWidth())
+                          .putExtra(Properties.PACKAGE + ".heightFav", mProductFavoriteImageButton.getHeight())
+                          .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
+                          .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
+                          .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
+                          .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
 
                     /* Reseteamos el nombre del fichero */
                     mBitmapFileName = null;
@@ -255,7 +241,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                         + product.getColors().get(0).getReference() + "_"
                         + product.getColors().get(0).getColorName() + "_0_Small.jpg";
 
-            String url = Utils.fixUrl(SERVER_URL + IMAGES_PATH + product.getShop() + "/" + imageFile);
+            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
 
             Picasso.with(mContext)
                    .load(url)
@@ -287,7 +273,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 {
                     // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
                     // y ralentiza la animacion
-                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
+                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), Properties.TAG);
 
                     if (mBitmapFileName != null)
                     {

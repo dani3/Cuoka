@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -25,11 +26,6 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
 {
-    /* Constants */
-    private static final String TAG = "CUOKA";
-    private static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    private static final String IMAGES_PATH = "/images/products/";
-
     /* Context */
     private static Context mContext;
 
@@ -101,7 +97,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                     + colorVariant.getReference() + "_"
                     + colorVariant.getColorName() + "_" + getAdapterPosition() + "_Large.jpg";
 
-            String url = Utils.fixUrl(SERVER_URL + IMAGES_PATH + mShop + "/" + imageFile);
+            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + mShop + "/" + imageFile);
 
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)
