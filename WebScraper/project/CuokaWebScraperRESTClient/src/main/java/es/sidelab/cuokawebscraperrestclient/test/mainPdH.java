@@ -20,6 +20,8 @@ import org.jsoup.select.Elements;
 
 public class mainPdH 
 {    
+    
+    /*Revisar urgentemente!!! */
     public static void main(String[] args) throws Exception 
     {
         String url = "http://pedrodelhierro.com";
