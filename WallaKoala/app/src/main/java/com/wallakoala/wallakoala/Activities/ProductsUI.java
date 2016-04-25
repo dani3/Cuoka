@@ -387,10 +387,10 @@ public class ProductsUI extends AppCompatActivity
      */
     protected void _initDrawerToggle()
     {
-        // Inicializamos el control en la action bar
+        // Inicializamos el control en la action bar.
         mLeftDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         {
-            // Metodo llamado cuando el drawer esta completamente cerrado
+            // Metodo llamado cuando el drawer esta completamente cerrado.
             @Override
             public void onDrawerClosed(View drawerView)
             {
@@ -398,7 +398,7 @@ public class ProductsUI extends AppCompatActivity
                     mLeftDrawerToggle.syncState();
             }
 
-            // Metodo llamado cuando el drawer esta completamente abierto
+            // Metodo llamado cuando el drawer esta completamente abierto.
             @Override
             public void onDrawerOpened(View drawerView)
             {
@@ -411,7 +411,7 @@ public class ProductsUI extends AppCompatActivity
                 }
             }
 
-            // Metodo para realizar la animacion del drawerToggle, solo se realiza con el drawer izquierdo
+            // Metodo para realizar la animacion del drawerToggle.
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset)
             {
@@ -909,7 +909,6 @@ public class ProductsUI extends AppCompatActivity
 
     /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
-     * Solo se queda con los productos que pasen el filtro.
      */
     protected void updateCandidates()
     {
@@ -937,11 +936,13 @@ public class ProductsUI extends AppCompatActivity
             while((index < list.size()) && (turn))
             {
                 mProductsCandidatesDeque.addLast(list.get(index++));
+
                 turn = false;
             } // while #2
 
             // Actualizamos el mapa de indices.
             indexMap.put(key, index);
+
             turn = true;
 
             // Si se ha terminado el recorrido, lo iniciamos de nuevo.
@@ -997,17 +998,16 @@ public class ProductsUI extends AppCompatActivity
 
         for(JSONObject jsonObject : jsonList)
         {
-            String name = jsonObject.getString("2");
-
-            String shop = key = jsonObject.getString("3");
-            String section = jsonObject.getString("4");
-            double price = jsonObject.getDouble("1");
-            String link = jsonObject.getString("5");
+            String name        = jsonObject.getString("2");
+            String shop = key  = jsonObject.getString("3");
+            String section     = jsonObject.getString("4");
+            double price       = jsonObject.getDouble("1");
+            String link        = jsonObject.getString("5");
             String description = jsonObject.getString("7");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
-            for( int i = 0; i < jsColors.length(); i++ )
+            for(int i = 0; i < jsColors.length(); i++)
             {
                 JSONObject jsColor = jsColors.getJSONObject(i);
 
@@ -1016,13 +1016,13 @@ public class ProductsUI extends AppCompatActivity
                 String colorPath = jsColor.getString("4");
                 short numerOfImages = (short)jsColor.getInt("3");
 
-                colors.add( new ColorVariant(reference, colorName, colorPath, numerOfImages));
+                colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
             Product product = new Product(name, shop, section, price, link, description, colors);
 
             if (product.isOkay())
-                productsList.add(new Product(name, shop, section, price, link, description, colors));
+                productsList.add(product);
 
         }
 
@@ -1038,7 +1038,9 @@ public class ProductsUI extends AppCompatActivity
     {
         private ThreadPoolExecutor executor;
         private CompletionService<String> completionService;
-        private List<String> content = new ArrayList<>();
+
+        private List<String> content;
+
         private String error = null;
 
         @Override
@@ -1055,6 +1057,8 @@ public class ProductsUI extends AppCompatActivity
                     , new LinkedBlockingQueue<Runnable>());
 
             completionService = new ExecutorCompletionService<>(executor);
+
+            content = new ArrayList<>();
         }
 
         @Override
@@ -1096,6 +1100,7 @@ public class ProductsUI extends AppCompatActivity
 
             } finally {
                 executor.shutdown();
+
             }
 
             return null;
@@ -1103,7 +1108,7 @@ public class ProductsUI extends AppCompatActivity
         } // doInBackground
 
         @Override
-        protected void onPostExecute( Void unused )
+        protected void onPostExecute(Void unused)
         {
             if (error != null)
             {
@@ -1111,8 +1116,10 @@ public class ProductsUI extends AppCompatActivity
 
                 _errorConnectingToServer(false);
 
-            } else
+            } else {
                 new MultithreadConversion().execute(content);
+
+            }
 
         } // onPostExecute
 
@@ -1164,15 +1171,15 @@ public class ProductsUI extends AppCompatActivity
                     return sb.toString();
                 }
 
-            } catch ( Exception e ) {
-                Log.d( Properties.TAG, "Error conectando con " + mShopsList.get(myPos) );
+            } catch (Exception e) {
+                Log.d(Properties.TAG, "Error conectando con " + mShopsList.get(myPos));
 
             } finally {
                 try {
-                    if ( reader != null )
+                    if (reader != null)
                         reader.close();
 
-                } catch ( IOException e ) {
+                } catch (IOException e) {
                     Log.d(Properties.TAG, "Error cerrando conexion con " + mShopsList.get(myPos));
 
                 }
@@ -1204,7 +1211,7 @@ public class ProductsUI extends AppCompatActivity
                     , TimeUnit.SECONDS
                     , new LinkedBlockingQueue<Runnable>());
 
-            completionService = new ExecutorCompletionService<>( executor );
+            completionService = new ExecutorCompletionService<>(executor);
         }
 
         @Override
@@ -1219,7 +1226,7 @@ public class ProductsUI extends AppCompatActivity
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
-                    Log.d(Properties.TAG, "Tamano en bytes: " + (content.get(i).getBytes().length / 1000 ) + "kB");
+                    Log.d(Properties.TAG, "Tamano en bytes: " + (content.get(i).getBytes().length / 1000) + "kB");
 
                     ConversionTask task = new ConversionTask(new JSONArray(content.get(i)));
 
