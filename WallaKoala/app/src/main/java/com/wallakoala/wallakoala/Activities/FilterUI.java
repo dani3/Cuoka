@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -61,10 +62,6 @@ import java.util.Map;
 public class FilterUI extends AppCompatActivity implements View.OnClickListener
 {
     /* Constants */
-    protected static final String TAG = "CUOKA";
-    protected static final String PACKAGE = "com.wallakoala.wallakoala";
-    protected static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    protected static final String SERVER_SPRING_PORT = "8080";
     protected static final float ALPHA_ACTIVE_FILTER = 1.0f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
     protected static String SECTION_FILTER_MAN_1;
@@ -218,33 +215,31 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (savedInstanceState == null)
         {
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> mFilterMap = new HashMap<>();
 
             Intent intent = getIntent();
 
             // Filtro de novedades (false si no esta activado)
-            map.put("newness", intent.getBooleanExtra(PACKAGE + ".newness", false));
+            mFilterMap.put("newness", intent.getBooleanExtra(Properties.PACKAGE + ".newness", false));
             // Filtro de secciones (null si no esta activado)
-            map.put("sections", intent.getSerializableExtra(PACKAGE + ".sections"));
+            mFilterMap.put("sections", intent.getSerializableExtra(Properties.PACKAGE + ".sections"));
             // Filtro de colores (null si no esta activado)
-            map.put("colors", intent.getSerializableExtra(PACKAGE + ".colors"));
+            mFilterMap.put("colors", intent.getSerializableExtra(Properties.PACKAGE + ".colors"));
             // Filtro de tiendas (null si no esta activado)
-            map.put("shops", intent.getSerializableExtra(PACKAGE + ".shops"));
+            mFilterMap.put("shops", intent.getSerializableExtra(Properties.PACKAGE + ".shops"));
             // Filtro de precio (minimo) (-1 si no esta activado)
-            map.put("minPrice", intent.getIntExtra(PACKAGE + ".minPrice", -1));
+            mFilterMap.put("minPrice", intent.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
             // Filtro de precio (maximo) (-1 si no esta activado)
-            map.put("maxPrice", intent.getIntExtra(PACKAGE + ".maxPrice", -1));
+            mFilterMap.put("maxPrice", intent.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
 
-            MAN = intent.getBooleanExtra(PACKAGE + ".man", false);
+            MAN = intent.getBooleanExtra(Properties.PACKAGE + ".man", false);
 
-            mFilterNewness  = intent.getBooleanExtra(PACKAGE + ".newness", false);
-            mFilterMinPrice = intent.getIntExtra(PACKAGE + ".minPrice", -1);
-            mFilterMaxPrice = intent.getIntExtra(PACKAGE + ".maxPrice", -1);
-            mFilterSections = (ArrayList<String>)intent.getSerializableExtra(PACKAGE + ".sections");
-            mFilterColors   = (ArrayList<String>)intent.getSerializableExtra(PACKAGE + ".colors");
-            mFilterShops    = (ArrayList<String>)intent.getSerializableExtra(PACKAGE + ".shops");
-
-            mFilterMap = map;
+            mFilterNewness  = intent.getBooleanExtra(Properties.PACKAGE + ".newness", false);
+            mFilterMinPrice = intent.getIntExtra(Properties.PACKAGE + ".minPrice", -1);
+            mFilterMaxPrice = intent.getIntExtra(Properties.PACKAGE + ".maxPrice", -1);
+            mFilterSections = (ArrayList<String>)intent.getSerializableExtra(Properties.PACKAGE + ".sections");
+            mFilterColors   = (ArrayList<String>)intent.getSerializableExtra(Properties.PACKAGE + ".colors");
+            mFilterShops    = (ArrayList<String>)intent.getSerializableExtra(Properties.PACKAGE + ".shops");
         }
 
         _initData();
@@ -447,12 +442,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     if (OK) {
                         boolean newness = mNewnessNewRadioButton.isChecked();
 
-                        intent.putExtra(PACKAGE + ".shops", shopsList);
-                        intent.putExtra(PACKAGE + ".colors", colorsList);
-                        intent.putExtra(PACKAGE + ".sections", sectionsList);
-                        intent.putExtra(PACKAGE + ".minPrice", from);
-                        intent.putExtra(PACKAGE + ".maxPrice", to);
-                        intent.putExtra(PACKAGE + ".newness", newness);
+                        intent.putExtra(Properties.PACKAGE + ".shops", shopsList);
+                        intent.putExtra(Properties.PACKAGE + ".colors", colorsList);
+                        intent.putExtra(Properties.PACKAGE + ".sections", sectionsList);
+                        intent.putExtra(Properties.PACKAGE + ".minPrice", from);
+                        intent.putExtra(Properties.PACKAGE + ".maxPrice", to);
+                        intent.putExtra(Properties.PACKAGE + ".newness", newness);
 
                         setResult(RESULT_OK, intent);
 
@@ -716,7 +711,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     if (mPriceToEditText.getText() != null && !mPriceToEditText.getText().toString().isEmpty())
                         to = Integer.valueOf(mPriceToEditText.getText().toString());
 
-                    Log.d(TAG, Integer.toString(from) + "|" + Integer.toString(to));
+                    Log.d(Properties.TAG, Integer.toString(from) + "|" + Integer.toString(to));
 
                     if (from > to) {
                         mRangeSeekBar.setSelectedMaxValue(from);
@@ -1268,13 +1263,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     ArrayList<String> aux = null;
 
-                    intent.putExtra(PACKAGE + ".shops", aux);
-                    intent.putExtra(PACKAGE + ".colors", aux);
-                    intent.putExtra(PACKAGE + ".sections", aux);
-                    intent.putExtra(PACKAGE + ".minPrice", -1);
-                    intent.putExtra(PACKAGE + ".maxPrice", -1);
-                    intent.putExtra(PACKAGE + ".newness", false);
-                    intent.putExtra(PACKAGE + ".search", query);
+                    intent.putExtra(Properties.PACKAGE + ".shops", aux);
+                    intent.putExtra(Properties.PACKAGE + ".colors", aux);
+                    intent.putExtra(Properties.PACKAGE + ".sections", aux);
+                    intent.putExtra(Properties.PACKAGE + ".minPrice", -1);
+                    intent.putExtra(Properties.PACKAGE + ".maxPrice", -1);
+                    intent.putExtra(Properties.PACKAGE + ".newness", false);
+                    intent.putExtra(Properties.PACKAGE + ".search", query);
 
                     setResult(RESULT_OK, intent);
 
@@ -1347,10 +1342,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             URL url = null;
 
             try {
-                String fixedURL = Utils.fixUrl(SERVER_URL + ":" + SERVER_SPRING_PORT
+                String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                         + "/suggest/" + params[0]);
 
-                Log.d(TAG, "Conectando con: " + fixedURL
+                Log.d(Properties.TAG, "Conectando con: " + fixedURL
                         + " para buscar '" + params[0] + "'");
 
                 url = new URL(fixedURL);
@@ -1371,7 +1366,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     // Devolvemos la respuesta
                     String content =  sb.toString();
 
-                    Log.d(TAG, content);
+                    Log.d(Properties.TAG, content);
 
                     JSONArray jsonArray = new JSONArray(content);
                     suggestions = new ArrayList<>();
@@ -1382,7 +1377,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 }
 
             } catch (Exception e) {
-                Log.d(TAG, "Error conectando realizando busqueda");
+                Log.d(Properties.TAG, "Error conectando realizando busqueda");
 
             } finally {
                 try {
@@ -1390,7 +1385,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         reader.close();
 
                 } catch (IOException e) {
-                    Log.d(TAG, "Error cerrando conexion con el servidor");
+                    Log.d(Properties.TAG, "Error cerrando conexion con el servidor");
 
                 }
 
@@ -1437,13 +1432,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             ArrayList<String> aux = null;
 
-            intent.putExtra(PACKAGE + ".shops", aux);
-            intent.putExtra(PACKAGE + ".colors", aux);
-            intent.putExtra(PACKAGE + ".sections", aux);
-            intent.putExtra(PACKAGE + ".minPrice", -1);
-            intent.putExtra(PACKAGE + ".maxPrice", -1);
-            intent.putExtra(PACKAGE + ".newness", false);
-            intent.putExtra(PACKAGE + ".search", textView.getText().toString());
+            intent.putExtra(Properties.PACKAGE + ".shops", aux);
+            intent.putExtra(Properties.PACKAGE + ".colors", aux);
+            intent.putExtra(Properties.PACKAGE + ".sections", aux);
+            intent.putExtra(Properties.PACKAGE + ".minPrice", -1);
+            intent.putExtra(Properties.PACKAGE + ".maxPrice", -1);
+            intent.putExtra(Properties.PACKAGE + ".newness", false);
+            intent.putExtra(Properties.PACKAGE + ".search", textView.getText().toString());
 
             setResult(RESULT_OK, intent);
 

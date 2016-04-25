@@ -5,7 +5,9 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import es.sidelab.cuokawebscraperrestclient.utils.Printer;
+import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,8 +22,9 @@ public class mainBlanco
     public static void main(String[] args) throws Exception 
     {        
         String url = "https://www.blanco.com/";
-        Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_false\\false\\", false );
+        Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false );
         List<Product> productList = new ArrayList<>();
+        List<String> productMultiColorList = new ArrayList<>();
         
         List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".html" , url );
             
@@ -51,31 +54,32 @@ public class mainBlanco
                 description = description.substring( 0, 255 );
             
             // Obtenemos los colores del producto
-            boolean first = true;
             List<ColorVariant> variants = new ArrayList<>();
+            List<Image> imagesURL = new ArrayList<>();
             
             // Hay dos product-color-selector repetidos, nos quedamos solo con uno
             Element colorList = document.select( "div.product-color-selector" ).first();            
-            Elements colors = colorList.select( "span" );
-            for ( Element color : colors )
+            Element color = colorList.select( "span" ).first();
+
+            // Si este producto tiene varios colores, lo anadimos a la lista para tenerlo guardado.
+            if ( colorList.select( "span" ).size() > 1 )
             {
-                List<Image> imagesURL = new ArrayList<>();
-                
-                String colorName = color.ownText().toUpperCase();
-                
-                // De Blanco no podemos acceder a las imagenes de los colores alternativos, solo las del color principal
-                if ( first )
+                for ( int i = 0; i < colorList.select( "span" ).size(); i++ )
                 {
-                    Elements images = document.select( "#product-gallery-list img" );
-                    for ( Element img : images )
-                        imagesURL.add( new Image( fixURL( url + img.attr( "src" ) ) ) );                    
-                    
-                    first = false;
-            
-                    variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );
+                    productMultiColorList.add( productLink );
                 }
             }
             
+            String colorName = color.ownText().toUpperCase();
+
+            Elements images = document.select( "#product-gallery-list img" );
+            for ( Element img : images ) 
+            {
+                imagesURL.add( new Image( fixURL( url + img.attr( "src" ) ) ) );
+            }
+
+            variants.add( new ColorVariant( reference, colorName, null, imagesURL ) );         
+
             productList.add( new Product( Double.parseDouble( price )
                                     , name
                                     , ""
@@ -83,12 +87,72 @@ public class mainBlanco
                                     , link 
                                     , description
                                     , true
-                                    , variants ) );
-            
+                                    , variants ) );            
             
         } // for products
         
-        Printer.print(Integer.toString(productList.size()));
+        // Escribimos los links de los productos con varios colores.
+        FileManager.writeLinksToFile( productMultiColorList, section );
+        // Ejecutamos el script que renderiza todos los productos
+        PythonManager.executeRenderColors( section );
+        
+        int cont = 0;
+        for( String multiColorProduct : productMultiColorList )
+        {
+            String pathProduct = section.getPath() + section.getName() + "_COLOR_" + cont + ".html";
+            
+            try 
+            {
+                File file = new File( pathProduct );
+            
+                // Esperamos a que python cree el fichero
+                while ( ! file.exists() ) {}
+
+                // Se realiza una espera de medio segundo para que no pillemos el fichero nada mas ser creado (estara vacio)
+                Thread.sleep( 1000 );
+                file = new File( pathProduct );
+                
+                Printer.print( "Scraping color: " + pathProduct );
+            
+                Document document = Jsoup.parse( file, "ISO-8859-1" );
+                
+                String reference = document.select( "p.product-number" ).first().ownText()
+                                                                                .replaceAll( "[^0-9]", "" );
+                
+                // Hay dos product-color-selector repetidos, nos quedamos solo con uno
+                Element colorList = document.select( "div.product-color-selector" ).first();            
+                Element color = colorList.select( "span" ).first();
+                
+                String colorName = color.ownText().toUpperCase();
+
+                Elements images = document.select( "#product-gallery-list img" );
+                List<Image> imagesURL = new ArrayList<>();
+                for ( Element img : images ) 
+                {
+                    imagesURL.add( new Image( fixURL( url + img.attr( "src" ) ) ) );
+                }
+                
+                ColorVariant cv = new ColorVariant( reference, colorName, null, imagesURL );
+                
+                int pos = containsProduct( productList, reference );
+                if( pos >= 0 )
+                    productList.get( pos ).getColors().add( cv );
+                   
+                else 
+                    throw new Exception( "Product not found (" + reference + ")" );
+               
+                
+            } catch( Exception e ) {
+                e.printStackTrace();
+                
+            } finally {
+                cont++;
+                
+            }
+            
+        } // for multiColor
+        
+        Printer.print( Integer.toString( productList.size() ) );
         
         Product p = productList.get( 0 );
         
@@ -134,5 +198,15 @@ public class mainBlanco
         }
         
         return links;
+    }
+    
+    private static int containsProduct( List<Product> productList, String reference )
+    {
+        for ( int i = 0; i < productList.size(); i++ )
+            for ( ColorVariant cv : productList.get( i ).getColors() )
+                if ( cv.getReference().equals( reference ) )
+                    return i;
+        
+        return -1;
     }
 }

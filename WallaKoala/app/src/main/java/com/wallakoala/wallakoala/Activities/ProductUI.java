@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -58,8 +59,6 @@ import io.codetail.animation.ViewAnimationUtils;
 public class ProductUI extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
 {
     /* Constants */
-    protected static final String TAG = "CUOKA";
-    protected static final String PACKAGE = "com.wallakoala.wallakoala";
     protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     protected static final int ANIM_DURATION = 250;
     protected static boolean EXITING;
@@ -195,16 +194,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         Bundle bundle = getIntent().getExtras();
 
-        mThumbnailTopFav    = bundle.getInt(PACKAGE + ".topFav");
-        mThumbnailLeftFav   = bundle.getInt(PACKAGE + ".leftFav");
-        mThumbnailWidthFav  = bundle.getInt(PACKAGE + ".widthFav");
-        mThumbnailHeightFav = bundle.getInt(PACKAGE + ".heightFav");
-        mThumbnailTop       = bundle.getInt(PACKAGE + ".top");
-        mThumbnailLeft      = bundle.getInt(PACKAGE + ".left");
-        mThumbnailWidth     = bundle.getInt(PACKAGE + ".width");
-        mThumbnailHeight    = bundle.getInt(PACKAGE + ".height");
-        mBitmapUri          = bundle.getString(PACKAGE + ".bitmap");
-        mProduct            = (Product)bundle.getSerializable(PACKAGE + ".Beans.Product");
+        mThumbnailTopFav    = bundle.getInt(Properties.PACKAGE + ".topFav");
+        mThumbnailLeftFav   = bundle.getInt(Properties.PACKAGE + ".leftFav");
+        mThumbnailWidthFav  = bundle.getInt(Properties.PACKAGE + ".widthFav");
+        mThumbnailHeightFav = bundle.getInt(Properties.PACKAGE + ".heightFav");
+        mThumbnailTop       = bundle.getInt(Properties.PACKAGE + ".top");
+        mThumbnailLeft      = bundle.getInt(Properties.PACKAGE + ".left");
+        mThumbnailWidth     = bundle.getInt(Properties.PACKAGE + ".width");
+        mThumbnailHeight    = bundle.getInt(Properties.PACKAGE + ".height");
+        mBitmapUri          = bundle.getString(Properties.PACKAGE + ".bitmap");
+        mProduct            = (Product)bundle.getSerializable(Properties.PACKAGE + ".Beans.Product");
 
         mTopOffset = 0.0f;
 
@@ -700,7 +699,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             (screenHeight - productInfoHeight > event.getY()) &&
             (!COLLAPSING))
         {
-            Log.d(TAG, "OnSingleTap: Collapsing info");
+            Log.d(Properties.TAG, "OnSingleTap: Collapsing info");
 
             collapseInfo();
         }

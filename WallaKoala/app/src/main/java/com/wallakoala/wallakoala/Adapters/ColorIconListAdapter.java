@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -30,12 +31,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ColorIconListAdapter extends BaseAdapter
 {
-    /* Constants */
-    private static final String TAG = "CUOKA";
-    private static final String SERVER_URL = "http://cuoka-ws.cloudapp.net";
-    private static final String PREDEFINED_ICONS_PATH = "/images/colors/";
-    private static final String ICONS_PATH = "/images/products/";
-
     /* Context */
     private Context mContext;
 
@@ -124,12 +119,12 @@ public class ColorIconListAdapter extends BaseAdapter
                     + mColorList.get(position).getReference() + "_"
                     + mColorList.get(position).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
 
-            url = Utils.fixUrl(SERVER_URL + ICONS_PATH + mShop + "/" + imageFile);
+            url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + mShop + "/" + imageFile);
 
         } else {
             String imageFile = mColorList.get(position).getColorPath();
 
-            url = Utils.fixUrl(SERVER_URL + PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+            url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
         }
 
         if (position == mIconSelected)
@@ -143,7 +138,7 @@ public class ColorIconListAdapter extends BaseAdapter
         }
 
 
-        Log.d(TAG, url);
+        Log.d(Properties.TAG, url);
 
         Picasso.with(mContext)
                .load(url)

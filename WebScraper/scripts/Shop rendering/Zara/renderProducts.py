@@ -4,25 +4,27 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-path_to_chromedriver = 'C:\\Users\\Dani\\Documents\\chromedriver'
+# Path al driver de Chrome -> "C:\\..\\chromedriver"
+path_to_chromedriver = sys.argv[1]
+# Nombre de la seccion -> "Camisas"
+section = sys.argv[2]
+# Path donde se encuentra el script -> "C:\\..\\false\\"
+path = sys.argv[3]
+# Path donde se encuentra el fichero de links -> "C:\\..\\false\\Camisas_LINKS.txt"
+links = sys.argv[4]
 
-section = "Blazers"
-path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\"
-links = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\Blazers_LINKS.txt"
-
+# Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
 file = open(links, 'r')
 for link in file:
     listOfLinks.append(link)
 
+# Driver de Chrome
 dr = webdriver.Chrome(executable_path = path_to_chromedriver)
 
-print(str(len(listOfLinks)))
-
 cont = 0
+# Se recorre la lista de links
 for link in listOfLinks:
-    print(str(cont) + ": " + link)
-    
     try:
         dr.get(link)
 
@@ -31,8 +33,10 @@ for link in listOfLinks:
             EC.presence_of_element_located((By.CLASS_NAME, "_img-zoom"))
         )
 
+        # Se espera un segundo
         time.sleep(1)
 
+        # Se forma el nombre del fichero .html con un contador
         htmlPath = path + section + "_" + str(cont) + ".html"
 
         # Escribimos el HTML.
@@ -42,8 +46,7 @@ for link in listOfLinks:
 
         cont = cont + 1
     except:
-        print("Exception")
-
+        #Aunque se cree una excepcion, creamos el fichero vacio.
         htmlPath = path + section + "_" + str(cont) + ".html"
 
         # Escribimos el HTML.
@@ -52,4 +55,5 @@ for link in listOfLinks:
 
         cont = cont + 1
 
+# Cerramos el navegador
 dr.quit()
