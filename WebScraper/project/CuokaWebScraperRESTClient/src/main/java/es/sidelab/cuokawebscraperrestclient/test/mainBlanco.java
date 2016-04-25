@@ -35,7 +35,7 @@ public class mainBlanco
                                      .timeout( Properties.TIMEOUT )
                                      .ignoreHttpErrors( true ).get();
             
-            // Obtener todos los atributos propios del producto
+            // Obtener todos los atributos propios del producto.
             String link = productLink;
             String name = document.select( "h1.product-name" ).first().ownText()
                                                                       .toUpperCase(); 
@@ -53,11 +53,11 @@ public class mainBlanco
             if ( description.length() > 255 )
                 description = description.substring( 0, 255 );
             
-            // Obtenemos los colores del producto
+            // Obtenemos los colores del producto.
             List<ColorVariant> variants = new ArrayList<>();
             List<Image> imagesURL = new ArrayList<>();
             
-            // Hay dos product-color-selector repetidos, nos quedamos solo con uno
+            // Hay dos product-color-selector repetidos, nos quedamos solo con uno.
             Element colorList = document.select( "div.product-color-selector" ).first();            
             Element color = colorList.select( "span" ).first();
 
