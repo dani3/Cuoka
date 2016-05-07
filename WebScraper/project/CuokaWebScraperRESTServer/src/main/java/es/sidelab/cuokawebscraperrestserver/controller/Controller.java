@@ -4,10 +4,13 @@ import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
+import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
+import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
+import es.sidelab.cuokawebscraperrestserver.utils.EncryptionManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import java.util.ArrayList;
@@ -38,6 +41,9 @@ public class Controller
 {
     private static final Log LOG = LogFactory.getLog( Controller.class );
     
+    private static final String KEY = "Bar12345Bar12345";
+    private static final String IV = "RandomInitVector";
+    
     @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool( 1 );
     
@@ -52,6 +58,21 @@ public class Controller
     
     @Autowired
     HistoricProductsRepository historicProductsRepository;
+    
+    @Autowired
+    UsersRepository usersRepository;
+    
+    @RequestMapping( value = "/users", method = RequestMethod.POST )
+    public ResponseEntity<Boolean> addUser( @RequestBody String email )
+    {
+        String emailEncrypted = EncryptionManager.encrypt( KEY, IV, email );
+        
+        User user = new User( emailEncrypted );
+        
+        usersRepository.save( user );
+        
+        return new ResponseEntity<>( HttpStatus.CREATED );
+    }
     
     /**
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos.
