@@ -46,7 +46,7 @@ public class PythonManager
                             String man = subFolder.getName();                            
                             String path = Properties.SHOPS_PATH + folderName + "\\" + man + "\\";
                             
-                            // Borramos los txt antes
+                            // Borramos los hmtls antes
                             for ( File file : subFolder.listFiles() )
                             {
                                 if ( file.getName().contains( ".html" ) )

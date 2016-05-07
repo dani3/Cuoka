@@ -2,7 +2,7 @@ package com.wallakoala.wallakoala.Properties;
 
 /**
  * @class Clase que todos las constantes necesarias.
- * Created by Dani on 18/04/2016.
+ * Created by Daniel Mancebo Aldea on 18/04/2016.
  */
 
 public class Properties
