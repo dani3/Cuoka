@@ -158,7 +158,7 @@ public class ProductsUI extends AppCompatActivity
         _initData();
         _initAuxViews();
         _initToolbar();
-        _initNavigationDrawers();
+        _initNavigationDrawer();
         _initAnimations();
 
         mConnectToServer = new ConnectToServer().execute();
@@ -372,7 +372,7 @@ public class ProductsUI extends AppCompatActivity
     /**
      * Inicializacion y configuracion de los navigation drawers.
      */
-    protected void _initNavigationDrawers()
+    protected void _initNavigationDrawer()
     {
         mLeftNavigationVew = (NavigationView)findViewById(R.id.nav_view);
         mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);

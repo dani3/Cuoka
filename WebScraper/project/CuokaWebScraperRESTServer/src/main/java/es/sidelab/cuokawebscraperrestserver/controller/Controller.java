@@ -13,6 +13,7 @@ import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
 import es.sidelab.cuokawebscraperrestserver.utils.EncryptionManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -41,9 +42,6 @@ public class Controller
 {
     private static final Log LOG = LogFactory.getLog( Controller.class );
     
-    private static final String KEY = "Bar12345Bar12345";
-    private static final String IV = "RandomInitVector";
-    
     @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool( 1 );
     
@@ -62,15 +60,27 @@ public class Controller
     @Autowired
     UsersRepository usersRepository;
     
+    /**
+     * 
+     * @param user
+     * @return 
+     */
     @RequestMapping( value = "/users", method = RequestMethod.POST )
-    public ResponseEntity<Boolean> addUser( @RequestBody String email )
-    {
-        String emailEncrypted = EncryptionManager.encrypt( KEY, IV, email );
+    public ResponseEntity<Boolean> addUser( @RequestBody User user )
+    {     
+        LOG.info( "Peticion POST para anadir un nuevo usuario" );
+        user.setRegistrationDate( Calendar.getInstance() );
         
-        User user = new User( emailEncrypted );
+        SecureRandom sr = new SecureRandom();
+        byte[] IV = sr.generateSeed( Properties.IV_LENGTH );
+        
+        final String encryptedPassword = EncryptionManager.encrypt( Properties.KEY, IV, user.getPassword() );
+        
+        user.setPassword( encryptedPassword );
         
         usersRepository.save( user );
         
+        LOG.info( "Usuario guardado correctamente" );
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
     

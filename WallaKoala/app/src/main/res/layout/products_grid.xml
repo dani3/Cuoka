@@ -39,7 +39,6 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:layout_gravity="center"
-                android:visibility="gone"
                 app:indicator="BallClipRotate"
                 app:indicator_color="@color/colorAccent"/>
 
