@@ -6,7 +6,11 @@ package es.sidelab.cuokawebscraperrestserver.properties;
  */
 
 public class Properties 
-{
+{    
+    public static final int IV_LENGTH = 16;
+    public static final String KEY = "10485mvJdb3/8wmc";    
+    public static final String HASH_ALGORITHM = "MD5";
+    
     public static final String PATH                   = "/images/products/";
     public static final String PREDEFINED_COLORS      = "/images/colors/";
     public static final String IMAGE_PATH             = "/var/www/html/images/products/";
