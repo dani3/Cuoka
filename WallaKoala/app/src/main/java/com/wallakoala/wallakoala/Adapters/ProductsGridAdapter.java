@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     private static Context mContext;
 
     /* Container Views */
-    private static CoordinatorLayout mCoordinatorLayout;
+    private static FrameLayout mFrameLayout;
 
     /* Data */
     private static List<Product> mProductList;
@@ -283,7 +284,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                         mProductFooterView.startAnimation(scaleDownFooter);
 
                     } else {
-                        Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -307,14 +308,14 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      * @param context: contexto (ProductsUI)
      * @param productList: lista de productos
      * @param total: total de productos, necesario para inicializar el array de ratios
-     * @param coordinatorLayout: layout necesario para animar la SnackBar
+     * @param frameLayout: layout necesario para animar la SnackBar
      */
-    public ProductsGridAdapter(Context context, List<Product> productList, int total, CoordinatorLayout coordinatorLayout)
+    public ProductsGridAdapter(Context context, List<Product> productList, int total, FrameLayout frameLayout)
     {
         mContext = context;
         mProductList = productList;
 
-        mCoordinatorLayout = coordinatorLayout;
+        mFrameLayout = frameLayout;
 
         mProductBitmapArray = new double[total];
         for (int i = 0; i < total; i++)
