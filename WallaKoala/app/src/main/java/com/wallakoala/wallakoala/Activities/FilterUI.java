@@ -342,10 +342,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 boolean OK = true;
 
                 if (!COLOR_FILTER_ACTIVE &&
-                        !SHOP_FILTER_ACTIVE &&
-                        !SECTION_FILTER_ACTIVE &&
-                        !PRICE_FILTER_ACTIVE &&
-                        !NEWNESS_FILTER_ACTIVE)
+                    !SHOP_FILTER_ACTIVE &&
+                    !SECTION_FILTER_ACTIVE &&
+                    !PRICE_FILTER_ACTIVE &&
+                    !NEWNESS_FILTER_ACTIVE)
                 {
                     mSnackbar = Snackbar.make(mCoordinatorLayout
                             , "No se ha establecido ningún filtro"

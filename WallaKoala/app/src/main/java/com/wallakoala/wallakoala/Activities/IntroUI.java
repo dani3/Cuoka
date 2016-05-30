@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -73,7 +72,7 @@ public class IntroUI extends AppCompatActivity
                 mSharedPreferencesManager.insertMan(man.isChecked());
                 mSharedPreferencesManager.insertShops(shops);
 
-                Intent intent = new Intent(IntroUI.this, ProductsUI.class);
+                Intent intent = new Intent(IntroUI.this, MainScreenUI.class);
                 startActivity(intent);
 
                 // Animacion de transicion para pasar de una activity a otra.

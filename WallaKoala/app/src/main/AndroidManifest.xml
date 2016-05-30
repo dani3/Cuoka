@@ -28,7 +28,7 @@
             android:windowSoftInputMode="adjustNothing">
         </activity>
 
-        <activity android:name=".Activities.ProductsUI"
+        <activity android:name=".Activities.MainScreenUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
         </activity>

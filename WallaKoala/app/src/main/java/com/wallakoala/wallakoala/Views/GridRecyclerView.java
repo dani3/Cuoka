@@ -18,17 +18,20 @@ import android.view.animation.GridLayoutAnimationController;
  * Created by Freddie (Musenkishi) Lust-Hed.
  */
 
-public class GridRecyclerView extends RecyclerView {
-
-    public GridRecyclerView(Context context) {
+public class GridRecyclerView extends RecyclerView
+{
+    public GridRecyclerView(Context context)
+    {
         super(context);
     }
 
-    public GridRecyclerView(Context context, AttributeSet attrs) {
+    public GridRecyclerView(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
     }
 
-    public GridRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+    public GridRecyclerView(Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
     }
 
