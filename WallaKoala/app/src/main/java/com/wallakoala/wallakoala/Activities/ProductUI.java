@@ -695,6 +695,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int productInfoHeight = mProductInfoLayout.getHeight();
 
+        // Si la info esta visible, ha pulsado encima de esta y no se esta cerrando
         if ((mProductInfoLayout.getVisibility() == View.VISIBLE) &&
             (screenHeight - productInfoHeight > event.getY()) &&
             (!COLLAPSING))

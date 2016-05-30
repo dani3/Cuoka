@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,19 +24,25 @@ import android.view.View;
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.SuggestionsFragment;
 import com.wallakoala.wallakoala.Fragments.TopsFragment;
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @class Pantalla principal de la app.
  * Created by Daniel Mancebo on 09/11/2015.
  */
 
-public class ProductsUI extends AppCompatActivity
+public class MainScreenUI extends AppCompatActivity
 {
+    protected static final int FILTER_REQUEST = 0;
     protected static final int EXIT_TIME_INTERVAL = 2000;
+
+    protected static String SEARCH_QUERY;
 
     protected NavigationView mLeftNavigationVew;
     protected ActionBarDrawerToggle mLeftDrawerToggle;
@@ -49,7 +57,9 @@ public class ProductsUI extends AppCompatActivity
 
     protected Menu mMenu;
 
-    protected Fragment mTopsFragment, mSugestionsFragment, mProductsFragment;
+    protected TopsFragment mTopsFragment;
+    protected SuggestionsFragment mSugestionsFragment;
+    protected ProductsFragment mProductsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -179,26 +189,68 @@ public class ProductsUI extends AppCompatActivity
     {
         if (item.getItemId() == R.id.menu_item_filter)
         {
-            /*if ((mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE))
+            // Solo si no se esta cargando los productos
+            if (mProductsFragment.canFilter())
             {
-                Intent intent = new Intent(ProductsUI.this, FilterUI.class);
+                // Creamos un Intent
+                Intent intent = new Intent(MainScreenUI.this, FilterUI.class);
 
-                intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)mFilterMap.get("newness"));
-                intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)mFilterMap.get("sections"));
-                intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)mFilterMap.get("colors"));
-                intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)mFilterMap.get("shops"));
-                intent.putExtra(Properties.PACKAGE + ".minPrice", (Integer)mFilterMap.get("minPrice"));
-                intent.putExtra(Properties.PACKAGE + ".maxPrice", (Integer)mFilterMap.get("maxPrice"));
-                intent.putExtra(Properties.PACKAGE + ".man", MAN);
+                // Obtenemos el mapa de filtros
+                Map<String, Object> filterMap = mProductsFragment.getFilterMap();
 
+                // Lo mandamos en el Intent
+                intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)filterMap.get("newness"));
+                intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)filterMap.get("sections"));
+                intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)filterMap.get("colors"));
+                intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)filterMap.get("shops"));
+                intent.putExtra(Properties.PACKAGE + ".minPrice", (Integer)filterMap.get("minPrice"));
+                intent.putExtra(Properties.PACKAGE + ".maxPrice", (Integer)filterMap.get("maxPrice"));
+                intent.putExtra(Properties.PACKAGE + ".man", mProductsFragment.getMan());
+
+                // Iniciamos la activity FilterUI
                 startActivityForResult(intent, FILTER_REQUEST);
 
                 // Animacion de transicion para pasar de una activity a otra.
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-            }*/
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Si ha ido bien
+        if (resultCode == RESULT_OK)
+        {
+            // Sacamos la cadena de busqueda
+            SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
+
+            // Si es null significa que se quiere filtrar
+            if (SEARCH_QUERY == null)
+            {
+                Log.d(Properties.TAG, "Filtro establecido:");
+
+                Map<String, Object> filterMap = new HashMap<>();
+
+                filterMap.put("newness", data.getBooleanExtra(Properties.PACKAGE + ".newness", false));
+                filterMap.put("sections", data.getSerializableExtra(Properties.PACKAGE + ".sections"));
+                filterMap.put("colors", data.getSerializableExtra(Properties.PACKAGE + ".colors"));
+                filterMap.put("shops", data.getSerializableExtra(Properties.PACKAGE + ".shops"));
+                filterMap.put("minPrice", data.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
+                filterMap.put("maxPrice", data.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
+
+                mProductsFragment.processFilter(filterMap);
+
+            } else {
+                Log.d(Properties.TAG, "Busqueda: " + SEARCH_QUERY);
+
+                mProductsFragment.processSearch(SEARCH_QUERY);
+            }
+        }
     }
 
     /**

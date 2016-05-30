@@ -206,6 +206,24 @@ public class ProductsFragment extends Fragment
     }
 
     /**
+     * Metodo que reinicializa ciertas variables.
+     */
+    protected void _reinitializeData()
+    {
+        mProductsListMap         = new ArrayList<>();
+        mProductsNonFilteredMap  = new HashMap<>();
+        mProductsDisplayedList   = new ArrayList<>();
+        mProductsCandidatesDeque = new ArrayDeque<>();
+
+        start = count = 0;
+        mBackPressed = 0;
+
+        DAYS_OFFSET = 0;
+
+        FIRST_CONNECTION = true;
+    }
+
+    /**
      * Metodo que inicializa las animaciones.
      */
     protected void _initAnimations()
@@ -1173,5 +1191,121 @@ public class ProductsFragment extends Fragment
         }
 
         return finished;
+    }
+
+    /**
+     * Metodo que indica si es posible filtrar.
+     * @return true si se puede ir a la pantalla de filtros.
+     */
+    public boolean canFilter()
+    {
+        return ((mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
+    }
+
+    /**
+     * Metodo que devuelve el estado actual de los filtros.
+     * @return mapa de filtros.
+     */
+    public Map<String, Object> getFilterMap()
+    {
+        return mFilterMap;
+    }
+
+    /**
+     * Metodo que realiza el proceso de filtrado
+     * @param filterMap nuevo estado de los filtros.
+     */
+    public void processFilter(Map<String, Object> filterMap)
+    {
+        mFilterMap = filterMap;
+
+        Log.d(Properties.TAG, " Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
+        Log.d(Properties.TAG, " Precio Min = " + Integer.toString((int) mFilterMap.get("minPrice")));
+        Log.d(Properties.TAG, " Precio Max = " + Integer.toString((int) mFilterMap.get("maxPrice")));
+
+        List<String> shopsList = (ArrayList<String>) mFilterMap.get("shops");
+        if (shopsList != null)
+            for (String shop : shopsList)
+                Log.d(Properties.TAG, " Tienda = " + shop);
+
+        List<String> sectionsList = (ArrayList<String>) mFilterMap.get("sections");
+        if (sectionsList != null)
+            for (String section : sectionsList)
+                Log.d(Properties.TAG, " Seccion = " + section);
+
+        List<String> colorsList = (ArrayList<String>) mFilterMap.get("colors");
+        if (colorsList != null)
+            for (String color : colorsList)
+                Log.d(Properties.TAG, " Color = " + color);
+
+        if (shopsList != null)
+            if (shopsList.size() == mShopsList.size())
+                if (shopsList.containsAll(mShopsList))
+                    shopsList = null;
+
+        boolean newness = (boolean) mFilterMap.get("newness");
+        int from = (int) mFilterMap.get("minPrice");
+        int to = (int) mFilterMap.get("maxPrice");
+
+        _reinitializeData();
+
+        if (mProductsRecyclerView != null)
+            mProductsRecyclerView.setVisibility(View.GONE);
+
+        // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
+        if ((shopsList == null)
+                && (colorsList == null)
+                && (sectionsList == null)
+                && (!newness)
+                && (from < 0)
+                && (to < 0))
+        {
+            Log.d(Properties.TAG, "Filtros por defecto");
+
+            // Reiniciamos el mapa de filtros.
+            mFilterMap = new HashMap<>();
+
+            mConnectToServer = new ConnectToServer().execute();
+
+        } else {
+            // Lo ponemos a -1 para detectar cuando estamos en los filtros.
+            DAYS_OFFSET = -1;
+
+            mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+
+        }
+    }
+
+    /**
+     * Metodo que realiza el proceso de busqueda.
+     * @param query cadena con la busqueda.
+     */
+    public void processSearch(String query)
+    {
+        // Reiniciamos ciertos parametros.
+        _reinitializeData();
+
+        SEARCH_QUERY = query;
+
+        // Reiniciamos el mapa de filtros.
+        mFilterMap = new HashMap<>();
+
+        // Ocultamos el RecyclerView
+        if (mProductsRecyclerView != null)
+            mProductsRecyclerView.setVisibility(View.GONE);
+
+        // Lo ponemos a -1 para detectar cuando estamos en los filtros
+        DAYS_OFFSET = -1;
+
+        mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+    }
+
+    /**
+     * Metodo que devuelve si es hombre o mujer.
+     * @return true si es hombre.
+     */
+    public boolean getMan()
+    {
+        return MAN;
     }
 }
