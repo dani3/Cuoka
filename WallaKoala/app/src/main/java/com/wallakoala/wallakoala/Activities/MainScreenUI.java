@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.SuggestionsFragment;
@@ -39,27 +41,35 @@ import java.util.Map;
 
 public class MainScreenUI extends AppCompatActivity
 {
+    /* Constants */
     protected static final int FILTER_REQUEST = 0;
     protected static final int EXIT_TIME_INTERVAL = 2000;
-
     protected static String SEARCH_QUERY;
 
+    /* Container Views */
     protected NavigationView mLeftNavigationVew;
-    protected ActionBarDrawerToggle mLeftDrawerToggle;
     protected DrawerLayout mDrawerLayout;
     protected CoordinatorLayout mCoordinatorLayout;
+    protected ViewPager mViewPager;
+    protected TabLayout mTabLayout;
 
+    /* Toolbar */
     protected Toolbar mToolbar;
-    protected TabLayout tabLayout;
-    protected ViewPager viewPager;
+    protected ActionBarDrawerToggle mLeftDrawerToggle;
 
-    protected long mBackPressed;
-
+    /* Menu */
     protected Menu mMenu;
 
+    /* Animations */
+    protected Animation mExplodeAnimation, mImplodeAnimation;
+
+    /* Fragments */
     protected TopsFragment mTopsFragment;
     protected SuggestionsFragment mSugestionsFragment;
     protected ProductsFragment mProductsFragment;
+
+    /* Other */
+    protected long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,48 +78,87 @@ public class MainScreenUI extends AppCompatActivity
 
         setContentView(R.layout.main_tabs);
 
+        _initToolbar();
+        _initViewPager();
+        _initNavigationDrawer();
+        _initAnimations();
+
+        mBackPressed = 0;
+    }
+
+    /**
+     * Metodo para inicializar la Toolbar
+     */
+    protected void _initToolbar()
+    {
         mToolbar = (Toolbar)findViewById(R.id.appbar);
 
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        _initViewPager(viewPager);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        mBackPressed = 0;
-
-        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
-
-        _initNavigationDrawer();
     }
 
-    @Override
-    public void onBackPressed()
+    /**
+     * Inicializacion del ViewPager.
+     */
+    private void _initViewPager()
     {
-        // Si el navigation drawer esta abierto, lo cerramos.
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        mTopsFragment       = new TopsFragment();
+        mProductsFragment   = new ProductsFragment();
+        mSugestionsFragment = new SuggestionsFragment();
+
+        // Añadimos los fragmentos al adapter
+        adapter.addFragment(mTopsFragment, "DESCUBRE");
+        adapter.addFragment(mProductsFragment, "NOVEDADES");
+        adapter.addFragment(mSugestionsFragment, "TOPS CUOKA");
+        mViewPager.setAdapter(adapter);
+
+        // Marcamos como activo la segunda pestaña
+        mViewPager.setCurrentItem(1);
+
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
         {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-
-        } else {
-            if (mBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis())
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
             {
-                super.onBackPressed();
-                return;
+                Log.d(Properties.TAG, "Pestaña cambiada a " + tab.getText());
 
-            } else {
-                Snackbar.make(mCoordinatorLayout
-                        , getResources().getString( R.string.exit_message )
-                        , Snackbar.LENGTH_SHORT).show();
+                if (tab.getText().equals("NOVEDADES"))
+                {
+                    findViewById(R.id.menu_item_filter).startAnimation(mExplodeAnimation);
+
+                } else {
+                    findViewById(R.id.menu_item_filter).startAnimation(mImplodeAnimation);
+
+                }
             }
 
-            mBackPressed = System.currentTimeMillis();
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
-        }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    /**
+     * Inicializacion y configuracion del NavigationDrawer.
+     */
+    protected void _initNavigationDrawer()
+    {
+        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
+        mLeftNavigationVew = (NavigationView)findViewById(R.id.nav_view);
+        mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        _initDrawerToggle();
+
+        mDrawerLayout.setDrawerListener(mLeftDrawerToggle);
     }
 
     /**
@@ -150,6 +199,74 @@ public class MainScreenUI extends AppCompatActivity
         };
     }
 
+    /**
+     * Metodo para inicializar las animaciones.
+     */
+    protected void _initAnimations()
+    {
+        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
+        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
+
+        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                findViewById(R.id.menu_item_filter).setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mExplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                findViewById(R.id.menu_item_filter).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // Si el navigation drawer esta abierto, lo cerramos.
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        } else {
+            if (mBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis())
+            {
+                super.onBackPressed();
+                return;
+
+            } else {
+                Snackbar.make(mCoordinatorLayout
+                        , getResources().getString( R.string.exit_message )
+                        , Snackbar.LENGTH_SHORT).show();
+            }
+
+            mBackPressed = System.currentTimeMillis();
+
+        }
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
@@ -175,10 +292,10 @@ public class MainScreenUI extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Guardamos el menu para poder acceder a los expandableItems mas adelante
+        // Guardamos el menu para poder acceder a los expandableItems mas adelante.
         this.mMenu = menu;
 
-        // Inflamos la ActionBar
+        // Inflamos el menu.
         getMenuInflater().inflate(R.menu.toolbar_menu_grid, menu);
 
         return super.onCreateOptionsMenu(menu);
@@ -189,13 +306,13 @@ public class MainScreenUI extends AppCompatActivity
     {
         if (item.getItemId() == R.id.menu_item_filter)
         {
-            // Solo si no se esta cargando los productos
+            // Solo si no se esta cargando los productos.
             if (mProductsFragment.canFilter())
             {
-                // Creamos un Intent
+                // Creamos un Intent.
                 Intent intent = new Intent(MainScreenUI.this, FilterUI.class);
 
-                // Obtenemos el mapa de filtros
+                // Obtenemos el mapa de filtros.
                 Map<String, Object> filterMap = mProductsFragment.getFilterMap();
 
                 // Lo mandamos en el Intent
@@ -207,7 +324,7 @@ public class MainScreenUI extends AppCompatActivity
                 intent.putExtra(Properties.PACKAGE + ".maxPrice", (Integer)filterMap.get("maxPrice"));
                 intent.putExtra(Properties.PACKAGE + ".man", mProductsFragment.getMan());
 
-                // Iniciamos la activity FilterUI
+                // Iniciamos la activity FilterUI.
                 startActivityForResult(intent, FILTER_REQUEST);
 
                 // Animacion de transicion para pasar de una activity a otra.
@@ -226,10 +343,10 @@ public class MainScreenUI extends AppCompatActivity
         // Si ha ido bien
         if (resultCode == RESULT_OK)
         {
-            // Sacamos la cadena de busqueda
+            // Sacamos la cadena de busqueda.
             SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
 
-            // Si es null significa que se quiere filtrar
+            // Si es null significa que se quiere filtrar.
             if (SEARCH_QUERY == null)
             {
                 Log.d(Properties.TAG, "Filtro establecido:");
@@ -251,41 +368,6 @@ public class MainScreenUI extends AppCompatActivity
                 mProductsFragment.processSearch(SEARCH_QUERY);
             }
         }
-    }
-
-    /**
-     * Inicializacion del ViewPager
-     * @param viewPager
-     */
-    private void _initViewPager(ViewPager viewPager)
-    {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        mTopsFragment       = new TopsFragment();
-        mProductsFragment   = new ProductsFragment();
-        mSugestionsFragment = new SuggestionsFragment();
-
-        // Añadimos los fragmentos al adapter
-        adapter.addFragment(mTopsFragment, "DESCUBRE");
-        adapter.addFragment(mProductsFragment, "NOVEDADES");
-        adapter.addFragment(mSugestionsFragment, "TOPS CUOKA");
-        viewPager.setAdapter(adapter);
-
-        // Marcamos como activo la segunda pestaña
-        viewPager.setCurrentItem(1);
-    }
-
-    /**
-     * Inicializacion y configuracion del NavigationDrawer.
-     */
-    protected void _initNavigationDrawer()
-    {
-        mLeftNavigationVew = (NavigationView)findViewById(R.id.nav_view);
-        mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
-
-        _initDrawerToggle();
-
-        mDrawerLayout.setDrawerListener(mLeftDrawerToggle);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter

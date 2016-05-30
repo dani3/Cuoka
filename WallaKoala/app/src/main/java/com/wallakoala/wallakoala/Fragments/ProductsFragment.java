@@ -493,7 +493,7 @@ public class ProductsFragment extends Fragment
 
             return null;
         }
-    }
+    } /* [END ConnectionSearchTask] */
 
     /**
      * Task que convierte una array de JSON en una lista de productos. Devuelve true cuando ha terminado.
@@ -1308,4 +1308,5 @@ public class ProductsFragment extends Fragment
     {
         return MAN;
     }
+
 }

@@ -56,7 +56,8 @@ import io.codetail.animation.ViewAnimationUtils;
  * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 
-public class ProductUI extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
+public class ProductUI extends AppCompatActivity implements GestureDetector.OnGestureListener
+                                                    , GestureDetector.OnDoubleTapListener
 {
     /* Constants */
     protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
@@ -517,6 +518,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         overridePendingTransition(0, 0);
     }
 
+    /**
+     * Metodo que expande la ventana de informacion.
+     */
     private void expandInfo()
     {
         // Calculamos cuanto hay que desplazar el FAB hasta el borde del layout de info.
@@ -577,6 +581,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         }
     }
 
+    /**
+     * Metodo que hace desaparecer la ventana de informacion.
+     */
     private void collapseInfo()
     {
         COLLAPSING = true;
