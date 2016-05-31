@@ -209,9 +209,7 @@ public class MainScreenUI extends AppCompatActivity
 
         mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -219,9 +217,7 @@ public class MainScreenUI extends AppCompatActivity
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
 
         mExplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -231,14 +227,10 @@ public class MainScreenUI extends AppCompatActivity
             }
 
             @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
+            public void onAnimationEnd(Animation animation) {}
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 
