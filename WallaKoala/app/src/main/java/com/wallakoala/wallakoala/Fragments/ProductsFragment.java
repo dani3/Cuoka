@@ -16,11 +16,21 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -338,164 +348,6 @@ public class ProductsFragment extends Fragment
     }
 
     /**
-     * Task que realiza una peticion al servidor con los filtros actuales.
-     */
-    private class ConnectionFilterTask implements Callable<String>
-    {
-        private String shop;
-
-        public ConnectionFilterTask(String shop)
-        {
-            this.shop = shop;
-        }
-
-        @Override
-        public String call()
-        {
-            BufferedReader reader = null;
-            DataOutputStream writer = null;
-            URL url;
-
-            try
-            {
-                String fixedURL = Utils.fixUrl(Properties.SERVER_URL
-                                            + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shop);
-
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL);
-
-                url = new URL(fixedURL);
-
-                if (url != null)
-                {
-                    URLConnection conn = url.openConnection();
-
-                    conn.setRequestProperty("Content-Type", "application/json");
-                    conn.setDoOutput(true);
-
-                    conn.connect();
-
-                    // Creamos el JSON con los filtros
-                    JSONObject jsonObject = new JSONObject();
-
-                    List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
-                    List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
-
-                    jsonObject.put("newness", mFilterMap.get("newness"));
-                    jsonObject.put("man", MAN);
-                    jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
-                    jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
-                    jsonObject.put("colors", new JSONArray(colorsList));
-                    jsonObject.put("sections", new JSONArray(sectionsList));
-
-                    Log.d(Properties.TAG, "JSON de filtros:\n    " + jsonObject.toString());
-
-                    // Enviamos el JSON
-                    writer = new DataOutputStream(conn.getOutputStream());
-
-                    String str = jsonObject.toString();
-                    byte[] data = str.getBytes("UTF-8");
-
-                    writer.write(data);
-                    writer.flush();
-
-                    // Obtenemos la respuesta del servidor
-                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line = "";
-
-                    // Leemos la respuesta
-                    while ((line = reader.readLine()) != null)
-                        sb.append(line + "");
-
-                    return sb.toString();
-                }
-
-            } catch(Exception ex) {
-                Log.d(Properties.TAG, "Error conectando con el servidor");
-
-            } finally {
-                try
-                {
-                    if (reader != null)
-                        reader.close();
-
-                    if (writer != null)
-                        writer.close();
-
-                } catch (IOException e) {
-                    Log.d(Properties.TAG, "Error cerrando conexion");
-
-                }
-
-            }
-
-            return null;
-
-        }
-
-    } /* [END ConnectionFilterTask] */
-
-    /**
-     * Task que realiza una peticion al servidor con la busqueda introducida.
-     */
-    private class ConnectionSearchTask implements Callable<String>
-    {
-        private String shop;
-
-        public ConnectionSearchTask(String shop)
-        {
-            this.shop = shop;
-        }
-
-        @Override
-        public String call()
-        {
-            BufferedReader reader = null;
-            URL url = null;
-
-            try {
-                String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                            + "/search/" + shop + "/" + MAN + "/" + SEARCH_QUERY);
-
-                Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
-
-                url = new URL(fixedURL);
-
-                URLConnection conn = url.openConnection();
-
-                // Obtenemos la respuesta del servidor
-                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line = "";
-
-                // Leemos la respuesta
-                while ((line = reader.readLine()) != null)
-                    sb.append(line + "");
-
-                // Devolvemos la respuesta
-                return sb.toString();
-
-
-            } catch (Exception e) {
-                Log.d(Properties.TAG, "Error realizando busqueda con " + shop);
-
-            } finally {
-                try {
-                    if (reader != null)
-                        reader.close();
-
-                } catch (IOException e) {
-                    Log.d(Properties.TAG, "Error cerrando conexion con " + shop);
-
-                }
-
-            }
-
-            return null;
-        }
-    } /* [END ConnectionSearchTask] */
-
-    /**
      * Task que convierte una array de JSON en una lista de productos. Devuelve true cuando ha terminado.
      */
     private class ConversionTask implements Callable<Boolean>
@@ -521,70 +373,6 @@ public class ProductsFragment extends Fragment
             return true;
         }
     } /* [END ConversionTask] */
-
-    /**
-     * Task que se conecta al servidor y trae una tienda determinada. Devuelve un string si ha ido bien, null EOC.
-     * En caso de que falle, se captura la excepcion y se devuelve null. El hecho de que falle una conexion no deberia
-     * parar el flujo entero.
-     */
-    private class ConnectionTask implements Callable<String>
-    {
-        private int myPos;
-
-        public ConnectionTask( int pos )
-        {
-            myPos = pos;
-        }
-
-        @Override
-        public String call()
-        {
-            BufferedReader reader = null;
-            URL url;
-
-            try {
-                String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                        + "/products/" + mShopsList.get(myPos).replaceAll(" ", "%20")
-                                        + "/" + MAN + "/" + DAYS_OFFSET;
-
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL
-                        + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
-
-                url = new URL(fixedURL);
-
-                URLConnection conn = url.openConnection();
-
-                // Obtenemos la respuesta del servidor
-                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line = "";
-
-                // Leemos la respuesta
-                while ((line = reader.readLine()) != null)
-                    sb.append(line + "");
-
-                // Devolvemos la respuesta
-                return sb.toString();
-
-            } catch (Exception e) {
-                Log.d(Properties.TAG, "Error conectando con " + mShopsList.get(myPos));
-
-            } finally {
-                try {
-                    if (reader != null)
-                        reader.close();
-
-                } catch (IOException e) {
-                    Log.d(Properties.TAG, "Error cerrando conexion con " + mShopsList.get(myPos));
-
-                }
-
-            }
-
-            return null;
-        }
-
-    } /* [END ConnectionTask] */
 
     /**
      * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's.
@@ -644,10 +432,7 @@ public class ProductsFragment extends Fragment
      */
     private class ConnectToServer extends AsyncTask<String, Void, Void>
     {
-        private ThreadPoolExecutor executor;
-        private CompletionService<String> completionService;
-
-        private List<String> content;
+        private List<JSONArray> content = new ArrayList<>();
 
         private String error = null;
 
@@ -656,17 +441,6 @@ public class ProductsFragment extends Fragment
         {
             if (mState != STATE.LOADING)
                 _loading(true, true);
-
-            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
-            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
-                    , NUMBER_OF_CORES * 4
-                    , 60L
-                    , TimeUnit.SECONDS
-                    , new LinkedBlockingQueue<Runnable>());
-
-            completionService = new ExecutorCompletionService<>(executor);
-
-            content = new ArrayList<>();
         }
 
         @Override
@@ -674,26 +448,41 @@ public class ProductsFragment extends Fragment
         {
             try
             {
-                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
-                for (int i = 0; i < mShopsList.size(); i++)
-                {
-                    ConnectionTask connectionTask = new ConnectionTask(i);
-
-                    completionService.submit(connectionTask);
-
-                    if (isCancelled())
-                        return null;
-                }
+                List<RequestFuture<JSONArray>> futures = new ArrayList<>();
 
                 // Metemos en content el resultado de cada uno
                 for (int i = 0; i < mShopsList.size(); i++)
                 {
-                    String future = completionService.take().get();
-                    if (future != null)
-                        content.add(future);
+                    final String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                            + "/products/" + mShopsList.get(i).replaceAll(" ", "%20")
+                            + "/" + MAN + "/" + DAYS_OFFSET;
 
-                    if (isCancelled())
-                        return null;
+                    Log.d(Properties.TAG, "Conectando con: " + fixedURL
+                            + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
+
+                    futures.add(RequestFuture.<JSONArray>newFuture());
+
+                    // Creamos una peticion
+                    JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                            , fixedURL
+                                                            , null
+                                                            , futures.get(i)
+                                                            , futures.get(i));
+
+                    // La mandamos a la cola de peticiones
+                    VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+                }
+
+                for (int i = 0; i < mShopsList.size(); i++)
+                {
+                    try {
+                        JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+
+                        content.add(response);
+
+                    } catch (InterruptedException e) {
+
+                    }
                 }
 
                 // Si content es vacio, es que han fallado todas las conexiones.
@@ -705,10 +494,6 @@ public class ProductsFragment extends Fragment
 
             } catch(Exception ex)  {
                 error = ex.getMessage();
-
-            } finally {
-                executor.shutdown();
-
             }
 
             return null;
@@ -736,7 +521,7 @@ public class ProductsFragment extends Fragment
     /**
      * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
      */
-    private class MultithreadConversion extends AsyncTask<List<String>, Void, Void>
+    private class MultithreadConversion extends AsyncTask<List<JSONArray>, Void, Void>
     {
         private ThreadPoolExecutor executor;
         private CompletionService<Boolean> completionService;
@@ -757,9 +542,9 @@ public class ProductsFragment extends Fragment
         }
 
         @Override
-        protected Void doInBackground(List<String>... params)
+        protected Void doInBackground(List<JSONArray>... params)
         {
-            List<String> content = params[0];
+            List<JSONArray> content = params[0];
 
             try
             {
@@ -768,9 +553,9 @@ public class ProductsFragment extends Fragment
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
-                    Log.d(Properties.TAG, "Tamano en bytes: " + (content.get(i).getBytes().length / 1000) + "kB");
+                    Log.d(Properties.TAG, "Tamano en bytes: " + (content.get(i).toString().getBytes().length / 1000) + "kB");
 
-                    ConversionTask task = new ConversionTask(new JSONArray(content.get(i)));
+                    ConversionTask task = new ConversionTask(content.get(i));
 
                     completionService.submit(task);
                 }
@@ -857,9 +642,7 @@ public class ProductsFragment extends Fragment
      */
     private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
     {
-        private ThreadPoolExecutor executor;
-        private CompletionService<String> completionService;
-        private List<String> content = new ArrayList<>();
+        private List<JSONArray> content = new ArrayList<>();
         private String error = null;
         private boolean EMPTY;
 
@@ -868,15 +651,6 @@ public class ProductsFragment extends Fragment
         {
             if (mState != STATE.LOADING)
                 _loading(true, true);
-
-            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
-            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
-                    , NUMBER_OF_CORES * 4
-                    , 60L
-                    , TimeUnit.SECONDS
-                    , new LinkedBlockingQueue<Runnable>());
-
-            completionService = new ExecutorCompletionService<>(executor);
         }
 
         @Override
@@ -887,20 +661,62 @@ public class ProductsFragment extends Fragment
                 List<String> aux = (ArrayList<String>)mFilterMap.get("shops");
                 List<String> shopsList = (aux == null) ? mShopsList : aux;
 
+                List<RequestFuture<JSONArray>> futures = new ArrayList<>();
+
                 // Creamos un thread por cada tienda a la que tenemos que conectarnos.
                 for (int i = 0; i < shopsList.size(); i++)
                 {
-                    ConnectionFilterTask connectionFilterTask = null;
-                    ConnectionSearchTask connectionSearchTask = null;
-
                     if (SEARCH_QUERY == null)
                     {
-                        connectionFilterTask = new ConnectionFilterTask(shopsList.get(i));
-                        completionService.submit(connectionFilterTask);
+                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL
+                                + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
+
+                        Log.d(Properties.TAG, "Conectando con: " + fixedURL);
+
+                        // Creamos el JSON con los filtros
+                        JSONObject jsonObject = new JSONObject();
+
+                        List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
+                        List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
+
+                        jsonObject.put("newness", mFilterMap.get("newness"));
+                        jsonObject.put("man", MAN);
+                        jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
+                        jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
+                        jsonObject.put("colors", new JSONArray(colorsList));
+                        jsonObject.put("sections", new JSONArray(sectionsList));
+
+                        Log.d(Properties.TAG, "JSON de filtros:\n    " + jsonObject.toString());
+
+                        futures.add(RequestFuture.<JSONArray>newFuture());
+
+                        // Creamos una peticion
+                        CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
+                                                            , fixedURL
+                                                            , jsonObject
+                                                            , futures.get(i)
+                                                            , futures.get(i));
+
+                        // La mandamos a la cola de peticiones
+                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
 
                     } else {
-                        connectionSearchTask = new ConnectionSearchTask(shopsList.get(i));
-                        completionService.submit(connectionSearchTask);
+                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                + "/search/" + shopsList.get(i) + "/" + MAN + "/" + SEARCH_QUERY);
+
+                        Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
+
+                        futures.add(RequestFuture.<JSONArray>newFuture());
+
+                        // Creamos una peticion
+                        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                , fixedURL
+                                , null
+                                , futures.get(i)
+                                , futures.get(i));
+
+                        // La mandamos a la cola de peticiones
+                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
                     }
 
                     if (isCancelled())
@@ -910,9 +726,14 @@ public class ProductsFragment extends Fragment
                 // Metemos en content el resultado de cada uno
                 for (int i = 0; i < shopsList.size(); i++)
                 {
-                    String future = completionService.take().get();
-                    if (future != null)
-                        content.add(future);
+                    try {
+                        JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+
+                        content.add(response);
+
+                    } catch (InterruptedException e) {
+
+                    }
 
                     if (isCancelled())
                         return null;
@@ -923,8 +744,6 @@ public class ProductsFragment extends Fragment
             } catch(Exception ex)  {
                 error = ex.getMessage();
 
-            } finally {
-                executor.shutdown();
             }
 
             return null;
