@@ -519,6 +519,138 @@ public class ProductsFragment extends Fragment
     } /* [END ConnectToServer] */
 
     /**
+     * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
+     * que cumplan los filtros establecidos.
+     */
+    private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
+    {
+        private List<JSONArray> content = new ArrayList<>();
+        private String error = null;
+        private boolean EMPTY;
+
+        @Override
+        protected void onPreExecute()
+        {
+            if (mState != STATE.LOADING)
+                _loading(true, true);
+        }
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            try
+            {
+                List<String> aux = (ArrayList<String>)mFilterMap.get("shops");
+                List<String> shopsList = (aux == null) ? mShopsList : aux;
+
+                List<RequestFuture<JSONArray>> futures = new ArrayList<>();
+
+                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
+                for (int i = 0; i < shopsList.size(); i++)
+                {
+                    if (SEARCH_QUERY == null)
+                    {
+                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL
+                                + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
+
+                        Log.d(Properties.TAG, "Conectando con: " + fixedURL);
+
+                        // Creamos el JSON con los filtros
+                        JSONObject jsonObject = new JSONObject();
+
+                        List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
+                        List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
+
+                        jsonObject.put("newness", mFilterMap.get("newness"));
+                        jsonObject.put("man", MAN);
+                        jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
+                        jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
+                        jsonObject.put("colors", new JSONArray(colorsList));
+                        jsonObject.put("sections", new JSONArray(sectionsList));
+
+                        Log.d(Properties.TAG, "JSON de filtros:\n    " + jsonObject.toString());
+
+                        futures.add(RequestFuture.<JSONArray>newFuture());
+
+                        // Creamos una peticion
+                        CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
+                                , fixedURL
+                                , jsonObject
+                                , futures.get(i)
+                                , futures.get(i));
+
+                        // La mandamos a la cola de peticiones
+                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+
+                    } else {
+                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                + "/search/" + shopsList.get(i) + "/" + MAN + "/" + SEARCH_QUERY);
+
+                        Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
+
+                        futures.add(RequestFuture.<JSONArray>newFuture());
+
+                        // Creamos una peticion
+                        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                , fixedURL
+                                , null
+                                , futures.get(i)
+                                , futures.get(i));
+
+                        // La mandamos a la cola de peticiones
+                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+                    }
+
+                    if (isCancelled())
+                        return null;
+                }
+
+                // Metemos en content el resultado de cada uno
+                for (int i = 0; i < shopsList.size(); i++)
+                {
+                    try {
+                        JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+
+                        content.add(response);
+
+                    } catch (InterruptedException e) {
+
+                    }
+
+                    if (isCancelled())
+                        return null;
+                }
+
+                EMPTY = content.isEmpty();
+
+            } catch(Exception ex)  {
+                error = ex.getMessage();
+
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            if (error != null)
+            {
+                _loading(false, false);
+
+                _errorConnectingToServer(true);
+
+            } else {
+                if (!EMPTY)
+                    new MultithreadConversion().execute(content);
+
+            }
+        }
+
+    } /* [END RetreiveProductsFromServer] */
+
+    /**
      * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
      */
     private class MultithreadConversion extends AsyncTask<List<JSONArray>, Void, Void>
@@ -635,138 +767,6 @@ public class ProductsFragment extends Fragment
         }
 
     } /* [END MultithreadConversion] */
-
-    /**
-     * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
-     * que cumplan los filtros establecidos.
-     */
-    private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
-    {
-        private List<JSONArray> content = new ArrayList<>();
-        private String error = null;
-        private boolean EMPTY;
-
-        @Override
-        protected void onPreExecute()
-        {
-            if (mState != STATE.LOADING)
-                _loading(true, true);
-        }
-
-        @Override
-        protected Void doInBackground(String... params)
-        {
-            try
-            {
-                List<String> aux = (ArrayList<String>)mFilterMap.get("shops");
-                List<String> shopsList = (aux == null) ? mShopsList : aux;
-
-                List<RequestFuture<JSONArray>> futures = new ArrayList<>();
-
-                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
-                for (int i = 0; i < shopsList.size(); i++)
-                {
-                    if (SEARCH_QUERY == null)
-                    {
-                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL
-                                + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
-
-                        Log.d(Properties.TAG, "Conectando con: " + fixedURL);
-
-                        // Creamos el JSON con los filtros
-                        JSONObject jsonObject = new JSONObject();
-
-                        List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
-                        List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
-
-                        jsonObject.put("newness", mFilterMap.get("newness"));
-                        jsonObject.put("man", MAN);
-                        jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
-                        jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
-                        jsonObject.put("colors", new JSONArray(colorsList));
-                        jsonObject.put("sections", new JSONArray(sectionsList));
-
-                        Log.d(Properties.TAG, "JSON de filtros:\n    " + jsonObject.toString());
-
-                        futures.add(RequestFuture.<JSONArray>newFuture());
-
-                        // Creamos una peticion
-                        CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
-                                                            , fixedURL
-                                                            , jsonObject
-                                                            , futures.get(i)
-                                                            , futures.get(i));
-
-                        // La mandamos a la cola de peticiones
-                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-                    } else {
-                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                + "/search/" + shopsList.get(i) + "/" + MAN + "/" + SEARCH_QUERY);
-
-                        Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
-
-                        futures.add(RequestFuture.<JSONArray>newFuture());
-
-                        // Creamos una peticion
-                        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                , fixedURL
-                                , null
-                                , futures.get(i)
-                                , futures.get(i));
-
-                        // La mandamos a la cola de peticiones
-                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-                    }
-
-                    if (isCancelled())
-                        return null;
-                }
-
-                // Metemos en content el resultado de cada uno
-                for (int i = 0; i < shopsList.size(); i++)
-                {
-                    try {
-                        JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
-
-                        content.add(response);
-
-                    } catch (InterruptedException e) {
-
-                    }
-
-                    if (isCancelled())
-                        return null;
-                }
-
-                EMPTY = content.isEmpty();
-
-            } catch(Exception ex)  {
-                error = ex.getMessage();
-
-            }
-
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void unused)
-        {
-            if (error != null)
-            {
-                _loading(false, false);
-
-                _errorConnectingToServer(true);
-
-            } else {
-                if (!EMPTY)
-                    new MultithreadConversion().execute(content);
-
-            }
-        }
-
-    } /* [END RetreiveProductsFromServer] */
 
     /**
      * Metodo que crea maneja la interfaz en funcion de si esta cargando o no los productos.

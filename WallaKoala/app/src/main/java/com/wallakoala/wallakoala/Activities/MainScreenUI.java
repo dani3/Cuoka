@@ -104,6 +104,7 @@ public class MainScreenUI extends AppCompatActivity
     private void _initViewPager()
     {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -117,10 +118,8 @@ public class MainScreenUI extends AppCompatActivity
         adapter.addFragment(mSugestionsFragment, "TOPS CUOKA");
         mViewPager.setAdapter(adapter);
 
-        // Marcamos como activo la segunda pestaña
+        // Marcamos como activo la segunda pestaña (NOVEDADES)
         mViewPager.setCurrentItem(1);
-
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
         {
@@ -129,13 +128,19 @@ public class MainScreenUI extends AppCompatActivity
             {
                 Log.d(Properties.TAG, "Pestaña cambiada a " + tab.getText());
 
+                // Sin esto, pinchar en la pestaña no hace nada.
+                mViewPager.setCurrentItem(tab.getPosition());
+
                 if (tab.getText().equals("NOVEDADES"))
                 {
-                    findViewById(R.id.menu_item_filter).startAnimation(mExplodeAnimation);
+                    View view = findViewById(R.id.menu_item_filter);
+                    if (view.getVisibility() == View.INVISIBLE)
+                    {
+                        findViewById(R.id.menu_item_filter).startAnimation(mExplodeAnimation);
+                    }
 
-                } else {
+                } else if (tab.getText().equals("TOPS CUOKA")) {
                     findViewById(R.id.menu_item_filter).startAnimation(mImplodeAnimation);
-
                 }
             }
 
