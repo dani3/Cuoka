@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /*
- * @class Clase que representa un producto
+ * @class Clase que representa un producto.
  * Created by Daniel Mancebo on 11/12/2015.
  */
 
@@ -23,13 +23,13 @@ public class Product implements Serializable
 	
 	public Product() {}
 	
-	public Product( String name
+	public Product(String name
 			 , String shop
 			 , String section
 			 , double price
 			 , String link
              , String description
-			 , List<ColorVariant> colors )
+			 , List<ColorVariant> colors)
 	{
 		this.name = name;
 		this.shop = shop;
@@ -48,7 +48,7 @@ public class Product implements Serializable
 	public List<ColorVariant> getColors() { return this.colors; }
 	public String getLink()               { return this.link; }
 
-	public void setName( String name ) { this.name = name; }
+	public void setName(String name) { this.name = name; }
 
 	public boolean isOkay()
 	{

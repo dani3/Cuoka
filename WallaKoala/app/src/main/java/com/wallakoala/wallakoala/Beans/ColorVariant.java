@@ -17,10 +17,10 @@ public class ColorVariant implements Serializable
     
     public ColorVariant() {}
     
-    public ColorVariant( String reference
+    public ColorVariant(String reference
     		, String colorName
     		, String colorPath
-    		, short numberOfImages )
+    		, short numberOfImages)
     {
 		this.reference = reference;
 		this.colorName = colorName;

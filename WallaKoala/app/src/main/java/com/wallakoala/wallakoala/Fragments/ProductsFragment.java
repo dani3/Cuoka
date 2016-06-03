@@ -17,13 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
+import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
@@ -38,12 +34,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -139,6 +129,7 @@ public class ProductsFragment extends Fragment
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
 
+    /* Constructor por defecto NECESARIO */
     public ProductsFragment() {}
 
     @Override
@@ -287,7 +278,7 @@ public class ProductsFragment extends Fragment
                         if (!mProductsCandidatesDeque.isEmpty())
                         {
                             // Sacamos los siguientes productos
-                            getNextProductsToBeDisplayed();
+                            _getNextProductsToBeDisplayed();
 
                             // Sacamos el indice del primer producto a insertar
                             start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
@@ -433,7 +424,6 @@ public class ProductsFragment extends Fragment
     private class ConnectToServer extends AsyncTask<String, Void, Void>
     {
         private List<JSONArray> content = new ArrayList<>();
-
         private String error = null;
 
         @Override
@@ -454,8 +444,8 @@ public class ProductsFragment extends Fragment
                 for (int i = 0; i < mShopsList.size(); i++)
                 {
                     final String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                            + "/products/" + mShopsList.get(i).replaceAll(" ", "%20")
-                            + "/" + MAN + "/" + DAYS_OFFSET;
+                                                + "/products/" + mShopsList.get(i).replaceAll(" ", "%20")
+                                                + "/" + MAN + "/" + DAYS_OFFSET;
 
                     Log.d(Properties.TAG, "Conectando con: " + fixedURL
                             + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
@@ -471,6 +461,9 @@ public class ProductsFragment extends Fragment
 
                     // La mandamos a la cola de peticiones
                     VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+
+                    if (isCancelled())
+                        return null;
                 }
 
                 for (int i = 0; i < mShopsList.size(); i++)
@@ -481,8 +474,12 @@ public class ProductsFragment extends Fragment
                         content.add(response);
 
                     } catch (InterruptedException e) {
-
+                        error = "Thread interrumpido";
+                        Log.d(Properties.TAG, error);
                     }
+
+                    if (isCancelled())
+                        return null;
                 }
 
                 // Si content es vacio, es que han fallado todas las conexiones.
@@ -511,7 +508,6 @@ public class ProductsFragment extends Fragment
 
             } else {
                 new MultithreadConversion().execute(content);
-
             }
 
         } // onPostExecute
@@ -574,10 +570,10 @@ public class ProductsFragment extends Fragment
 
                         // Creamos una peticion
                         CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
-                                , fixedURL
-                                , jsonObject
-                                , futures.get(i)
-                                , futures.get(i));
+                                                            , fixedURL
+                                                            , jsonObject
+                                                            , futures.get(i)
+                                                            , futures.get(i));
 
                         // La mandamos a la cola de peticiones
                         VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
@@ -614,7 +610,8 @@ public class ProductsFragment extends Fragment
                         content.add(response);
 
                     } catch (InterruptedException e) {
-
+                        error = "Thread interrumpido";
+                        Log.d(Properties.TAG, error);
                     }
 
                     if (isCancelled())
@@ -625,7 +622,6 @@ public class ProductsFragment extends Fragment
 
             } catch(Exception ex)  {
                 error = ex.getMessage();
-
             }
 
             return null;
@@ -702,7 +698,7 @@ public class ProductsFragment extends Fragment
                 // Una vez cargados los productos, actualizamos la cola de candidatos...
                 updateCandidates();
                 // ... y actualizamos la lista de los que se van a mostrar
-                getNextProductsToBeDisplayed();
+                _getNextProductsToBeDisplayed();
 
                 // Si no es la primera conexion
                 if (!FIRST_CONNECTION)
@@ -720,7 +716,6 @@ public class ProductsFragment extends Fragment
 
             } catch (Exception e) {
                 error = e.getMessage();
-
             }
 
             return null;
@@ -974,7 +969,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que inserta los productos en la cola ordenados.
      */
-    protected void getNextProductsToBeDisplayed()
+    protected void _getNextProductsToBeDisplayed()
     {
         mProductsInsertedPreviously = NUM_PRODUCTS_DISPLAYED;
 
@@ -1091,8 +1086,8 @@ public class ProductsFragment extends Fragment
             DAYS_OFFSET = -1;
 
             mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
-
         }
+
     }
 
     /**
