@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.wallakoala.wallakoala.Views.DotsLargeView
+        android:id="@+id/vDotsView"
+        android:layout_width="102dp"
+        android:layout_height="102dp"
+        android:layout_gravity="center"/>
+
+    <com.wallakoala.wallakoala.Views.CircleView
+        android:id="@+id/vCircle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:id="@+id/ivStar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_favorite_grey"/>
+
+</merge>

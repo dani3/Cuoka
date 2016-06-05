@@ -45,6 +45,8 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wallakoala.wallakoala.Views.LikeButtonLargeView;
+import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.io.File;
 
@@ -87,7 +89,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     /* Views */
     protected ImageView mImageView;
-    protected ImageButton mFavoriteImageButton;
+    protected LikeButtonLargeView mFavoriteImageButton;
     protected ImageButton mCartImageButton;
 
     /* TextViews */
@@ -226,7 +228,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
         mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
         mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
-        mFavoriteImageButton        = (ImageButton)findViewById(R.id.product_favorite);
+        mFavoriteImageButton        = (LikeButtonLargeView) findViewById(R.id.product_favorite);
         mCartImageButton            = (ImageButton)findViewById(R.id.product_info_cart);
 
         /* Inicializamos la info del producto */

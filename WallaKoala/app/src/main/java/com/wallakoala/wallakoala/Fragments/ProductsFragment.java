@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
@@ -588,10 +587,10 @@ public class ProductsFragment extends Fragment
 
                         // Creamos una peticion
                         JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                , fixedURL
-                                , null
-                                , futures.get(i)
-                                , futures.get(i));
+                                                                , fixedURL
+                                                                , null
+                                                                , futures.get(i)
+                                                                , futures.get(i));
 
                         // La mandamos a la cola de peticiones
                         VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
@@ -696,7 +695,7 @@ public class ProductsFragment extends Fragment
                 executor.shutdown();
 
                 // Una vez cargados los productos, actualizamos la cola de candidatos...
-                updateCandidates();
+                _updateCandidates();
                 // ... y actualizamos la lista de los que se van a mostrar
                 _getNextProductsToBeDisplayed();
 
@@ -920,7 +919,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
      */
-    protected void updateCandidates()
+    protected void _updateCandidates()
     {
         // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior.
         Map<String, Integer> indexMap = new HashMap<>();

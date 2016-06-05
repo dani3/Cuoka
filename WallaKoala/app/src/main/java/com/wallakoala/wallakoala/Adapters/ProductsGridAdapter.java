@@ -25,6 +25,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private String mBitmapFileName;
 
         private ImageView mProductImageView;
-        private ImageButton mProductFavoriteImageButton;
+        private LikeButtonView mProductFavoriteImageButton;
         private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
 
@@ -76,7 +77,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.footer_price);
 
-            mProductFavoriteImageButton = (ImageButton)itemView.findViewById(R.id.product_item_favorite);
+            mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.product_item_favorite);
 
             mProductFooterView      = itemView.findViewById(R.id.footer);
             mProductFooterExtraView = itemView.findViewById(R.id.extraInfo);

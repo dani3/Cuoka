@@ -25,16 +25,12 @@
             app:riv_corner_radius_top_left="4dp"
             app:riv_corner_radius_top_right="4dp"/>
 
-        <ImageButton
+        <com.wallakoala.wallakoala.Views.LikeButtonView
             android:id="@+id/product_item_favorite"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:scaleType="centerCrop"
-            android:layout_gravity="top|right|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_favorite_border_white"
-            android:tint="@color/colorAccent"
-            android:background="@android:color/transparent"/>
+            android:layout_gravity="top|right|end"/>
 
         <!-- Pie de foto -->
         <RelativeLayout

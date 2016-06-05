@@ -27,16 +27,12 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <ImageButton
+        <com.wallakoala.wallakoala.Views.LikeButtonLargeView
             android:id="@+id/product_favorite"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:scaleType="centerCrop"
-            android:layout_gravity="top|right|end"
-            android:layout_margin="24dp"
-            android:src="@drawable/ic_favorite_border_white"
-            android:tint="@color/colorAccent"
-            android:background="@android:color/transparent"/>
+            android:layout_gravity="top|right|end"/>
 
         <include android:id="@+id/product_info_layout"
             layout="@layout/product_info">

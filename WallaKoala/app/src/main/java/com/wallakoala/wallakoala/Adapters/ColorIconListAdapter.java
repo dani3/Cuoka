@@ -137,7 +137,6 @@ public class ColorIconListAdapter extends BaseAdapter
             colorIconHolder.mSelectedView.setVisibility(View.GONE);
         }
 
-
         Log.d(Properties.TAG, url);
 
         Picasso.with(mContext)
