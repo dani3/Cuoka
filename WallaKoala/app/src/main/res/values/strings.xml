@@ -87,6 +87,7 @@
     <string name="search_hint">Secciones, colores, etc.</string>
 
     <string name="sign_up">Registro</string>
+    <string name="gender_election">Elige tu sexo</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Contraseña</string>
     <string name="age_hint">Edad</string>
