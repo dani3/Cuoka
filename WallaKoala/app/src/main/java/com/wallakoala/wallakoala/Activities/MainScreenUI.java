@@ -26,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.SuggestionsFragment;
 import com.wallakoala.wallakoala.Fragments.TopsFragment;
+import com.wallakoala.wallakoala.Other.ActivitySession;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 

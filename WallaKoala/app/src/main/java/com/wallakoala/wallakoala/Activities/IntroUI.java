@@ -72,7 +72,7 @@ public class IntroUI extends AppCompatActivity
                 mSharedPreferencesManager.insertMan(man.isChecked());
                 mSharedPreferencesManager.insertShops(shops);
 
-                Intent intent = new Intent(IntroUI.this, MainScreenUI.class);
+                Intent intent = new Intent(IntroUI.this, SignUpUI.class);
                 startActivity(intent);
 
                 // Animacion de transicion para pasar de una activity a otra.

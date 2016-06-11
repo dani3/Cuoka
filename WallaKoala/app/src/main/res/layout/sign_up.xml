@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.SignUpUI"
+    android:layout_margin="16dp"
+    android:background="@android:color/transparent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:paddingBottom="6dp"
+                android:paddingLeft="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/sign_up"
+                android:textSize="18dp"
+                android:textColor="@color/colorLightText"
+                android:background="@drawable/filter_bottom_border"/>
+
+            <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+            <LinearLayout
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="0px"
+                android:layout_height="0px"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/email_input_layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="34dp"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="12dp"
+                android:theme="@style/TextLabel">
+
+                <EditText
+                    android:id="@+id/email_edittext"
+                    android:inputType="textEmailAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorMediumText"
+                    android:hint="@string/email_hint"
+                    android:nextFocusUp="@id/email_edittext"
+                    android:nextFocusLeft="@id/email_edittext"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/password_input_layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="34dp"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="12dp"
+                android:theme="@style/TextLabel">
+
+                <EditText
+                    android:id="@+id/password_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorMediumText"
+                    android:hint="@string/password_hint"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/age_input_layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="34dp"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="12dp"
+                android:theme="@style/TextLabel">
+
+                <EditText
+                    android:id="@+id/age_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:singleLine="true"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorMediumText"
+                    android:hint="@string/age_hint"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/postal_code_input_layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="34dp"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="12dp"
+                android:theme="@style/TextLabel">
+
+                <EditText
+                    android:id="@+id/postal_code_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:singleLine="true"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorMediumText"
+                    android:hint="@string/postal_code_hint"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/done_sign_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white"
+        android:layout_gravity="bottom|start"
+        android:layout_marginLeft="90dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginBottom="34dp"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/back_sign_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_backspace_white"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="90dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="34dp"
+        app:backgroundTint="@color/colorLightText"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+</android.support.v7.widget.CardView>

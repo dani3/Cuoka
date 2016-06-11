@@ -460,7 +460,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     }
 
     /**
-     * La animacion de salida es la misma animacion de entrada pero al reves
+     * La animacion de sali
+     * da es la misma animacion de entrada pero al reves
      * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
     private void runExitAnimation(final Runnable endAction)

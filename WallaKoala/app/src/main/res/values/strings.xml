@@ -86,4 +86,10 @@
 
     <string name="search_hint">Secciones, colores, etc.</string>
 
+    <string name="sign_up">Registro</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="age_hint">Edad</string>
+    <string name="postal_code_hint">Código postal</string>
+
 </resources>
