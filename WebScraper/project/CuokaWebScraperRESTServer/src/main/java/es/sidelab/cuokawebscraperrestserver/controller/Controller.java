@@ -61,9 +61,9 @@ public class Controller
     UsersRepository usersRepository;
     
     /**
-     * 
-     * @param user
-     * @return 
+     * Metodo que anade un usuario a la BD.
+     * @param user: usuario a anadir.
+     * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @RequestMapping( value = "/users", method = RequestMethod.POST )
     public ResponseEntity<Boolean> addUser( @RequestBody User user )
@@ -181,7 +181,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 50 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 65 ) ;
     }
     
     /**

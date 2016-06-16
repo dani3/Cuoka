@@ -563,7 +563,7 @@ public class ProductsFragment extends Fragment
                         jsonObject.put("colors", new JSONArray(colorsList));
                         jsonObject.put("sections", new JSONArray(sectionsList));
 
-                        Log.d(Properties.TAG, "JSON de filtros:\n    " + jsonObject.toString());
+                        Log.d(Properties.TAG, "JSON con los filtros:\n    " + jsonObject.toString());
 
                         futures.add(RequestFuture.<JSONArray>newFuture());
 

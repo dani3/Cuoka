@@ -2,7 +2,9 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -16,8 +18,22 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @class Pantalla de login que premite registrarse con Facebook, Google+, Instagram y un registro propio.
@@ -57,6 +73,9 @@ public class SignUpUI extends AppCompatActivity
     private FloatingActionButton mAcceptFAB;
     private FloatingActionButton mBackFAB;
 
+    /* Containers */
+    private CoordinatorLayout mCoordinatorLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -70,6 +89,7 @@ public class SignUpUI extends AppCompatActivity
         _initEditTexts();
         _initFABs();
         _initImageButtons();
+        _initViews();
     }
 
     /**
@@ -78,8 +98,8 @@ public class SignUpUI extends AppCompatActivity
     private void _initEditTexts()
     {
         mEmailInputLayout      = (TextInputLayout)findViewById(R.id.email_input_layout);
-        mPasswordInputLayout = (TextInputLayout)findViewById(R.id.password_input_layout);
-        mAgeInputLayout = (TextInputLayout)findViewById(R.id.age_input_layout);
+        mPasswordInputLayout   = (TextInputLayout)findViewById(R.id.password_input_layout);
+        mAgeInputLayout        = (TextInputLayout)findViewById(R.id.age_input_layout);
         mPostalCodeInputLayout = (TextInputLayout)findViewById(R.id.postal_code_input_layout);
 
         mPasswordEdittext      = (EditText)findViewById(R.id.password_edittext);
@@ -108,16 +128,85 @@ public class SignUpUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                //if (_validateEmail() && _validatePassword() && _validateAge() && _validatePostalCode())
-                //{
-                    Intent intent = new Intent(SignUpUI.this, MainScreenUI.class);
-                    startActivity(intent);
+                // Validamos los datos introducidos
+                if (_validateEmail() && _validatePassword() &&
+                    _validateAge() && _validatePostalCode() && _isGenderSelected())
+                {
+                    try {
+                        final String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                + "/users";
 
-                    // Animacion de transicion para pasar de una activity a otra.
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        Log.d(Properties.TAG, "Conectando con: " + fixedURL
+                                + " para registrar un usuario");
 
-                    finish();
-                //}
+                        // Creamos el JSON con los datos del usuario
+                        JSONObject jsonObject = new JSONObject();
+
+                        jsonObject.put("age", Short.valueOf(mAgeEdittext.getText().toString()));
+                        jsonObject.put("email", mEmailEdittext.getText().toString());
+                        jsonObject.put("password", mPasswordEdittext.getText().toString());
+                        jsonObject.put("man", (mMaleImageButton.getAlpha() == ACTIVE_ALPHA));
+                        jsonObject.put("postalCode", Short.valueOf(mPostalCodeEdittext.getText().toString()));
+
+                        Log.d(Properties.TAG, "JSON con el usuario:\n    " + jsonObject.toString());
+
+                        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST
+                                , fixedURL
+                                , jsonObject
+                                , new Response.Listener<JSONObject>()
+                                {
+                                    @Override
+                                    public void onResponse(JSONObject response)
+                                    {
+                                        // Si ha ido bien, avanzamos a la siguiente pantalla
+                                        Log.d(Properties.TAG, "Usuario registrado correctamente");
+
+                                        Intent intent = new Intent(SignUpUI.this, MainScreenUI.class);
+                                        startActivity(intent);
+
+                                        // Animacion de transicion para pasar de una activity a otra.
+                                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                                        finish();
+                                    }
+                                }
+                                , new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error)
+                                    {
+                                        Log.d(Properties.TAG, "Error registrando el usuario (" + error.getMessage() + ")");
+                                    }
+                                })
+                                {
+                                    @Override
+                                    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response)
+                                    {
+                                        try
+                                        {
+                                            String json = new String(response.data, "UTF-8");
+
+                                            if (json.length() == 0)
+                                            {
+                                                return Response.success(null
+                                                                 , HttpHeaderParser.parseCacheHeaders(response));
+
+                                            } else {
+                                                return super.parseNetworkResponse(response);
+                                            }
+
+                                        } catch (UnsupportedEncodingException e) {
+                                            return Response.error(new ParseError(e));
+                                        }
+                                    }
+                                };
+
+                        VolleySingleton.getInstance(SignUpUI.this).addToRequestQueue(stringRequest);
+
+                    } catch (JSONException e) {
+                        Log.d(Properties.TAG, "Error creando JSON (" + e.getMessage() + ")");
+                    }
+                }
             }
         });
 
@@ -227,6 +316,14 @@ public class SignUpUI extends AppCompatActivity
         });
     }
 
+    /**
+     * Metodo que inicializa distintas vistas.
+     */
+    private void _initViews()
+    {
+        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.sign_up_coordinator);
+    }
+
     @Override
     public void finish()
     {
@@ -236,6 +333,22 @@ public class SignUpUI extends AppCompatActivity
         {
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
         }
+    }
+
+    /**
+     * Metodo que comprueba si se ha seleccionado algun sexo.
+     * @return true si se ha seleccionado algun sexo.
+     */
+    private boolean _isGenderSelected()
+    {
+        if ((mMaleImageButton.getAlpha() == INACTIVE_ALPHA) && (mFemaleImageButton.getAlpha() == INACTIVE_ALPHA))
+        {
+            Snackbar.make(mCoordinatorLayout, "Elige tu sexo", Snackbar.LENGTH_SHORT).show();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

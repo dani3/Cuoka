@@ -141,23 +141,6 @@
 
             </LinearLayout>
 
-            <!-- Cabecera sexo -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="34dp"
-                android:layout_marginLeft="34dp"
-                android:layout_marginTop="24dp"
-                android:paddingBottom="6dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/gender_election"
-                android:textSize="18dp"
-                android:textColor="@color/colorLightText"
-                android:background="@drawable/filter_bottom_border"/>
-
             <!-- Sexo -->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -192,33 +175,41 @@
 
     </ScrollView>
 
-    <!-- FAB Aceptar -->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/done_sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_done_white"
-        android:layout_gravity="bottom|start"
-        android:layout_marginLeft="90dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginBottom="34dp"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"/>
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/sign_up_coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!-- FAB Atras -->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/back_sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_backspace_white"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="90dp"
-        android:layout_marginEnd="90dp"
-        android:layout_marginBottom="34dp"
-        app:backgroundTint="@color/colorLightText"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"/>
+        <!-- FAB Aceptar -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/done_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_white"
+            android:layout_gravity="bottom|start"
+            android:layout_marginLeft="90dp"
+            android:layout_marginStart="90dp"
+            android:layout_marginBottom="34dp"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"/>
+
+        <!-- FAB Atras -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/back_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_backspace_white"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="90dp"
+            android:layout_marginEnd="90dp"
+            android:layout_marginBottom="34dp"
+            app:backgroundTint="@color/colorLightText"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 
 </android.support.v7.widget.CardView>
