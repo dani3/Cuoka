@@ -44,11 +44,23 @@ public class IntroUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(IntroUI.this, LoginUI.class);
-                startActivity(intent);
+                Intent intent;
 
-                // Animacion de transicion para pasar de una activity a otra.
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                // TODO: temporal
+                mSharedPreferencesManager.insertLoggedIn(false);
+
+                if (mSharedPreferencesManager.retreiveLoggedIn())
+                {
+                    intent = new Intent(IntroUI.this, MainScreenUI.class);
+
+                    // Limpiamos la Activity Stack
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                } else {
+                    intent = new Intent(IntroUI.this, LoginUI.class);
+                }
+
+                startActivity(intent);
 
                 finish();
             }

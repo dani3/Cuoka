@@ -132,10 +132,11 @@ public class SignUpUI extends AppCompatActivity
                 if (mRegisterCircularButton.getProgress() == 100)
                 {
                     Intent intent = new Intent(SignUpUI.this, MainScreenUI.class);
-                    startActivity(intent);
 
-                    // Animacion de transicion para pasar de una activity a otra.
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    // Limpiamos la Activity Stack
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    startActivity(intent);
 
                     finish();
                 }
@@ -368,6 +369,9 @@ public class SignUpUI extends AppCompatActivity
         mSharedPreferencesManager.insertPostalCode(postalCode);
         mSharedPreferencesManager.insertEmai(email);
         mSharedPreferencesManager.insertPassword(password);
+
+        mSharedPreferencesManager.insertOwnRegister(true);
+        mSharedPreferencesManager.insertLoggedIn(true);
     }
 
     /**
