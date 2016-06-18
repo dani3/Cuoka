@@ -904,7 +904,7 @@ public class ProductsFragment extends Fragment
                 @Override
                 public void onClick(View view)
                 {
-                    //mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+                    mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
                 }
             });
         }

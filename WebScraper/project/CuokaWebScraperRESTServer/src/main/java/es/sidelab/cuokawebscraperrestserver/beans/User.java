@@ -36,7 +36,7 @@ public class User
     private String password;
     
     @Column( name = "POSTAL_CODE" )
-    private short postalCode;
+    private int postalCode;
     
     @JsonIgnore
     @Column( name = "DATE" )
@@ -48,7 +48,7 @@ public class User
             , short age
             , boolean man
             , String password
-            , short postalCode
+            , int postalCode
             , Calendar registrationDate )
     {
         this.email = email;
@@ -65,7 +65,7 @@ public class User
     public String getPassword() { return this.password; }
     public short getAge() { return this.age; }
     public boolean getMan() { return this.man; }
-    public short getPostalCode() { return this.postalCode; }
+    public int getPostalCode() { return this.postalCode; }
     
     @JsonIgnore
     public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; }    
@@ -73,5 +73,5 @@ public class User
     public void setPassword( String password ) { this.password = password; }
     public void setAge( short age ) { this.age = age; }
     public void setMan( boolean man ) { this.man = man; }
-    public void setPostalCode( short postalCode ) { this.postalCode = postalCode; }
+    public void setPostalCode( int postalCode ) { this.postalCode = postalCode; }
 }

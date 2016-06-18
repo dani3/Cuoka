@@ -11,6 +11,9 @@ public class Properties
     public static final String KEY = "10485mvJdb3/8wmc";    
     public static final String HASH_ALGORITHM = "MD5";
     
+    public static final String ALREADY_EXISTS = "USER_ALREADY_EXISTS";
+    public static final String REGISTRATION_OK = "USER_REGISTRATION_OK";
+    
     public static final String PATH                   = "/images/products/";
     public static final String PREDEFINED_COLORS      = "/images/colors/";
     public static final String IMAGE_PATH             = "/var/www/html/images/products/";

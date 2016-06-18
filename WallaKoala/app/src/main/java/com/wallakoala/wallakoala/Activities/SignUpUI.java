@@ -3,7 +3,6 @@ package com.wallakoala.wallakoala.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -18,22 +17,19 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.dd.CircularProgressButton;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * @class Pantalla de login que premite registrarse con Facebook, Google+, Instagram y un registro propio.
@@ -69,9 +65,7 @@ public class SignUpUI extends AppCompatActivity
     private ImageButton mMaleImageButton;
     private ImageButton mFemaleImageButton;
 
-    /* FABs */
-    private FloatingActionButton mAcceptFAB;
-    private FloatingActionButton mBackFAB;
+    private CircularProgressButton mRegisterCircularButton;
 
     /* Containers */
     private CoordinatorLayout mCoordinatorLayout;
@@ -87,7 +81,7 @@ public class SignUpUI extends AppCompatActivity
         setContentView(R.layout.sign_up);
 
         _initEditTexts();
-        _initFABs();
+        _initCircularButton();
         _initImageButtons();
         _initViews();
     }
@@ -116,108 +110,115 @@ public class SignUpUI extends AppCompatActivity
     /**
      * Metodo que inicializa los FABs.
      */
-    private void _initFABs()
+    private void _initCircularButton()
     {
         BACK_PRESSED = false;
 
-        mAcceptFAB = (FloatingActionButton)findViewById(R.id.done_sign_up);
-        mBackFAB   = (FloatingActionButton)findViewById(R.id.back_sign_up);
+        mRegisterCircularButton = (CircularProgressButton)findViewById(R.id.sign_up_accept);
+        mRegisterCircularButton.setIndeterminateProgressMode(true);
 
-        mAcceptFAB.setOnClickListener(new View.OnClickListener()
+        mRegisterCircularButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                // Validamos los datos introducidos
+                if (mRegisterCircularButton.getProgress() == 100)
+                {
+                    Intent intent = new Intent(SignUpUI.this, MainScreenUI.class);
+                    startActivity(intent);
+
+                    // Animacion de transicion para pasar de una activity a otra.
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                    finish();
+                }
+
+                // Validamos los datos introducidos y comprobamos que no estemos ya cargando.
                 if (_validateEmail() && _validatePassword() &&
-                    _validateAge() && _validatePostalCode() && _isGenderSelected())
+                    _validateAge() && _validatePostalCode() && _isGenderSelected() &&
+                    mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100)
                 {
                     try {
-                        final String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                + "/users";
+                        // 0 < X < 100 -> Cargando
+                        mRegisterCircularButton.setProgress(50);
 
-                        Log.d(Properties.TAG, "Conectando con: " + fixedURL
-                                + " para registrar un usuario");
+                        final String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users";
+
+                        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para registrar un usuario");
 
                         // Creamos el JSON con los datos del usuario
-                        JSONObject jsonObject = new JSONObject();
+                        final JSONObject jsonObject = new JSONObject();
 
                         jsonObject.put("age", Short.valueOf(mAgeEdittext.getText().toString()));
                         jsonObject.put("email", mEmailEdittext.getText().toString());
                         jsonObject.put("password", mPasswordEdittext.getText().toString());
                         jsonObject.put("man", (mMaleImageButton.getAlpha() == ACTIVE_ALPHA));
-                        jsonObject.put("postalCode", Short.valueOf(mPostalCodeEdittext.getText().toString()));
+                        jsonObject.put("postalCode", Integer.valueOf(mPostalCodeEdittext.getText().toString()));
 
                         Log.d(Properties.TAG, "JSON con el usuario:\n    " + jsonObject.toString());
 
-                        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST
                                 , fixedURL
-                                , jsonObject
-                                , new Response.Listener<JSONObject>()
-                                {
+                                , new Response.Listener<String>() {
                                     @Override
-                                    public void onResponse(JSONObject response)
+                                    public void onResponse(String response)
                                     {
-                                        // Si ha ido bien, avanzamos a la siguiente pantalla
-                                        Log.d(Properties.TAG, "Usuario registrado correctamente");
+                                        Log.d(Properties.TAG, "Respueste del servidor: " + response);
 
-                                        Intent intent = new Intent(SignUpUI.this, MainScreenUI.class);
-                                        startActivity(intent);
+                                        if (response.equals(Properties.REGISTRATION_OK))
+                                        {
+                                            // Si ha ido bien, avanzamos a la siguiente pantalla
+                                            Log.d(Properties.TAG, "Usuario registrado correctamente");
 
-                                        // Animacion de transicion para pasar de una activity a otra.
-                                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                            // X = 100 -> Complete
+                                            mRegisterCircularButton.setProgress(100);
 
-                                        finish();
+                                        } else if (response.equals(Properties.ALREADY_EXISTS)) {
+                                            // X < 0 -> Error
+                                            mRegisterCircularButton.setProgress(-1);
+
+                                            Snackbar.make(mCoordinatorLayout, "Email ya registrado", Snackbar.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                                , new Response.ErrorListener()
-                                {
+                                 }
+                                , new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error)
                                     {
-                                        Log.d(Properties.TAG, "Error registrando el usuario (" + error.getMessage() + ")");
+                                        mRegisterCircularButton.setProgress(-1);
+
+                                        Log.d(Properties.TAG, "Error registrando usuario: " + error.getMessage());
+
+                                        error.printStackTrace();
                                     }
-                                })
+                                 })
                                 {
                                     @Override
-                                    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response)
+                                    public byte[] getBody() throws AuthFailureError
                                     {
-                                        try
-                                        {
-                                            String json = new String(response.data, "UTF-8");
+                                        return jsonObject.toString().getBytes();
+                                    }
 
-                                            if (json.length() == 0)
-                                            {
-                                                return Response.success(null
-                                                                 , HttpHeaderParser.parseCacheHeaders(response));
-
-                                            } else {
-                                                return super.parseNetworkResponse(response);
-                                            }
-
-                                        } catch (UnsupportedEncodingException e) {
-                                            return Response.error(new ParseError(e));
-                                        }
+                                    @Override
+                                    public String getBodyContentType()
+                                    {
+                                        return "application/json";
                                     }
                                 };
 
+                        // Establecemos el timeout en ms y la politica de reintentos.
+                        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                                Properties.REQUEST_TIMEOUT,
+                                0,
+                                0));
+
+                        // Enviamos la peticion.
                         VolleySingleton.getInstance(SignUpUI.this).addToRequestQueue(stringRequest);
 
                     } catch (JSONException e) {
                         Log.d(Properties.TAG, "Error creando JSON (" + e.getMessage() + ")");
                     }
                 }
-            }
-        });
-
-        mBackFAB.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                BACK_PRESSED = true;
-
-                finish();
             }
         });
     }
@@ -329,10 +330,7 @@ public class SignUpUI extends AppCompatActivity
     {
         super.finish();
 
-        if (BACK_PRESSED)
-        {
-            overridePendingTransition(R.anim.left_in, R.anim.left_out);
-        }
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     /**

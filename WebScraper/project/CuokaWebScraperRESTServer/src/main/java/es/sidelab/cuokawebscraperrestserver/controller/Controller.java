@@ -66,22 +66,36 @@ public class Controller
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @RequestMapping( value = "/users", method = RequestMethod.POST )
-    public ResponseEntity<Boolean> addUser( @RequestBody User user )
+    public String addUser( @RequestBody User user )
     {     
         LOG.info( "Peticion POST para anadir un nuevo usuario" );
+        LOG.info( "Comprobando que no exista..." );
+        
+        // Comprobamos que no existe el usuario.
+        if ( usersRepository.findByEmail( user.getEmail() ) != null )
+        {
+            LOG.info( "El usuario con email (" + user.getEmail() + ") ya existe" );
+        
+            return Properties.ALREADY_EXISTS;
+        }
+        
+        // Asignamos la fecha de registro.
         user.setRegistrationDate( Calendar.getInstance() );
         
+        // Ciframos la contraseña.
         SecureRandom sr = new SecureRandom();
         byte[] IV = sr.generateSeed( Properties.IV_LENGTH );
         
         final String encryptedPassword = EncryptionManager.encrypt( Properties.KEY, IV, user.getPassword() );
         
+        // Asignamos la nueva contraseña cifrada.
         user.setPassword( encryptedPassword );
         
+        // Guardamos el usuario en BD.
         usersRepository.save( user );
         
         LOG.info( "Usuario guardado correctamente" );
-        return new ResponseEntity<>( HttpStatus.CREATED );
+        return Properties.REGISTRATION_OK;
     }
     
     /**

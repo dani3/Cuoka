@@ -1,5 +1,7 @@
 package com.wallakoala.wallakoala.Properties;
 
+import com.android.volley.toolbox.StringRequest;
+
 /**
  * @class Clase que todos las constantes necesarias.
  * Created by Daniel Mancebo Aldea on 18/04/2016.
@@ -16,4 +18,9 @@ public class Properties
     public static final String IMAGES_PATH = "/images/products/";
     public static final String PREDEFINED_ICONS_PATH = "/images/colors/";
     public static final String ICONS_PATH = "/images/products/";
+
+    public static final String ALREADY_EXISTS = "USER_ALREADY_EXISTS";
+    public static final String REGISTRATION_OK = "USER_REGISTRATION_OK";
+
+    public static final int REQUEST_TIMEOUT = 100000;
 }
