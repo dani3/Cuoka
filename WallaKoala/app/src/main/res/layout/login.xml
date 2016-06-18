@@ -1,8 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    tools:context=".Activities.LoginUI"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginUI">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@android:color/white">
+
+    <in.championswimmer.libsocialbuttons.buttons.BtnFacebook
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:text="@string/login_facebook"
+        android:textSize="18dp"/>
+
+    <in.championswimmer.libsocialbuttons.buttons.BtnGoogleplus
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:text="@string/login_google"
+        android:textSize="18dp"/>
+
+    <in.championswimmer.libsocialbuttons.buttons.BtnInstagram
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:text="@string/login_instagram"
+        android:textSize="18dp"/>
+
+    <LinearLayout
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/sign_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/login_login"
+            android:textColor="@color/colorMediumText"
+            android:textSize="14dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+
+        <Button
+            android:id="@+id/sign_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/login_sign_up"
+            android:textSize="14dp"
+            style="@style/AppTheme.Button"/>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -22,5 +22,5 @@ public class Properties
     public static final String ALREADY_EXISTS = "USER_ALREADY_EXISTS";
     public static final String REGISTRATION_OK = "USER_REGISTRATION_OK";
 
-    public static final int REQUEST_TIMEOUT = 100000;
+    public static final int REQUEST_TIMEOUT = 30000;
 }

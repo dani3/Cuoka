@@ -27,6 +27,7 @@ import com.dd.CircularProgressButton;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +50,9 @@ public class SignUpUI extends AppCompatActivity
     private static boolean FEMALE_SELECTED;
     private static boolean BACK_PRESSED;
 
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferencesManager;
+
     /* TextInputLayouts */
     private TextInputLayout mEmailInputLayout;
     private TextInputLayout mPasswordInputLayout;
@@ -65,6 +69,7 @@ public class SignUpUI extends AppCompatActivity
     private ImageButton mMaleImageButton;
     private ImageButton mFemaleImageButton;
 
+    /* Morphing Button */
     private CircularProgressButton mRegisterCircularButton;
 
     /* Containers */
@@ -79,6 +84,10 @@ public class SignUpUI extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.sign_up);
+
+        mSharedPreferencesManager = new SharedPreferencesManager(this);
+
+        BACK_PRESSED = false;
 
         _initEditTexts();
         _initCircularButton();
@@ -108,12 +117,10 @@ public class SignUpUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa los FABs.
+     * Metodo que inicializa el CircularButton.
      */
     private void _initCircularButton()
     {
-        BACK_PRESSED = false;
-
         mRegisterCircularButton = (CircularProgressButton)findViewById(R.id.sign_up_accept);
         mRegisterCircularButton.setIndeterminateProgressMode(true);
 
@@ -134,11 +141,11 @@ public class SignUpUI extends AppCompatActivity
                 }
 
                 // Validamos los datos introducidos y comprobamos que no estemos ya cargando.
-                if (_validateEmail() && _validatePassword() &&
-                    _validateAge() && _validatePostalCode() && _isGenderSelected() &&
-                    mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100)
+                if (mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100 &&
+                    _validateEmail() && _validatePassword() && _validateAge() && _validatePostalCode() && _isGenderSelected())
                 {
-                    try {
+                    try
+                    {
                         // 0 < X < 100 -> Cargando
                         mRegisterCircularButton.setProgress(50);
 
@@ -167,17 +174,21 @@ public class SignUpUI extends AppCompatActivity
 
                                         if (response.equals(Properties.REGISTRATION_OK))
                                         {
-                                            // Si ha ido bien, avanzamos a la siguiente pantalla
+                                            // Si ha ido bien, avanzamos a la siguiente pantalla.
                                             Log.d(Properties.TAG, "Usuario registrado correctamente");
 
                                             // X = 100 -> Complete
                                             mRegisterCircularButton.setProgress(100);
 
+                                            // Actualizamos el fichero de SharedPreferences.
+                                            _updateSharedPreferences();
+
                                         } else if (response.equals(Properties.ALREADY_EXISTS)) {
                                             // X < 0 -> Error
-                                            mRegisterCircularButton.setProgress(-1);
+                                            mRegisterCircularButton.setProgress(0);
 
-                                            Snackbar.make(mCoordinatorLayout, "Email ya registrado", Snackbar.LENGTH_SHORT).show();
+                                            Snackbar.make(mCoordinatorLayout
+                                                    , "Email ya registrado", Snackbar.LENGTH_LONG).show();
                                         }
                                     }
                                  }
@@ -186,6 +197,9 @@ public class SignUpUI extends AppCompatActivity
                                     public void onErrorResponse(VolleyError error)
                                     {
                                         mRegisterCircularButton.setProgress(-1);
+
+                                        Snackbar.make(mCoordinatorLayout
+                                                , "Error en el registro", Snackbar.LENGTH_INDEFINITE).show();
 
                                         Log.d(Properties.TAG, "Error registrando usuario: " + error.getMessage());
 
@@ -205,12 +219,6 @@ public class SignUpUI extends AppCompatActivity
                                         return "application/json";
                                     }
                                 };
-
-                        // Establecemos el timeout en ms y la politica de reintentos.
-                        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                                Properties.REQUEST_TIMEOUT,
-                                0,
-                                0));
 
                         // Enviamos la peticion.
                         VolleySingleton.getInstance(SignUpUI.this).addToRequestQueue(stringRequest);
@@ -326,11 +334,40 @@ public class SignUpUI extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        BACK_PRESSED = true;
+
+        super.onBackPressed();
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
 
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if (BACK_PRESSED)
+        {
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
+    }
+
+    /**
+     * Metodo que actualiza el fichero de SharedPreferences.
+     */
+    private void _updateSharedPreferences()
+    {
+        boolean man     = (mMaleImageButton.getAlpha() == ACTIVE_ALPHA);
+        int age         = Integer.valueOf(mAgeEdittext.getText().toString());
+        int postalCode  = Integer.valueOf(mPostalCodeEdittext.getText().toString());
+        String email    = mEmailEdittext.getText().toString();
+        String password = mPasswordEdittext.getText().toString();
+
+        mSharedPreferencesManager.insertMan(man);
+        mSharedPreferencesManager.insertAge(age);
+        mSharedPreferencesManager.insertPostalCode(postalCode);
+        mSharedPreferencesManager.insertEmai(email);
+        mSharedPreferencesManager.insertPassword(password);
     }
 
     /**

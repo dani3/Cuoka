@@ -8,23 +8,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Activities.IntroUI">
 
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Hombre"
-        android:textColor="@color/colorText"
-        android:checked="false"
-        app:buttonTint="@color/colorAccent"
-        android:layout_marginBottom="16dp"/>
-
     <Button
         android:id="@+id/enter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Entrar"
-        android:layout_margin="16dp"/>
+        android:layout_margin="48dp"/>
 
 </LinearLayout>

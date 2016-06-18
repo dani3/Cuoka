@@ -94,4 +94,10 @@
     <string name="postal_code_hint">Código postal</string>
 
     <string name="morph_idle">Hecho</string>
+
+    <string name="login_facebook">Login con Facebook</string>
+    <string name="login_google">Login con Google+</string>
+    <string name="login_instagram">Login con Instagram</string>
+    <string name="login_login">Iniciar sesión</string>
+    <string name="login_sign_up">Registrarse</string>
 </resources>

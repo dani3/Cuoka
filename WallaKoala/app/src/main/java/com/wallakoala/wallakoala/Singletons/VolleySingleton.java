@@ -2,9 +2,11 @@ package com.wallakoala.wallakoala.Singletons;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.wallakoala.wallakoala.Properties.Properties;
 
 /**
  * @class Singleton para manejar una instancia de Volley.
@@ -48,6 +50,11 @@ public class VolleySingleton
 
     public <T> void addToRequestQueue(Request<T> req)
     {
+        req.setRetryPolicy(new DefaultRetryPolicy(
+                Properties.REQUEST_TIMEOUT,
+                0,
+                0));
+
         getRequestQueue().add(req);
     }
 }

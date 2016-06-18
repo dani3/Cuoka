@@ -33,6 +33,10 @@
             android:configChanges="orientation|keyboardHidden">
         </activity>
 
+        <activity android:name=".Activities.LoginUI"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity android:name=".Activities.ProductUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"

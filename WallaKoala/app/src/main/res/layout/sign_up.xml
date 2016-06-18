@@ -195,7 +195,8 @@
             app:cpb_selectorIdle="@color/morph_button_idle"
             app:cpb_selectorComplete="@color/morph_button_complete"
             app:cpb_selectorError="@color/morph_button_error"
-            app:cpb_colorIndicator="@color/colorAccent"/>
+            app:cpb_colorIndicator="@color/colorAccent"
+            app:cpb_cornerRadius="24dp"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

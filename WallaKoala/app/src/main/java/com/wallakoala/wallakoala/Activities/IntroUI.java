@@ -26,7 +26,6 @@ public class IntroUI extends AppCompatActivity
 
     /* Views */
     protected Button enter;
-    protected AppCompatCheckBox man;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,21 +37,20 @@ public class IntroUI extends AppCompatActivity
         // Especificamos el layout 'intro.xml'
         setContentView(R.layout.intro);
 
-        man      = (AppCompatCheckBox)findViewById(R.id.checkBox);
-        enter    = (Button)findViewById(R.id.enter);
+        enter = (Button)findViewById(R.id.enter);
 
         enter.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mSharedPreferencesManager.insertMan(man.isChecked());
-
-                Intent intent = new Intent(IntroUI.this, SignUpUI.class);
+                Intent intent = new Intent(IntroUI.this, LoginUI.class);
                 startActivity(intent);
 
                 // Animacion de transicion para pasar de una activity a otra.
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                finish();
             }
         });
     }
