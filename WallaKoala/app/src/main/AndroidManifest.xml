@@ -22,12 +22,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.SignUpUI"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-
         <activity android:name=".Activities.MainScreenUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">

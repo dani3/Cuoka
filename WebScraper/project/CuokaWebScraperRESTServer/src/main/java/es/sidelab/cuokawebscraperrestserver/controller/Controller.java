@@ -83,19 +83,41 @@ public class Controller
         user.setRegistrationDate( Calendar.getInstance() );
         
         // Ciframos la contraseña.
-        SecureRandom sr = new SecureRandom();
+        /*SecureRandom sr = new SecureRandom();
         byte[] IV = sr.generateSeed( Properties.IV_LENGTH );
         
         final String encryptedPassword = EncryptionManager.encrypt( Properties.KEY, IV, user.getPassword() );
         
         // Asignamos la nueva contraseña cifrada.
-        user.setPassword( encryptedPassword );
+        user.setPassword( encryptedPassword );*/
         
         // Guardamos el usuario en BD.
         usersRepository.save( user );
         
         LOG.info( "Usuario guardado correctamente" );
         return Properties.REGISTRATION_OK;
+    }
+    
+    
+    @RequestMapping( value = "/users/{email}/{password}", method = RequestMethod.GET )
+    public String loginUser( @PathVariable String email, @PathVariable String password )
+    {
+        LOG.info( "Peticion GET para logear un usuario" );
+        LOG.info( " - Email: " + email );
+        LOG.info( " - Contrasena: " + password );
+        
+        boolean found = ( usersRepository.findByEmailAndPassword( email, password ) != null );
+        
+        if ( found )
+        {
+            LOG.info( "Usuario logeado correctamente" );
+            
+            return Properties.LOGIN_OK;
+        }
+        
+        LOG.info( "Usuario no encontrado" );
+        
+        return Properties.INCORRECT_LOGIN;
     }
     
     /**

@@ -13,6 +13,8 @@ public class Properties
     
     public static final String ALREADY_EXISTS = "USER_ALREADY_EXISTS";
     public static final String REGISTRATION_OK = "USER_REGISTRATION_OK";
+    public static final String LOGIN_OK = "USER_LOGGED_IN";
+    public static final String INCORRECT_LOGIN = "USER_INCORRECT_LOGIN";
     
     public static final String PATH                   = "/images/products/";
     public static final String PREDEFINED_COLORS      = "/images/colors/";
