@@ -2,7 +2,6 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -80,7 +79,7 @@ public class LoginUI extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.login);
+        setContentView(R.layout.login_screen);
 
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
@@ -102,6 +101,17 @@ public class LoginUI extends AppCompatActivity
                 alertDialog.show();
             }
         });
+
+        mSignInButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                AlertDialog alertDialog = createDialogSignIn();
+
+                alertDialog.show();
+            }
+        });
     }
 
     private AlertDialog createDialogSignUp()
@@ -117,6 +127,19 @@ public class LoginUI extends AppCompatActivity
         _initEditTexts(v);
         _initImageButtons(v);
         _initCircularButton(v);
+
+        return builder.create();
+    }
+
+    private AlertDialog createDialogSignIn()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.sign_in, null);
+
+        builder.setView(v);
 
         return builder.create();
     }
