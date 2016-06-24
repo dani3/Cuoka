@@ -100,10 +100,12 @@
     <string name="login_instagram">Login con Instagram</string>
     <string name="login_login">Iniciar sesión</string>
     <string name="login_sign_up">Registrarse</string>
+    <string name="login_sign_in">Entrar</string>
     <string name="create_account">Crear cuenta</string>
     <string name="remember_me">Recordarme</string>
-    <string name="forget_password">¿Has olvidado la contraseña?</string>
-    <string name="login_sign_in">Entrar</string>
+    <string name="forget_password"><u>¿Has olvidado la contraseña?</u></string>
 
     <string name="sign_in_info">Necesitas tener creada una cuenta para entrar en la aplicación</string>
+
+    <string name="progress_authenticating">Iniciando sesión</string>
 </resources>

@@ -47,14 +47,11 @@ public class IntroUI extends AppCompatActivity
                 Intent intent;
 
                 // TODO: temporal
-                mSharedPreferencesManager.insertLoggedIn(false);
+                //mSharedPreferencesManager.insertLoggedIn(false);
 
                 if (mSharedPreferencesManager.retreiveLoggedIn())
                 {
                     intent = new Intent(IntroUI.this, MainScreenUI.class);
-
-                    // Limpiamos la Activity Stack
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 } else {
                     intent = new Intent(IntroUI.this, LoginUI.class);
@@ -63,6 +60,15 @@ public class IntroUI extends AppCompatActivity
                 startActivity(intent);
 
                 finish();
+            }
+        });
+
+        Button login = (Button)findViewById(R.id.login);
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSharedPreferencesManager.insertLoggedIn(false);
             }
         });
     }

@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+
+import com.wallakoala.wallakoala.Properties.Properties;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -107,5 +110,51 @@ public class Utils
     public static double clamp(double value, double low, double high)
     {
         return Math.min(Math.max(value, low), high);
+    }
+
+    /**
+     * Metodo que comprueba si el email es correcto.
+     * @param email: email a comprobar.
+     * @return true si el email es correcto.
+     */
+    public static boolean isValidEmail(String email)
+    {
+        return (!TextUtils.isEmpty(email) &&
+                android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
+    /**
+     * Metodo que comprueba si la edad es correcta.
+     * @param age: edad a comprobar.
+     * @return true si la edad es correcta.
+     */
+    public static boolean isValidAge(String age)
+    {
+        return (!age.isEmpty()) && (Integer.valueOf(age) >= Properties.MIN_AGE && Integer.valueOf(age) <= Properties.MAX_AGE);
+    }
+
+    /**
+     * Metodo que comprueba si el CP es correcto.
+     * @param postalCode: CP a comprobar.
+     * @return true si el CP es correcto.
+     */
+    public static boolean isValidPostalCode(String postalCode)
+    {
+        return (postalCode.length() == Properties.POSTAL_CODE_LENGHT);
+    }
+
+    /**
+     * Metodo que comprueba si la contraseña es correcta.
+     * @param password: contraseña a comprobar.
+     * @return true si la contraseña es correcta.
+     */
+    public static boolean isValidPassword(String password)
+    {
+        return (!password.trim().isEmpty() &&
+                !(password.trim().length() < Properties.MIN_PASSWORD_LENGTH) &&
+                !(password.toUpperCase().contains("SELECT")) && !(password.toUpperCase().contains("DROP")) &&
+                !(password.toUpperCase().contains("DELETE")) && !(password.contains("*"))  &&
+                !(password.contains("=")) && !(password.contains("|")) && !(password.contains("&")) &&
+                !(password.contains("'")) && !(password.contains("!")) && !(password.contains(";")));
     }
 }
