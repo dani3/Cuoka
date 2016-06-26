@@ -50,7 +50,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @class Fragmento con la pestaña de novedades.
+ * @class Fragmento con la pestaña de Novedades.
  * Created by Daniel Mancebo Aldea on 29/05/2016.
  */
 
@@ -69,19 +69,19 @@ public class ProductsFragment extends Fragment
     {
         ERROR
                 { @Override
-                public String toString() { return "ERROR"; }
+                  public String toString() { return "ERROR"; }
                 },
         LOADING
                 { @Override
-                public String toString() { return "LOADING"; }
+                  public String toString() { return "LOADING"; }
                 },
         NODATA
                 { @Override
-                public String toString() { return "NO_DATA"; }
+                  public String toString() { return "NO_DATA"; }
                 },
         NORMAL
                 { @Override
-                public String toString() { return "NORMAL"; }
+                  public String toString() { return "NORMAL"; }
                 },
     }
 
@@ -433,7 +433,7 @@ public class ProductsFragment extends Fragment
         }
 
         @Override
-        protected Void doInBackground(String... shops)
+        protected Void doInBackground(String... unused)
         {
             try
             {

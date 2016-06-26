@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recommended_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recommended_grid_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clipToPadding="false"/>
+
+    <!-- Loading View -->
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/recommended_avloadingIndicatorView"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center"
+        app:indicator="BallClipRotate"
+        app:indicator_color="@color/colorAccent"/>
+
+</FrameLayout>

@@ -24,9 +24,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
-import com.wallakoala.wallakoala.Fragments.SuggestionsFragment;
+import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Fragments.TopsFragment;
-import com.wallakoala.wallakoala.Other.ActivitySession;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 
@@ -66,7 +65,7 @@ public class MainScreenUI extends AppCompatActivity
 
     /* Fragments */
     protected TopsFragment mTopsFragment;
-    protected SuggestionsFragment mSugestionsFragment;
+    protected RecommendedFragment mRecommendedFragment;
     protected ProductsFragment mProductsFragment;
 
     /* Other */
@@ -111,12 +110,12 @@ public class MainScreenUI extends AppCompatActivity
 
         mTopsFragment       = new TopsFragment();
         mProductsFragment   = new ProductsFragment();
-        mSugestionsFragment = new SuggestionsFragment();
+        mRecommendedFragment = new RecommendedFragment();
 
         // Añadimos los fragmentos al adapter
-        adapter.addFragment(mTopsFragment, "DESCUBRE");
+        adapter.addFragment(mRecommendedFragment, "DESCUBRE");
         adapter.addFragment(mProductsFragment, "NOVEDADES");
-        adapter.addFragment(mSugestionsFragment, "TOPS CUOKA");
+        adapter.addFragment(mTopsFragment, "TOPS CUOKA");
         mViewPager.setAdapter(adapter);
 
         // Marcamos como activo la segunda pestaña (NOVEDADES)

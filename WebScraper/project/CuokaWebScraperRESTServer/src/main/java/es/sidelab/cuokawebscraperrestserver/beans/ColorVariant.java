@@ -49,7 +49,6 @@ public class ColorVariant
     @Column( name = "NUM_IMAGES" )
     private short numberOfImages;
 
-    
     public ColorVariant() {}    
     
     @JsonIgnore

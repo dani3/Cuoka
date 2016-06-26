@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
+import es.sidelab.cuokawebscraperrestserver.beans.UserActivity;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
@@ -63,7 +64,7 @@ public class Controller
     /**
      * Metodo que anade un usuario a la BD.
      * @param user: usuario a anadir.
-     * @return Codigo HTTP con el resultado de la ejecucion.
+     * @return String con el resultado de la operacion.
      */
     @RequestMapping( value = "/users", method = RequestMethod.POST )
     public String addUser( @RequestBody User user )
@@ -88,17 +89,25 @@ public class Controller
         
         final String encryptedPassword = EncryptionManager.encrypt( Properties.KEY, IV, user.getPassword() );
         
-        // Asignamos la nueva contraseña cifrada.
+        // Asignamos la nueva contraseña cifrada y su IV
+        user.setInitializationVector( IV );
         user.setPassword( encryptedPassword );*/
         
         // Guardamos el usuario en BD.
         usersRepository.save( user );
         
-        LOG.info( "Usuario guardado correctamente" );
-        return Properties.REGISTRATION_OK;
+        long id = usersRepository.findByEmail( user.getEmail() ).getId();
+        
+        LOG.info( "Usuario guardado correctamente (ID: " + id + ")" );
+        return String.valueOf( id );
     }
     
-    
+    /**
+     * Metodo que loguea un usuario.
+     * @param email: email del usuario.
+     * @param password: contraseña del usuario.
+     * @return String con el resultado de la operacion.
+     */
     @RequestMapping( value = "/users/{email}/{password}", method = RequestMethod.GET )
     public String loginUser( @PathVariable String email, @PathVariable String password )
     {
@@ -106,18 +115,52 @@ public class Controller
         LOG.info( " - Email: " + email );
         LOG.info( " - Contrasena: " + password );
         
-        boolean found = ( usersRepository.findByEmailAndPassword( email, password ) != null );
+        /*final String cipheredPassword = EncryptionManager.encrypt(Properties.KEY
+                                                    , user.getInitializationVector()
+                                                    , user.getPassword() );*/
         
-        if ( found )
+        User user = usersRepository.findByEmailAndPassword( email, password );
+        
+        if ( user != null )
         {
-            LOG.info( "Usuario logeado correctamente" );
+            LOG.info( "Usuario logeado correctamente (ID: " + user.getId() + ")" );
             
-            return Properties.LOGIN_OK;
+            return String.valueOf( user.getId() );
         }
         
         LOG.info( "Usuario no encontrado" );
         
         return Properties.INCORRECT_LOGIN;
+    }
+    
+    /**
+     * Metodo que devuelve la actividad del usuario.
+     * @param id: id del usuario.
+     * @return actividad del usuario.
+     */
+    @RequestMapping( value = "/users/{id}", method = RequestMethod.GET )
+    public UserActivity getUserActivity( @PathVariable long id )
+    {
+        LOG.info( "Peticion GET para obtener la actividad de un usuario (ID: " + id + ")" );
+        User user = usersRepository.findOne( id );
+        
+        if ( user != null )
+        {
+            LOG.info( "Usuario encontrado, devolviendo su actividad" );
+            
+            UserActivity userActivity = new UserActivity();
+            
+            userActivity.setAddedToCartProducts( user.getAddedToCartProducts() );
+            userActivity.setFavoriteProducts( user.getFavoriteProducts() );
+            userActivity.setSharedProducts( user.getSharedProducts() );
+            userActivity.setViewedProducts( user.getViewedProducts() );
+            userActivity.setVisitedProducts( user.getVisitedProducts() );
+            
+            return userActivity;
+        }
+        
+        LOG.info( "Usuario no encontrado" );
+        return null;
     }
     
     /**

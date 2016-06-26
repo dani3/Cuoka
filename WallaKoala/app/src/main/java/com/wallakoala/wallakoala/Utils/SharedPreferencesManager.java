@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.wallakoala.wallakoala.Beans.UserActivity;
+
 import java.util.Set;
 
 /**
@@ -21,6 +24,8 @@ public class SharedPreferencesManager
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_LOGGED_IN = "logged_in";
     private static final String KEY_OWN_REGISTER = "own_register";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_USER_ACTIVITY = "user_activity";
 
     private static SharedPreferences mSharedPreferences;
     private static SharedPreferences.Editor mEditor;
@@ -207,5 +212,57 @@ public class SharedPreferencesManager
     public boolean retreiveLoggedIn()
     {
         return mSharedPreferences.getBoolean(KEY_LOGGED_IN, false);
+    }
+
+    /**
+     * Metodo que inserta el id del usuario.
+     * @param id: id del usuario.
+     * @return true si se ha insertado correctamente.
+     */
+    public boolean insertUserId(long id)
+    {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putLong(KEY_USER_ID, id);
+
+        return mEditor.commit();
+    }
+
+    /**
+     * Metodo que devuelve el id del usuario.
+     * @return id del usuario.
+     */
+    public long retreiveUserId()
+    {
+        return mSharedPreferences.getLong(KEY_USER_ID, -1);
+    }
+
+    /**
+     * Metodo que inserta la actividad del usuario, hay que convertirlo a JSON.
+     * @param userActivity: actividad del usuario.
+     * @return true si se ha insertado correctamente.
+     */
+    public boolean insertUserActivity(UserActivity userActivity)
+    {
+        mEditor = mSharedPreferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(userActivity);
+
+        mEditor.putString(KEY_USER_ACTIVITY, json);
+
+        return mEditor.commit();
+    }
+
+    /**
+     * Metodo que devuelve la actividad de un usuario.
+     * @return actividad del usuario.
+     */
+    public UserActivity retreiveUserActivity()
+    {
+        Gson gson = new Gson();
+
+        String json = mSharedPreferences.getString(KEY_USER_ACTIVITY, null);
+
+        return gson.fromJson(json, UserActivity.class);
     }
 }

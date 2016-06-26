@@ -104,8 +104,11 @@
     <string name="create_account">Crear cuenta</string>
     <string name="remember_me">Recordarme</string>
     <string name="forget_password"><u>¿Has olvidado la contraseña?</u></string>
+    <string name="existing_email">El correo ya ha sido registrado</string>
 
     <string name="sign_in_info">Necesitas tener creada una cuenta para entrar en la aplicación</string>
 
     <string name="progress_authenticating">Iniciando sesión</string>
+
+    <string name="terms_and_conditions">Al continuar aceptas también los <u><b>Términos del Servicio</b></u> y la <u><b>Política de Privacidad</b></u> de Cuoka</string>
 </resources>

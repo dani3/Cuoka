@@ -4,8 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -34,8 +32,7 @@ public class EncryptionManager
         {
             LOG.info( "Cifrando " + message );
             
-            IvParameterSpec iv = new IvParameterSpec( initVector );
-            
+            IvParameterSpec iv = new IvParameterSpec( initVector );            
             SecretKeySpec skeySpec = new SecretKeySpec( key.getBytes( "UTF-8" ), "AES" );
 
             Cipher cipher = Cipher.getInstance( "AES/CBC/PKCS5PADDING" );
@@ -43,7 +40,7 @@ public class EncryptionManager
 
             byte[] encrypted = cipher.doFinal( message.getBytes( "UTF-8" ) );
             
-            LOG.info( message + " cifrado con exito" );
+            LOG.info( "Contraseña cifrada con exito" );
 
             return Base64.getEncoder().encodeToString( encrypted );
             
@@ -62,13 +59,13 @@ public class EncryptionManager
      * @param message: string a cifrar.
      * @return String con el mensaje descifrado.
      */
-    public static String decrypt( String key, String initVector, String message ) 
+    public static String decrypt( String key, byte[] initVector, String message ) 
     {
         try 
         {
             LOG.info( "Descifrando..." );
             
-            IvParameterSpec iv = new IvParameterSpec( initVector.getBytes( "UTF-8" ) );
+            IvParameterSpec iv = new IvParameterSpec( initVector );
             SecretKeySpec skeySpec = new SecretKeySpec( key.getBytes( "UTF-8" ), "AES" );
 
             Cipher cipher = Cipher.getInstance( "AES/CBC/PKCS5PADDING" );
@@ -76,7 +73,7 @@ public class EncryptionManager
 
             byte[] original = cipher.doFinal( Base64.getDecoder().decode( message ) );
 
-            LOG.info( "Mensaje descifrado con exito (" + original +")" );
+            LOG.info( "Contraseña descifrada con exito" );
             
             return new String( original );
             

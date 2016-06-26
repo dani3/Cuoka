@@ -2,7 +2,9 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Calendar;
+import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,6 +44,35 @@ public class User
     @Column( name = "DATE" )
     private Calendar registrationDate;
     
+    @JsonIgnore
+    @ElementCollection
+    @Column( name = "FAVORITE_PRODUCTS" )
+    private Set<Long> favoriteProducts;
+ 
+    @JsonIgnore
+    @ElementCollection
+    @Column( name = "VIEWED_PRODUCTS" )
+    private Set<Long> viewedProducts;
+    
+    @JsonIgnore
+    @ElementCollection
+    @Column( name = "SHARED_PRODUCTS" )
+    private Set<Long> sharedProducts;
+    
+    @JsonIgnore
+    @ElementCollection
+    @Column( name = "VISITED_PRODUCTS" )
+    private Set<Long> visitedProducts;
+    
+    @JsonIgnore
+    @ElementCollection
+    @Column( name = "ADDED_TO_CART_PRODUCTS" )
+    private Set<Long> addedToCartProducts;
+    
+    @JsonIgnore
+    @Column( name = "INITIALIZATION_VECTOR" )
+    private byte[] initializationVector;
+    
     public User() {}
     
     public User( String email
@@ -59,19 +90,46 @@ public class User
         this.registrationDate = registrationDate;
     }
     
-    @JsonIgnore
-    public Calendar getRegistrationDate() { return this.registrationDate; }
     public String getEmail() { return this.email; }
     public String getPassword() { return this.password; }
     public short getAge() { return this.age; }
     public boolean getMan() { return this.man; }
     public int getPostalCode() { return this.postalCode; }
+    @JsonIgnore
+    public byte[] getInitializationVector() { return this.initializationVector; }  
+    @JsonIgnore
+    public Calendar getRegistrationDate() { return this.registrationDate; }
+    @JsonIgnore
+    public Set<Long> getFavoriteProducts() { return favoriteProducts; }
+    @JsonIgnore
+    public Set<Long> getViewedProducts() { return viewedProducts; }
+    @JsonIgnore
+    public Set<Long> getSharedProducts() { return sharedProducts; }
+    @JsonIgnore
+    public Set<Long> getVisitedProducts() { return visitedProducts; }
+    @JsonIgnore
+    public Set<Long> getAddedToCartProducts() { return addedToCartProducts; }
+    @JsonIgnore
+    public long getId() { return id; }
     
     @JsonIgnore
-    public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; }    
+    public void setInitializationVector( byte[] initializationVector ) { this.initializationVector = initializationVector; }
+    @JsonIgnore
+    public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; }  
+    @JsonIgnore
+    public void setFavoriteProducts( Set<Long> favoriteProducts ) { this.favoriteProducts = favoriteProducts; }
+    @JsonIgnore
+    public void setViewedProducts( Set<Long> viewedProducts ) { this.viewedProducts = viewedProducts; }
+    @JsonIgnore
+    public void setSharedProducts( Set<Long> sharedProducts ) { this.sharedProducts = sharedProducts; }
+    @JsonIgnore
+    public void setVisitedProducts( Set<Long> visitedProducts ) { this.visitedProducts = visitedProducts; }
+    @JsonIgnore
+    public void setAddedToCartProducts( Set<Long> addedToCartProducts ) { this.addedToCartProducts = addedToCartProducts; }
     public void setEmail( String email ) { this.email = email; }
     public void setPassword( String password ) { this.password = password; }
     public void setAge( short age ) { this.age = age; }
     public void setMan( boolean man ) { this.man = man; }
     public void setPostalCode( int postalCode ) { this.postalCode = postalCode; }
+    
 }
