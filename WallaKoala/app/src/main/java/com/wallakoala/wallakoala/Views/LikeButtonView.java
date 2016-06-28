@@ -72,7 +72,7 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener
 
     private void init()
     {
-        LayoutInflater.from(getContext()).inflate(R.layout.view_like_button, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.aux_explosive_button, this, true);
         ButterKnife.bind(this);
         setOnClickListener(this);
     }

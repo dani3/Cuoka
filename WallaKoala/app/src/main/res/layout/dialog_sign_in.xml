@@ -111,8 +111,8 @@
             app:cpb_cornerRadius="1dp"
             app:cpb_textIdle="@string/login_sign_in"
             app:cpb_iconComplete="@drawable/ic_done_mini"
-            app:cpb_selectorIdle="@color/morph_button_idle"
-            app:cpb_selectorComplete="@color/morph_button_complete"
+            app:cpb_selectorIdle="@color/morph_button_idle_colors"
+            app:cpb_selectorComplete="@color/morph_button_complete_colors"
             app:cpb_colorIndicator="@color/colorAccent"
             app:cpb_colorIndicatorBackground="@android:color/transparent"
             app:cpb_colorProgress="@android:color/transparent"/>

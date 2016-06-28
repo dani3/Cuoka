@@ -76,7 +76,7 @@ public class MainScreenUI extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main_tabs);
+        setContentView(R.layout.activity_main);
 
         _initToolbar();
         _initViewPager();
@@ -209,8 +209,8 @@ public class MainScreenUI extends AppCompatActivity
      */
     protected void _initAnimations()
     {
-        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
-        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
+        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
+        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode_animation);
 
         mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -325,7 +325,7 @@ public class MainScreenUI extends AppCompatActivity
                 startActivityForResult(intent, FILTER_REQUEST);
 
                 // Animacion de transicion para pasar de una activity a otra.
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
             }
         }
 

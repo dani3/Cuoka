@@ -8,7 +8,7 @@
 
     <!-- Toolbar -->
     <include android:id="@+id/filter_appbar"
-        layout="@layout/toolbar">
+        layout="@layout/aux_toolbar">
 
     </include>
 

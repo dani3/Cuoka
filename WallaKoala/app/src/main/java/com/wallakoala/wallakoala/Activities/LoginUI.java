@@ -87,7 +87,7 @@ public class LoginUI extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.login_screen);
+        setContentView(R.layout.activity_login);
 
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
@@ -135,7 +135,7 @@ public class LoginUI extends AppCompatActivity
 
         LayoutInflater inflater = this.getLayoutInflater();
 
-        mAlertDialogView = inflater.inflate(R.layout.sign_up, null);
+        mAlertDialogView = inflater.inflate(R.layout.dialog_sign_up, null);
 
         builder.setView(mAlertDialogView);
 
@@ -156,7 +156,7 @@ public class LoginUI extends AppCompatActivity
 
         LayoutInflater inflater = this.getLayoutInflater();
 
-        mAlertDialogView = inflater.inflate(R.layout.sign_in, null);
+        mAlertDialogView = inflater.inflate(R.layout.dialog_sign_in, null);
 
         builder.setView(mAlertDialogView);
 

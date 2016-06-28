@@ -187,9 +187,9 @@
         app:cpb_textIdle="@string/morph_idle"
         app:cpb_iconComplete="@drawable/ic_done_mini"
         app:cpb_iconError="@drawable/ic_cancel_mini"
-        app:cpb_selectorIdle="@color/morph_button_idle"
-        app:cpb_selectorComplete="@color/morph_button_complete"
-        app:cpb_selectorError="@color/morph_button_error"
+        app:cpb_selectorIdle="@color/morph_button_idle_colors"
+        app:cpb_selectorComplete="@color/morph_button_complete_colors"
+        app:cpb_selectorError="@color/morph_button_error_colors"
         app:cpb_colorIndicator="@color/colorAccent"
         app:cpb_colorIndicatorBackground="@android:color/transparent"
         app:cpb_colorProgress="@android:color/transparent"/>

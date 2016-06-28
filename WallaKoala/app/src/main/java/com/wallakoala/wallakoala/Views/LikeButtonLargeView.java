@@ -72,7 +72,7 @@ public class LikeButtonLargeView extends FrameLayout implements View.OnClickList
 
     private void init()
     {
-        LayoutInflater.from(getContext()).inflate(R.layout.view_like_button_large, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.aux_explosive_button_large, this, true);
         ButterKnife.bind(this);
         setOnClickListener(this);
     }

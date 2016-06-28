@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,9 +84,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.setOnClickListener(this);
             mProductImageView.setOnClickListener(this);
 
-            scaleUp              = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
-            scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
-            scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down);
+            scaleUp              = AnimationUtils.loadAnimation(mContext, R.anim.scale_up_animation);
+            scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
+            scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
 
             scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
             {

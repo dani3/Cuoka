@@ -208,7 +208,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.filter);
+        setContentView(R.layout.activity_filter);
 
         if (savedInstanceState == null)
         {
@@ -319,7 +319,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initAnimations()
     {
-        mExplode = AnimationUtils.loadAnimation(this, R.anim.explode);
+        mExplode = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
         mExplode.setStartOffset(300);
     }
 
@@ -373,7 +373,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             OK = false;
 
                             mFilterShopMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
                         }
                     }
 
@@ -394,7 +394,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             OK = false;
 
                             mFilterColorMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
                         }
                     }
 
@@ -415,7 +415,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             OK = false;
 
                             mFilterSectionMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
                         }
                     }
 
@@ -432,7 +432,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             OK = false;
 
                             mFilterPriceMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake));
+                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
                         }
                     }
 
@@ -1322,7 +1322,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         super.finish();
 
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        overridePendingTransition(R.anim.left_in_animation, R.anim.left_out_animation);
     }
 
     /**

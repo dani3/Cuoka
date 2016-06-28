@@ -145,7 +145,7 @@ public class ProductsFragment extends Fragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        return inflater.inflate(R.layout.products_tab, container, false);
+        return inflater.inflate(R.layout.fragment_products, container, false);
     }
 
     @Override
@@ -229,13 +229,13 @@ public class ProductsFragment extends Fragment
     protected void _initAnimations()
     {
         mMoveAndFadeAnimation = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.translate_and_fade);
+                , R.anim.translate_and_fade_animation);
 
         mHideFromUp = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.hide_to_down);
+                , R.anim.hide_to_down_animation);
 
         mShowFromDown = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.show_up_from_down);
+                , R.anim.show_from_down_animation);
     }
 
     /**

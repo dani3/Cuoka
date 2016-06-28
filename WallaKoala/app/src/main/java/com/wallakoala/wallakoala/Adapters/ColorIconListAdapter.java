@@ -1,25 +1,19 @@
 package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.OvershootInterpolator;
 import android.widget.BaseAdapter;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -99,7 +93,7 @@ public class ColorIconListAdapter extends BaseAdapter
         {
             colorIconHolder = new ColorIconHolder();
 
-            convertView = mLayoutInflater.inflate(R.layout.color_icon, null);
+            convertView = mLayoutInflater.inflate(R.layout.aux_color_icon, null);
 
             colorIconHolder.mIconView     = (CircleImageView)convertView.findViewById(R.id.color_icon);
             colorIconHolder.mSelectedView = (CircleImageView)convertView.findViewById(R.id.color_selected);
@@ -131,7 +125,7 @@ public class ColorIconListAdapter extends BaseAdapter
         {
             colorIconHolder.mSelectedView.setVisibility(View.VISIBLE);
             colorIconHolder.mSelectedView.startAnimation(AnimationUtils.loadAnimation(mContext
-                                                                            , R.anim.explode));
+                                                                            , R.anim.explode_animation));
 
         } else {
             colorIconHolder.mSelectedView.setVisibility(View.GONE);

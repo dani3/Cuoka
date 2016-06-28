@@ -45,6 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_gravity="bottom|center"
-            layout="@layout/loading"/>
+            layout="@layout/aux_loading"/>
 
 </FrameLayout>

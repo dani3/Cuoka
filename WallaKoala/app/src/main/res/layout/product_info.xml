@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.71"
             android:alpha="0.85"
-            android:background="@drawable/product_info_top_border">
+            android:background="@drawable/top_border">
 
             <TextView
                 android:id="@+id/product_info_name"
@@ -87,7 +87,7 @@
                 android:paddingBottom="2dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="5dp"
-                android:background="@drawable/product_price_footer_relief"
+                android:background="@drawable/button_relief"
                 android:layout_marginBottom="14dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignLeft="@+id/product_info_description"
@@ -115,7 +115,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.29"
             android:alpha="0.85"
-            android:background="@drawable/icon_list_left_border">
+            android:background="@drawable/left_border">
 
             <ListView
                 android:id="@+id/product_info_list_colors"

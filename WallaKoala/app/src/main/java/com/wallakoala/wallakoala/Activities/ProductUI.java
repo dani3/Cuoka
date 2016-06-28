@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +45,6 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.LikeButtonLargeView;
-import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.io.File;
 
@@ -134,8 +132,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     {
         super.onCreate(savedInstanceState);
 
-        // Especificamos el layout 'product.xml'
-        setContentView(R.layout.product);
+        // Especificamos el layout 'activity_product.xmloduct.xml'
+        setContentView(R.layout.activity_product);
 
         _initData();
         _initViews();
@@ -358,10 +356,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     protected void _initAnimations()
     {
-        mScaleUp          = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-        mScaleDown        = AnimationUtils.loadAnimation(this, R.anim.scale_down);
-        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode);
-        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode);
+        mScaleUp          = AnimationUtils.loadAnimation(this, R.anim.scale_up_animation);
+        mScaleDown        = AnimationUtils.loadAnimation(this, R.anim.scale_down_animation);
+        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
+        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode_animation);
 
         mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
