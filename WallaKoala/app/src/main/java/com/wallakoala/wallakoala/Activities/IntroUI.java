@@ -88,7 +88,8 @@ public class IntroUI extends AppCompatActivity
     }
 
     @SuppressWarnings("unchecked")
-    private void _getUserActivity(final long id) {
+    private void _getUserActivity(final long id)
+    {
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
 
@@ -99,13 +100,16 @@ public class IntroUI extends AppCompatActivity
                 , null
                 , new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONObject response)
+                    {
                         UserActivity userActivity = new UserActivity();
 
-                        try {
+                        try
+                        {
                             JSONArray jsonArray = response.getJSONArray("addedToCartProducts");
                             Set<Long> set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
                                 set.add((Long) jsonArray.get(i));
                             }
 
@@ -113,7 +117,8 @@ public class IntroUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("favoriteProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
                                 set.add((Long) jsonArray.get(i));
                             }
 
@@ -121,7 +126,8 @@ public class IntroUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("sharedProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
                                 set.add((Long) jsonArray.get(i));
                             }
 
@@ -129,7 +135,8 @@ public class IntroUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("viewedProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
                                 set.add((Long) jsonArray.get(i));
                             }
 
@@ -137,7 +144,8 @@ public class IntroUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("visitedProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
                                 set.add((Long) jsonArray.get(i));
                             }
 
@@ -155,7 +163,7 @@ public class IntroUI extends AppCompatActivity
                             e.printStackTrace();
                         }
 
-                        // Avanzamos automaticamente a la siguiente pantalla.
+                        // Avanzamos a la siguiente pantalla.
                         Intent intent = new Intent(IntroUI.this, MainScreenUI.class);
 
                         startActivity(intent);

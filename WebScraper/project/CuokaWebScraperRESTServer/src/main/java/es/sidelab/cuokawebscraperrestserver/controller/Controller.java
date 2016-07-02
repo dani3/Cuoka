@@ -115,10 +115,6 @@ public class Controller
         LOG.info( " - Email: " + email );
         LOG.info( " - Contrasena: " + password );
         
-        /*final String cipheredPassword = EncryptionManager.encrypt(Properties.KEY
-                                                    , user.getInitializationVector()
-                                                    , user.getPassword() );*/
-        
         User user = usersRepository.findByEmailAndPassword( email, password );
         
         if ( user != null )

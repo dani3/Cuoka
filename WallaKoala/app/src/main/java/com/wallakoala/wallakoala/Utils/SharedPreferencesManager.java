@@ -36,7 +36,7 @@ public class SharedPreferencesManager
     {
         mContext = context;
         mSharedPreferences = mContext.getSharedPreferences("cuoka_preferences", Context.MODE_PRIVATE);
-}
+    }
 
     /**
      * Metodo que inserta un conjunto de tiendas en las preferencias.

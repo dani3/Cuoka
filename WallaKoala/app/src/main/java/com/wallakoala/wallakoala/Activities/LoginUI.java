@@ -54,7 +54,7 @@ public class LoginUI extends AppCompatActivity
     private static boolean FEMALE_SELECTED;
 
     /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     /* TextInputLayouts */
     private TextInputLayout mEmailInputLayout;
@@ -99,8 +99,8 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initButtons()
     {
-        Button mSignInButton = (Button) findViewById(R.id.sign_in);
-        Button mSingUpButton = (Button) findViewById(R.id.sign_up);
+        final Button mSignInButton = (Button) findViewById(R.id.sign_in);
+        final Button mSingUpButton = (Button) findViewById(R.id.sign_up);
 
         mSingUpButton.setOnClickListener(new View.OnClickListener()
         {
@@ -173,7 +173,7 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initSignInButtons(View parent)
     {
-        Button mCreateAccountButton = (Button) parent.findViewById(R.id.create_account);
+        final Button mCreateAccountButton = (Button) parent.findViewById(R.id.create_account);
         final CircularProgressButton mEnterButton = (CircularProgressButton) parent.findViewById(R.id.enter);
         mEnterButton.setIndeterminateProgressMode(true);
 
@@ -485,14 +485,14 @@ public class LoginUI extends AppCompatActivity
 
                                         if (response.equals(Properties.ALREADY_EXISTS))
                                         {
-                                            // X < 0 -> Error
+                                            // X = 0 -> Idle
                                             mRegisterCircularButton.setProgress(0);
 
                                             Snackbar.make(mAlertDialogView, "Email ya registrado", Snackbar.LENGTH_LONG).show();
 
                                         } else {
                                             // Si ha ido bien, actualizamos las preferencias.
-                                            long id = Long.valueOf(response);
+                                            final long id = Long.valueOf(response);
 
                                             Log.d(Properties.TAG, "Usuario registrado correctamente (ID: " + id + ")");
 
@@ -501,7 +501,6 @@ public class LoginUI extends AppCompatActivity
 
                                             // Actualizamos el fichero de SharedPreferences.
                                             _updateSharedPreferences(id);
-
                                         }
                                     }
                                 }
@@ -510,6 +509,7 @@ public class LoginUI extends AppCompatActivity
                                     @Override
                                     public void onErrorResponse(VolleyError error)
                                     {
+                                        // X = -1 -> Error
                                         mRegisterCircularButton.setProgress(-1);
 
                                         Log.d(Properties.TAG, "Error registrando usuario: " + error.getMessage());

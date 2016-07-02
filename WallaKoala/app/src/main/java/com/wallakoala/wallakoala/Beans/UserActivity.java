@@ -17,15 +17,15 @@ public class UserActivity
 
     public UserActivity() {}
 
-    public Set<Long> getFavoriteProducts() { return favoriteProducts; }
-    public Set<Long> getViewedProducts() { return viewedProducts; }
-    public Set<Long> getSharedProducts() { return sharedProducts; }
-    public Set<Long> getVisitedProducts() { return visitedProducts; }
+    public Set<Long> getFavoriteProducts()    { return favoriteProducts; }
+    public Set<Long> getViewedProducts()      { return viewedProducts; }
+    public Set<Long> getSharedProducts()      { return sharedProducts; }
+    public Set<Long> getVisitedProducts()     { return visitedProducts; }
     public Set<Long> getAddedToCartProducts() { return addedToCartProducts; }
 
-    public void setFavoriteProducts(Set<Long> favoriteProducts) { this.favoriteProducts = favoriteProducts; }
-    public void setViewedProducts(Set<Long> viewedProducts) { this.viewedProducts = viewedProducts; }
-    public void setSharedProducts(Set<Long> sharedProducts) { this.sharedProducts = sharedProducts; }
-    public void setVisitedProducts(Set<Long> visitedProducts) { this.visitedProducts = visitedProducts; }
+    public void setFavoriteProducts(Set<Long> favoriteProducts)       { this.favoriteProducts = favoriteProducts; }
+    public void setViewedProducts(Set<Long> viewedProducts)           { this.viewedProducts = viewedProducts; }
+    public void setSharedProducts(Set<Long> sharedProducts)           { this.sharedProducts = sharedProducts; }
+    public void setVisitedProducts(Set<Long> visitedProducts)         { this.visitedProducts = visitedProducts; }
     public void setAddedToCartProducts(Set<Long> addedToCartProducts) { this.addedToCartProducts = addedToCartProducts; }
 }

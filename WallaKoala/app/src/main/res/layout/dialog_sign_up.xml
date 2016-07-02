@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardBackgroundColor="@android:color/white">
@@ -175,7 +174,7 @@
 
     <com.dd.CircularProgressButton
         android:id="@+id/sign_up_accept"
-        android:layout_gravity="bottom|center_horizontal"
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginRight="24dp"
