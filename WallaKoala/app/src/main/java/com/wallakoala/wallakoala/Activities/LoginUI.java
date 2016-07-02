@@ -296,6 +296,7 @@ public class LoginUI extends AppCompatActivity
     private void _initSignInViews(View parent)
     {
         mRememberMeCheckBox = (AppCompatCheckBox)parent.findViewById(R.id.remember_me_checkbox);
+        mRememberMeCheckBox.setChecked(true);
 
         TextView mPasswordForgottenTextView = (TextView)parent.findViewById(R.id.password_forgotten);
         mPasswordForgottenTextView.setOnClickListener(new View.OnClickListener()

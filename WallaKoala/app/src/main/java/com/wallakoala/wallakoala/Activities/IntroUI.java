@@ -162,13 +162,6 @@ public class IntroUI extends AppCompatActivity
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        // Avanzamos a la siguiente pantalla.
-                        Intent intent = new Intent(IntroUI.this, MainScreenUI.class);
-
-                        startActivity(intent);
-
-                        finish();
                     }
                 }
                 , new Response.ErrorListener() {
