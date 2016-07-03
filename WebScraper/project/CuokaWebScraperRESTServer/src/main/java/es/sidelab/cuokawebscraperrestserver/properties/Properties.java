@@ -13,6 +13,7 @@ public class Properties
     
     public static final String ALREADY_EXISTS  = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN = "USER_INCORRECT_LOGIN";
+    public static final String NOT_FOUND       = "NOT_FOUND";
     
     public static final String PATH                   = "/images/products/";
     public static final String PREDEFINED_COLORS      = "/images/colors/";
@@ -36,4 +37,10 @@ public class Properties
     public static final double MEDIUM_SIMILARITY_THRESHOLD = 0.925f;
     
     public static final short MAX_SUGGESTIONS = 4;
+    
+    public static final short ACTION_VIEWED        = 0;
+    public static final short ACTION_FAVORITE      = 1;
+    public static final short ACTION_VISITED       = 2;
+    public static final short ACTION_ADDED_TO_CART = 3;
+    public static final short ACTION_SHARED        = 4;
 }

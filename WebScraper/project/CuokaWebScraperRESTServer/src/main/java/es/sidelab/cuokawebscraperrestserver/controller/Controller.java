@@ -159,6 +159,84 @@ public class Controller
         return null;
     }
     
+    @RequestMapping( value = "/users/{id}/{action}/{shop}/{section}/{reference}", method = RequestMethod.GET )
+    public String addProductToUserActivity( @PathVariable long id
+                                            , @PathVariable short action
+                                            , @PathVariable String shop 
+                                            , @PathVariable String section 
+                                            , @PathVariable String reference )
+    {
+        LOG.info( "Peticion GET para anadir un producto al UserActivity del usuario con ID: " + id );
+        
+        User user = usersRepository.findOne( id );
+        List<Product> candidates = productsRepository.findBySectionAndShop( section, shop );
+        
+        if ( user == null )
+        {
+            LOG.info( "No se encuentra el usuario" );
+            
+            return Properties.NOT_FOUND;
+        }
+        
+        long productId = -1;
+        for ( Product product : candidates )
+        {
+            for ( ColorVariant color : product.getColors() )
+            {
+                if ( color.getReference().equals( reference ) )
+                {
+                    productId = ( color.getReference().equals( reference ) ) ? product.getId() : -1;
+                    break;
+                }
+            }
+            
+            if ( productId != -1 )
+            {
+                break;
+            }
+        }
+        
+        if ( productId == -1 )
+        {
+            LOG.info( "No se encuentra el producto" );
+            
+            return Properties.NOT_FOUND;
+        }
+        
+        switch( action )
+        {
+            case Properties.ACTION_ADDED_TO_CART:
+                LOG.info( "Producto (" + productId + ") anadido al carrito" );
+                user.addToAddedToCartProducts( productId );
+                break;
+                
+            case Properties.ACTION_FAVORITE:
+                LOG.info( "Producto (" + productId + ") anadido a favoritos" );
+                user.addToFavoriteProducts( productId );
+                break;
+                
+            case Properties.ACTION_SHARED:
+                LOG.info( "Producto (" + productId + ") compartido" );
+                user.addToSharedProducts( productId );
+                break;
+                
+            case Properties.ACTION_VIEWED:
+                LOG.info( "Producto (" + productId + ") visto" );
+                user.addToViewedProducts( productId );
+                break;
+                
+            case Properties.ACTION_VISITED:
+                LOG.info( "Producto (" + productId + ") visitado en la web" );
+                user.addToVisitedProducts( productId );
+                break;
+        }
+        
+        // Al haber sacado el usuario con el findOne, al guardarlo se actualiza
+        usersRepository.save( user );
+        
+        return String.valueOf( productId );
+    }
+    
     /**
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos.
      * @param products: Lista de los productos a insertar.
