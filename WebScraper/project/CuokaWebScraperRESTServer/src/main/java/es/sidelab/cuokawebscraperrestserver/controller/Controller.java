@@ -159,12 +159,21 @@ public class Controller
         return null;
     }
     
+    /**
+     * Metodo que añade el producto a la lista correspondiente de la UserActivity
+     * @param id: id del usuario.
+     * @param action: accion que ha realizado el usuario con el producto.
+     * @param shop: tienda del producto.
+     * @param section: seccion del producto.
+     * @param reference: referencia del producto.
+     * @return identificador del producto o un error.
+     */
     @RequestMapping( value = "/users/{id}/{action}/{shop}/{section}/{reference}", method = RequestMethod.GET )
     public String addProductToUserActivity( @PathVariable long id
-                                            , @PathVariable short action
-                                            , @PathVariable String shop 
-                                            , @PathVariable String section 
-                                            , @PathVariable String reference )
+                                , @PathVariable short action
+                                , @PathVariable String shop 
+                                , @PathVariable String section 
+                                , @PathVariable String reference )
     {
         LOG.info( "Peticion GET para anadir un producto al UserActivity del usuario con ID: " + id );
         
@@ -175,7 +184,7 @@ public class Controller
         {
             LOG.info( "No se encuentra el usuario" );
             
-            return Properties.NOT_FOUND;
+            return Properties.USER_NOT_FOUND;
         }
         
         long productId = -1;
@@ -200,7 +209,7 @@ public class Controller
         {
             LOG.info( "No se encuentra el producto" );
             
-            return Properties.NOT_FOUND;
+            return Properties.PRODUCT_NOT_FOUND;
         }
         
         switch( action )
@@ -229,9 +238,12 @@ public class Controller
                 LOG.info( "Producto (" + productId + ") visitado en la web" );
                 user.addToVisitedProducts( productId );
                 break;
+                
+            default :
+                return Properties.INCORRECT_ACTION;
         }
         
-        // Al haber sacado el usuario con el findOne, al guardarlo se actualiza
+        // Al haber sacado el usuario con el findOne, al guardarlo se actualiza automaticamente
         usersRepository.save( user );
         
         return String.valueOf( productId );
