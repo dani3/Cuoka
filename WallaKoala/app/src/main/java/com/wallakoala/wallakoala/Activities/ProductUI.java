@@ -38,11 +38,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.UserActivity;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.LikeButtonLargeView;
 
@@ -111,6 +118,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     protected ColorDrawable mBackground;
     protected int mCurrentColor;
 
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferencesManager;
+
     /* Others */
     protected int mLeftDeltaImage, mLeftDeltaFav;
     protected int mTopDeltaImage, mTopDeltaFav;
@@ -140,6 +150,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         _initIconListView();
         _initRecyclerView();
         _initAnimations();
+        _updateUserActivity();
 
         // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
@@ -375,6 +386,53 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             public void onAnimationRepeat(Animation animation) {
             }
         });
+    }
+
+    /**
+     * Metodo que llama al servidor para indicar que se ha visto este producto.
+     */
+    protected void _updateUserActivity()
+    {
+        mSharedPreferencesManager = new SharedPreferencesManager(this);
+
+        final long id = mSharedPreferencesManager.retreiveUserId();
+        final String shop = mProduct.getShop();
+        final String section = mProduct.getSection();
+        final String reference = mProduct.getColors().get(0).getReference();
+
+        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                + "/users" + "/" + id + "/" + Properties.ACTION_VIEWED + "/" + shop + "/" + section + "/" + reference);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para añadir el producto como visto");
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET
+                , fixedURL
+                , new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                        if (!response.equals(Properties.USER_NOT_FOUND) &&
+                            !response.equals(Properties.INCORRECT_ACTION) &&
+                            !response.equals(Properties.PRODUCT_NOT_FOUND))
+                        {
+                            final long productId = Long.valueOf(response);
+
+                            UserActivity userActivity = mSharedPreferencesManager.retreiveUserActivity();
+
+                            userActivity.addToViewedProducts(productId);
+                        }
+                    }
+                }
+                , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {}
+                });
+
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     /**

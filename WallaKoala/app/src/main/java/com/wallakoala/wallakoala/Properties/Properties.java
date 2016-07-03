@@ -21,6 +21,9 @@ public class Properties
 
     public static final String ALREADY_EXISTS  = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN = "USER_INCORRECT_LOGIN";
+    public static final String USER_NOT_FOUND    = "USER_NOT_FOUND";
+    public static final String PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
+    public static final String INCORRECT_ACTION  = "INCORRECT_ACTION";
 
     public static final int REQUEST_TIMEOUT = 30000;
 
@@ -28,4 +31,10 @@ public class Properties
     public static final int MIN_AGE = 12;
     public static final int MAX_AGE = 110;
     public static final int POSTAL_CODE_LENGHT = 5;
+
+    public static final short ACTION_VIEWED        = 0;
+    public static final short ACTION_FAVORITE      = 1;
+    public static final short ACTION_VISITED       = 2;
+    public static final short ACTION_ADDED_TO_CART = 3;
+    public static final short ACTION_SHARED        = 4;
 }

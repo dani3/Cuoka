@@ -42,10 +42,10 @@ public class IntroUI extends AppCompatActivity
 
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
-        // Especificamos el layout 'activity_introity_intro.xml'
+        // Especificamos el layout 'activity_intro.xml'
         setContentView(R.layout.activity_intro);
 
-        // Si tiene el flag de LoggedIn, llamamos al servidor para traer
+        // Si tiene el flag de LoggedIn, llamamos al servidor para traer la actividad del usuario.
         if (mSharedPreferencesManager.retreiveLoggedIn())
         {
             long id = mSharedPreferencesManager.retreiveUserId();
@@ -110,7 +110,7 @@ public class IntroUI extends AppCompatActivity
                             Set<Long> set = new HashSet<>();
                             for (int i = 0; i < jsonArray.length(); i++)
                             {
-                                set.add((Long) jsonArray.get(i));
+                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
                             userActivity.setAddedToCartProducts(set);
@@ -119,7 +119,7 @@ public class IntroUI extends AppCompatActivity
                             set = new HashSet<>();
                             for (int i = 0; i < jsonArray.length(); i++)
                             {
-                                set.add((Long) jsonArray.get(i));
+                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
                             userActivity.setFavoriteProducts(set);
@@ -128,7 +128,7 @@ public class IntroUI extends AppCompatActivity
                             set = new HashSet<>();
                             for (int i = 0; i < jsonArray.length(); i++)
                             {
-                                set.add((Long) jsonArray.get(i));
+                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
                             userActivity.setSharedProducts(set);
@@ -137,7 +137,7 @@ public class IntroUI extends AppCompatActivity
                             set = new HashSet<>();
                             for (int i = 0; i < jsonArray.length(); i++)
                             {
-                                set.add((Long) jsonArray.get(i));
+                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
                             userActivity.setViewedProducts(set);
@@ -146,7 +146,7 @@ public class IntroUI extends AppCompatActivity
                             set = new HashSet<>();
                             for (int i = 0; i < jsonArray.length(); i++)
                             {
-                                set.add((Long) jsonArray.get(i));
+                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
                             userActivity.setVisitedProducts(set);

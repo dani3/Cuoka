@@ -329,7 +329,7 @@ public class Controller
     public List<Product> getProducts( @PathVariable String shop )
     {
         LOG.info( "Peticion GET para obtener todos los productos de " + shop );
-        return productsRepository.findByShop( shop) ;
+        return productsRepository.findByShop( shop ) ;
     }
     
     /**
@@ -346,7 +346,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 75 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 85 ) ;
     }
     
     /**
