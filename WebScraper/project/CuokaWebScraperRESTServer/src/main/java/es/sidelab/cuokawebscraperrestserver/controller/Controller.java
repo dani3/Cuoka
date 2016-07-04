@@ -4,10 +4,12 @@ import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
+import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
+import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
@@ -57,6 +59,9 @@ public class Controller
     
     @Autowired
     UsersRepository usersRepository;
+    
+    @Autowired
+    ShopsRepository shopsRepository;
     
     /**
      * Metodo que anade un usuario a la BD.
@@ -146,6 +151,18 @@ public class Controller
         LOG.info( "Usuario no encontrado" );
         
         return Properties.INCORRECT_LOGIN;
+    }
+    
+    /**
+     * Metodo que devuelve la lista de tiendas.
+     * @return lista de tiendas.
+     */
+    @Cacheable( value = "products" )
+    @RequestMapping( value = "/shops", method = RequestMethod.GET )
+    public List<Shop> getShops()
+    {
+        LOG.info( "Peticion GET para obtener la lista de todas las tiendas" );
+        return shopsRepository.findAll();
     }
     
     /**
@@ -258,6 +275,12 @@ public class Controller
                 productsRepository.delete( product.getId() );
 
             LOG.info( "Productos eliminados!" );
+            
+            if ( shopsRepository.findByName( shop ) == null )
+            {            
+                LOG.info( "Es una tienda nueva. La anadimos a la BD" );
+                shopsRepository.save( new Shop( shop ) );
+            }
 
             LOG.info( "Insertando nuevos productos" );
             LOG.info( "Llamando a ImageManager para descargar las imagenes que no existan " );

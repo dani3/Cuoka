@@ -22,6 +22,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
@@ -106,6 +107,7 @@ public class ProductsFragment extends Fragment
     protected TextView mNoDataTextView;
     protected View mLoadingView;
     protected View mLoadingServerView;
+    protected View mNoShopsView;
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
@@ -127,6 +129,9 @@ public class ProductsFragment extends Fragment
     protected STATE mState;
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
+
+    /* User */
+    protected User user;
 
     /* Constructor por defecto NECESARIO */
     public ProductsFragment() {}
@@ -168,8 +173,19 @@ public class ProductsFragment extends Fragment
         // RecyclerView
         mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.grid_recycler);
 
-        // Nos conectamos al servidor para traer los ultimos productos.
-        mConnectToServer = new ConnectToServer().execute();
+        mNoShopsView = getView().findViewById(R.id.no_shops);
+
+        if (user.getShops().isEmpty())
+        {
+            mLoadingView.setVisibility(View.GONE);
+            mLoadingServerView.setVisibility(View.GONE);
+            mProductsRecyclerView.setVisibility(View.GONE);
+
+        } else {
+            mNoShopsView.setVisibility(View.GONE);
+
+            mConnectToServer = new ConnectToServer().execute();
+        }
     }
 
     /**
@@ -201,6 +217,8 @@ public class ProductsFragment extends Fragment
 
         FIRST_CONNECTION = true;
         ON_CREATE_FLAG = true;
+
+        user = mSharedPreferences.retreiveUser();
 
         Log.d(Properties.TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }

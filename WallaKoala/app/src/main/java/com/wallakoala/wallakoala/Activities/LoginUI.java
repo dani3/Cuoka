@@ -513,11 +513,7 @@ public class LoginUI extends AppCompatActivity
                                             user.setEmail(email);
                                             user.setFavoriteProducts(new HashSet<Long>());
 
-                                            // TODO: Temporal
-                                            Set<String> shops = new HashSet<>();
-                                            shops.add("Blanco"); shops.add("HyM"); shops.add("Springfield"); shops.add("Pedro Del Hierro");
-
-                                            user.setShops(shops);
+                                            user.setShops(new HashSet<String>());
 
                                             mSharedPreferencesManager.insertUser(user);
                                             mSharedPreferencesManager.insertLoggedIn(true);
@@ -621,9 +617,6 @@ public class LoginUI extends AppCompatActivity
                             {
                                 shops.add((String.valueOf(jsonArray.get(i))));
                             }
-
-                            // TODO: TEMPORAL
-                            shops.add("Blanco"); shops.add("HyM"); shops.add("Springfield"); shops.add("Pedro Del Hierro");
 
                             user.setShops(shops);
 

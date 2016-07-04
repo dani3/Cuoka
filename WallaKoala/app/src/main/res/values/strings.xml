@@ -111,4 +111,7 @@
     <string name="progress_authenticating">Iniciando sesión</string>
 
     <string name="terms_and_conditions">Al continuar aceptas también los <u><b>Términos del Servicio</b></u> y la <u><b>Política de Privacidad</b></u> de Cuoka</string>
+
+    <string name="no_shops">Parece que no has añadido ninguna tienda</string>
+    <string name="add_shops">Añade tus tiendas</string>
 </resources>
