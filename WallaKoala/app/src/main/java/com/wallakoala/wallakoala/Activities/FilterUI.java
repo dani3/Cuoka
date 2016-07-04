@@ -265,7 +265,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         mShopsList = new ArrayList<>();
         mSharedPreferences = new SharedPreferencesManager(this);
-        for (String shop : mSharedPreferences.retreiveShops())
+        for (String shop : mSharedPreferences.retreiveUser().getShops())
             mShopsList.add(shop);
 
         SECTION_FILTER_MAN_1 = getResources().getString(R.string.filter_section_abrigos);

@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Calendar;
 import java.util.Set;
 import javax.persistence.Column;
@@ -70,6 +71,11 @@ public class User
     private Set<Long> addedToCartProducts;
     
     @JsonIgnore
+    @ElementCollection
+    @Column( name = "SHOPS" )
+    private Set<String> shops;
+    
+    @JsonIgnore
     @Column( name = "INITIALIZATION_VECTOR" )
     private byte[] initializationVector;
     
@@ -90,16 +96,19 @@ public class User
         this.registrationDate = registrationDate;
     }
     
-    public String getEmail() { return this.email; }
+    public String getEmail()    { return this.email; }
     public String getPassword() { return this.password; }
-    public short getAge() { return this.age; }
-    public boolean getMan() { return this.man; }
-    public int getPostalCode() { return this.postalCode; }
+    public short getAge()       { return this.age; }
+    public boolean getMan()     { return this.man; }
+    public int getPostalCode()  { return this.postalCode; }
+    
     @JsonIgnore
     public byte[] getInitializationVector() { return this.initializationVector; }  
+    
     @JsonIgnore
     public Calendar getRegistrationDate() { return this.registrationDate; }
-    @JsonIgnore
+    
+    @JsonProperty
     public Set<Long> getFavoriteProducts() { return favoriteProducts; }
     @JsonIgnore
     public Set<Long> getViewedProducts() { return viewedProducts; }
@@ -109,13 +118,19 @@ public class User
     public Set<Long> getVisitedProducts() { return visitedProducts; }
     @JsonIgnore
     public Set<Long> getAddedToCartProducts() { return addedToCartProducts; }
+    
+    @JsonProperty
+    public Set<String> getShops() { return shops; }
+    
     @JsonIgnore
     public long getId() { return id; }
     
     @JsonIgnore
     public void setInitializationVector( byte[] initializationVector ) { this.initializationVector = initializationVector; }
+    
     @JsonIgnore
-    public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; }  
+    public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; } 
+    
     @JsonIgnore
     public void setFavoriteProducts( Set<Long> favoriteProducts ) { this.favoriteProducts = favoriteProducts; }
     @JsonIgnore
@@ -126,15 +141,19 @@ public class User
     public void setVisitedProducts( Set<Long> visitedProducts ) { this.visitedProducts = visitedProducts; }
     @JsonIgnore
     public void setAddedToCartProducts( Set<Long> addedToCartProducts ) { this.addedToCartProducts = addedToCartProducts; }
-    public void setEmail( String email ) { this.email = email; }
-    public void setPassword( String password ) { this.password = password; }
-    public void setAge( short age ) { this.age = age; }
-    public void setMan( boolean man ) { this.man = man; }
+    
+    @JsonIgnore
+    public void setShops( Set<String> shops ) { this.shops = shops; }
+    
+    public void setEmail( String email )        { this.email = email; }
+    public void setPassword( String password )  { this.password = password; }
+    public void setAge( short age )             { this.age = age; }
+    public void setMan( boolean man )           { this.man = man; }
     public void setPostalCode( int postalCode ) { this.postalCode = postalCode; }
     
-    public void addToFavoriteProducts( Long idProduct ) { this.favoriteProducts.add( idProduct ); }
-    public void addToViewedProducts( Long idProduct ) { this.viewedProducts.add( idProduct ); }
-    public void addToSharedProducts( Long idProduct ) { this.sharedProducts.add( idProduct ); }
-    public void addToVisitedProducts( Long idProduct ) { this.visitedProducts.add( idProduct ); }
+    public void addToFavoriteProducts( Long idProduct )    { this.favoriteProducts.add( idProduct ); }
+    public void addToViewedProducts( Long idProduct )      { this.viewedProducts.add( idProduct ); }
+    public void addToSharedProducts( Long idProduct )      { this.sharedProducts.add( idProduct ); }
+    public void addToVisitedProducts( Long idProduct )     { this.visitedProducts.add( idProduct ); }
     public void addToAddedToCartProducts( Long idProduct ) { this.addedToCartProducts.add( idProduct ); }
 }

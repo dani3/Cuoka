@@ -5,16 +5,13 @@ import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.HistoricProduct;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
-import es.sidelab.cuokawebscraperrestserver.beans.UserActivity;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.HistoricProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
-import es.sidelab.cuokawebscraperrestserver.utils.EncryptionManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -107,7 +104,7 @@ public class Controller
      * @param id: id del usuario.
      * @return usuario.
      */
-    @RequestMapping( value = "/users/data/{id}", method = RequestMethod.GET )
+    @RequestMapping( value = "/users/{id}", method = RequestMethod.GET )
     public User getUserInfo( @PathVariable long id )
     {
         LOG.info( "Peticion GET para obtener los datos del usuario (" + id + ")" );
@@ -149,36 +146,6 @@ public class Controller
         LOG.info( "Usuario no encontrado" );
         
         return Properties.INCORRECT_LOGIN;
-    }
-    
-    /**
-     * Metodo que devuelve la actividad del usuario.
-     * @param id: id del usuario.
-     * @return actividad del usuario.
-     */
-    @RequestMapping( value = "/users/{id}", method = RequestMethod.GET )
-    public UserActivity getUserActivity( @PathVariable long id )
-    {
-        LOG.info( "Peticion GET para obtener la actividad de un usuario (ID: " + id + ")" );
-        User user = usersRepository.findOne( id );
-        
-        if ( user != null )
-        {
-            LOG.info( "Usuario encontrado, devolviendo su actividad" );
-            
-            UserActivity userActivity = new UserActivity();
-            
-            userActivity.setAddedToCartProducts( user.getAddedToCartProducts() );
-            userActivity.setFavoriteProducts( user.getFavoriteProducts() );
-            userActivity.setSharedProducts( user.getSharedProducts() );
-            userActivity.setViewedProducts( user.getViewedProducts() );
-            userActivity.setVisitedProducts( user.getVisitedProducts() );
-            
-            return userActivity;
-        }
-        
-        LOG.info( "Usuario no encontrado" );
-        return null;
     }
     
     /**

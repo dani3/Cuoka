@@ -45,7 +45,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
-import com.wallakoala.wallakoala.Beans.UserActivity;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
@@ -395,7 +394,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     {
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
-        final long id = mSharedPreferencesManager.retreiveUserId();
+        final long id = mSharedPreferencesManager.retreiveUser().getId();
         final String shop = mProduct.getShop();
         final String section = mProduct.getSection();
         final String reference = mProduct.getColors().get(0).getReference();
@@ -410,21 +409,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 , new Response.Listener<String>()
                 {
                     @Override
-                    public void onResponse(String response)
-                    {
-                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                        if (!response.equals(Properties.USER_NOT_FOUND) &&
-                            !response.equals(Properties.INCORRECT_ACTION) &&
-                            !response.equals(Properties.PRODUCT_NOT_FOUND))
-                        {
-                            final long productId = Long.valueOf(response);
-
-                            UserActivity userActivity = mSharedPreferencesManager.retreiveUserActivity();
-
-                            userActivity.addToViewedProducts(productId);
-                        }
-                    }
+                    public void onResponse(String response) {}
                 }
                 , new Response.ErrorListener()
                 {

@@ -26,9 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.dd.CircularProgressButton;
-import com.google.gson.Gson;
 import com.wallakoala.wallakoala.Beans.User;
-import com.wallakoala.wallakoala.Beans.UserActivity;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
@@ -499,7 +497,30 @@ public class LoginUI extends AppCompatActivity
                                             mRegisterCircularButton.setProgress(100);
 
                                             // Actualizamos el fichero de SharedPreferences.
-                                            _updateSharedPreferences(id);
+                                            boolean man     = (mMaleImageButton.getAlpha() == ACTIVE_ALPHA);
+                                            int age         = Integer.valueOf(mAgeEdittext.getText().toString());
+                                            int postalCode  = Integer.valueOf(mPostalCodeEdittext.getText().toString());
+                                            String email    = mEmailEdittext.getText().toString();
+                                            String password = mPasswordEdittext.getText().toString();
+
+                                            final User user = new User();
+
+                                            user.setId(id);
+                                            user.setPostalCode(postalCode);
+                                            user.setMan(man);
+                                            user.setPassword(password);
+                                            user.setAge(age);
+                                            user.setEmail(email);
+                                            user.setFavoriteProducts(new HashSet<Long>());
+
+                                            // TODO: Temporal
+                                            Set<String> shops = new HashSet<>();
+                                            shops.add("Blanco"); shops.add("HyM"); shops.add("Springfield"); shops.add("Pedro Del Hierro");
+
+                                            user.setShops(shops);
+
+                                            mSharedPreferencesManager.insertUser(user);
+                                            mSharedPreferencesManager.insertLoggedIn(true);
                                         }
                                     }
                                 }
@@ -560,7 +581,7 @@ public class LoginUI extends AppCompatActivity
     private void _getUserInfo(final long id, final CircularProgressButton enterButton, final boolean rememberMe)
     {
         final String fixedURL = Utils.fixUrl(
-                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/data/" + id);
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
 
         Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para obtener los datos del usuario");
 
@@ -576,21 +597,54 @@ public class LoginUI extends AppCompatActivity
                         {
                             final User user = new User();
 
+                            user.setId(id);
                             user.setAge(response.getInt("age"));
                             user.setEmail(response.getString("email"));
                             user.setPassword(response.getString("password"));
                             user.setMan(response.getBoolean("man"));
                             user.setPostalCode(response.getInt("postalCode"));
 
-                            mSharedPreferencesManager.insertAge(user.getAge());
-                            mSharedPreferencesManager.insertUserId(id);
-                            mSharedPreferencesManager.insertPostalCode(user.getPostalCode());
-                            mSharedPreferencesManager.insertMan(user.getMan());
-                            mSharedPreferencesManager.insertEmai(user.getEmail());
-                            mSharedPreferencesManager.insertPassword(user.getPassword());
-                            mSharedPreferencesManager.insertLoggedIn(true);
+                            // Sacamos los productos favoritos
+                            JSONArray jsonArray = response.getJSONArray("favoriteProducts");
+                            Set<Long> favorites = new HashSet<>();
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
+                                favorites.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
+                            }
 
-                            _getUserActivity(id, enterButton, rememberMe);
+                            user.setFavoriteProducts(favorites);
+
+                            // Sacamos la lista de tiendas
+                            jsonArray = response.getJSONArray("shops");
+                            Set<String> shops = new HashSet<>();
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
+                                shops.add((String.valueOf(jsonArray.get(i))));
+                            }
+
+                            // TODO: TEMPORAL
+                            shops.add("Blanco"); shops.add("HyM"); shops.add("Springfield"); shops.add("Pedro Del Hierro");
+
+                            user.setShops(shops);
+
+                            Log.d(Properties.TAG, "Datos del usuario: ");
+                            Log.d(Properties.TAG, " - ID: " + id);
+                            Log.d(Properties.TAG, " - Email: " + user.getAge());
+                            Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
+                            Log.d(Properties.TAG, " - Hombre: " + user.getMan());
+                            Log.d(Properties.TAG, " - Edad: " + user.getAge());
+                            Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
+                            Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
+
+                            mSharedPreferencesManager.insertUser(user);
+                            mSharedPreferencesManager.insertLoggedIn(rememberMe);
+
+                            // Avanzamos automaticamente a la siguiente pantalla.
+                            Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+
+                            startActivity(intent);
+
+                            finish();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -635,156 +689,6 @@ public class LoginUI extends AppCompatActivity
                 });
 
         VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
-    }
-
-    /**
-     * Metodo que obtiene la actividad del usuario.
-     * @param id: id del usuario.
-     * @param enterButton: boton para cambiar el estado.
-     * @param rememberMe: check de recuerdame.
-     */
-    @SuppressWarnings("unchecked")
-    private void _getUserActivity(final long id, final CircularProgressButton enterButton, final boolean rememberMe)
-    {
-        final String fixedURL = Utils.fixUrl(
-                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
-
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para obtener la actividad del usuario");
-
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET
-                , fixedURL
-                , null
-                , new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        try
-                        {
-                            UserActivity userActivity = new UserActivity();
-
-                            JSONArray jsonArray = response.getJSONArray("addedToCartProducts");
-                            Set<Long> set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-                            }
-
-                            userActivity.setAddedToCartProducts(set);
-
-                            jsonArray = response.getJSONArray("favoriteProducts");
-                            set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-                            }
-
-                            userActivity.setFavoriteProducts(set);
-
-                            jsonArray = response.getJSONArray("sharedProducts");
-                            set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-                            }
-
-                            userActivity.setSharedProducts(set);
-
-                            jsonArray = response.getJSONArray("viewedProducts");
-                            set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-                            }
-
-                            userActivity.setViewedProducts(set);
-
-                            jsonArray = response.getJSONArray("visitedProducts");
-                            set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-                            }
-
-                            userActivity.setVisitedProducts(set);
-
-                            mSharedPreferencesManager.insertUserActivity(userActivity);
-                            mSharedPreferencesManager.insertLoggedIn(rememberMe);
-
-                            Log.d(Properties.TAG, " - Productos favoritos: " + userActivity.getFavoriteProducts().size());
-                            Log.d(Properties.TAG, " - Productos visitados en la web: " + userActivity.getVisitedProducts().size());
-                            Log.d(Properties.TAG, " - Productos compartidos: " + userActivity.getSharedProducts().size());
-                            Log.d(Properties.TAG, " - Productos añadidos al carro: " + userActivity.getAddedToCartProducts().size());
-                            Log.d(Properties.TAG, " - Productos vistos: " + userActivity.getViewedProducts().size());
-
-                            // Avanzamos automaticamente a la siguiente pantalla.
-                            Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
-
-                            startActivity(intent);
-
-                            finish();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-
-                            enterButton.setProgress(0);
-
-                            Log.d(Properties.TAG, "Error logeando usuario: no se pudo parsear el JSON de la actividad");
-
-                            Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("Reintentar", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v)
-                                        {
-                                            enterButton.setProgress(0);
-                                            enterButton.performClick();
-                                        }
-                                    }).show();
-                        }
-                    }
-                }
-                , new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        error.printStackTrace();
-                        enterButton.setProgress(0);
-
-                        Log.d(Properties.TAG, "VOLLEYERROR: Error logeando usuario: no se pudo parsear el JSON de la actividad");
-
-                        Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
-                                .setAction("Reintentar", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v)
-                                    {
-                                        enterButton.setProgress(0);
-                                        enterButton.performClick();
-                                    }
-                                }).show();
-                    }
-                });
-
-        VolleySingleton.getInstance(LoginUI.this).addToRequestQueue(jsonObjectRequest);
-    }
-
-    /**
-     * Metodo que actualiza el fichero de SharedPreferences.
-     */
-    private void _updateSharedPreferences(final long id)
-    {
-        boolean man     = (mMaleImageButton.getAlpha() == ACTIVE_ALPHA);
-        int age         = Integer.valueOf(mAgeEdittext.getText().toString());
-        int postalCode  = Integer.valueOf(mPostalCodeEdittext.getText().toString());
-        String email    = mEmailEdittext.getText().toString();
-        String password = mPasswordEdittext.getText().toString();
-
-        // Se insertan los datos del usuario.
-        mSharedPreferencesManager.insertMan(man);
-        mSharedPreferencesManager.insertAge(age);
-        mSharedPreferencesManager.insertPostalCode(postalCode);
-        mSharedPreferencesManager.insertEmai(email);
-        mSharedPreferencesManager.insertPassword(password);
-        mSharedPreferencesManager.insertUserId(id);
-
-        // Se marca el flag de nuestro registro y de mantenerse logeado.
-        mSharedPreferencesManager.insertOwnRegister(true);
-        mSharedPreferencesManager.insertLoggedIn(true);
     }
 
     /**

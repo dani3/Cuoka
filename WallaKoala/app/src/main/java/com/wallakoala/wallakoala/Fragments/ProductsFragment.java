@@ -186,7 +186,7 @@ public class ProductsFragment extends Fragment
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
 
-        for (String shop : mSharedPreferences.retreiveShops())
+        for (String shop : mSharedPreferences.retreiveUser().getShops())
             mShopsList.add(shop);
 
         start = count = 0;
@@ -195,7 +195,7 @@ public class ProductsFragment extends Fragment
         SEARCH_QUERY = null;
 
         DAYS_OFFSET = 0;
-        MAN = mSharedPreferences.retreiveMan();
+        MAN = mSharedPreferences.retreiveUser().getMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
