@@ -26,6 +26,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.dd.CircularProgressButton;
+import com.google.gson.Gson;
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Beans.UserActivity;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
@@ -235,11 +237,7 @@ public class LoginUI extends AppCompatActivity
 
                                         Log.d(Properties.TAG, "Usuario logueado correctamente (ID: " + id + ")");
 
-                                        _getUserActivity(id);
-
-                                        // Actualizamos las preferencias.
-                                        mSharedPreferencesManager.insertLoggedIn(rememberMe);
-                                        mSharedPreferencesManager.insertUserId(id);
+                                        _getUserInfo(id, mEnterButton, rememberMe);
                                     }
 
                                 }
@@ -554,11 +552,99 @@ public class LoginUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que llama al usuario para obtener la actividad del usuario.
+     * Metodo que obtiene la info del usuario.
      * @param id: id del usuario.
+     * @param enterButton: boton para cambiar el estado.
+     * @param rememberMe: check de recuerdame.
+     */
+    private void _getUserInfo(final long id, final CircularProgressButton enterButton, final boolean rememberMe)
+    {
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/data/" + id);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para obtener los datos del usuario");
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET
+                , fixedURL
+                , null
+                , new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        try
+                        {
+                            final User user = new User();
+
+                            user.setAge(response.getInt("age"));
+                            user.setEmail(response.getString("email"));
+                            user.setPassword(response.getString("password"));
+                            user.setMan(response.getBoolean("man"));
+                            user.setPostalCode(response.getInt("postalCode"));
+
+                            mSharedPreferencesManager.insertAge(user.getAge());
+                            mSharedPreferencesManager.insertUserId(id);
+                            mSharedPreferencesManager.insertPostalCode(user.getPostalCode());
+                            mSharedPreferencesManager.insertMan(user.getMan());
+                            mSharedPreferencesManager.insertEmai(user.getEmail());
+                            mSharedPreferencesManager.insertPassword(user.getPassword());
+                            mSharedPreferencesManager.insertLoggedIn(true);
+
+                            _getUserActivity(id, enterButton, rememberMe);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                            enterButton.setProgress(0);
+
+                            Log.d(Properties.TAG, "Error logeando usuario: no se pudo parsear el JSON");
+
+                            Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Reintentar", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            enterButton.setProgress(0);
+                                            enterButton.performClick();
+                                        }
+                                    }).show();
+                        }
+                    }
+                }
+                , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        enterButton.setProgress(0);
+
+                        Log.d(Properties.TAG, "VOLLEYERROR: Error logeando usuario: no se pudo sacar sus datos");
+
+                        error.printStackTrace();
+
+                        Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                .setAction("Reintentar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        enterButton.setProgress(0);
+                                        enterButton.performClick();
+                                    }
+                                }).show();
+                    }
+                });
+
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    /**
+     * Metodo que obtiene la actividad del usuario.
+     * @param id: id del usuario.
+     * @param enterButton: boton para cambiar el estado.
+     * @param rememberMe: check de recuerdame.
      */
     @SuppressWarnings("unchecked")
-    private void _getUserActivity(final long id)
+    private void _getUserActivity(final long id, final CircularProgressButton enterButton, final boolean rememberMe)
     {
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
@@ -573,14 +659,13 @@ public class LoginUI extends AppCompatActivity
                     @Override
                     public void onResponse(JSONObject response)
                     {
-                        UserActivity userActivity = new UserActivity();
-
                         try
                         {
+                            UserActivity userActivity = new UserActivity();
+
                             JSONArray jsonArray = response.getJSONArray("addedToCartProducts");
                             Set<Long> set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
@@ -588,8 +673,7 @@ public class LoginUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("favoriteProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
@@ -597,8 +681,7 @@ public class LoginUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("sharedProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
@@ -606,8 +689,7 @@ public class LoginUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("viewedProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
@@ -615,14 +697,14 @@ public class LoginUI extends AppCompatActivity
 
                             jsonArray = response.getJSONArray("visitedProducts");
                             set = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 set.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
                             }
 
                             userActivity.setVisitedProducts(set);
 
                             mSharedPreferencesManager.insertUserActivity(userActivity);
+                            mSharedPreferencesManager.insertLoggedIn(rememberMe);
 
                             Log.d(Properties.TAG, " - Productos favoritos: " + userActivity.getFavoriteProducts().size());
                             Log.d(Properties.TAG, " - Productos visitados en la web: " + userActivity.getVisitedProducts().size());
@@ -630,22 +712,52 @@ public class LoginUI extends AppCompatActivity
                             Log.d(Properties.TAG, " - Productos añadidos al carro: " + userActivity.getAddedToCartProducts().size());
                             Log.d(Properties.TAG, " - Productos vistos: " + userActivity.getViewedProducts().size());
 
+                            // Avanzamos automaticamente a la siguiente pantalla.
+                            Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+
+                            startActivity(intent);
+
+                            finish();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
+
+                            enterButton.setProgress(0);
+
+                            Log.d(Properties.TAG, "Error logeando usuario: no se pudo parsear el JSON de la actividad");
+
+                            Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Reintentar", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            enterButton.setProgress(0);
+                                            enterButton.performClick();
+                                        }
+                                    }).show();
                         }
-
-                        // Avanzamos automaticamente a la siguiente pantalla.
-                        Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
-
-                        startActivity(intent);
-
-                        finish();
                     }
                 }
                 , new Response.ErrorListener()
                 {
                     @Override
-                    public void onErrorResponse(VolleyError error) {}
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        error.printStackTrace();
+                        enterButton.setProgress(0);
+
+                        Log.d(Properties.TAG, "VOLLEYERROR: Error logeando usuario: no se pudo parsear el JSON de la actividad");
+
+                        Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                .setAction("Reintentar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        enterButton.setProgress(0);
+                                        enterButton.performClick();
+                                    }
+                                }).show();
+                    }
                 });
 
         VolleySingleton.getInstance(LoginUI.this).addToRequestQueue(jsonObjectRequest);

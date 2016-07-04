@@ -103,6 +103,28 @@ public class Controller
     }
     
     /**
+     * Metodo que devuelve los datos de un usuario.
+     * @param id: id del usuario.
+     * @return usuario.
+     */
+    @RequestMapping( value = "/users/data/{id}", method = RequestMethod.GET )
+    public User getUserInfo( @PathVariable long id )
+    {
+        LOG.info( "Peticion GET para obtener los datos del usuario (" + id + ")" );
+        
+        final User user = usersRepository.findOne( id );
+        
+        if ( user == null )
+        {
+            LOG.info( "Usuario no encontrado" );
+        } else {
+            LOG.info( "Usuario encontrado, se devuelven sus datos" );
+        }
+        
+        return user;
+    }
+    
+    /**
      * Metodo que loguea un usuario.
      * @param email: email del usuario.
      * @param password: contraseña del usuario.
