@@ -95,6 +95,9 @@
 
     <string name="morph_idle">Hecho</string>
 
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+
     <string name="login_facebook">Login con Facebook</string>
     <string name="login_google">Login con Google+</string>
     <string name="login_instagram">Login con Instagram</string>

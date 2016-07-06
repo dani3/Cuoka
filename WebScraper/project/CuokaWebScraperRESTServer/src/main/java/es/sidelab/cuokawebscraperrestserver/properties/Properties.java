@@ -18,6 +18,7 @@ public class Properties
     public static final String USER_NOT_FOUND    = "USER_NOT_FOUND";
     public static final String PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
     public static final String INCORRECT_ACTION  = "INCORRECT_ACTION";
+    public static final String ACCEPTED          = "ACCEPTED";
     
     /* Paths */
     public static final String PATH                   = "/images/products/";

@@ -5,6 +5,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -109,6 +112,9 @@ public class ProductsFragment extends Fragment
     protected View mLoadingServerView;
     protected View mNoShopsView;
 
+    /* Buttons */
+    protected Button mAddShopsButton;
+
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
 
@@ -125,13 +131,13 @@ public class ProductsFragment extends Fragment
     /* AsynTasks */
     protected AsyncTask mConnectToServer, mRetreiveProductsFromServer;
 
+    /* User */
+    protected User user;
+
     /* Others */
     protected STATE mState;
     protected int mProductsInsertedPreviously, start, count;
     protected long mBackPressed;
-
-    /* User */
-    protected User user;
 
     /* Constructor por defecto NECESARIO */
     public ProductsFragment() {}
@@ -164,7 +170,6 @@ public class ProductsFragment extends Fragment
         // LoaderView
         mLoadingView       = getView().findViewById(R.id.avloadingIndicatorView);
         mLoadingServerView = getView().findViewById(R.id.loading);
-
         mLoadingServerView.setVisibility(View.GONE);
 
         // TextView que muestran que no hay productos disponibles
@@ -173,12 +178,27 @@ public class ProductsFragment extends Fragment
         // RecyclerView
         mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.grid_recycler);
 
-        mNoShopsView = getView().findViewById(R.id.no_shops);
+        // No shops
+        mNoShopsView    = getView().findViewById(R.id.no_shops);
+        mAddShopsButton = (Button) getView().findViewById(R.id.add_shops_button);
+
+        mAddShopsButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final AlertDialog alertDialog = createDialogAddShops();
+
+                alertDialog.show();
+            }
+        });
 
         if (user.getShops().isEmpty())
         {
             mLoadingView.setVisibility(View.GONE);
             mLoadingServerView.setVisibility(View.GONE);
+
+            // IMPORTANTE quitar el RecyclerView de los productos.
             mProductsRecyclerView.setVisibility(View.GONE);
 
         } else {
@@ -191,7 +211,7 @@ public class ProductsFragment extends Fragment
     /**
      * Inicializacion de las distintias estructuras de datos.
      */
-    protected void _initData()
+    private void _initData()
     {
         mSharedPreferences = new SharedPreferencesManager(getActivity());
 
@@ -226,7 +246,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que reinicializa ciertas variables.
      */
-    protected void _reinitializeData()
+    private void _reinitializeData()
     {
         mProductsListMap         = new ArrayList<>();
         mProductsNonFilteredMap  = new HashMap<>();
@@ -244,7 +264,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que inicializa las animaciones.
      */
-    protected void _initAnimations()
+    private void _initAnimations()
     {
         mMoveAndFadeAnimation = AnimationUtils.loadAnimation(getActivity()
                 , R.anim.translate_and_fade_animation);
@@ -259,7 +279,7 @@ public class ProductsFragment extends Fragment
     /**
      * Inicializacion y configuracion del recyclerView.
      */
-    protected void _initRecyclerView()
+    private void _initRecyclerView()
     {
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new ProductsGridAdapter(getActivity()
@@ -387,7 +407,7 @@ public class ProductsFragment extends Fragment
      * @param jsonArray: lista de JSON a convertir.
      * @throws JSONException
      */
-    protected void convertJSONtoProduct(JSONArray jsonArray) throws JSONException
+    private void convertJSONtoProduct(JSONArray jsonArray) throws JSONException
     {
         List<Product> productsList = new ArrayList<>();
         List<JSONObject> jsonList = new ArrayList<>();
@@ -515,6 +535,7 @@ public class ProductsFragment extends Fragment
         } // doInBackground
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void onPostExecute(Void unused)
         {
             if (error != null)
@@ -549,6 +570,7 @@ public class ProductsFragment extends Fragment
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected Void doInBackground(String... params)
         {
             try
@@ -784,7 +806,7 @@ public class ProductsFragment extends Fragment
      * Metodo que crea maneja la interfaz en funcion de si esta cargando o no los productos.
      * @param loading: true indica que se inicia la carga, false que ha terminado.
      */
-    protected void _loading(boolean loading, boolean ok)
+    private void _loading(boolean loading, boolean ok)
     {
         // Si hemos terminado de cargar los productos
         if (!loading)
@@ -877,7 +899,7 @@ public class ProductsFragment extends Fragment
      * Metodo que muestra un mensaje cuando no hay ningun producto que mostrar.
      * @param noData: true indica que no hay ningun producto que mostrar.
      */
-    protected void _noData(boolean noData)
+    private void _noData(boolean noData)
     {
         if (!noData)
         {
@@ -899,7 +921,7 @@ public class ProductsFragment extends Fragment
      * Metodo que muestra un mensaje cuando se ha producido un error al conectar con el server.
      * @param isFiltering: true si el error se ha producido con los filtros.
      */
-    protected void _errorConnectingToServer(boolean isFiltering)
+    private void _errorConnectingToServer(boolean isFiltering)
     {
         if (!isFiltering)
         {
@@ -937,7 +959,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que actualiza la cola de candidatos, realiza una lectura del mapa de productos como un RoundRobin.
      */
-    protected void _updateCandidates()
+    private void _updateCandidates()
     {
         // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior.
         Map<String, Integer> indexMap = new HashMap<>();
@@ -986,7 +1008,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que inserta los productos en la cola ordenados.
      */
-    protected void _getNextProductsToBeDisplayed()
+    private void _getNextProductsToBeDisplayed()
     {
         mProductsInsertedPreviously = NUM_PRODUCTS_DISPLAYED;
 
@@ -1010,7 +1032,7 @@ public class ProductsFragment extends Fragment
      * @param indexMap: Mapa de indices donde guardamos el indice de la ultima iteracion.
      * @return: true si se han recorrido todos los productos.
      */
-    protected boolean _checkIfFinished(Map<String, Integer> indexMap)
+    private boolean _checkIfFinished(Map<String, Integer> indexMap)
     {
         boolean finished = true;
         Iterator<String> iterator = indexMap.keySet().iterator();
@@ -1140,4 +1162,44 @@ public class ProductsFragment extends Fragment
         return MAN;
     }
 
+    /**
+     * Metodo que crea el dialogo para añadir tiendas.
+     * @return AlertDialog
+     */
+    private AlertDialog createDialogAddShops()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_add_shops, null);
+
+        final AlertDialog alertDialog = builder.create();
+
+        alertDialog.setView(view);
+
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.add_shops_recyclerview);
+        final Button cancel = (Button) view.findViewById(R.id.add_shop_cancel);
+        final Button accept = (Button) view.findViewById(R.id.add_shop_accept);
+
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                alertDialog.dismiss();
+            }
+        });
+
+        accept.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
+        return alertDialog;
+    }
 }

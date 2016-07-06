@@ -17,6 +17,7 @@ import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.logging.Log;
@@ -151,6 +152,32 @@ public class Controller
         LOG.info( "Usuario no encontrado" );
         
         return Properties.INCORRECT_LOGIN;
+    }
+    
+    /**
+     * Metodo que añade las tiendas favoritas de un usuario.
+     * @param id: id del usuario.
+     * @param shops: lista de tiendas favoritas.
+     * @return resultado de la operacion.
+     */
+    @RequestMapping( value = "/shops/{id}", method = RequestMethod.POST )
+    public String addShopsToUser( @PathVariable long id, @RequestBody Set<String> shops )
+    {
+        LOG.info( "Peticion POST para anadir las tiendas del usuario (" + id + ")" );
+        User user = usersRepository.findOne( id );
+        
+        if ( user == null )
+        {
+            LOG.info( "Usuario no encontrado" );
+            return Properties.USER_NOT_FOUND;
+        }
+        
+        LOG.info( "Usuario encontrado, se anaden sus tiendas" );
+        user.setShops( shops );
+        
+        usersRepository.save( user );
+        
+        return Properties.ACCEPTED;
     }
     
     /**

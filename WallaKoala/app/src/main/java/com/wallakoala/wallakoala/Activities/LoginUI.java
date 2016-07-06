@@ -512,7 +512,6 @@ public class LoginUI extends AppCompatActivity
                                             user.setAge(age);
                                             user.setEmail(email);
                                             user.setFavoriteProducts(new HashSet<Long>());
-
                                             user.setShops(new HashSet<String>());
 
                                             mSharedPreferencesManager.insertUser(user);
@@ -628,6 +627,7 @@ public class LoginUI extends AppCompatActivity
                             Log.d(Properties.TAG, " - Edad: " + user.getAge());
                             Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
                             Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
+                            Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
 
                             mSharedPreferencesManager.insertUser(user);
                             mSharedPreferencesManager.insertLoggedIn(rememberMe);
