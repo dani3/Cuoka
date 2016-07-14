@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -20,9 +20,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
+import com.wallakoala.wallakoala.Adapters.ShopAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
@@ -32,6 +35,7 @@ import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +43,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -99,12 +104,14 @@ public class ProductsFragment extends Fragment
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
+    protected RecyclerView mShopsRecyclerView;
 
     /* Layouts */
     protected FrameLayout mFrameLayout;
 
     /* LayoutManagers */
     protected StaggeredGridLayoutManager mStaggeredGridLayoutManager;
+    protected GridLayoutManager mGridLayoutManager;
 
     /* Views */
     protected TextView mNoDataTextView;
@@ -117,6 +124,7 @@ public class ProductsFragment extends Fragment
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
+    protected ShopAdapter mShopAdapter;
 
     /* Animations */
     protected Animation mMoveAndFadeAnimation;
@@ -132,7 +140,7 @@ public class ProductsFragment extends Fragment
     protected AsyncTask mConnectToServer, mRetreiveProductsFromServer;
 
     /* User */
-    protected User user;
+    protected User mUser;
 
     /* Others */
     protected STATE mState;
@@ -193,7 +201,7 @@ public class ProductsFragment extends Fragment
             }
         });
 
-        if (user.getShops().isEmpty())
+        if (mUser.getShops().isEmpty())
         {
             mLoadingView.setVisibility(View.GONE);
             mLoadingServerView.setVisibility(View.GONE);
@@ -238,7 +246,7 @@ public class ProductsFragment extends Fragment
         FIRST_CONNECTION = true;
         ON_CREATE_FLAG = true;
 
-        user = mSharedPreferences.retreiveUser();
+        mUser = mSharedPreferences.retreiveUser();
 
         Log.d(Properties.TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
@@ -668,6 +676,7 @@ public class ProductsFragment extends Fragment
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void onPostExecute(Void unused)
         {
             if (error != null)
@@ -678,7 +687,9 @@ public class ProductsFragment extends Fragment
 
             } else {
                 if (!EMPTY)
+                {
                     new MultithreadConversion().execute(content);
+                }
 
             }
         }
@@ -879,6 +890,8 @@ public class ProductsFragment extends Fragment
         } else if (FIRST_CONNECTION) {
             _noData(false);
 
+            mNoShopsView.setVisibility(View.GONE);
+
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
 
@@ -1030,7 +1043,7 @@ public class ProductsFragment extends Fragment
     /**
      * Metodo que comprueba si se han recorrido todos los productos del mapa de productos.
      * @param indexMap: Mapa de indices donde guardamos el indice de la ultima iteracion.
-     * @return: true si se han recorrido todos los productos.
+     * @return true si se han recorrido todos los productos.
      */
     private boolean _checkIfFinished(Map<String, Integer> indexMap)
     {
@@ -1068,6 +1081,7 @@ public class ProductsFragment extends Fragment
      * Metodo que realiza el proceso de filtrado
      * @param filterMap nuevo estado de los filtros.
      */
+    @SuppressWarnings("unchecked")
     public void processFilter(Map<String, Object> filterMap)
     {
         mFilterMap = filterMap;
@@ -1172,15 +1186,92 @@ public class ProductsFragment extends Fragment
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.dialog_add_shops, null);
+        final View view = inflater.inflate(R.layout.dialog_add_shops, null);
 
         final AlertDialog alertDialog = builder.create();
 
         alertDialog.setView(view);
 
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.add_shops_recyclerview);
-        final Button cancel = (Button) view.findViewById(R.id.add_shop_cancel);
-        final Button accept = (Button) view.findViewById(R.id.add_shop_accept);
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mShopsRecyclerView = (RecyclerView) view.findViewById(R.id.add_shops_recyclerview);
+
+        final Button cancel = (Button) view.findViewById(R.id.add_shops_cancel);
+        final Button accept = (Button) view.findViewById(R.id.add_shops_accept);
+
+        final AVLoadingIndicatorView loadingIndicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.add_shops_loading);
+
+        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                + "/shops");
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
+
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET
+                , fixedURL
+                , null
+                , new Response.Listener<JSONArray>()
+                {
+                    @Override
+                    public void onResponse(JSONArray response)
+                    {
+                        Log.d(Properties.TAG, "Respuesta: " + response);
+
+                        List<String> shops = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++)
+                        {
+                            try
+                            {
+                                shops.add(response.getJSONObject(i).getString("name"));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (shops.isEmpty())
+                        {
+                            alertDialog.dismiss();
+
+                            Snackbar.make(mFrameLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Reintentar", new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            mAddShopsButton.performClick();
+                                        }
+                                    }).show();
+
+                        } else {
+                            Collections.sort(shops);
+
+                            mShopAdapter = new ShopAdapter(shops, getActivity());
+                            mShopsRecyclerView.setLayoutManager(mGridLayoutManager);
+                            mShopsRecyclerView.setAdapter(mShopAdapter);
+
+                            loadingIndicatorView.setVisibility(View.GONE);
+                        }
+                    }
+                }
+                , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        alertDialog.dismiss();
+
+                        Snackbar.make(mFrameLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                .setAction("Reintentar", new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        mAddShopsButton.performClick();
+                                    }
+                                }).show();
+                    }
+                });
+
+        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
 
         cancel.setOnClickListener(new View.OnClickListener()
         {
@@ -1196,7 +1287,21 @@ public class ProductsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
+                List<String> shopsChecked = mShopAdapter.getShopsChecked();
+                if (shopsChecked.isEmpty())
+                {
+                    Snackbar.make(view, "No has seleccionada ninguna tienda", Snackbar.LENGTH_SHORT).show();
 
+                } else {
+                    mShopsList = shopsChecked;
+
+                    mShopsRecyclerView.setVisibility(View.GONE);
+                    loadingIndicatorView.setVisibility(View.VISIBLE);
+
+                    new ConnectToServer().execute();
+
+                    alertDialog.dismiss();
+                }
             }
         });
 

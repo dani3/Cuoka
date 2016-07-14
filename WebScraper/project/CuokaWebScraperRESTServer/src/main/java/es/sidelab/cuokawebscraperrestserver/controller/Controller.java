@@ -75,7 +75,7 @@ public class Controller
         LOG.info( "Peticion POST para anadir un nuevo usuario" );
         LOG.info( "Comprobando que no exista..." );
         
-        // Comprobamos que no existe el usuario.
+        // Comprobamos que no existe el usuario. Si existe, se devuelve 'USER_ALREADY_EXISTS'
         if ( usersRepository.findByEmail( user.getEmail() ) != null )
         {
             LOG.info( "El usuario con email (" + user.getEmail() + ") ya existe" );
@@ -99,9 +99,10 @@ public class Controller
         // Guardamos el usuario en BD.
         usersRepository.save( user );
         
-        long id = usersRepository.findByEmail( user.getEmail() ).getId();
-        
+        // Sacamos el ID que se le ha asignado al guardarlo, y se devuelve.
+        long id = usersRepository.findByEmail( user.getEmail() ).getId();        
         LOG.info( "Usuario guardado correctamente (ID: " + id + ")" );
+        
         return String.valueOf( id );
     }
     
@@ -115,6 +116,7 @@ public class Controller
     {
         LOG.info( "Peticion GET para obtener los datos del usuario (" + id + ")" );
         
+        // Buscamos el usuario con el ID.
         final User user = usersRepository.findOne( id );
         
         if ( user == null )
@@ -124,6 +126,7 @@ public class Controller
             LOG.info( "Usuario encontrado, se devuelven sus datos" );
         }
         
+        // Si no se encuentra el usuario, se devuelve null.
         return user;
     }
     
@@ -140,8 +143,10 @@ public class Controller
         LOG.info( " - Email: " + email );
         LOG.info( " - Contrasena: " + password );
         
+        // Buscamos el usuario con el email y la contraseña.
         User user = usersRepository.findByEmailAndPassword( email, password );
         
+        // Si lo encontramos, se devuelve el ID.
         if ( user != null )
         {
             LOG.info( "Usuario logeado correctamente (ID: " + user.getId() + ")" );
@@ -149,8 +154,8 @@ public class Controller
             return String.valueOf( user.getId() );
         }
         
-        LOG.info( "Usuario no encontrado" );
-        
+        // Si no, se devuelve 'INCORRECT_LOGIN'
+        LOG.info( "Usuario no encontrado" );        
         return Properties.INCORRECT_LOGIN;
     }
     

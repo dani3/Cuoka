@@ -1,0 +1,144 @@
+package com.wallakoala.wallakoala.Adapters;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.wallakoala.wallakoala.Properties.Properties;
+import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * @class Adapter para mostrar la lista de tiendas.
+ * Created by Daniel Mancebo Aldea on 06/07/2016.
+ */
+
+public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
+{
+    private static Context mContext;
+
+    private static List<String> mShopList;
+    private static boolean[] mShopsCheckedArray;
+
+    /* [BEGIN] ViewHolder */
+    public static class ShopHolder extends RecyclerView.ViewHolder
+    {
+        private CircleImageView mShopLogoImageView;
+        private Target mTarget;
+
+        public ShopHolder(View itemView)
+        {
+            super(itemView);
+
+            mShopLogoImageView = (CircleImageView) itemView.findViewById(R.id.shop_logo);
+        }
+
+        public void bindShop(String shop)
+        {
+            String logoFile = shop + "-logo.jpg";
+
+            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
+
+            mTarget = new Target()
+            {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                {
+                    mShopLogoImageView.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable)
+                {
+                    mShopLogoImageView.setBackgroundColor(mContext.getResources()
+                            .getColor(android.R.color.holo_red_dark));
+
+                    mShopLogoImageView.setAlpha(0.2f);
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable)
+                {
+                    mShopLogoImageView.setImageBitmap(null);
+                }
+            };
+
+            Picasso.with(mContext)
+                   .load(url)
+                   .into(mTarget);
+        }
+
+    } /* [END] ViewHolder */
+
+    public ShopAdapter(List<String> shops, Context context)
+    {
+        mShopList = shops;
+        mContext = context;
+
+        mShopsCheckedArray = new boolean[mShopList.size()];
+    }
+
+    /**
+     * Metodo que actualiza el array de tiendas marcadas.
+     * @param shop: tienda que ha cambiado su estado.
+     * @param isChecked: true si se ha marcado.
+     */
+    private static void _shopCheckChanged(String shop, boolean isChecked)
+    {
+        final int pos = mShopList.indexOf(shop);
+
+        mShopsCheckedArray[pos] = isChecked;
+    }
+
+    /**
+     * Metodo que devuelve solo las tiendas marcadas.
+     * @return lista de tiendas marcadas.
+     */
+    public List<String> getShopsChecked()
+    {
+        List<String> checkedShops = new ArrayList<>();
+        for (int i = 0; i < mShopsCheckedArray.length; i++)
+        {
+            if (mShopsCheckedArray[i])
+            {
+                checkedShops.add(mShopList.get(i));
+            }
+        }
+
+        return checkedShops;
+    }
+
+    @Override
+    public ShopHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
+    {
+        View itemView = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.shop_item
+                        , viewGroup
+                        , false );
+
+        return new ShopHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final ShopHolder shopHolder, int pos)
+    {
+        shopHolder.bindShop(mShopList.get(pos));
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return mShopList.size();
+    }
+}

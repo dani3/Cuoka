@@ -18,12 +18,10 @@ public class Properties
     public static final String IMAGES_PATH = "/images/products/";
     public static final String PREDEFINED_ICONS_PATH = "/images/colors/";
     public static final String ICONS_PATH = "/images/products/";
+    public static final String LOGOS_PATH = "/images/logos/";
 
     public static final String ALREADY_EXISTS  = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN = "USER_INCORRECT_LOGIN";
-    public static final String USER_NOT_FOUND    = "USER_NOT_FOUND";
-    public static final String PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
-    public static final String INCORRECT_ACTION  = "INCORRECT_ACTION";
 
     public static final int REQUEST_TIMEOUT = 30000;
 
