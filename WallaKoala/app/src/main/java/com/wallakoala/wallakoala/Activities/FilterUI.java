@@ -679,6 +679,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializa el menu de precios.
      */
+    @SuppressWarnings("unchecked")
     protected void _initFilterPrice()
     {
         mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
@@ -931,6 +932,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo que resetea el filtro de precios.
      */
+    @SuppressWarnings("unchecked")
     protected void _resetFilterPrice()
     {
         mRangeSeekBar.setSelectedMaxValue(mRangeSeekBar.getAbsoluteMaxValue());

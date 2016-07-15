@@ -19,11 +19,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Adapters.ShopAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
@@ -46,9 +48,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
@@ -190,6 +194,7 @@ public class ProductsFragment extends Fragment
         mNoShopsView    = getView().findViewById(R.id.no_shops);
         mAddShopsButton = (Button) getView().findViewById(R.id.add_shops_button);
 
+        // Listener para abrir el dialogo para anadir tiendas.
         mAddShopsButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -201,6 +206,7 @@ public class ProductsFragment extends Fragment
             }
         });
 
+        // Si el usuario no tiene tiendas.
         if (mUser.getShops().isEmpty())
         {
             mLoadingView.setVisibility(View.GONE);
@@ -345,7 +351,6 @@ public class ProductsFragment extends Fragment
                             }
                         }
                     }
-
                 }
             }
         });
@@ -357,7 +362,8 @@ public class ProductsFragment extends Fragment
         super.onResume();
 
         // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
-        // la pantalla de un producto, por lo que hay que restaurar el pie de foto.
+        // la pantalla de un producto o de los filtros.
+        // Si venimos de un producto, tenemos que restaurar el footer.
         if ((!ON_CREATE_FLAG) && (mProductAdapter != null) && (mProductAdapter.productClicked()))
         {
             Log.d(Properties.TAG, "Volviendo de ProductUI");
@@ -373,7 +379,7 @@ public class ProductsFragment extends Fragment
     {
         super.onDestroy();
 
-        // Cancelamos cualquier conexion que se este haciendo
+        // Cancelamos cualquier conexion que se este haciendo.
         if (mConnectToServer != null)
             if (!mConnectToServer.isCancelled())
                 mConnectToServer.cancel(true);
@@ -1186,25 +1192,31 @@ public class ProductsFragment extends Fragment
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+        // Sacamos la vista del dialogo
         final View view = inflater.inflate(R.layout.dialog_add_shops, null);
 
+        // Creamos el dialogo.
         final AlertDialog alertDialog = builder.create();
 
+        // Le asignamos la vista.
         alertDialog.setView(view);
 
+        // Creamos el GridLayout con dos columnas.
         mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mShopsRecyclerView = (RecyclerView) view.findViewById(R.id.add_shops_recyclerview);
 
+        // Obtenemos los dos botones para Aceptar y Cancelar.
         final Button cancel = (Button) view.findViewById(R.id.add_shops_cancel);
         final Button accept = (Button) view.findViewById(R.id.add_shops_accept);
 
+        // Obtenemos la vista de carga.
         final AVLoadingIndicatorView loadingIndicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.add_shops_loading);
 
-        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                + "/shops");
+        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
 
         Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
 
+        // Creamos la peticion para obtener la lista de tiendas.
         final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET
                 , fixedURL
                 , null
@@ -1215,6 +1227,7 @@ public class ProductsFragment extends Fragment
                     {
                         Log.d(Properties.TAG, "Respuesta: " + response);
 
+                        // Sacamos la lista de tiendas
                         List<String> shops = new ArrayList<>();
                         for (int i = 0; i < response.length(); i++)
                         {
@@ -1227,6 +1240,7 @@ public class ProductsFragment extends Fragment
                             }
                         }
 
+                        // Si la lista esta vacia (raro), cerramos el dialogo.
                         if (shops.isEmpty())
                         {
                             alertDialog.dismiss();
@@ -1242,8 +1256,10 @@ public class ProductsFragment extends Fragment
                                     }).show();
 
                         } else {
+                            // Ordenamos la lista
                             Collections.sort(shops);
 
+                            // Creamos el adapter enviando la lista de tiendas.
                             mShopAdapter = new ShopAdapter(shops, getActivity());
                             mShopsRecyclerView.setLayoutManager(mGridLayoutManager);
                             mShopsRecyclerView.setAdapter(mShopAdapter);
@@ -1257,6 +1273,7 @@ public class ProductsFragment extends Fragment
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
+                        // Si ha habido algun error, cerramos el dialogo.
                         alertDialog.dismiss();
 
                         Snackbar.make(mFrameLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
@@ -1271,8 +1288,10 @@ public class ProductsFragment extends Fragment
                     }
                 });
 
+        // Enviamos la peticion.
         VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
 
+        // Listener del boton de Cancelar.
         cancel.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1282,25 +1301,105 @@ public class ProductsFragment extends Fragment
             }
         });
 
+        // Listener del boton de Aceptar.
         accept.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                List<String> shopsChecked = mShopAdapter.getShopsChecked();
+                // Sacamos la lista de tiendas seleccionadas.
+                final List<String> shopsChecked = mShopAdapter.getShopsChecked();
+
+                // Si esta vacia la lista, mostramos un error.
                 if (shopsChecked.isEmpty())
                 {
                     Snackbar.make(view, "No has seleccionada ninguna tienda", Snackbar.LENGTH_SHORT).show();
 
                 } else {
-                    mShopsList = shopsChecked;
+                    final String fixedURL = Utils.fixUrl(
+                            Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                    + "/shops/" + mSharedPreferences.retreiveUser().getId());
 
-                    mShopsRecyclerView.setVisibility(View.GONE);
-                    loadingIndicatorView.setVisibility(View.VISIBLE);
+                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para añadir las tiendas");
 
-                    new ConnectToServer().execute();
+                    // Creamos el JSON con la lista de las tiendas.
+                    final JSONArray jsonArray = new JSONArray();
+                    for (String shop : shopsChecked)
+                    {
+                        jsonArray.put(shop);
+                    }
 
-                    alertDialog.dismiss();
+                    Log.d(Properties.TAG, "JSON con las tiendas:\n    " + jsonArray.toString());
+
+                    // Creamos una peticion para enviar las tiendas.
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST
+                            , fixedURL
+                            , new Response.Listener<String>()
+                            {
+                                @Override
+                                public void onResponse(String response)
+                                {
+                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                                    // Si ha ido bien, guardamos la lista de tiendas
+                                    if (response.equals(Properties.ACCEPTED))
+                                    {
+                                        // Guardamos la lista de tiendas.
+                                        mShopsList = shopsChecked;
+
+                                        Set<String> shopSet = new HashSet<>();
+                                        for (String shop : mShopsList)
+                                        {
+                                            shopSet.add(shop);
+                                        }
+
+                                        // Guardamos la lista de tiendas en las preferencias.
+                                        mUser.setShops(shopSet);
+                                        mSharedPreferences.insertUser(mUser);
+
+                                        // Creamos el AsyncTask para traer los productos.
+                                        new ConnectToServer().execute();
+
+                                        // Cerramos el dialogo.
+                                        alertDialog.dismiss();
+                                    }
+                                }
+                            }
+                            , new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
+                                {
+                                    // Si ha habido algun error, cerramos el dialogo.
+                                    alertDialog.dismiss();
+
+                                    Snackbar.make(mFrameLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                            .setAction("Reintentar", new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View v)
+                                                {
+                                                    mAddShopsButton.performClick();
+                                                }
+                                            }).show();
+                                }
+                            })
+                            {
+                                @Override
+                                public byte[] getBody() throws AuthFailureError
+                                {
+                                    return jsonArray.toString().getBytes();
+                                }
+
+                                @Override
+                                public String getBodyContentType()
+                                {
+                                    return "application/json";
+                                }
+                            };
+
+                    // Enviamos la peticion al servidor.
+                    VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
                 }
             }
         });

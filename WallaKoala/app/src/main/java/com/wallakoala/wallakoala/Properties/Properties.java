@@ -22,6 +22,7 @@ public class Properties
 
     public static final String ALREADY_EXISTS  = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN = "USER_INCORRECT_LOGIN";
+    public static final String ACCEPTED        = "ACCEPTED";
 
     public static final int REQUEST_TIMEOUT = 30000;
 

@@ -91,7 +91,12 @@ public class IntroUI extends AppCompatActivity
                                     shops.add((String.valueOf(jsonArray.get(i))));
                                 }
 
-                                user.setShops(shops);
+                                if (!shops.isEmpty())
+                                {
+                                    user.setShops(shops);
+                                } else {
+                                    user.setShops(new HashSet<String>());
+                                }
 
                                 Log.d(Properties.TAG, "Datos del usuario: ");
                                 Log.d(Properties.TAG, " - ID: " + id);
@@ -115,10 +120,11 @@ public class IntroUI extends AppCompatActivity
                     , new Response.ErrorListener()
                     {
                         @Override
-                        public void onErrorResponse(VolleyError error) {}
+                        public void onErrorResponse(VolleyError error) { DONE = true; }
                     });
 
             VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+
         } else {
             DONE = true;
         }

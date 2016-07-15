@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -26,14 +27,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
 {
+    /* Context */
     private static Context mContext;
 
+    /* Data */
     private static List<String> mShopList;
     private static boolean[] mShopsCheckedArray;
 
     /* [BEGIN] ViewHolder */
     public static class ShopHolder extends RecyclerView.ViewHolder
     {
+        private CircleImageView mShopLogoSelectedImageView;
         private CircleImageView mShopLogoImageView;
         private Target mTarget;
 
@@ -41,11 +45,41 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
         {
             super(itemView);
 
+            mShopLogoSelectedImageView = (CircleImageView) itemView.findViewById(R.id.shop_logo_selected);
+            mShopLogoSelectedImageView.setAlpha(0.0f);
+
             mShopLogoImageView = (CircleImageView) itemView.findViewById(R.id.shop_logo);
         }
 
-        public void bindShop(String shop)
+        /**
+         * Metodo llamado cuando se va a mostrar el item.
+         * @param shop: nombre de la tienda.
+         */
+        public void bindShop(final String shop)
         {
+            mShopLogoImageView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mShopLogoSelectedImageView.getAlpha() == 0.0f)
+                    {
+                        mShopLogoSelectedImageView.animate().setDuration(250)
+                                                            .alpha(1.0f)
+                                                            .setInterpolator(new OvershootInterpolator());
+
+                        _shopCheckChanged(shop, true);
+
+                    } else {
+                        mShopLogoSelectedImageView.animate().setDuration(250)
+                                                            .alpha(0.0f)
+                                                            .setInterpolator(new OvershootInterpolator());
+
+                        _shopCheckChanged(shop, false);
+                    }
+                }
+            });
+
             String logoFile = shop + "-logo.jpg";
 
             String url = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
