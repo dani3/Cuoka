@@ -19,7 +19,7 @@ public class VolleySingleton
     private static Context mContext;
     private RequestQueue mRequestQueue;
 
-    private VolleySingleton(Context context)
+    private VolleySingleton(final Context context)
     {
         mContext = context;
 

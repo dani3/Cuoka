@@ -51,7 +51,10 @@ public class ColorIconListAdapter extends BaseAdapter
      * @param context: contexto de la aplicacion.
      * @param colorVariants: lista de ColorVariants.
      */
-    public ColorIconListAdapter(Context context, List<ColorVariant> colorVariants, String shop, String section)
+    public ColorIconListAdapter(final Context context
+                    , final List<ColorVariant> colorVariants
+                    , final String shop
+                    , final String section)
     {
         this.mContext = context;
         mColorList = colorVariants;
@@ -81,12 +84,13 @@ public class ColorIconListAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        ColorIconHolder colorIconHolder = null;
+        ColorIconHolder colorIconHolder;
 
         // Creamos el inflater si no esta creado
         if (mLayoutInflater == null)
-            mLayoutInflater = (LayoutInflater)mContext
-                                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        {
+            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
 
         // Inflamos el item
         if (convertView == null)
@@ -108,15 +112,14 @@ public class ColorIconListAdapter extends BaseAdapter
         String url;
         if (mColorList.get(position).getColorPath().equals("0"))
         {
-            String imageFile = mShop + "_"
-                    + mSection + "_"
-                    + mColorList.get(position).getReference() + "_"
-                    + mColorList.get(position).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+            final String imageFile = mShop + "_" + mSection + "_"
+                            + mColorList.get(position).getReference() + "_"
+                            + mColorList.get(position).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
 
             url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + mShop + "/" + imageFile);
 
         } else {
-            String imageFile = mColorList.get(position).getColorPath();
+            final String imageFile = mColorList.get(position).getColorPath();
 
             url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
         }
@@ -144,5 +147,4 @@ public class ColorIconListAdapter extends BaseAdapter
     {
         mIconSelected = position;
     }
-
 }

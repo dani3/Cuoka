@@ -90,6 +90,7 @@ public class RecommendedFragment extends Fragment
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);

@@ -158,10 +158,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
          * @param product: producto con el que se inicializa un item.
          * @param pos: posicion del producto en la lista.
          */
-        public void bindProduct(Product product, int pos)
+        @SuppressWarnings("deprecation")
+        public void bindProduct(final Product product, final int pos)
         {
-            final int position = pos;
-
             mProductImageView.setImageBitmap(null);
             ERROR = false;
             LOADED = false;
@@ -196,9 +195,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductImageView.setAlpha(1.0f);
 
                     // Si la imagen es nueva, calculamos el aspect ratio y lo almacenamos el el array en la pos correspondiente.
-                    if (mProductBitmapArray[position] == 0.0f)
+                    if (mProductBitmapArray[pos] == 0.0f)
                     {
-                        mProductBitmapArray[position] = (double)bitmap.getHeight() / (double)bitmap.getWidth();
+                        mProductBitmapArray[pos] = (double)bitmap.getHeight() / (double)bitmap.getWidth();
                     }
 
                     // Guardamos el bitmap, para asi pasarlo a ProductUI.
@@ -226,10 +225,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     // Si esta imagen ya se ha cargado, establecemos la altura de la ImageView
                     // usando el aspect ratio almacenado en el array, si no, se carga un valor cualquiera
-                    if (mProductBitmapArray[position] != 0.0f)
+                    if (mProductBitmapArray[pos] != 0.0f)
                     {
                         mProductImageView.getLayoutParams().height =
-                                (int) (mProductImageView.getWidth() * mProductBitmapArray[position]);
+                                (int) (mProductImageView.getWidth() * mProductBitmapArray[pos]);
 
                     } else{
                         mProductImageView.getLayoutParams().height = 600;
@@ -241,12 +240,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 }
             };
 
-            String imageFile = product.getShop() + "_"
+            final String imageFile = product.getShop() + "_"
                         + product.getSection() + "_"
                         + product.getColors().get(0).getReference() + "_"
                         + product.getColors().get(0).getColorName() + "_0_Small.jpg";
 
-            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
+            final String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
 
             Picasso.with(mContext)
                    .load(url)
@@ -256,7 +256,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         }
 
         @Override
-        public void onClick(View view)
+        public void onClick(final View view)
         {
             /* Si se pulsa en el pie de foto */
             if (view.getId() == mProductFooterView.getId())
@@ -315,7 +315,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      * @param total: total de productos, necesario para inicializar el array de ratios
      * @param frameLayout: layout necesario para animar la SnackBar
      */
-    public ProductsGridAdapter(Context context, List<Product> productList, int total, FrameLayout frameLayout)
+    public ProductsGridAdapter(final Context context
+            , final List<Product> productList
+            , final int total
+            , final FrameLayout frameLayout)
     {
         mContext = context;
         mProductList = productList;
@@ -335,7 +338,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      * Metodo que actualiza la lista de productos del adapter
      * @param productList: lista con todos los productos
      */
-    public void updateProductList(List<Product> productList)
+    public void updateProductList(final List<Product> productList)
     {
         mProductList = productList;
 
@@ -376,7 +379,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     }
 
     @Override
-    public ProductHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
+    public ProductHolder onCreateViewHolder(final ViewGroup viewGroup, final int viewType)
     {
         View itemView = LayoutInflater.from(viewGroup.getContext())
                                       .inflate(R.layout.product_item_grid
@@ -387,7 +390,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ProductHolder productHolder, int pos)
+    public void onBindViewHolder(final ProductHolder productHolder, final int pos)
     {
         productHolder.bindProduct(mProductList.get(pos), pos);
     }

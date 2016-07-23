@@ -59,6 +59,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param colorVariant: producto con el que se inicializa un item.
          */
+        @SuppressWarnings("deprecation")
         public void bindProduct(ColorVariant colorVariant)
         {
             mProductImageView.getLayoutParams().height = (int)(Resources.getSystem()
@@ -92,12 +93,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 public void onPrepareLoad(Drawable placeHolderDrawable) {}
             };
 
-            String imageFile = mShop + "_"
-                    + mSection + "_"
-                    + colorVariant.getReference() + "_"
-                    + colorVariant.getColorName() + "_" + getAdapterPosition() + "_Large.jpg";
+            final String imageFile = mShop + "_" + mSection + "_"
+                            + colorVariant.getReference() + "_"
+                            + colorVariant.getColorName() + "_" + getAdapterPosition() + "_Large.jpg";
 
-            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + mShop + "/" + imageFile);
+            final String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + mShop + "/" + imageFile);
 
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)
@@ -116,12 +116,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
      * @param section: seccion a la que pertenece el producto.
      * @param image: imagen de baja calidad que se coloca debajo del RecyclerView.
      */
-    public ProductAdapter(Context context
-                , ColorVariant color
-                , double ratio
-                , String shop
-                , String section
-                , ImageView image)
+    public ProductAdapter(final Context context
+                , final ColorVariant color
+                , final double ratio
+                , final String shop
+                , final String section
+                , final ImageView image)
     {
         mContext = context;
         mColor = color;
@@ -132,18 +132,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     }
 
     @Override
-    public ProductHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
+    public ProductHolder onCreateViewHolder(final ViewGroup viewGroup, int viewType)
     {
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.product_image
-                    , viewGroup
-                    , false);
+                                      .inflate(R.layout.product_image
+                                            , viewGroup
+                                            , false);
 
         return new ProductHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ProductHolder holder, int position)
+    public void onBindViewHolder(final ProductHolder holder, final int position)
     {
         holder.bindProduct(mColor);
     }

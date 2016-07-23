@@ -71,9 +71,6 @@ public class MainScreenUI extends AppCompatActivity
     protected RecommendedFragment mRecommendedFragment;
     protected ProductsFragment mProductsFragment;
 
-    /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferencesManager;
-
     /* Other */
     protected long mBackPressed;
 

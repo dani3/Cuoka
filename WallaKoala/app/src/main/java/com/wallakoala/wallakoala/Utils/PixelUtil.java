@@ -13,14 +13,12 @@ public class PixelUtil
 
     public static int dpToPx(Context context, int dp)
     {
-        int px = Math.round(dp * getPixelScaleFactor(context));
-        return px;
+        return Math.round(dp * getPixelScaleFactor(context));
     }
 
     public static int pxToDp(Context context, int px)
     {
-        int dp = Math.round(px / getPixelScaleFactor(context));
-        return dp;
+        return Math.round(px / getPixelScaleFactor(context));
     }
 
     private static float getPixelScaleFactor(Context context)

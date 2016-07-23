@@ -115,7 +115,7 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
 
     } /* [END] ViewHolder */
 
-    public ShopLogoAdapter(List<String> shops, Context context)
+    public ShopLogoAdapter(final List<String> shops, final Context context)
     {
         mShopList = shops;
         mContext = context;
@@ -128,7 +128,7 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
      * @param shop: tienda que ha cambiado su estado.
      * @param isChecked: true si se ha marcado.
      */
-    private static void _shopCheckChanged(String shop, boolean isChecked)
+    private static void _shopCheckChanged(final String shop, final boolean isChecked)
     {
         final int pos = mShopList.indexOf(shop);
 
@@ -154,7 +154,7 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
     }
 
     @Override
-    public ShopHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
+    public ShopHolder onCreateViewHolder(final ViewGroup viewGroup, final int viewType)
     {
         View itemView = LayoutInflater.from(viewGroup.getContext())
                                       .inflate(R.layout.shop_logo_item
@@ -165,7 +165,7 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
     }
 
     @Override
-    public void onBindViewHolder(final ShopHolder shopHolder, int pos)
+    public void onBindViewHolder(final ShopHolder shopHolder, final int pos)
     {
         shopHolder.bindShop(mShopList.get(pos));
     }

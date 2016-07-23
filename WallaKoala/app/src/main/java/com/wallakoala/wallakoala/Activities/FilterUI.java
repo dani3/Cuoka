@@ -187,7 +187,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected List<String> mFilterShops;
     protected List<String> mFilterColors;
     protected List<String> mFilterSections;
-    protected Map<String, ?> mFilterMap;
+    protected Map<String, Object> mFilterMap;
     protected int mFilterMinPrice;
     protected int mFilterMaxPrice;
     protected boolean mFilterNewness;
@@ -207,7 +207,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (savedInstanceState == null)
         {
-            Map<String, Object> mFilterMap = new HashMap<>();
+            mFilterMap = new HashMap<>();
 
             Intent intent = getIntent();
 
@@ -329,6 +329,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFloatingActionButton.setVisibility(View.VISIBLE);
         mFloatingActionButton.startAnimation(mExplode);
 
+        // [BEGIN] Listener FAB OK
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -355,7 +356,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         boolean none = true;
 
                         shopsList = new ArrayList<>();
-
                         for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
                         {
                             if (checkBox.isChecked())
@@ -446,7 +446,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     if (OK)
                     {
-                        boolean newness = mNewnessNewRadioButton.isChecked();
+                        final boolean newness = mNewnessNewRadioButton.isChecked();
 
                         intent.putExtra(Properties.PACKAGE + ".shops", shopsList);
                         intent.putExtra(Properties.PACKAGE + ".colors", colorsList);
@@ -523,6 +523,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializar el menu de colores.
      */
+    @SuppressWarnings("deprecation")
     protected void _initFilterColor()
     {
         mColorYellowCheckBox = (AppCompatCheckBox)findViewById(R.id.filter_color_yellow);
@@ -574,6 +575,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializar el menu de secciones.
      */
+    @SuppressWarnings("deprecation")
     protected void _initFilterSection()
     {
         mSection1CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_1);
@@ -656,6 +658,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializar el menu de novedades.
      */
+    @SuppressWarnings("deprecation")
     protected void _initFilterNewness()
     {
         mFilterNewnessTextView = (TextView)findViewById(R.id.filter_text_newness);
@@ -688,15 +691,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializa el menu de precios.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecaction"})
     protected void _initFilterPrice()
     {
         mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
 
         mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
-        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+        mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
+        {
             @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue)
+            {
                 int from = (int) bar.getSelectedMinValue();
                 int to = (int) bar.getSelectedMaxValue();
 
@@ -708,10 +713,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
 
-        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (!v.getText().toString().isEmpty()) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (!v.getText().toString().isEmpty())
+                {
                     int from = Integer.valueOf(mPriceFromEditText.getText().toString());
                     int to = 999;
 
@@ -720,34 +728,37 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     Log.d(Properties.TAG, Integer.toString(from) + "|" + Integer.toString(to));
 
-                    if (from > to) {
+                    if (from > to)
+                    {
                         mRangeSeekBar.setSelectedMaxValue(from);
                         mPriceToEditText.setText(Integer.toString(from));
                     }
-
 
                     mRangeSeekBar.setSelectedMinValue(from);
 
                 } else {
                     mRangeSeekBar.setSelectedMinValue(mRangeSeekBar.getAbsoluteMinValue());
-
                 }
 
                 return false;
             }
         });
 
-        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPriceToEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (!v.getText().toString().isEmpty()) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (!v.getText().toString().isEmpty())
+                {
                     int from = -1;
                     int to = Integer.valueOf(mPriceToEditText.getText().toString());
 
                     if (mPriceFromEditText.getText() != null && !mPriceFromEditText.getText().toString().isEmpty())
                         from = Integer.valueOf(mPriceFromEditText.getText().toString());
 
-                    if (from > to) {
+                    if (from > to)
+                    {
                         mRangeSeekBar.setSelectedMinValue(to);
                         mPriceFromEditText.setText(Integer.toString(to));
                     }
@@ -756,7 +767,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                 } else {
                     mRangeSeekBar.setSelectedMaxValue(mRangeSeekBar.getAbsoluteMaxValue());
-
                 }
 
                 return false;
@@ -791,6 +801,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializar el menu de tiendas.
      */
+    @SuppressWarnings("deprecation")
     protected void _initFilterShop()
     {
         mShopsCheckBoxesList = new ArrayList<>();
@@ -805,10 +816,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         for (int i = 0; i < mShopsList.size(); i++)
         {
             // Inflamos el layout con el checkbox.
-            View view = LayoutInflater.from(this).inflate(R.layout.shop_checkbox_item, null);
+            final View view = LayoutInflater.from(this).inflate(R.layout.shop_checkbox_item, null);
 
             // Obtenemos el checkbox y le cambiamos el texto.
-            AppCompatCheckBox shopCheckbox = (AppCompatCheckBox) view.findViewById(R.id.shop_checkbox);
+            final AppCompatCheckBox shopCheckbox = (AppCompatCheckBox) view.findViewById(R.id.shop_checkbox);
             shopCheckbox.setText(mShopsList.get(i));
 
             // Lo guardamos en una lista.
@@ -913,6 +924,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo que resetea todos los filtros.
      */
+    @SuppressWarnings("deprecation")
     protected void _resetFilter()
     {
         mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtros restablecidos", Snackbar.LENGTH_SHORT);
@@ -987,7 +999,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View view)
+    @SuppressWarnings("deprecation")
+    public void onClick(final View view)
     {
         /* [BEGIN Listener en los filtros] */
         if (view.getId() == R.id.filter_shop)
@@ -1219,11 +1232,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 {
                     Intent intent = new Intent();
 
-                    ArrayList<String> aux = null;
-
-                    intent.putExtra(Properties.PACKAGE + ".shops", aux);
-                    intent.putExtra(Properties.PACKAGE + ".colors", aux);
-                    intent.putExtra(Properties.PACKAGE + ".sections", aux);
+                    intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)null);
+                    intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)null);
+                    intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)null);
                     intent.putExtra(Properties.PACKAGE + ".minPrice", -1);
                     intent.putExtra(Properties.PACKAGE + ".maxPrice", -1);
                     intent.putExtra(Properties.PACKAGE + ".newness", false);
@@ -1253,7 +1264,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(final MenuItem item)
     {
         if (item.getItemId() == android.R.id.home)
         {
@@ -1297,10 +1308,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         protected Void doInBackground(String... params)
         {
             BufferedReader reader = null;
-            URL url = null;
+            URL url;
 
             try {
-                String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                         + "/suggest/" + params[0]);
 
                 Log.d(Properties.TAG, "Conectando con: " + fixedURL
@@ -1308,30 +1319,27 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                 url = new URL(fixedURL);
 
-                if (url != null)
+                URLConnection conn = url.openConnection();
+
+                // Obtenemos la respuesta del servidor
+                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                // Leemos la respuesta
+                while ((line = reader.readLine()) != null)
+                    sb.append(line + "");
+
+                // Devolvemos la respuesta
+                String content =  sb.toString();
+
+                Log.d(Properties.TAG, content);
+
+                JSONArray jsonArray = new JSONArray(content);
+                suggestions = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++)
                 {
-                    URLConnection conn = url.openConnection();
-
-                    // Obtenemos la respuesta del servidor
-                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line = "";
-
-                    // Leemos la respuesta
-                    while ((line = reader.readLine()) != null)
-                        sb.append(line + "");
-
-                    // Devolvemos la respuesta
-                    String content =  sb.toString();
-
-                    Log.d(Properties.TAG, content);
-
-                    JSONArray jsonArray = new JSONArray(content);
-                    suggestions = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++)
-                    {
-                        suggestions.add(jsonArray.getString(i));
-                    }
+                    suggestions.add(jsonArray.getString(i));
                 }
 
             } catch (Exception e) {
@@ -1380,19 +1388,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      * Metodo llamado cuando se hace click en el texto de la sugerencia.
      * @param view
      */
-    public void onClickText(View view)
+    public void onClickText(final View view)
     {
-        TextView textView = (TextView)view;
+        final TextView textView = (TextView)view;
 
         if (Utils.isQueryOk(textView.getText().toString()))
         {
             Intent intent = new Intent();
 
-            ArrayList<String> aux = null;
-
-            intent.putExtra(Properties.PACKAGE + ".shops", aux);
-            intent.putExtra(Properties.PACKAGE + ".colors", aux);
-            intent.putExtra(Properties.PACKAGE + ".sections", aux);
+            intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)null);
+            intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)null);
+            intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)null);
             intent.putExtra(Properties.PACKAGE + ".minPrice", -1);
             intent.putExtra(Properties.PACKAGE + ".maxPrice", -1);
             intent.putExtra(Properties.PACKAGE + ".newness", false);
@@ -1406,11 +1412,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /**
      * Metodo llamado cuando se hace click en el boton de la sugerencia.
-     * @param view
+     * @param view: sugerencia clickada.
      */
-    public void onClickButton(View view)
+    public void onClickButton(final View view)
     {
-        ImageButton imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
+        final ImageButton imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
 
         final SearchView search = (SearchView)mMenu.findItem(R.id.menu_item_search).getActionView();
 
@@ -1434,21 +1440,21 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
 
         @Override
-        public void bindView(View view, Context context, Cursor cursor)
+        public void bindView(final View view, final Context context, final Cursor cursor)
         {
             text.setText(items.get(cursor.getPosition()));
             imageButton.setContentDescription(text.getText());
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent)
+        public View newView(final Context context, final Cursor cursor, final ViewGroup parent)
         {
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view = inflater.inflate(R.layout.suggestion_item, parent, false);
+            final View view = inflater.inflate(R.layout.suggestion_item, parent, false);
 
-            text = (TextView)view.findViewById(R.id.suggestion_item);
-            imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
+            text        = (TextView) view.findViewById(R.id.suggestion_item);
+            imageButton = (ImageButton) view.findViewById(R.id.suggestion_include);
 
             return view;
         }
@@ -1460,5 +1466,4 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
 
     } /* [END SuggestionAdapter] */
-
 }

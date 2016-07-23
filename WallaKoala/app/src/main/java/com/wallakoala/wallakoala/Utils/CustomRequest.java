@@ -13,8 +13,10 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by Dani on 01/06/2016.
+ * @class: Clase para realizar una peticion customizada para Volley.
+ * Created by Daniel Mancebo Aldea on 01/06/2016.
  */
+
 public class CustomRequest extends JsonRequest<JSONArray>
 {
     /**

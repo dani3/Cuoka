@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Fragments;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -172,6 +173,7 @@ public class ProductsFragment extends Fragment
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
@@ -293,6 +295,7 @@ public class ProductsFragment extends Fragment
     /**
      * Inicializacion y configuracion del recyclerView.
      */
+    @SuppressWarnings("deprecation")
     private void _initRecyclerView()
     {
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -421,7 +424,7 @@ public class ProductsFragment extends Fragment
      * @param jsonArray: lista de JSON a convertir.
      * @throws JSONException
      */
-    private void convertJSONtoProduct(JSONArray jsonArray) throws JSONException
+    private void convertJSONtoProduct(final JSONArray jsonArray) throws JSONException
     {
         List<Product> productsList = new ArrayList<>();
         List<JSONObject> jsonList = new ArrayList<>();
@@ -489,7 +492,7 @@ public class ProductsFragment extends Fragment
         {
             try
             {
-                List<RequestFuture<JSONArray>> futures = new ArrayList<>();
+                final List<RequestFuture<JSONArray>> futures = new ArrayList<>();
 
                 // Metemos en content el resultado de cada uno
                 for (int i = 0; i < mShopsList.size(); i++)
@@ -504,11 +507,11 @@ public class ProductsFragment extends Fragment
                     futures.add(RequestFuture.<JSONArray>newFuture());
 
                     // Creamos una peticion
-                    JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                            , fixedURL
-                                                            , null
-                                                            , futures.get(i)
-                                                            , futures.get(i));
+                    final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                                        , fixedURL
+                                                                        , null
+                                                                        , futures.get(i)
+                                                                        , futures.get(i));
 
                     // La mandamos a la cola de peticiones
                     VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
@@ -520,7 +523,7 @@ public class ProductsFragment extends Fragment
                 for (int i = 0; i < mShopsList.size(); i++)
                 {
                     try {
-                        JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+                        final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
                         content.add(response);
 
@@ -599,16 +602,16 @@ public class ProductsFragment extends Fragment
                 {
                     if (SEARCH_QUERY == null)
                     {
-                        String fixedURL = Utils.fixUrl(
+                        final String fixedURL = Utils.fixUrl(
                                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
 
                         Log.d(Properties.TAG, "Conectando con: " + fixedURL);
 
                         // Creamos el JSON con los filtros
-                        JSONObject jsonObject = new JSONObject();
+                        final JSONObject jsonObject = new JSONObject();
 
-                        List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
-                        List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
+                        final List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
+                        final List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
 
                         jsonObject.put("newness", mFilterMap.get("newness"));
                         jsonObject.put("man", MAN);
@@ -622,17 +625,17 @@ public class ProductsFragment extends Fragment
                         futures.add(RequestFuture.<JSONArray>newFuture());
 
                         // Creamos una peticion
-                        CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
-                                                            , fixedURL
-                                                            , jsonObject
-                                                            , futures.get(i)
-                                                            , futures.get(i));
+                        final CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
+                                                                    , fixedURL
+                                                                    , jsonObject
+                                                                    , futures.get(i)
+                                                                    , futures.get(i));
 
                         // La mandamos a la cola de peticiones
                         VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
 
                     } else {
-                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                                 + "/search/" + shopsList.get(i) + "/" + MAN + "/" + SEARCH_QUERY);
 
                         Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
@@ -640,11 +643,11 @@ public class ProductsFragment extends Fragment
                         futures.add(RequestFuture.<JSONArray>newFuture());
 
                         // Creamos una peticion
-                        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                , fixedURL
-                                                                , null
-                                                                , futures.get(i)
-                                                                , futures.get(i));
+                        final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                                        , fixedURL
+                                                                        , null
+                                                                        , futures.get(i)
+                                                                        , futures.get(i));
 
                         // La mandamos a la cola de peticiones
                         VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
@@ -658,7 +661,7 @@ public class ProductsFragment extends Fragment
                 for (int i = 0; i < shopsList.size(); i++)
                 {
                     try {
-                        JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+                        final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
                         content.add(response);
 
@@ -981,7 +984,8 @@ public class ProductsFragment extends Fragment
     private void _updateCandidates()
     {
         // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior.
-        Map<String, Integer> indexMap = new HashMap<>();
+        final Map<String, Integer> indexMap = new HashMap<>();
+
         boolean finished = false;
         boolean turn = true;
 
@@ -1051,7 +1055,7 @@ public class ProductsFragment extends Fragment
      * @param indexMap: Mapa de indices donde guardamos el indice de la ultima iteracion.
      * @return true si se han recorrido todos los productos.
      */
-    private boolean _checkIfFinished(Map<String, Integer> indexMap)
+    private boolean _checkIfFinished(final Map<String, Integer> indexMap)
     {
         boolean finished = true;
         Iterator<String> iterator = indexMap.keySet().iterator();
@@ -1088,7 +1092,7 @@ public class ProductsFragment extends Fragment
      * @param filterMap nuevo estado de los filtros.
      */
     @SuppressWarnings("unchecked")
-    public void processFilter(Map<String, Object> filterMap)
+    public void processFilter(final Map<String, Object> filterMap)
     {
         mFilterMap = filterMap;
 
@@ -1116,9 +1120,9 @@ public class ProductsFragment extends Fragment
                 if (shopsList.containsAll(mShopsList))
                     shopsList = null;
 
-        boolean newness = (boolean) mFilterMap.get("newness");
-        int from = (int) mFilterMap.get("minPrice");
-        int to = (int) mFilterMap.get("maxPrice");
+        final boolean newness = (boolean) mFilterMap.get("newness");
+        final int from = (int) mFilterMap.get("minPrice");
+        final int to = (int) mFilterMap.get("maxPrice");
 
         _reinitializeData();
 
@@ -1146,14 +1150,13 @@ public class ProductsFragment extends Fragment
 
             mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
         }
-
     }
 
     /**
      * Metodo que realiza el proceso de busqueda.
      * @param query cadena con la busqueda.
      */
-    public void processSearch(String query)
+    public void processSearch(final String query)
     {
         // Reiniciamos ciertos parametros.
         _reinitializeData();
@@ -1188,9 +1191,9 @@ public class ProductsFragment extends Fragment
      */
     private AlertDialog createDialogAddShops()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Sacamos la vista del dialogo
         final View view = inflater.inflate(R.layout.dialog_add_shops, null);

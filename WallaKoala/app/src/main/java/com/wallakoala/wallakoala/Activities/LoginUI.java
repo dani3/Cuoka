@@ -843,7 +843,7 @@ public class LoginUI extends AppCompatActivity
      * Metodo que pone el foco en la vista.
      * @param view: vista a la que se quiere poner el foco.
      */
-    private void _requestFocus(View view)
+    private void _requestFocus(final View view)
     {
         if (view.requestFocus())
         {

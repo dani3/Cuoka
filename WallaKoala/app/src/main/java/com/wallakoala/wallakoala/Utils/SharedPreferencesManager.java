@@ -14,17 +14,14 @@ import com.wallakoala.wallakoala.Beans.User;
 public class SharedPreferencesManager
 {
     private static final String KEY_LOGGED_IN = "logged_in";
-    private static final String KEY_USER_ACTIVITY = "user_activity";
+    private static final String KEY_USER      = "user_activity";
 
     private static SharedPreferences mSharedPreferences;
     private static SharedPreferences.Editor mEditor;
 
-    private static Context mContext;
-
     public SharedPreferencesManager(Context context)
     {
-        mContext = context;
-        mSharedPreferences = mContext.getSharedPreferences("cuoka_preferences", Context.MODE_PRIVATE);
+        mSharedPreferences = context.getSharedPreferences("cuoka_preferences", Context.MODE_PRIVATE);
     }
 
     /**
@@ -32,7 +29,7 @@ public class SharedPreferencesManager
      * @param loggedIn: true si el usuario esta logeado
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertLoggedIn(boolean loggedIn)
+    public boolean insertLoggedIn(final boolean loggedIn)
     {
         mEditor = mSharedPreferences.edit();
         mEditor.putBoolean(KEY_LOGGED_IN, loggedIn);
@@ -54,14 +51,14 @@ public class SharedPreferencesManager
      * @param user: actividad del usuario.
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertUser(User user)
+    public boolean insertUser(final User user)
     {
         mEditor = mSharedPreferences.edit();
 
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
+        final Gson gson = new Gson();
+        final String json = gson.toJson(user);
 
-        mEditor.putString(KEY_USER_ACTIVITY, json);
+        mEditor.putString(KEY_USER, json);
 
         return mEditor.commit();
     }
@@ -72,9 +69,8 @@ public class SharedPreferencesManager
      */
     public User retreiveUser()
     {
-        Gson gson = new Gson();
-
-        String json = mSharedPreferences.getString(KEY_USER_ACTIVITY, null);
+        final Gson gson = new Gson();
+        final String json = mSharedPreferences.getString(KEY_USER, null);
 
         return gson.fromJson(json, User.class);
     }
