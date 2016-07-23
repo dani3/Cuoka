@@ -55,6 +55,7 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
          * Metodo llamado cuando se va a mostrar el item.
          * @param shop: nombre de la tienda.
          */
+        @SuppressWarnings("deprecation")
         public void bindShop(final String shop)
         {
             mShopLogoImageView.setOnClickListener(new View.OnClickListener()
@@ -115,6 +116,11 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
 
     } /* [END] ViewHolder */
 
+    /**
+     * Constructor de la adapter.
+     * @param shops: lista de tiendas.
+     * @param context: contexto.
+     */
     public ShopLogoAdapter(final List<String> shops, final Context context)
     {
         mShopList = shops;

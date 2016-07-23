@@ -22,7 +22,7 @@
     <string name="product_info_reference">Referencia: 123456789</string>
 
     <string name="error_message">Ops! Algo ha ido mal</string>
-    <string name="nodata_message">No hay ningún resultado...</string>
+    <string name="nodata_message">No hay ningún resultado…</string>
     <string name="exit_message">Pulsa otra vez para SALIR</string>
     <string name="product_deleted_message">Producto eliminado</string>
 

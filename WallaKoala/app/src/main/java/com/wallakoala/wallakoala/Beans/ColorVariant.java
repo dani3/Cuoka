@@ -1,7 +1,6 @@
 package com.wallakoala.wallakoala.Beans;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @class Clase ColorVariant que representa un color de un producto.

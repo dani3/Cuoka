@@ -155,7 +155,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         if (savedInstanceState == null)
         {
             // Listener global
-            ViewTreeObserver observer = mImageView.getViewTreeObserver();
+            final ViewTreeObserver observer = mImageView.getViewTreeObserver();
             observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
             {
                 @Override
@@ -333,6 +333,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que inicializa el RecyclerView.
      */
+    @SuppressWarnings("deprecation")
     protected void _initRecyclerView()
     {
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
@@ -565,6 +566,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que expande la ventana de informacion.
      */
+    @SuppressWarnings("deprecation")
     private void expandInfo()
     {
         // Calculamos cuanto hay que desplazar el FAB hasta el borde del layout de info.
@@ -628,6 +630,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que hace desaparecer la ventana de informacion.
      */
+    @SuppressWarnings("deprecation")
     private void collapseInfo()
     {
         COLLAPSING = true;

@@ -1,9 +1,6 @@
 package com.wallakoala.wallakoala.Beans;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.List;
 
 /*
