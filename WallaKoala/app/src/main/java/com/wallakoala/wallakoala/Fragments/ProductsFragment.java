@@ -27,7 +27,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
-import com.wallakoala.wallakoala.Adapters.ShopAdapter;
+import com.wallakoala.wallakoala.Adapters.ShopLogoAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
@@ -128,7 +128,7 @@ public class ProductsFragment extends Fragment
 
     /* Adapters */
     protected ProductsGridAdapter mProductAdapter;
-    protected ShopAdapter mShopAdapter;
+    protected ShopLogoAdapter mShopLogoAdapter;
 
     /* Animations */
     protected Animation mMoveAndFadeAnimation;
@@ -494,9 +494,9 @@ public class ProductsFragment extends Fragment
                 // Metemos en content el resultado de cada uno
                 for (int i = 0; i < mShopsList.size(); i++)
                 {
-                    final String fixedURL = Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                                + "/products/" + mShopsList.get(i).replaceAll(" ", "%20")
-                                                + "/" + MAN + "/" + DAYS_OFFSET;
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                                + "/products/" + mShopsList.get(i)
+                                                + "/" + MAN + "/" + DAYS_OFFSET);
 
                     Log.d(Properties.TAG, "Conectando con: " + fixedURL
                             + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
@@ -599,8 +599,8 @@ public class ProductsFragment extends Fragment
                 {
                     if (SEARCH_QUERY == null)
                     {
-                        String fixedURL = Utils.fixUrl(Properties.SERVER_URL
-                                + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
+                        String fixedURL = Utils.fixUrl(
+                                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
 
                         Log.d(Properties.TAG, "Conectando con: " + fixedURL);
 
@@ -1212,7 +1212,8 @@ public class ProductsFragment extends Fragment
         // Obtenemos la vista de carga.
         final AVLoadingIndicatorView loadingIndicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.add_shops_loading);
 
-        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
 
         Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
 
@@ -1260,9 +1261,9 @@ public class ProductsFragment extends Fragment
                             Collections.sort(shops);
 
                             // Creamos el adapter enviando la lista de tiendas.
-                            mShopAdapter = new ShopAdapter(shops, getActivity());
+                            mShopLogoAdapter = new ShopLogoAdapter(shops, getActivity());
                             mShopsRecyclerView.setLayoutManager(mGridLayoutManager);
-                            mShopsRecyclerView.setAdapter(mShopAdapter);
+                            mShopsRecyclerView.setAdapter(mShopLogoAdapter);
 
                             loadingIndicatorView.setVisibility(View.GONE);
                         }
@@ -1308,7 +1309,7 @@ public class ProductsFragment extends Fragment
             public void onClick(View v)
             {
                 // Sacamos la lista de tiendas seleccionadas.
-                final List<String> shopsChecked = mShopAdapter.getShopsChecked();
+                final List<String> shopsChecked = mShopLogoAdapter.getShopsChecked();
 
                 // Si esta vacia la lista, mostramos un error.
                 if (shopsChecked.isEmpty())
@@ -1347,13 +1348,14 @@ public class ProductsFragment extends Fragment
                                         // Guardamos la lista de tiendas.
                                         mShopsList = shopsChecked;
 
+                                        // Metemos las tiendas en un Set
                                         Set<String> shopSet = new HashSet<>();
                                         for (String shop : mShopsList)
                                         {
                                             shopSet.add(shop);
                                         }
 
-                                        // Guardamos la lista de tiendas en las preferencias.
+                                        // Guardamos el conjunto de tiendas en las preferencias.
                                         mUser.setShops(shopSet);
                                         mSharedPreferences.insertUser(mUser);
 

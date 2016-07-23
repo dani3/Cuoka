@@ -26,10 +26,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,6 +47,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +108,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /* Container Views */
     protected ViewGroup mItemsMenuViewGroup;
+    protected LinearLayout mLeftShopList;
+    protected LinearLayout mRightShopList;
     protected CoordinatorLayout mCoordinatorLayout;
     protected RelativeLayout mFilterShopItemLayout;
     protected RelativeLayout mFilterSectionItemLayout;
@@ -144,16 +147,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatRadioButton mNewnessNewRadioButton;
 
     /* CheckBoxes */
-    protected List<AppCompatCheckBox> mMyCheckBoxesList;
-    protected List<AppCompatCheckBox> mAllCheckBoxesList;
-    protected AppCompatCheckBox mShopAllCheckBox;
-    protected AppCompatCheckBox mShopMyCheckBox;
-    protected AppCompatCheckBox mShopBlancoCheckBox;
-    protected AppCompatCheckBox mShopPedroDelHierroCheckBox;
-    protected AppCompatCheckBox mShopSpringfieldCheckBox;
-    protected AppCompatCheckBox mShopHyMCheckBox;
-    protected AppCompatCheckBox mShopZaraCheckBox;
-
+    protected List<AppCompatCheckBox> mShopsCheckBoxesList;
     protected List<AppCompatCheckBox> mColorCheckBoxesList;
     protected AppCompatCheckBox mColorYellowCheckBox;
     protected AppCompatCheckBox mColorBlueCheckBox;
@@ -204,6 +198,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected boolean NEWNESS_FILTER_ACTIVE;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -258,8 +253,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         PRICE_FILTER_ACTIVE   = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
         NEWNESS_FILTER_ACTIVE = true;
 
-        mAllCheckBoxesList     = new ArrayList<>();
-        mMyCheckBoxesList      = new ArrayList<>();
         mColorCheckBoxesList   = new ArrayList<>();
         mSectionCheckBoxesList = new ArrayList<>();
 
@@ -357,19 +350,24 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     Intent intent = new Intent();
 
                     ArrayList<String> shopsList = null;
-                    if (SHOP_FILTER_ACTIVE) {
+                    if (SHOP_FILTER_ACTIVE)
+                    {
                         boolean none = true;
 
                         shopsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mAllCheckBoxesList) {
-                            if (checkBox.isChecked()) {
+
+                        for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
+                        {
+                            if (checkBox.isChecked())
+                            {
                                 none = false;
 
                                 shopsList.add(checkBox.getText().toString());
                             }
                         }
 
-                        if (none) {
+                        if (none)
+                        {
                             OK = false;
 
                             mFilterShopMenuLayout.startAnimation(
@@ -378,19 +376,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     }
 
                     ArrayList<String> colorsList = null;
-                    if (COLOR_FILTER_ACTIVE) {
+                    if (COLOR_FILTER_ACTIVE)
+                    {
                         boolean none = true;
 
                         colorsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mColorCheckBoxesList) {
-                            if (checkBox.isChecked()) {
+                        for (AppCompatCheckBox checkBox : mColorCheckBoxesList)
+                        {
+                            if (checkBox.isChecked())
+                            {
                                 none = false;
 
                                 colorsList.add(checkBox.getText().toString());
                             }
                         }
 
-                        if (none) {
+                        if (none)
+                        {
                             OK = false;
 
                             mFilterColorMenuLayout.startAnimation(
@@ -399,19 +401,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     }
 
                     ArrayList<String> sectionsList = null;
-                    if (SECTION_FILTER_ACTIVE) {
+                    if (SECTION_FILTER_ACTIVE)
+                    {
                         boolean none = true;
 
                         sectionsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList) {
-                            if (checkBox.isChecked()) {
+                        for (AppCompatCheckBox checkBox : mSectionCheckBoxesList)
+                        {
+                            if (checkBox.isChecked())
+                            {
                                 none = false;
 
                                 sectionsList.add(checkBox.getText().toString());
                             }
                         }
 
-                        if (none) {
+                        if (none)
+                        {
                             OK = false;
 
                             mFilterSectionMenuLayout.startAnimation(
@@ -421,14 +427,16 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     int from = -1;
                     int to = -1;
-                    if (PRICE_FILTER_ACTIVE) {
+                    if (PRICE_FILTER_ACTIVE)
+                    {
                         int lengthFrom = mPriceFromEditText.getText().length();
                         int lengthTo = mPriceToEditText.getText().length();
 
                         from = (lengthFrom == 0) ? from : Integer.valueOf(mPriceFromEditText.getText().toString());
                         to = (lengthTo == 0) ? to : Integer.valueOf(mPriceToEditText.getText().toString());
 
-                        if (lengthFrom == 0 && lengthTo == 0) {
+                        if (lengthFrom == 0 && lengthTo == 0)
+                        {
                             OK = false;
 
                             mFilterPriceMenuLayout.startAnimation(
@@ -436,7 +444,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         }
                     }
 
-                    if (OK) {
+                    if (OK)
+                    {
                         boolean newness = mNewnessNewRadioButton.isChecked();
 
                         intent.putExtra(Properties.PACKAGE + ".shops", shopsList);
@@ -784,81 +793,36 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterShop()
     {
-        mShopAllCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_all);
-        mShopMyCheckBox             = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_my);
-        mShopBlancoCheckBox         = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_blanco);
-        mShopPedroDelHierroCheckBox = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_pedro_del_hierro);
-        mShopSpringfieldCheckBox    = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_springfield);
-        mShopHyMCheckBox            = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_hym);
-        mShopZaraCheckBox           = (AppCompatCheckBox)findViewById(R.id.check_filter_shop_zara);
+        mShopsCheckBoxesList = new ArrayList<>();
 
         mFilterShopTextView = (TextView)findViewById(R.id.filter_text_shop);
 
-        // Metemos en una lista todos los CheckBoxes de todas las tiendas
-        mAllCheckBoxesList.add(mShopBlancoCheckBox);
-        mAllCheckBoxesList.add(mShopSpringfieldCheckBox);
-        mAllCheckBoxesList.add(mShopPedroDelHierroCheckBox);
-        mAllCheckBoxesList.add(mShopHyMCheckBox);
-        mAllCheckBoxesList.add(mShopZaraCheckBox);
+        mRightShopList = (LinearLayout) findViewById(R.id.rightShopList);
+        mLeftShopList = (LinearLayout) findViewById(R.id.leftShopList);
 
-        // Metemos en una lista todos los CheckBoxes de mis tiendas
-        for (String shop : mShopsList)
+        // Ordenamos las tiendas por orden alfabetico.
+        Collections.sort(mShopsList);
+        for (int i = 0; i < mShopsList.size(); i++)
         {
-            for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+            // Inflamos el layout con el checkbox.
+            View view = LayoutInflater.from(this).inflate(R.layout.shop_checkbox_item, null);
+
+            // Obtenemos el checkbox y le cambiamos el texto.
+            AppCompatCheckBox shopCheckbox = (AppCompatCheckBox) view.findViewById(R.id.shop_checkbox);
+            shopCheckbox.setText(mShopsList.get(i));
+
+            // Lo guardamos en una lista.
+            mShopsCheckBoxesList.add(shopCheckbox);
+
+            // Los pares a la izquierda, los impares a la derecha.
+            if ((i % 2) == 0)
             {
-                if (checkBox.getText().equals(shop))
-                {
-                    mMyCheckBoxesList.add(checkBox);
-                }
+                mLeftShopList.addView(view);
+
+            } else {
+                mRightShopList.addView(view);
             }
         }
-
-        mShopAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopMyCheckBox)
-                if (!isChecked && !mShopMyCheckBox.isChecked()) {
-                    for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
-                        checkBox.setChecked(false);
-                }
-
-                // Si se marca, se marcan todas las tiendas y se desmarca mShopMyCheckBox
-                if (isChecked) {
-                    mShopMyCheckBox.setChecked(false);
-
-                    for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
-                        checkBox.setChecked(true);
-                }
-            }
-        });
-
-        mShopMyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // Si se desmarca directamente (no se ha desmarcado al marcar el de mShopAllCheckBox)
-                if (!isChecked && !mShopAllCheckBox.isChecked()) {
-                    boolean allChecked = true;
-                    for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
-                        if (!checkBox.isChecked())
-                            allChecked = false;
-
-                    if (allChecked)
-                        for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
-                            checkBox.setChecked(false);
-                }
-
-                // Si se marca, desmarco el resto de tiendas y mShopAllCheckBox
-                if (isChecked) {
-                    mShopAllCheckBox.setChecked(false);
-
-                    for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
-                        checkBox.setChecked(false);
-
-                    for (AppCompatCheckBox checkBox : mMyCheckBoxesList)
-                        checkBox.setChecked(true);
-                }
-            }
-        });
 
         if (SHOP_FILTER_ACTIVE)
         {
@@ -872,21 +836,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
+            // Marcamos los que vengan en el mapa de filtros.
             for (String shop : mFilterShops)
             {
-                for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+                for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
                 {
-                    if (checkBox.getText().toString().equals(shop))
-                    {
-                        checkBox.setChecked(true);
-                    }
+                    checkBox.setChecked(shop.equals(checkBox.getText().toString()));
                 }
             }
 
         } else {
-
-            // Marcamos el ChecBox, el listener lo tratara y marcara las tiendas.
-            mShopMyCheckBox.setChecked(true);
+            for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
+            {
+                checkBox.setChecked(true);
+            }
 
             ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
         }
@@ -897,14 +860,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _resetFilterShop()
     {
-        for (AppCompatCheckBox checkBox : mAllCheckBoxesList)
+        for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
         {
             checkBox.setChecked(false);
         }
-
-        mShopMyCheckBox.setChecked(false);
-        mShopAllCheckBox.setChecked(false);
-        mShopMyCheckBox.setChecked(true);
     }
 
     /**

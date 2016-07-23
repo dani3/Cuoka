@@ -25,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Daniel Mancebo Aldea on 06/07/2016.
  */
 
-public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
+public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHolder>
 {
     /* Context */
     private static Context mContext;
@@ -80,9 +80,9 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
                 }
             });
 
-            String logoFile = shop + "-logo.jpg";
+            final String logoFile = shop + "-logo.jpg";
 
-            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
+            final String fixedUrl = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
 
             mTarget = new Target()
             {
@@ -109,13 +109,13 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
             };
 
             Picasso.with(mContext)
-                   .load(url)
+                   .load(fixedUrl)
                    .into(mTarget);
         }
 
     } /* [END] ViewHolder */
 
-    public ShopAdapter(List<String> shops, Context context)
+    public ShopLogoAdapter(List<String> shops, Context context)
     {
         mShopList = shops;
         mContext = context;
@@ -157,9 +157,9 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopHolder>
     public ShopHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
     {
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.shop_item
-                        , viewGroup
-                        , false );
+                                      .inflate(R.layout.shop_logo_item
+                                            , viewGroup
+                                            , false );
 
         return new ShopHolder(itemView);
     }

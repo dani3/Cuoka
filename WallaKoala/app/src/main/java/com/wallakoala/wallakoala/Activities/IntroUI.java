@@ -51,6 +51,7 @@ public class IntroUI extends AppCompatActivity
         if (mSharedPreferencesManager.retreiveLoggedIn())
         {
             final long id = mSharedPreferencesManager.retreiveUser().getId();
+
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
 
@@ -100,7 +101,7 @@ public class IntroUI extends AppCompatActivity
 
                                 Log.d(Properties.TAG, "Datos del usuario: ");
                                 Log.d(Properties.TAG, " - ID: " + id);
-                                Log.d(Properties.TAG, " - Email: " + user.getAge());
+                                Log.d(Properties.TAG, " - Email: " + user.getEmail());
                                 Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
                                 Log.d(Properties.TAG, " - Hombre: " + user.getMan());
                                 Log.d(Properties.TAG, " - Edad: " + user.getAge());
@@ -129,7 +130,7 @@ public class IntroUI extends AppCompatActivity
             DONE = true;
         }
 
-        Button enter = (Button)findViewById(R.id.enter);
+        final Button enter = (Button)findViewById(R.id.enter);
         enter.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -154,7 +155,7 @@ public class IntroUI extends AppCompatActivity
             }
         });
 
-        Button login = (Button)findViewById(R.id.login);
+        final Button login = (Button)findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

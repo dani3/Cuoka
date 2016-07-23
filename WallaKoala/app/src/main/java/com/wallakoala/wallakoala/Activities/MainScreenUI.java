@@ -17,17 +17,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
-import com.wallakoala.wallakoala.Fragments.TopsFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,9 +68,11 @@ public class MainScreenUI extends AppCompatActivity
     protected Animation mExplodeAnimation, mImplodeAnimation;
 
     /* Fragments */
-    protected TopsFragment mTopsFragment;
     protected RecommendedFragment mRecommendedFragment;
     protected ProductsFragment mProductsFragment;
+
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferencesManager;
 
     /* Other */
     protected long mBackPressed;
@@ -108,48 +114,17 @@ public class MainScreenUI extends AppCompatActivity
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        mTopsFragment       = new TopsFragment();
-        mProductsFragment   = new ProductsFragment();
+        mProductsFragment    = new ProductsFragment();
         mRecommendedFragment = new RecommendedFragment();
 
         // Añadimos los fragmentos al adapter
         adapter.addFragment(mRecommendedFragment, "DESCUBRE");
         adapter.addFragment(mProductsFragment, "NOVEDADES");
-        adapter.addFragment(mTopsFragment, "TOPS CUOKA");
         mViewPager.setAdapter(adapter);
 
         // Marcamos como activo la segunda pestaña (NOVEDADES)
         mViewPager.setCurrentItem(1);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-        {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab)
-            {
-                Log.d(Properties.TAG, "Pestaña cambiada a " + tab.getText());
-
-                // Sin esto, pinchar en la pestaña no hace nada.
-                mViewPager.setCurrentItem(tab.getPosition());
-
-                if (tab.getText().equals("NOVEDADES"))
-                {
-                    View view = findViewById(R.id.menu_item_filter);
-                    if (view.getVisibility() == View.INVISIBLE)
-                    {
-                        findViewById(R.id.menu_item_filter).startAnimation(mExplodeAnimation);
-                    }
-
-                } else if (tab.getText().equals("TOPS CUOKA")) {
-                    findViewById(R.id.menu_item_filter).startAnimation(mImplodeAnimation);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
     }
 
     /**
@@ -255,7 +230,7 @@ public class MainScreenUI extends AppCompatActivity
 
             } else {
                 Snackbar.make(mCoordinatorLayout
-                        , getResources().getString( R.string.exit_message )
+                        , getResources().getString(R.string.exit_message)
                         , Snackbar.LENGTH_SHORT).show();
             }
 
@@ -299,6 +274,7 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (item.getItemId() == R.id.menu_item_filter)

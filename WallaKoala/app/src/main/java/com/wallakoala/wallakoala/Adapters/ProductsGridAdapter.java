@@ -197,7 +197,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     // Si la imagen es nueva, calculamos el aspect ratio y lo almacenamos el el array en la pos correspondiente.
                     if (mProductBitmapArray[position] == 0.0f)
+                    {
                         mProductBitmapArray[position] = (double)bitmap.getHeight() / (double)bitmap.getWidth();
+                    }
 
                     // Guardamos el bitmap, para asi pasarlo a ProductUI.
                     mBitmap = bitmap;
@@ -225,10 +227,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     // Si esta imagen ya se ha cargado, establecemos la altura de la ImageView
                     // usando el aspect ratio almacenado en el array, si no, se carga un valor cualquiera
                     if (mProductBitmapArray[position] != 0.0f)
-                        mProductImageView.getLayoutParams().height = (int)(mProductImageView.getWidth()
-                                                                                * mProductBitmapArray[position]);
-                    else
+                    {
+                        mProductImageView.getLayoutParams().height =
+                                (int) (mProductImageView.getWidth() * mProductBitmapArray[position]);
+
+                    } else{
                         mProductImageView.getLayoutParams().height = 600;
+                    }
 
                     // Establecemos un color de fondo y un 10% de opacidad.
                     mProductImageView.setBackgroundColor(mContext.getResources().getColor(R.color.colorText));
@@ -262,8 +267,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductFooterExtraView.setVisibility(View.VISIBLE);
                     mProductFooterExtraView.startAnimation(scaleUp);
 
-                } else
+                } else {
                     mProductFooterExtraView.startAnimation(scaleDownFooterExtra);
+                }
             }
 
             /* Si se pulsa en la imagen */
@@ -318,7 +324,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
         mProductBitmapArray = new double[total];
         for (int i = 0; i < total; i++)
+        {
             mProductBitmapArray[i] = 0.0f;
+        }
 
         mProductClicked = null;
     }
@@ -334,11 +342,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         if (mProductList.size() > mProductBitmapArray.length)
         {
             double[] aux = new double[mProductList.size()];
-            for (int i = 0; i < mProductBitmapArray.length; i++)
-                aux[i] = mProductBitmapArray[i];
+            System.arraycopy(mProductBitmapArray, 0, aux, 0, mProductBitmapArray.length);
 
             for (int i = mProductBitmapArray.length; i < aux.length; i++)
+            {
                 aux[i] = 0.0f;
+            }
 
             mProductBitmapArray = aux;
         }
