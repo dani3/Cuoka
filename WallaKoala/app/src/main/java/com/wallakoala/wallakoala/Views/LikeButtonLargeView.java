@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  * Created by Miroslav on 04/06/2016.
  */
 
-public class LikeButtonLargeView extends FrameLayout implements View.OnClickListener
+public class LikeButtonLargeView extends FrameLayout
 {
     private static final DecelerateInterpolator
                             DECCELERATE_INTERPOLATOR = new DecelerateInterpolator();
@@ -74,11 +74,16 @@ public class LikeButtonLargeView extends FrameLayout implements View.OnClickList
     {
         LayoutInflater.from(getContext()).inflate(R.layout.aux_explosive_button_large, this, true);
         ButterKnife.bind(this);
-        setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v)
+    public void changeIcon(boolean isChecked)
+    {
+        this.isChecked = isChecked;
+
+        ivStar.setImageResource(isChecked ? R.drawable.ic_favorite_pink : R.drawable.ic_favorite_grey);
+    }
+
+    public void startAnimation()
     {
         isChecked = !isChecked;
         ivStar.setImageResource(isChecked ? R.drawable.ic_favorite_pink : R.drawable.ic_favorite_grey);

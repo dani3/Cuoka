@@ -439,6 +439,7 @@ public class ProductsFragment extends Fragment
 
         for(JSONObject jsonObject : jsonList)
         {
+            long id            = jsonObject.getLong("8");
             String name        = jsonObject.getString("2");
             String shop = key  = jsonObject.getString("3");
             String section     = jsonObject.getString("4");
@@ -460,7 +461,7 @@ public class ProductsFragment extends Fragment
                 colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
-            Product product = new Product(name, shop, section, price, link, description, colors);
+            Product product = new Product(id, name, shop, section, price, link, description, colors);
 
             if (product.isOkay())
                 productsList.add(product);

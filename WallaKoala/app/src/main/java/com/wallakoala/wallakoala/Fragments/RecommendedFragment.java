@@ -135,7 +135,8 @@ public class RecommendedFragment extends Fragment
             List<ColorVariant> list = new ArrayList<>();
             list.add(cv);
 
-            Product product = new Product("TRENCH ENVOLVENTE ESPIGA"
+            Product product = new Product(0
+                                    , "TRENCH ENVOLVENTE ESPIGA"
                                     , "Blanco"
                                     , "Blazers"
                                     , 129.99f

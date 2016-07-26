@@ -25,7 +25,6 @@ public class Product
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
-    @JsonIgnore
     @Column( name = "ID" )
     private long id;
     
@@ -105,9 +104,10 @@ public class Product
     public boolean isMan() { return this.man; }
     @JsonProperty( "6" )
     public List<ColorVariant> getColors() { return this.colors; }
-    public long getId() { return this.id; } 
     @JsonProperty( "7" )
     public String getDescription() { return this.description; }  
+    @JsonProperty( "8" )
+    public long getId() { return this.id; } 
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
 }

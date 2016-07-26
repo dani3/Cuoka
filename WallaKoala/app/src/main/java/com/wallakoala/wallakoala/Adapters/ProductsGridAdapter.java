@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +17,24 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @class Adapter para el grid de productos.
@@ -44,6 +53,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     private static List<Product> mProductList;
     private static double[] mProductBitmapArray;
     private static ProductHolder mProductClicked;
+
+    /* SharedPreferences */
+    private static SharedPreferencesManager mSharedPreferencesManager;
 
     /**
      * ViewHolder del producto con todos los componentes graficos necesarios
@@ -87,6 +99,56 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             scaleUp              = AnimationUtils.loadAnimation(mContext, R.anim.scale_up_animation);
             scaleDownFooterExtra = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
             scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
+
+            mProductFavoriteImageButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    final User user = mSharedPreferencesManager.retreiveUser();
+                    final long id = user.getId();
+
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                    + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
+
+                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+
+                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                        , fixedURL
+                        , new Response.Listener<String>()
+                        {
+                            @Override
+                            public void onResponse(String response)
+                            {
+                                Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                                if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                {
+                                    // Si contiene el producto, es que lo ha quitado de favoritos.
+                                    if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                    {
+                                        user.getFavoriteProducts().remove(mProduct.getId());
+
+                                    } else {
+                                        user.getFavoriteProducts().add(mProduct.getId());
+                                    }
+
+                                    mSharedPreferencesManager.insertUser(user);
+                                }
+                            }
+                        }
+                        , new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error)
+                            {}
+                        });
+
+                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+
+                    mProductFavoriteImageButton.startAnimation();
+                }
+            });
 
             scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
             {
@@ -161,6 +223,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         @SuppressWarnings("deprecation")
         public void bindProduct(final Product product, final int pos)
         {
+            mProduct = product;
+
             mProductImageView.setImageBitmap(null);
             ERROR = false;
             LOADED = false;
@@ -176,6 +240,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterExtraView.setVisibility(View.GONE);
             mProductFooterMainView.setVisibility(View.GONE);
             mProductFavoriteImageButton.setVisibility(View.GONE);
+
+            /* Inicializamos el boton de favorito */
+            mProductFavoriteImageButton.changeIcon(
+                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
             /* Cargamos la imagen usando Picasso */
             mTarget = new Target()
@@ -251,8 +319,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             Picasso.with(mContext)
                    .load(url)
                    .into(mTarget);
-
-            mProduct = product;
         }
 
         @Override
@@ -324,6 +390,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         mProductList = productList;
 
         mFrameLayout = frameLayout;
+
+        mSharedPreferencesManager = new SharedPreferencesManager(mContext);
 
         mProductBitmapArray = new double[total];
         for (int i = 0; i < total; i++)

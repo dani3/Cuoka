@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Product implements Serializable
 {
+    private long id;
 	private String name;
 	private String shop;
 	private String section;
@@ -20,7 +21,8 @@ public class Product implements Serializable
 	
 	public Product() {}
 	
-	public Product(String name
+	public Product(long id
+             , String name
 			 , String shop
 			 , String section
 			 , double price
@@ -28,6 +30,7 @@ public class Product implements Serializable
              , String description
 			 , List<ColorVariant> colors)
 	{
+        this.id = id;
 		this.name = name;
 		this.shop = shop;
 		this.section = section;
@@ -37,6 +40,7 @@ public class Product implements Serializable
 		this.colors = colors;
 	}
 
+    public long getId()                   { return this.id; }
 	public String getName()               { return this.name; }
 	public String getShop()               { return this.shop; }
 	public String getSection()            { return this.section; }

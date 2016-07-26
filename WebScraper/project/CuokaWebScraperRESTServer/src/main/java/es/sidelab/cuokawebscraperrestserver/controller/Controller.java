@@ -199,24 +199,20 @@ public class Controller
     
     /**
      * Metodo que añade el producto a la lista correspondiente de la UserActivity
-     * @param id: id del usuario.
+     * @param userId: id del usuario.
+     * @param productId: id del producto.
      * @param action: accion que ha realizado el usuario con el producto.
-     * @param shop: tienda del producto.
-     * @param section: seccion del producto.
-     * @param reference: referencia del producto.
      * @return identificador del producto o un error.
      */
-    @RequestMapping( value = "/users/{id}/{action}/{shop}/{section}/{reference}", method = RequestMethod.GET )
-    public String addProductToUserActivity( @PathVariable long id
-                                , @PathVariable short action
-                                , @PathVariable String shop 
-                                , @PathVariable String section 
-                                , @PathVariable String reference )
+    @RequestMapping( value = "/users/{userId}/{productId}/{action}", method = RequestMethod.GET )
+    public String addProductToUserActivity( @PathVariable long userId
+                                , @PathVariable long productId
+                                , @PathVariable short action )
     {
-        LOG.info( "Peticion GET para anadir un producto al UserActivity del usuario con ID: " + id );
+        LOG.info( "Peticion GET para anadir un producto al UserActivity del usuario con ID: " + userId );
         
-        User user = usersRepository.findOne( id );
-        List<Product> candidates = productsRepository.findBySectionAndShop( section, shop );
+        User user = usersRepository.findOne( userId );
+        Product product = productsRepository.findOne( productId );
         
         if ( user == null )
         {
@@ -225,25 +221,7 @@ public class Controller
             return Properties.USER_NOT_FOUND;
         }
         
-        long productId = -1;
-        for ( Product product : candidates )
-        {
-            for ( ColorVariant color : product.getColors() )
-            {
-                if ( color.getReference().equals( reference ) )
-                {
-                    productId = ( color.getReference().equals( reference ) ) ? product.getId() : -1;
-                    break;
-                }
-            }
-            
-            if ( productId != -1 )
-            {
-                break;
-            }
-        }
-        
-        if ( productId == -1 )
+        if ( product == null )
         {
             LOG.info( "No se encuentra el producto" );
             
@@ -258,8 +236,16 @@ public class Controller
                 break;
                 
             case Properties.ACTION_FAVORITE:
-                LOG.info( "Producto (" + productId + ") anadido a favoritos" );
-                user.addToFavoriteProducts( productId );
+                if ( ! user.getFavoriteProducts().contains( productId ) )
+                {
+                    LOG.info( "Producto (" + productId + ") anadido a favoritos" );
+                    user.addToFavoriteProducts( productId );
+                    
+                } else {
+                    LOG.info( "Producto (" + productId + ") quitado de favoritos" );
+                    user.getFavoriteProducts().remove( productId );
+                }
+                
                 break;
                 
             case Properties.ACTION_SHARED:
@@ -284,7 +270,7 @@ public class Controller
         // Al haber sacado el usuario con el findOne, al guardarlo se actualiza automaticamente
         usersRepository.save( user );
         
-        return String.valueOf( productId );
+        return Properties.ACCEPTED;
     }
     
     /**
@@ -343,11 +329,13 @@ public class Controller
                     }               
                 }
 
-                if ( newness )            
+                if ( newness )        
+                {
                     product.setInsertDate( Calendar.getInstance() );
-
-                else 
+                    
+                } else {
                     product.setInsertDate( insertDate );
+                }
 
                 productsRepository.save( product );
             }
@@ -390,7 +378,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 102 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 110 ) ;
     }
     
     /**
@@ -420,7 +408,7 @@ public class Controller
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " que cumplan los siguientes filtros:" );
         
-        List<Product> productList = new ArrayList<>();
+        List<Product> productList;
         
         if ( filter.isMan() )
             LOG.info( " - Solo hombre" );
