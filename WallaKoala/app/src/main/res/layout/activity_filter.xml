@@ -47,7 +47,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_filter_shop"/>
+                        android:src="@drawable/icono_tienda_color"/>
 
                     <TextView
                         android:id="@+id/filter_text_shop"
@@ -76,7 +76,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_filter_section"/>
+                        android:src="@drawable/icono_secciones_color"/>
 
                     <TextView
                         android:id="@+id/filter_text_section"
@@ -105,7 +105,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_filter_price"/>
+                        android:src="@drawable/icono_dinero_color"/>
 
                     <TextView
                         android:id="@+id/filter_text_price"
@@ -134,7 +134,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_filter_color"/>
+                        android:src="@drawable/icono_color_color"/>
 
                     <TextView
                         android:id="@+id/filter_text_color"
@@ -163,7 +163,7 @@
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_filter_newness"/>
+                        android:src="@drawable/icono_novedades_color"/>
 
                     <TextView
                         android:id="@+id/filter_text_newness"

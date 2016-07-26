@@ -127,8 +127,8 @@ public class ColorIconListAdapter extends BaseAdapter
         if (position == mIconSelected)
         {
             colorIconHolder.mSelectedView.setVisibility(View.VISIBLE);
-            colorIconHolder.mSelectedView.startAnimation(AnimationUtils.loadAnimation(mContext
-                                                                            , R.anim.explode_animation));
+            colorIconHolder.mSelectedView.startAnimation(
+                    AnimationUtils.loadAnimation(mContext, R.anim.explode_animation));
 
         } else {
             colorIconHolder.mSelectedView.setVisibility(View.GONE);

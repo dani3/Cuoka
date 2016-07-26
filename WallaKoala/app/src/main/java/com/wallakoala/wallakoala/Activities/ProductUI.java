@@ -355,10 +355,13 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mColorIconListView.setAdapter(mColorIconAdapter);
 
         // Listener para cambiar de color
-        mColorIconListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mColorIconListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCurrentColor != position) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (mCurrentColor != position)
+                {
                     mColorIconAdapter.setSelected(position);
                     mColorIconAdapter.notifyDataSetChanged();
 
