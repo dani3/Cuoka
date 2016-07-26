@@ -124,7 +124,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                                 if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                                 {
-                                    // Si contiene el producto, es que lo ha quitado de favoritos.
+                                    // Si contiene el producto, es que se quiere quitar de favoritos.
                                     if (user.getFavoriteProducts().contains(mProduct.getId()))
                                     {
                                         user.getFavoriteProducts().remove(mProduct.getId());
@@ -372,6 +372,15 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.startAnimation(scaleUp);
         }
 
+        /**
+         * Metodo que cambia el icono de favoritos si es necesario.
+         */
+        private void notifyFavoriteChanged()
+        {
+            mProductFavoriteImageButton.changeIcon(
+                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+        }
+
     } /* [END] ViewHolder */
 
     /**
@@ -425,13 +434,15 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     }
 
     /**
-     * Restauramos el pie de foto, comprobando que se haya clickado en algun producto.
+     * Metodo para restaurar el pie de foto, comprobando que se haya clickado en algun producto.
+     * Tambien comprueba si hay que cambiar el icono de favoritos (por si se cambia desde ProductUI)
      */
-    public void restoreProductFooter()
+    public void restore()
     {
         if (mProductClicked != null)
         {
             mProductClicked.restoreFooter();
+            mProductClicked.notifyFavoriteChanged();
 
             mProductClicked = null;
         }

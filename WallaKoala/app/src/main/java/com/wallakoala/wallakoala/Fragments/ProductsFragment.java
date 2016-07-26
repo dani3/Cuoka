@@ -370,7 +370,7 @@ public class ProductsFragment extends Fragment
         if ((!ON_CREATE_FLAG) && (mProductAdapter != null) && (mProductAdapter.productClicked()))
         {
             Log.d(Properties.TAG, "Volviendo de ProductUI");
-            mProductAdapter.restoreProductFooter();
+            mProductAdapter.restore();
 
         } else if (ON_CREATE_FLAG) {
             ON_CREATE_FLAG = false;

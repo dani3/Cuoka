@@ -45,6 +45,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
@@ -149,7 +150,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         _initIconListView();
         _initRecyclerView();
         _initAnimations();
-        _updateUserActivity();
+        _sendViewedProduct();
 
         // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
@@ -167,7 +168,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                     int[] imageScreenLocation = new int[2];
                     mImageView.getLocationOnScreen(imageScreenLocation);
                     mLeftDeltaImage = mThumbnailLeft - imageScreenLocation[0];
-                    mTopDeltaImage = mThumbnailTop - imageScreenLocation[1];
+                    mTopDeltaImage  = mThumbnailTop - imageScreenLocation[1];
 
                     // Factores de escala para saber cuanto hay que encojer o agrandar la imagen
                     mWidthScaleImage = mThumbnailWidth / mImageView.getWidth();
@@ -177,9 +178,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                     int[] favScreenLocation = new int[2];
                     mFavoriteImageButton.getLocationOnScreen(favScreenLocation);
                     mLeftDeltaFav = mThumbnailLeftFav - favScreenLocation[0];
-                    mTopDeltaFav = mThumbnailTopFav - favScreenLocation[1];
+                    mTopDeltaFav  = mThumbnailTopFav - favScreenLocation[1];
 
-                    mWidthScaleFav = mThumbnailWidthFav / mFavoriteImageButton.getWidth();
+                    mWidthScaleFav  = mThumbnailWidthFav / mFavoriteImageButton.getWidth();
                     mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
 
                     runEnterAnimation();
@@ -252,6 +253,56 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductPriceTextView.setText(price);
 
         mProductInfoLayout.setVisibility(View.INVISIBLE);
+
+        mFavoriteImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final User user = mSharedPreferencesManager.retreiveUser();
+                final long id = user.getId();
+
+                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                        + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
+
+                Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+
+                final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                        , fixedURL
+                        , new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                        {
+                            // Si contiene el producto, es que se quiere quitar de favoritos.
+                            if (user.getFavoriteProducts().contains(mProduct.getId()))
+                            {
+                                user.getFavoriteProducts().remove(mProduct.getId());
+
+                            } else {
+                                user.getFavoriteProducts().add(mProduct.getId());
+                            }
+
+                            mSharedPreferencesManager.insertUser(user);
+                        }
+                    }
+                }
+                        , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {}
+                });
+
+                VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+
+                mFavoriteImageButton.startAnimation();
+            }
+        });
 
         /* Floating Button */
         mFloatingActionButtonPlus.setVisibility(View.GONE);
@@ -391,19 +442,17 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que llama al servidor para indicar que se ha visto este producto.
      */
-    protected void _updateUserActivity()
+    protected void _sendViewedProduct()
     {
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
-        final long id = mSharedPreferencesManager.retreiveUser().getId();
-        final String shop = mProduct.getShop();
-        final String section = mProduct.getSection();
-        final String reference = mProduct.getColors().get(0).getReference();
+        final User user = mSharedPreferencesManager.retreiveUser();
+        final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                + "/users" + "/" + id + "/" + Properties.ACTION_VIEWED + "/" + shop + "/" + section + "/" + reference);
+                + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_VIEWED);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para añadir el producto como visto");
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para marcar el producto como visto");
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
@@ -433,6 +482,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mImageView.setScaleY(mHeightScaleImage);
         mImageView.setTranslationX(mLeftDeltaImage);
         mImageView.setTranslationY(mTopDeltaImage);
+
+        mFavoriteImageButton.changeIcon(
+                mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
         mFavoriteImageButton.setPivotX(0);
         mFavoriteImageButton.setPivotY(0);
@@ -527,6 +579,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                       .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
                                       .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
                                       .withEndAction(endAction);
+
+        mFavoriteImageButton.changeIcon(
+                mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
             collapseInfo();
