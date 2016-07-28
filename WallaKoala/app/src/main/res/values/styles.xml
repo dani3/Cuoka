@@ -10,6 +10,10 @@
         <item name="android:listDivider">@color/colorDividerList</item>
 
         <item name="colorControlNormal">@color/colorAccent</item>
+
+        <item name="android:textColorHint">@color/colorMediumText</item>
+
+        <item name="android:editTextColor">@color/colorMediumText</item>
     </style>
 
     <style name="Transparent" parent="AppTheme">

@@ -58,9 +58,6 @@ public class RecommendedFragment extends Fragment
     /* LayoutManagers */
     protected GridLayoutManager mGridLayoutManager;
 
-    /* Views */
-    protected View mLoadingView;
-
     /* Adapters */
     protected RecommendedListAdapter mProductAdapter;
 
@@ -97,9 +94,6 @@ public class RecommendedFragment extends Fragment
 
         // FrameLayout
         mFrameLayout = (FrameLayout)getView().findViewById(R.id.recommended_frame);
-
-        // LoaderView
-        mLoadingView = getView().findViewById(R.id.recommended_avloadingIndicatorView);
 
         // RecyclerView
         mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.recommended_grid_recycler);
@@ -162,8 +156,6 @@ public class RecommendedFragment extends Fragment
             mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
             mProductsRecyclerView.setAdapter(mProductAdapter);
             mProductsRecyclerView.setVisibility(View.VISIBLE);
-
-            mLoadingView.setVisibility(View.GONE);
         }
     }
 }

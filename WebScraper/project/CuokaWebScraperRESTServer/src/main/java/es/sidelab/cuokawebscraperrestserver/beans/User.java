@@ -49,6 +49,11 @@ public class User
     @ElementCollection
     @Column( name = "FAVORITE_PRODUCTS" )
     private Set<Long> favoriteProducts;
+    
+    @JsonIgnore
+    @ElementCollection
+    @Column( name = "WISHLIST_PRODUCTS" )
+    private Set<Long> wishlistProducts;
  
     @JsonIgnore
     @ElementCollection
@@ -100,16 +105,15 @@ public class User
     public String getPassword() { return this.password; }
     public short getAge()       { return this.age; }
     public boolean getMan()     { return this.man; }
-    public int getPostalCode()  { return this.postalCode; }
-    
+    public int getPostalCode()  { return this.postalCode; }    
     @JsonIgnore
-    public byte[] getInitializationVector() { return this.initializationVector; }  
-    
+    public byte[] getInitializationVector() { return this.initializationVector; }      
     @JsonIgnore
-    public Calendar getRegistrationDate() { return this.registrationDate; }
-    
+    public Calendar getRegistrationDate() { return this.registrationDate; }    
     @JsonProperty
     public Set<Long> getFavoriteProducts() { return favoriteProducts; }
+    @JsonProperty
+    public Set<Long> getWishlistProducts() { return wishlistProducts; }
     @JsonIgnore
     public Set<Long> getViewedProducts() { return viewedProducts; }
     @JsonIgnore
@@ -117,22 +121,20 @@ public class User
     @JsonIgnore
     public Set<Long> getVisitedProducts() { return visitedProducts; }
     @JsonIgnore
-    public Set<Long> getAddedToCartProducts() { return addedToCartProducts; }
-    
+    public Set<Long> getAddedToCartProducts() { return addedToCartProducts; }    
     @JsonProperty
-    public Set<String> getShops() { return shops; }
-    
+    public Set<String> getShops() { return shops; }    
     @JsonIgnore
     public long getId() { return id; }
     
     @JsonIgnore
-    public void setInitializationVector( byte[] initializationVector ) { this.initializationVector = initializationVector; }
-    
+    public void setInitializationVector( byte[] initializationVector ) { this.initializationVector = initializationVector; }    
     @JsonIgnore
-    public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; } 
-    
+    public void setRegistrationDate( Calendar registrationDate ) { this.registrationDate = registrationDate; }     
     @JsonIgnore
     public void setFavoriteProducts( Set<Long> favoriteProducts ) { this.favoriteProducts = favoriteProducts; }
+    @JsonIgnore
+    public void setWishlistProducts( Set<Long> wishlistProducts ) { this.wishlistProducts = wishlistProducts; }
     @JsonIgnore
     public void setViewedProducts( Set<Long> viewedProducts ) { this.viewedProducts = viewedProducts; }
     @JsonIgnore
@@ -140,11 +142,9 @@ public class User
     @JsonIgnore
     public void setVisitedProducts( Set<Long> visitedProducts ) { this.visitedProducts = visitedProducts; }
     @JsonIgnore
-    public void setAddedToCartProducts( Set<Long> addedToCartProducts ) { this.addedToCartProducts = addedToCartProducts; }
-    
+    public void setAddedToCartProducts( Set<Long> addedToCartProducts ) { this.addedToCartProducts = addedToCartProducts; }    
     @JsonIgnore
-    public void setShops( Set<String> shops ) { this.shops = shops; }
-    
+    public void setShops( Set<String> shops ) { this.shops = shops; }    
     public void setEmail( String email )        { this.email = email; }
     public void setPassword( String password )  { this.password = password; }
     public void setAge( short age )             { this.age = age; }
@@ -156,4 +156,5 @@ public class User
     public void addToSharedProducts( Long idProduct )      { this.sharedProducts.add( idProduct ); }
     public void addToVisitedProducts( Long idProduct )     { this.visitedProducts.add( idProduct ); }
     public void addToAddedToCartProducts( Long idProduct ) { this.addedToCartProducts.add( idProduct ); }
+    public void addToWishlistProducts( Long idProduct )    { this.wishlistProducts.add( idProduct ); }
 }

@@ -4,16 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Loading View -->
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/av_loading_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:indicator="BallClipRotate"
-        app:indicator_color="@color/colorAccent"/>
-
     <ImageView
         android:id="@+id/product_image"
         android:layout_width="match_parent"

@@ -17,7 +17,6 @@ import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
-import com.wang.avi.AVLoadingIndicatorView;
 
 /**
  * @class Adapter para la lista de imagenes de un producto.
@@ -44,7 +43,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public static class ProductHolder extends RecyclerView.ViewHolder
     {
         private ImageView mProductImageView;
-        private AVLoadingIndicatorView mLoadingView;
         private Target mTarget;
 
         public ProductHolder(View itemView)
@@ -52,7 +50,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             super(itemView);
 
             mProductImageView = (ImageView)itemView.findViewById(R.id.product_image);
-            mLoadingView      = (AVLoadingIndicatorView)itemView.findViewById(R.id.av_loading_image);
         }
 
         /**
@@ -68,17 +65,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             mProductImageView.setBackgroundColor(mContext.getResources()
                                                          .getColor(android.R.color.transparent));
 
-            if (getAdapterPosition() != 0)
-                mLoadingView.setVisibility(View.VISIBLE);
-
             mTarget = new Target()
             {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
-                    if (getAdapterPosition() != 0)
-                        mLoadingView.setVisibility(View.GONE);
-                    else
+                    if (getAdapterPosition() == 0)
                         mImageView.setVisibility(View.GONE);
 
                     mProductImageView.setImageBitmap(bitmap);

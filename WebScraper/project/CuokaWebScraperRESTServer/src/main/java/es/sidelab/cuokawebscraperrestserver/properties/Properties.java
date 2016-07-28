@@ -54,4 +54,5 @@ public class Properties
     public static final short ACTION_VISITED       = 2;
     public static final short ACTION_ADDED_TO_CART = 3;
     public static final short ACTION_SHARED        = 4;
+    public static final short ACTION_WISHLIST      = 5;
 }

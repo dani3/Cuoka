@@ -12,13 +12,4 @@
         android:scrollbars="none"
         android:clipToPadding="false"/>
 
-    <!-- Loading View -->
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/recommended_avloadingIndicatorView"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_gravity="center"
-        app:indicator="BallClipRotate"
-        app:indicator_color="@color/colorAccent"/>
-
 </FrameLayout>
