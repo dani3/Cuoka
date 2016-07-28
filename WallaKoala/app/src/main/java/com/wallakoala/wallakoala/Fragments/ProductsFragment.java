@@ -38,7 +38,6 @@ import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1214,7 +1213,7 @@ public class ProductsFragment extends Fragment
         final Button accept = (Button) view.findViewById(R.id.add_shops_accept);
 
         // Obtenemos la vista de carga.
-        final AVLoadingIndicatorView loadingIndicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.add_shops_loading);
+        final View loadingIndicatorView = view.findViewById(R.id.add_shops_loading);
 
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
@@ -1337,7 +1336,7 @@ public class ProductsFragment extends Fragment
                     Log.d(Properties.TAG, "JSON con las tiendas:\n    " + jsonArray.toString());
 
                     // Creamos una peticion para enviar las tiendas.
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST
+                    final StringRequest stringRequest = new StringRequest(Request.Method.POST
                             , fixedURL
                             , new Response.Listener<String>()
                             {

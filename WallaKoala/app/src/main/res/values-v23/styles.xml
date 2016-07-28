@@ -7,6 +7,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorBackground</item>
 
+        <item name="android:windowLightStatusBar">true</item>
+
         <item name="android:listDivider">@color/colorDividerList</item>
 
         <item name="colorControlNormal">@color/colorAccent</item>

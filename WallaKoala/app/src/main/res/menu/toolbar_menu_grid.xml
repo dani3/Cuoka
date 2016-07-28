@@ -4,13 +4,13 @@
     tools:context=".ProductsUI">
 
     <item android:id="@+id/menu_item_filter"
-        android:title="Filter"
-        android:icon="@drawable/ic_filter_list_white"
+        android:title="Filtros"
+        android:icon="@drawable/ic_filter_list"
         app:showAsAction="always"/>
 
     <item android:id="@+id/menu_item_cart"
-        android:title="Cart"
-        android:icon="@drawable/ic_cart"
+        android:title="Carrito"
+        android:icon="@drawable/ic_shopping_cart"
         app:showAsAction="always"/>
 
 </menu>

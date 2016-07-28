@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -98,7 +101,9 @@ public class MainScreenUI extends AppCompatActivity
 
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null)
+        {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
     }
 
     /**
@@ -144,7 +149,11 @@ public class MainScreenUI extends AppCompatActivity
     protected void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar.
-        mLeftDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
+        mLeftDrawerToggle = new ActionBarDrawerToggle(this
+                , mDrawerLayout
+                , mToolbar
+                , R.string.open_drawer
+                , R.string.close_drawer)
         {
             // Metodo llamado cuando el drawer esta completamente cerrado.
             @Override
@@ -170,10 +179,23 @@ public class MainScreenUI extends AppCompatActivity
             // Metodo para realizar la animacion del drawerToggle.
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset)
-            {
-                super.onDrawerSlide(drawerView, slideOffset);
-            }
+            {}
         };
+
+        mLeftDrawerToggle.setDrawerIndicatorEnabled(false);
+        mToolbar.setNavigationIcon(R.drawable.ic_menu);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                else
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
     }
 
     /**

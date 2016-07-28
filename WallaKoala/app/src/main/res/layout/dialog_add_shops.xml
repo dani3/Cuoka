@@ -34,13 +34,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <com.wang.avi.AVLoadingIndicatorView
+        <!-- Loading View -->
+        <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/add_shops_loading"
-            android:layout_width="84dp"
-            android:layout_height="84dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
             android:layout_gravity="center"
-            app:indicator="BallClipRotate"
-            app:indicator_color="@color/colorAccent"/>
+            android:alpha="0.75"
+            style="@style/SpinKitView.Large.ChasingDots"
+            app:SpinKit_Color="@color/colorAccent"/>
 
     </FrameLayout>
 

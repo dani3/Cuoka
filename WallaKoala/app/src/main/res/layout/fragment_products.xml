@@ -54,13 +54,15 @@
     </LinearLayout>
 
     <!-- Loading View -->
-    <com.wang.avi.AVLoadingIndicatorView
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/avloadingIndicatorView"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
         android:layout_gravity="center"
-        app:indicator="BallClipRotate"
-        app:indicator_color="@color/colorAccent"/>
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
 
     <!-- Texto de no prductos -->
     <TextView
@@ -76,11 +78,15 @@
         android:textSize="20sp"
         android:textColor="@color/colorText"/>
 
-    <include android:id="@+id/loading"
-        android:layout_height="wrap_content"
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/loading"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
         android:layout_marginBottom="16dp"
         android:layout_gravity="bottom|center"
-        layout="@layout/aux_loading"/>
+        android:alpha="0.75"
+        style="@style/SpinKitView.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
 
 </FrameLayout>
