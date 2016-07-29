@@ -15,6 +15,7 @@ public class Product implements Serializable
 	private String shop;
 	private String section;
 	private double price;
+	private float aspectRatio;
 	private String link;
 	private String description;
 	private List<ColorVariant> colors;
@@ -26,6 +27,7 @@ public class Product implements Serializable
 			 , String shop
 			 , String section
 			 , double price
+		     , float aspectRatio
 			 , String link
              , String description
 			 , List<ColorVariant> colors)
@@ -34,6 +36,7 @@ public class Product implements Serializable
 		this.name = name;
 		this.shop = shop;
 		this.section = section;
+		this.aspectRatio = aspectRatio;
 		this.price = price;
 		this.link = link;
         this.description = description;
@@ -45,6 +48,7 @@ public class Product implements Serializable
 	public String getShop()               { return this.shop; }
 	public String getSection()            { return this.section; }
 	public double getPrice()              { return this.price; }
+	public float getAspectRatio()         { return this.aspectRatio; }
     public String getDescription()        { return this.description; }
 	public List<ColorVariant> getColors() { return this.colors; }
 	public String getLink()               { return this.link; }

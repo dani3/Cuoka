@@ -26,7 +26,7 @@ public class Properties
     public static final String PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
     public static final String ACCEPTED          = "ACCEPTED";
 
-    public static final int REQUEST_TIMEOUT = 30000;
+    public static final int REQUEST_TIMEOUT = 60000;
 
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int MIN_AGE             = 12;

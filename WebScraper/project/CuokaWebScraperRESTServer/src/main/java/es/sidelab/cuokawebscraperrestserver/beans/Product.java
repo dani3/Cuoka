@@ -50,6 +50,10 @@ public class Product
     @Column( name = "MAN" )
     private boolean man;
     
+    @JsonIgnore
+    @Column( name = "ASPECT_RATIO" )
+    private float aspectRatio;
+    
     @ElementCollection
     @OneToMany( cascade = CascadeType.ALL )
     @Column( name = "COLORS" )
@@ -89,6 +93,8 @@ public class Product
     public void setColors( List<ColorVariant> colors ) { this.colors = colors; }  
     @JsonIgnore
     public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
+    @JsonIgnore
+    public void setAspectRatio( float aspectRatio ) { this.aspectRatio = aspectRatio; }
         
     @JsonProperty( "1" )
     public double getPrice() { return this.price; }
@@ -108,6 +114,8 @@ public class Product
     public String getDescription() { return this.description; }  
     @JsonProperty( "8" )
     public long getId() { return this.id; } 
+    @JsonProperty( "9" )
+    public float getAspectRatio() { return this.aspectRatio; } 
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
 }

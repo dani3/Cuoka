@@ -2,6 +2,8 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -146,6 +148,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Inicializacion y configuracion del drawer toggle del leftDrawer.
      */
+    @SuppressWarnings("deprecation")
     protected void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar.

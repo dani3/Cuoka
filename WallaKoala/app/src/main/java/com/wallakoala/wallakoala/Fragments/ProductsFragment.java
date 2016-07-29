@@ -438,13 +438,14 @@ public class ProductsFragment extends Fragment
 
         for(JSONObject jsonObject : jsonList)
         {
-            long id            = jsonObject.getLong("8");
+            double price       = jsonObject.getDouble("1");
             String name        = jsonObject.getString("2");
             String shop = key  = jsonObject.getString("3");
             String section     = jsonObject.getString("4");
-            double price       = jsonObject.getDouble("1");
             String link        = jsonObject.getString("5");
             String description = jsonObject.getString("7");
+            long id            = jsonObject.getLong("8");
+            float aspectRation = (float) jsonObject.getDouble("9");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -460,11 +461,20 @@ public class ProductsFragment extends Fragment
                 colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
-            Product product = new Product(id, name, shop, section, price, link, description, colors);
+            Product product = new Product(id
+                                    , name
+                                    , shop
+                                    , section
+                                    , price
+                                    , aspectRation
+                                    , link
+                                    , description
+                                    , colors);
 
             if (product.isOkay())
+            {
                 productsList.add(product);
-
+            }
         }
 
         mProductsListMap.get(mProductsListMap.size()-1).put(key, productsList);
