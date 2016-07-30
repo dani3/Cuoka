@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -34,6 +36,7 @@ import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -51,8 +54,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
     /* Data */
     private static List<Product> mProductList;
-    private static double[] mProductBitmapArray;
     private static ProductHolder mProductClicked;
+    private static int[] mBackgroundColors;
 
     /* SharedPreferences */
     private static SharedPreferencesManager mSharedPreferencesManager;
@@ -262,17 +265,16 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductImageView.setBackgroundColor(-1);
                     mProductImageView.setAlpha(1.0f);
 
-                    // Si la imagen es nueva, calculamos el aspect ratio y lo almacenamos el el array en la pos correspondiente.
-                    if (mProductBitmapArray[pos] == 0.0f)
-                    {
-                        mProductBitmapArray[pos] = (double)bitmap.getHeight() / (double)bitmap.getWidth();
-                    }
-
                     // Guardamos el bitmap, para asi pasarlo a ProductUI.
                     mBitmap = bitmap;
 
                     // Por ultimo, cargamos el Bitmap en la ImageView
                     mProductImageView.setImageBitmap(bitmap);
+
+                    Animation fadeOut = new AlphaAnimation(0, 1);
+                    fadeOut.setInterpolator(new AccelerateInterpolator());
+                    fadeOut.setDuration(250);
+                    mProductImageView.startAnimation(fadeOut);
                 }
 
                 @Override
@@ -291,19 +293,13 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     // Debido a que los ViewHolder se reciclan, eliminamos el Bitmap antiguo
                     mProductImageView.setImageBitmap(null);
 
-                    // Si esta imagen ya se ha cargado, establecemos la altura de la ImageView
-                    // usando el aspect ratio almacenado en el array, si no, se carga un valor cualquiera
-                    if (mProductBitmapArray[pos] != 0.0f)
-                    {
-                        mProductImageView.getLayoutParams().height =
-                                (int) (mProductImageView.getWidth() * mProductBitmapArray[pos]);
-
-                    } else{
-                        mProductImageView.getLayoutParams().height = 600;
-                    }
+                    // Establecemos la altura usando el AspectRatio del producto.
+                     mProductImageView.getLayoutParams().height =
+                            (int) (mProductImageView.getWidth() * mProduct.getAspectRatio());
 
                     // Establecemos un color de fondo y un 10% de opacidad.
-                    mProductImageView.setBackgroundColor(mContext.getResources().getColor(R.color.colorText));
+                    mProductImageView.setBackgroundColor(
+                            mContext.getResources().getColor(mBackgroundColors[new Random().nextInt(mBackgroundColors.length)]));
                     mProductImageView.setAlpha(0.1f);
                 }
             };
@@ -318,6 +314,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             Picasso.with(mContext)
                    .load(url)
+                    .noFade()
                    .into(mTarget);
         }
 
@@ -387,12 +384,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      * Constructor del Adapter
      * @param context: contexto (ProductsUI)
      * @param productList: lista de productos
-     * @param total: total de productos, necesario para inicializar el array de ratios
      * @param frameLayout: layout necesario para animar la SnackBar
      */
     public ProductsGridAdapter(final Context context
             , final List<Product> productList
-            , final int total
             , final FrameLayout frameLayout)
     {
         mContext = context;
@@ -402,13 +397,17 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
 
-        mProductBitmapArray = new double[total];
-        for (int i = 0; i < total; i++)
-        {
-            mProductBitmapArray[i] = 0.0f;
-        }
-
         mProductClicked = null;
+
+        mBackgroundColors = new int[7];
+
+        mBackgroundColors[0] = R.color.holo_blue_bright;
+        mBackgroundColors[1] = R.color.holo_green_light;
+        mBackgroundColors[2] = R.color.holo_orange_light;
+        mBackgroundColors[3] = R.color.mb_blue;
+        mBackgroundColors[4] = R.color.mb_green_dark;
+        mBackgroundColors[5] = R.color.mb_purple;
+        mBackgroundColors[6] = R.color.colorAccent;
     }
 
     /**
@@ -418,19 +417,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     public void updateProductList(final List<Product> productList)
     {
         mProductList = productList;
-
-        if (mProductList.size() > mProductBitmapArray.length)
-        {
-            double[] aux = new double[mProductList.size()];
-            System.arraycopy(mProductBitmapArray, 0, aux, 0, mProductBitmapArray.length);
-
-            for (int i = mProductBitmapArray.length; i < aux.length; i++)
-            {
-                aux[i] = 0.0f;
-            }
-
-            mProductBitmapArray = aux;
-        }
     }
 
     /**

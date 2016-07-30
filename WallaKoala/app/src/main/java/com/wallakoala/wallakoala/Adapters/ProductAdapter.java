@@ -62,8 +62,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             mProductImageView.getLayoutParams().height = (int)(Resources.getSystem()
                                                                         .getDisplayMetrics().widthPixels * mAspectRatio);
 
-            mProductImageView.setBackgroundColor(mContext.getResources()
-                                                         .getColor(android.R.color.transparent));
+            mProductImageView.setBackgroundColor(
+                    mContext.getResources().getColor(android.R.color.transparent));
 
             mTarget = new Target()
             {
@@ -89,7 +89,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                             + colorVariant.getReference() + "_"
                             + colorVariant.getColorName() + "_" + getAdapterPosition() + "_Large.jpg";
 
-            final String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + mShop + "/" + imageFile);
+            final String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + mShop + "/" + imageFile);
 
             // Cargamos la imagen utilizando Picasso.
             Picasso.with(mContext)

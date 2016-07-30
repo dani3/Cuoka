@@ -300,7 +300,6 @@ public class ProductsFragment extends Fragment
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new ProductsGridAdapter(getActivity()
                                     , mProductsDisplayedList
-                                    , mProductsCandidatesDeque.size() + mProductsDisplayedList.size()
                                     , mFrameLayout);
 
         mProductsRecyclerView.setHasFixedSize(true);

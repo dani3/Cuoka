@@ -134,6 +134,7 @@ public class RecommendedFragment extends Fragment
                                     , "Blanco"
                                     , "Blazers"
                                     , 129.99f
+                                    , 0.0f
                                     , "https://www.blanco.com//product/7942/new/clothing/outerwear/jackets/blazers/wrap-around-trench"
                                     , ""
                                     , list);
