@@ -69,14 +69,13 @@ public class GridRecyclerView extends RecyclerView
 
         } else {
             super.attachLayoutAnimationParameters(child, params, index, count);
-
         }
     }
 
     @Override
     public boolean fling(int velocityX, int velocityY)
     {
-        velocityY *= 0.6;
+        velocityY *= 0.75;
 
         return super.fling(velocityX, velocityY);
     }

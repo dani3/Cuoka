@@ -1103,6 +1103,8 @@ public class ProductsFragment extends Fragment
     @SuppressWarnings("unchecked")
     public void processFilter(final Map<String, Object> filterMap)
     {
+        SEARCH_QUERY = null;
+
         mFilterMap = filterMap;
 
         Log.d(Properties.TAG, " Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));

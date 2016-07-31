@@ -454,6 +454,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         intent.putExtra(Properties.PACKAGE + ".minPrice", from);
                         intent.putExtra(Properties.PACKAGE + ".maxPrice", to);
                         intent.putExtra(Properties.PACKAGE + ".newness", newness);
+                        intent.putExtra(Properties.PACKAGE + ".search", (String)null);
 
                         setResult(RESULT_OK, intent);
 
@@ -809,7 +810,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterShopTextView = (TextView)findViewById(R.id.filter_text_shop);
 
         mRightShopList = (LinearLayout) findViewById(R.id.rightShopList);
-        mLeftShopList = (LinearLayout) findViewById(R.id.leftShopList);
+        mLeftShopList  = (LinearLayout) findViewById(R.id.leftShopList);
 
         // Ordenamos las tiendas por orden alfabetico.
         Collections.sort(mShopsList);
@@ -852,7 +853,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             {
                 for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
                 {
-                    checkBox.setChecked(shop.equals(checkBox.getText().toString()));
+                    if (shop.equals(checkBox.getText().toString()))
+                    {
+                        checkBox.setChecked(true);
+                    }
                 }
             }
 
