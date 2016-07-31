@@ -150,34 +150,4 @@ public class LikeButtonView extends FrameLayout
             animatorSet.start();
         }
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        switch (event.getAction())
-        {
-            case MotionEvent.ACTION_DOWN:
-                ivStar.animate().scaleX(0.7f).scaleY(0.7f).setDuration(150).setInterpolator(DECCELERATE_INTERPOLATOR);
-                setPressed(true);
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                float x = event.getX();
-                float y = event.getY();
-                boolean isInside = (x > 0 && x < getWidth() && y > 0 && y < getHeight());
-                if (isPressed() != isInside) {
-                    setPressed(isInside);
-                }
-                break;
-
-            case MotionEvent.ACTION_UP:
-                ivStar.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
-                if (isPressed()) {
-                    performClick();
-                    setPressed(false);
-                }
-                break;
-        }
-        return true;
-    }
 }

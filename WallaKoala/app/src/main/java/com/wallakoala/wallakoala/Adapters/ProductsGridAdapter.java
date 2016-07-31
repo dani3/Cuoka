@@ -132,8 +132,14 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                                     {
                                         user.getFavoriteProducts().remove(mProduct.getId());
 
+                                        Snackbar.make(
+                                                mFrameLayout, "Producto eliminado de tus favoritos", Snackbar.LENGTH_SHORT).show();
+
                                     } else {
                                         user.getFavoriteProducts().add(mProduct.getId());
+
+                                        Snackbar.make(
+                                                mFrameLayout, "Producto añadido a tus favoritos", Snackbar.LENGTH_SHORT).show();
                                     }
 
                                     mSharedPreferencesManager.insertUser(user);
@@ -150,6 +156,64 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
 
                     mProductFavoriteImageButton.startAnimation();
+                }
+            });
+
+            mProductFavoriteImageButton.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    final User user = mSharedPreferencesManager.retreiveUser();
+                    final long id = user.getId();
+
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                            + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_WISHLIST);
+
+                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de la wishist");
+
+                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                            , fixedURL
+                            , new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response)
+                        {
+                            Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                            if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                            {
+                                // Si contiene el producto, es que se quiere quitar de favoritos.
+                                if (user.getWishlistProducts().contains(mProduct.getId()))
+                                {
+                                    user.getWishlistProducts().remove(mProduct.getId());
+
+                                    Snackbar.make(
+                                            mFrameLayout, "Producto eliminado de la wishlist", Snackbar.LENGTH_SHORT).show();
+
+                                } else {
+                                    user.getWishlistProducts().add(mProduct.getId());
+
+                                    Snackbar.make(
+                                            mFrameLayout, "Producto añadido de la wishlist", Snackbar.LENGTH_SHORT).show();
+                                }
+
+                                mSharedPreferencesManager.insertUser(user);
+                            }
+                        }
+                    }
+                            , new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error)
+                        {}
+                    });
+
+                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+
+                    mProductFavoriteImageButton.startAnimation();
+
+                    return true;
                 }
             });
 
@@ -221,14 +285,14 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         /**
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param product: producto con el que se inicializa un item.
-         * @param pos: posicion del producto en la lista.
          */
         @SuppressWarnings("deprecation")
-        public void bindProduct(final Product product, final int pos)
+        public void bindProduct(final Product product)
         {
             mProduct = product;
 
             mProductImageView.setImageBitmap(null);
+
             ERROR = false;
             LOADED = false;
 
@@ -282,8 +346,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 {
                     ERROR = true;
 
-                    mProductImageView.setBackgroundColor(mContext.getResources()
-                                                                 .getColor(android.R.color.holo_red_dark));
+                    mProductImageView.setBackgroundColor(
+                            mContext.getResources().getColor(android.R.color.holo_red_dark));
                     mProductImageView.setAlpha(0.2f);
                 }
 
@@ -297,10 +361,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                      mProductImageView.getLayoutParams().height =
                             (int) (mProductImageView.getWidth() * mProduct.getAspectRatio());
 
-                    // Establecemos un color de fondo y un 10% de opacidad.
+                    // Establecemos un color de fondo aleatorio y un 20% de opacidad.
                     mProductImageView.setBackgroundColor(
-                            mContext.getResources().getColor(mBackgroundColors[new Random().nextInt(mBackgroundColors.length)]));
-                    mProductImageView.setAlpha(0.1f);
+                            mContext.getResources().getColor(
+                                    mBackgroundColors[new Random().nextInt(mBackgroundColors.length)]));
+                    mProductImageView.setAlpha(0.2f);
                 }
             };
 
@@ -314,7 +379,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             Picasso.with(mContext)
                    .load(url)
-                    .noFade()
+                   .noFade()
                    .into(mTarget);
         }
 
@@ -457,7 +522,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     @Override
     public void onBindViewHolder(final ProductHolder productHolder, final int pos)
     {
-        productHolder.bindProduct(mProductList.get(pos), pos);
+        productHolder.bindProduct(mProductList.get(pos));
     }
 
     @Override

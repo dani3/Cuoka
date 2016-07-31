@@ -263,6 +263,19 @@ public class Controller
                 user.addToVisitedProducts( productId );
                 break;
                 
+            case Properties.ACTION_WISHLIST:
+                if ( ! user.getWishlistProducts().contains( productId ) )
+                {
+                    LOG.info( "Producto (" + productId + ") anadido a la wishlist" );
+                    user.addToWishlistProducts( productId );
+                    
+                } else {
+                    LOG.info( "Producto (" + productId + ") quitado de la wishlist" );
+                    user.getWishlistProducts().remove( productId );
+                }
+                
+                break;
+                
             default :
                 return Properties.INCORRECT_ACTION;
         }
@@ -378,7 +391,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 110 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 113 ) ;
     }
     
     /**

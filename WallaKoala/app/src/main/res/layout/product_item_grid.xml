@@ -30,7 +30,8 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:scaleType="centerCrop"
-            android:layout_gravity="top|right|end"/>
+            android:layout_gravity="top|right|end"
+            android:longClickable="true"/>
 
         <!-- Pie de foto -->
         <RelativeLayout
