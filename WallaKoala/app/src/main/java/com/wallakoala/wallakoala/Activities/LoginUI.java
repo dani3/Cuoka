@@ -609,15 +609,6 @@ public class LoginUI extends AppCompatActivity
 
                             user.setFavoriteProducts(favorites);
 
-                            // Sacamos los productos en la wishlist
-                            jsonArray = response.getJSONArray("wishlistProducts");
-                            Set<Long> wishlist = new HashSet<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                wishlist.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-                            }
-
-                            user.setWishlistProducts(wishlist);
-
                             // Sacamos la lista de tiendas
                             jsonArray = response.getJSONArray("shops");
                             Set<String> shops = new HashSet<>();
@@ -636,7 +627,6 @@ public class LoginUI extends AppCompatActivity
                             Log.d(Properties.TAG, " - Edad: " + user.getAge());
                             Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
                             Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
-                            Log.d(Properties.TAG, " - Numero de productos en wishlist: " + user.getWishlistProducts().size());
                             Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
 
                             mSharedPreferencesManager.insertUser(user);
