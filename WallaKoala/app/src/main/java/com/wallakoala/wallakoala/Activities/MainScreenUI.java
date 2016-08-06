@@ -179,10 +179,15 @@ public class MainScreenUI extends AppCompatActivity
                 }
             }
 
-            // Metodo para realizar la animacion del drawerToggle.
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset)
-            {}
+            {
+                // Offset = 1.0 -> Totalmente abierto
+                // Se normalizan los valores entre [0-1] a valores entre [0-0.1]
+                float normalizedOffset = 1 - ((0.1f - 0.0f) / (1.0f - 0.0f) * (slideOffset - 1.0f) + 0.1f);
+
+                mProductsFragment.resizeGrid(normalizedOffset);
+            }
         };
 
         mLeftDrawerToggle.setDrawerIndicatorEnabled(false);

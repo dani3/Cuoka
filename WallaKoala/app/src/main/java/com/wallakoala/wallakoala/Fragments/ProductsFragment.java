@@ -1188,6 +1188,21 @@ public class ProductsFragment extends Fragment
     }
 
     /**
+     * Metodo que redimensiona el grid de productos.
+     * @param reduction: porcentaje que se quiere reducir.
+     */
+    public void resizeGrid(final float reduction)
+    {
+        if (mProductsRecyclerView != null)
+        {
+            mProductsRecyclerView.animate()
+                                 .setDuration(0)
+                                 .scaleX(reduction)
+                                 .scaleY(reduction);
+        }
+    }
+
+    /**
      * Metodo que devuelve si es hombre o mujer.
      * @return true si es hombre.
      */

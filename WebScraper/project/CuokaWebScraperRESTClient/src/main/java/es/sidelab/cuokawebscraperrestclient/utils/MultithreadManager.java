@@ -82,7 +82,7 @@ public class MultithreadManager
                     try
                     {
                         LOG.info( "A la espera de que acabe un thread..." );
-                        Future< List<Product> > future = completionSections.take();
+                        Future<List<Product>> future = completionSections.take();
                         List<Product> productList = future.get();  
                         LOG.info( "Ha acabado la seccion de " + shop.getSections().get( j ).getName() + " de " + shop.getName()
                                 + "... Ha sacado " + productList.size() + " productos!" );
@@ -125,6 +125,7 @@ public class MultithreadManager
             
             LOG.info( "El thread " + i + " de " + shop.getName() + " ha empezado..." );
             executorShops.execute( task );
+            
         } // for 
         
         try {
@@ -132,7 +133,7 @@ public class MultithreadManager
             countDownLatch.await();
             LOG.info( "MAIN THREAD : Me despierto..." );
             
-        } catch (InterruptedException ex) {
+        } catch ( InterruptedException ex ) {
             LOG.error( "ERROR: Se ha producido un error con el CountDownLatch" );
             
         }

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:cardPreventCornerOverlap="false"
     app:cardElevation="4dp"
     app:cardCornerRadius="4dp"
@@ -12,7 +12,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <!-- Imagen -->
         <com.makeramen.roundedimageview.RoundedImageView
