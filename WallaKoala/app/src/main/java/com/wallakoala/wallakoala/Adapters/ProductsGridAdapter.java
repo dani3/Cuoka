@@ -55,7 +55,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     /* Data */
     private static List<Product> mProductList;
     private static ProductHolder mProductClicked;
-    private static int[] mBackgroundColors;
 
     /* SharedPreferences */
     private static SharedPreferencesManager mSharedPreferencesManager;
@@ -299,8 +298,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     // Establecemos un color de fondo aleatorio y un 25% de opacidad.
                     mProductImageView.setBackgroundColor(
-                            mContext.getResources().getColor(
-                                    mBackgroundColors[new Random().nextInt(mBackgroundColors.length)]));
+                            mContext.getResources().getColor(R.color.colorAccent));
                     mProductImageView.setAlpha(0.25f);
                 }
             };
@@ -399,16 +397,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
 
         mProductClicked = null;
-
-        mBackgroundColors = new int[7];
-
-        mBackgroundColors[0] = R.color.holo_blue_bright;
-        mBackgroundColors[1] = R.color.holo_green_light;
-        mBackgroundColors[2] = R.color.holo_orange_light;
-        mBackgroundColors[3] = R.color.mb_blue;
-        mBackgroundColors[4] = R.color.mb_green_dark;
-        mBackgroundColors[5] = R.color.mb_purple;
-        mBackgroundColors[6] = R.color.colorAccent;
     }
 
     /**

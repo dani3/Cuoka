@@ -70,7 +70,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductsFragment extends Fragment
 {
     /* Constants */
-    protected static final int NUM_PRODUCTS_DISPLAYED = 10;
+    protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
     protected static boolean MAN;
     protected static boolean FIRST_CONNECTION;
@@ -100,7 +100,6 @@ public class ProductsFragment extends Fragment
 
     /* Data */
     protected List<ConcurrentMap<String, List<Product>>> mProductsListMap;
-    protected Map<String, List<Product>> mProductsNonFilteredMap;
     protected Map<String, Object> mFilterMap;
     protected Deque<Product> mProductsCandidatesDeque;
     protected List<Product> mProductsDisplayedList;
@@ -232,7 +231,6 @@ public class ProductsFragment extends Fragment
 
         mProductsListMap         = new ArrayList<>();
         mFilterMap               = new HashMap<>();
-        mProductsNonFilteredMap  = new HashMap<>();
         mProductsDisplayedList   = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
@@ -264,7 +262,6 @@ public class ProductsFragment extends Fragment
     private void _reinitializeData()
     {
         mProductsListMap         = new ArrayList<>();
-        mProductsNonFilteredMap  = new HashMap<>();
         mProductsDisplayedList   = new ArrayList<>();
         mProductsCandidatesDeque = new ArrayDeque<>();
 
@@ -317,7 +314,8 @@ public class ProductsFragment extends Fragment
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 scrollingUp = dy > 0;
 
-                if (scrollingUp) {
+                if (scrollingUp)
+                {
                     // Detectamos cuando llegamos abajo para cargar nuevos productos
                     int[] lastItemsPosition = new int[2];
                     mStaggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(lastItemsPosition);
@@ -1056,7 +1054,7 @@ public class ProductsFragment extends Fragment
         }
 
         Log.d(Properties.TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
-        Log.d(Properties.TAG, "Lista de mostrados: " + mProductsDisplayedList.size());
+        Log.d(Properties.TAG, "Lista de mostrados: "  + mProductsDisplayedList.size());
     }
 
     /**
