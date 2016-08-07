@@ -46,7 +46,11 @@ public class Properties
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;
     public static final double MEDIUM_SIMILARITY_THRESHOLD = 0.925f;
     
+    /* Numero maximo de sugerencias */
     public static final short MAX_SUGGESTIONS = 4;
+    
+    /* Numero maximo de productos que se devolveran en los filtros */
+    public static final int MAX_FILTERED_PRODUCTS = 5000;
     
     /* Lista de acciones posibles sobre un producto */
     public static final short ACTION_VIEWED        = 0;

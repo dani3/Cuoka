@@ -391,7 +391,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 113 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 120 ) ;
     }
     
     /**
@@ -480,6 +480,11 @@ public class Controller
                 }
             }
             
+            if ( newList.size() > Properties.MAX_FILTERED_PRODUCTS )
+            {
+                newList = newList.subList( 0, Properties.MAX_FILTERED_PRODUCTS - 1 );
+            }
+            
             return newList;
         }
         
@@ -493,6 +498,11 @@ public class Controller
             for ( Product product : productList )
                 if ( _searchForSection( product, filter.getSections() ) )
                     newList.add( product );  
+            
+            if ( newList.size() > Properties.MAX_FILTERED_PRODUCTS )
+            {
+                newList = newList.subList( 0, Properties.MAX_FILTERED_PRODUCTS - 1 );
+            }
             
             return newList;
         }  
@@ -511,8 +521,18 @@ public class Controller
                     newList.add( product );
             }
             
+            if ( newList.size() > Properties.MAX_FILTERED_PRODUCTS )
+            {
+                newList = newList.subList( 0, Properties.MAX_FILTERED_PRODUCTS - 1 );
+            }
+            
             return newList;
-        }         
+        }   
+        
+        if ( productList.size() > Properties.MAX_FILTERED_PRODUCTS )
+        {
+            productList = productList.subList( 0, Properties.MAX_FILTERED_PRODUCTS - 1 );
+        }
         
         return productList;
     }
