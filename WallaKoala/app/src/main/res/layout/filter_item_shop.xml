@@ -55,9 +55,9 @@
 
         <!-- Body -->
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_below="@+id/relativeLayout"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -65,23 +65,42 @@
             android:layout_marginStart="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:baselineAligned="true"
-            android:weightSum="1">
+            android:layout_marginBottom="8dp">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/filterAllShops"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_all_shops"
+                android:textColor="@color/colorMediumText"/>
 
             <LinearLayout
-                android:id="@+id/leftShopList"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:orientation="vertical"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:baselineAligned="true"
+                android:weightSum="1">
 
-            <LinearLayout
-                android:id="@+id/rightShopList"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:orientation="vertical"/>
+                <LinearLayout
+                    android:id="@+id/leftShopList"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"/>
+
+                <LinearLayout
+                    android:id="@+id/rightShopList"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

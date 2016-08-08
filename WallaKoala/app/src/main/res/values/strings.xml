@@ -31,6 +31,7 @@
     <string name="filter_colors">colors</string>
     <string name="filter_sections">sections</string>
 
+    <string name="filter_all_shops">Todas las tiendas</string>
     <string name="filter_item_shops">Tiendas</string>
     <string name="filter_item_sections">Secciones</string>
     <string name="filter_item_price">Precio</string>

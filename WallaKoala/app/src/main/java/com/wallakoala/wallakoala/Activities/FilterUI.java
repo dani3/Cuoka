@@ -1227,6 +1227,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                .setTextColor(getResources().getColor(R.color.colorMediumText));
+
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                .setHintTextColor(getResources().getColor(R.color.colorMediumText));
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {
             @Override
@@ -1365,6 +1371,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         protected void onPostExecute(Void unused)
         {
             String[] columns = new String[] { "_id", "text" };
