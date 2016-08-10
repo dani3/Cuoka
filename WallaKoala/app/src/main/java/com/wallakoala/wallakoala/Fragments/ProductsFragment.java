@@ -70,6 +70,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductsFragment extends Fragment
 {
     /* Constants */
+    protected static final int NUM_CACHED_PRODUCTS = 50;
     protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
     protected static boolean MAN;
@@ -303,6 +304,7 @@ public class ProductsFragment extends Fragment
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setVisibility(View.VISIBLE);
+        mProductsRecyclerView.setItemViewCacheSize(NUM_CACHED_PRODUCTS);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             boolean scrollingUp;
@@ -854,17 +856,7 @@ public class ProductsFragment extends Fragment
                         {
                             mLoadingView.setVisibility(View.GONE);
 
-                            // La animacion de cada item solo esta disponible para 5.0+
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-                            {
-                                _initRecyclerView();
-                                mProductsRecyclerView.startAnimation(AnimationUtils.loadAnimation(getActivity()
-                                        , android.R.anim.fade_in));
-
-                            } else {
-                                _initRecyclerView();
-                                mProductsRecyclerView.scheduleLayoutAnimation();
-                            }
+                            _initRecyclerView();
                         }
 
                         @Override

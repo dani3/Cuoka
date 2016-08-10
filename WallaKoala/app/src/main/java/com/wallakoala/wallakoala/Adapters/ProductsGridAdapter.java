@@ -36,8 +36,6 @@ import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 /**
  * @class Adapter para el grid de productos.

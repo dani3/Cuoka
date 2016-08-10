@@ -1211,6 +1211,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     } /* [END OnClick] */
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.toolbar_menu_filter, menu);
@@ -1371,7 +1372,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
 
         @Override
-        @SuppressWarnings("deprecation")
         protected void onPostExecute(Void unused)
         {
             String[] columns = new String[] { "_id", "text" };
@@ -1397,7 +1397,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
     /**
      * Metodo llamado cuando se hace click en el texto de la sugerencia.
-     * @param view
+     * @param view: texto en el que se hace click.
      */
     public void onClickText(final View view)
     {
