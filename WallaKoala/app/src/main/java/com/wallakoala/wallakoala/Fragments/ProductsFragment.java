@@ -1,9 +1,7 @@
 package com.wallakoala.wallakoala.Fragments;
 
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -70,7 +68,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductsFragment extends Fragment
 {
     /* Constants */
-    protected static final int NUM_CACHED_PRODUCTS = 50;
+    protected static final int NUM_CACHED_PRODUCTS = 8;
     protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
     protected static boolean MAN;
@@ -295,6 +293,8 @@ public class ProductsFragment extends Fragment
     @SuppressWarnings("deprecation")
     private void _initRecyclerView()
     {
+        mProductsRecyclerView.setVisibility(View.VISIBLE);
+
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new ProductsGridAdapter(getActivity()
                                     , mProductsDisplayedList
@@ -303,7 +303,6 @@ public class ProductsFragment extends Fragment
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setVisibility(View.VISIBLE);
         mProductsRecyclerView.setItemViewCacheSize(NUM_CACHED_PRODUCTS);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -845,7 +844,7 @@ public class ProductsFragment extends Fragment
                 // Si no es la primera conexion no hace falta inicializar el RecyclerView
                 if (FIRST_CONNECTION)
                 {
-                    // Cuando termine la animacion de la view de carga, iniciamos la del recyclerView
+                    // Cuando termine la animacion de la view de carga, mostramos el RecyclerView
                     mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
                     {
                         @Override

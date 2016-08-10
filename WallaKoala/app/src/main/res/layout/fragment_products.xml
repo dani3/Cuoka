@@ -9,13 +9,12 @@
     tools:context="com.wallakoala.wallakoala.Fragments.ProductsFragment">
 
     <!-- Recylcer Grid -->
-    <com.wallakoala.wallakoala.Views.GridRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/grid_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
-        android:clipToPadding="false"
-        android:layoutAnimation="@anim/grid_layout_animation"/>
+        android:clipToPadding="false"/>
 
     <!-- Sin tiendas -->
     <LinearLayout

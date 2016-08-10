@@ -224,8 +224,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             mProduct = product;
 
-            mProductImageView.setImageBitmap(null);
-
             ERROR = false;
             LOADED = false;
 
