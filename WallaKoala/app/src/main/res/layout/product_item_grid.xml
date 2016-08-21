@@ -42,19 +42,11 @@
             android:layout_gravity="bottom"
             android:alpha="0.85">
 
-            <!-- Info extra -->
-            <include android:id="@+id/extraInfo"
-                layout="@layout/product_footer_extra"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"/>
-
             <!-- Info principal -->
             <include android:id="@+id/mainFooter"
                 layout="@layout/product_footer"
                 android:layout_height="@dimen/footer_height"
-                android:layout_width="match_parent"
-                android:layout_below="@id/extraInfo"/>
+                android:layout_width="match_parent"/>
 
         </RelativeLayout>
 

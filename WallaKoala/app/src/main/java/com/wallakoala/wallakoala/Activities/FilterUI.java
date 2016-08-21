@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -62,6 +63,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /* Constants */
     protected static final float ALPHA_ACTIVE_FILTER = 1.0f;
     protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
+    protected static final String ALL = "All";
     protected static String SECTION_FILTER_MAN_1;
     protected static String SECTION_FILTER_MAN_2;
     protected static String SECTION_FILTER_MAN_3;
@@ -160,6 +162,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     protected AppCompatCheckBox mColorRedCheckBox;
     protected AppCompatCheckBox mColorPinkCheckBox;
     protected AppCompatCheckBox mColorGreenCheckBox;
+
+    protected AppCompatCheckBox mAllShopsCheckBox;
 
     protected List<AppCompatCheckBox> mSectionCheckBoxesList;
     protected AppCompatCheckBox mSection1CheckBox;
@@ -356,14 +360,24 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         boolean none = true;
 
                         shopsList = new ArrayList<>();
-                        for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
-                        {
-                            if (checkBox.isChecked())
-                            {
-                                none = false;
 
-                                shopsList.add(checkBox.getText().toString());
+                        // Si esta marcado, metemos en la lista el tag ALL.
+                        if (!mAllShopsCheckBox.isChecked())
+                        {
+                            for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
+                            {
+                                if (checkBox.isChecked())
+                                {
+                                    none = false;
+
+                                    shopsList.add(checkBox.getText().toString());
+                                }
                             }
+
+                        } else {
+                            none = false;
+
+                            shopsList.add(ALL);
                         }
 
                         if (none)
@@ -809,6 +823,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         mFilterShopTextView = (TextView)findViewById(R.id.filter_text_shop);
 
+        mAllShopsCheckBox = (AppCompatCheckBox)findViewById(R.id.filterAllShops);
+        mAllShopsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked)
+            {
+                for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
+                {
+                    checkBox.setEnabled(!isChecked);
+
+                    checkBox.animate()
+                            .alpha((isChecked) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER)
+                            .setDuration(100);
+                }
+            }
+        });
+
         mRightShopList = (LinearLayout) findViewById(R.id.rightShopList);
         mLeftShopList  = (LinearLayout) findViewById(R.id.leftShopList);
 
@@ -848,16 +879,22 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
-            // Marcamos los que vengan en el mapa de filtros.
-            for (String shop : mFilterShops)
+            // Marcamos los que vengan en el mapa de filtros, si viene solo ALL, marcamos el check de mAllShops
+            if ((!mFilterShops.isEmpty()) && !(mFilterShops.get(0).equals(ALL)))
             {
-                for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
+                for (String shop : mFilterShops)
                 {
-                    if (shop.equals(checkBox.getText().toString()))
+                    for (AppCompatCheckBox checkBox : mShopsCheckBoxesList)
                     {
-                        checkBox.setChecked(true);
+                        if (shop.equals(checkBox.getText().toString()))
+                        {
+                            checkBox.setChecked(true);
+                        }
                     }
                 }
+
+            } else {
+                mAllShopsCheckBox.setChecked(true);
             }
 
         } else {

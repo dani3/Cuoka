@@ -72,8 +72,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
         private ImageView mProductImageView;
         private LikeButtonView mProductFavoriteImageButton;
-        private View mProductFooterView, mProductFooterExtraView, mProductFooterMainView;
-        private TextView mTitleTextView, mSubtitleTextView, mNameTextView, mPriceTextView;
+        private View mProductFooterView, mProductFooterMainView;
+        private TextView mTitleTextView, mSubtitleTextView, mPriceTextView;
 
         private Animation scaleUp, scaleDownFooterExtra, scaleDownFooter;
 
@@ -84,13 +84,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductImageView = (ImageView)itemView.findViewById(R.id.grid_image);
             mTitleTextView    = (TextView)itemView.findViewById(R.id.footer_title);
             mSubtitleTextView = (TextView)itemView.findViewById(R.id.footer_subtitle);
-            mNameTextView     = (TextView)itemView.findViewById(R.id.name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.footer_price);
 
             mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.product_item_favorite);
 
             mProductFooterView      = itemView.findViewById(R.id.footer);
-            mProductFooterExtraView = itemView.findViewById(R.id.extraInfo);
             mProductFooterMainView  = itemView.findViewById(R.id.mainFooter);
 
             mProductFooterView.setOnClickListener(this);
@@ -147,22 +145,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
 
                     mProductFavoriteImageButton.startAnimation();
-                }
-            });
-
-            scaleDownFooterExtra.setAnimationListener(new Animation.AnimationListener()
-            {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mProductFooterExtraView.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
                 }
             });
 
@@ -231,11 +213,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             String name = product.getName().substring(0, 1) + product.getName().split(" ")[0].substring(1).toLowerCase();
             mTitleTextView.setText(name);
             mSubtitleTextView.setText(product.getShop());
-            mNameTextView.setText(product.getName());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
 
             /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone */
-            mProductFooterExtraView.setVisibility(View.GONE);
             mProductFooterMainView.setVisibility(View.GONE);
             mProductFavoriteImageButton.setVisibility(View.GONE);
 
@@ -316,39 +296,21 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         @Override
         public void onClick(final View view)
         {
-            /* Si se pulsa en el pie de foto */
-            if (view.getId() == mProductFooterView.getId())
+            if (!ERROR && LOADED && mProductClicked == null)
             {
-                /* Abrimos la info extra si esta oculta */
-                if (mProductFooterExtraView.getVisibility() == View.GONE)
+                // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
+                // y ralentiza la animacion
+                mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), Properties.TAG);
+
+                if (mBitmapFileName != null)
                 {
-                    mProductFooterExtraView.setVisibility(View.VISIBLE);
-                    mProductFooterExtraView.startAnimation(scaleUp);
+                    // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
+                    mProductClicked = this;
+
+                    mProductFooterView.startAnimation(scaleDownFooter);
 
                 } else {
-                    mProductFooterExtraView.startAnimation(scaleDownFooterExtra);
-                }
-            }
-
-            /* Si se pulsa en la imagen */
-            if (view.getId() == mProductImageView.getId())
-            {
-                if (!ERROR && LOADED && mProductClicked == null)
-                {
-                    // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
-                    // y ralentiza la animacion
-                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), Properties.TAG);
-
-                    if (mBitmapFileName != null)
-                    {
-                        // Guardamos que producto se ha pinchado para reestablecer despues el pie de foto
-                        mProductClicked = this;
-
-                        mProductFooterView.startAnimation(scaleDownFooter);
-
-                    } else {
-                        Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
-                    }
+                    Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
@@ -359,7 +321,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private void restoreFooter()
         {
             mProductFooterView.setVisibility(View.VISIBLE);
-            mProductFooterExtraView.setVisibility(View.GONE);
 
             mProductFooterView.startAnimation(scaleUp);
         }

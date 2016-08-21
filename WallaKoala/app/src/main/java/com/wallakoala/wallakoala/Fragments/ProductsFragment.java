@@ -68,6 +68,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductsFragment extends Fragment
 {
     /* Constants */
+    protected static final String ALL = "All";
     protected static final int NUM_CACHED_PRODUCTS = 8;
     protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
@@ -1148,7 +1149,69 @@ public class ProductsFragment extends Fragment
             // Lo ponemos a -1 para detectar cuando estamos en los filtros.
             DAYS_OFFSET = -1;
 
-            mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+            // Si ha marcado todas las tiendas, tenemos que traerlas antes.
+            if ((shopsList != null) && (shopsList.get(0).equals(ALL)))
+            {
+                final String fixedURL = Utils.fixUrl(
+                        Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
+
+                Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
+
+                // Creamos la peticion para obtener la lista de tiendas.
+                final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET
+                        , fixedURL
+                        , null
+                        , new Response.Listener<JSONArray>()
+                        {
+                            @Override
+                            public void onResponse(JSONArray response)
+                            {
+                                Log.d(Properties.TAG, "Respuesta: " + response);
+
+                                // Sacamos la lista de tiendas
+                                List<String> shops = new ArrayList<>();
+                                for (int i = 0; i < response.length(); i++)
+                                {
+                                    try
+                                    {
+                                        shops.add(response.getJSONObject(i).getString("name"));
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                mFilterMap.put("shops", shops);
+
+                                _loading(true, true);
+
+                                mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+                            }
+                        }
+                        , new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error)
+                            {
+                                _loading(false, false);
+
+                                Snackbar.make(mFrameLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                        .setAction("Reintentar", new View.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(View v)
+                                            {
+                                                processFilter(mFilterMap);
+                                            }
+                                        }).show();
+                            }
+                        });
+
+                VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
+
+            } else {
+                mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+            }
         }
     }
 

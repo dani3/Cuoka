@@ -391,7 +391,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 120 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 130 ) ;
     }
     
     /**
