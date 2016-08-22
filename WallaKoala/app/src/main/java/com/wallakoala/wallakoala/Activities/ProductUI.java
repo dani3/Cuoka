@@ -95,7 +95,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /* Views */
     protected ImageView mImageView;
     protected LikeButtonLargeView mFavoriteImageButton;
-    protected ImageButton mCartImageButton;
+    protected ImageButton mShareImageButton;
 
     /* TextViews */
     protected TextView mProductNameTextView;
@@ -225,6 +225,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que inicializa todas las vistas.
      */
+    @SuppressWarnings("deprecation")
     protected void _initViews()
     {
         mImageView                  = (ImageView)findViewById(R.id.imageView);
@@ -238,7 +239,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
         mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
         mFavoriteImageButton        = (LikeButtonLargeView) findViewById(R.id.product_favorite);
-        mCartImageButton            = (ImageButton)findViewById(R.id.product_info_cart);
+        mShareImageButton           = (ImageButton)findViewById(R.id.product_info_share);
 
         /* Inicializamos la info del producto */
         boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
@@ -306,24 +307,28 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         /* Floating Button */
         mFloatingActionButtonPlus.setVisibility(View.GONE);
-        mFloatingActionButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
-                    expandInfo();
-                else
-                    collapseInfo();
-            }
-        });
-
-        /* Listener del boton de la cesta */
-        mCartImageButton.setOnClickListener(new View.OnClickListener()
+        mFloatingActionButtonPlus.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mProduct.getLink()));
-                startActivity(browserIntent);
+                if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
+                {
+                    expandInfo();
+
+                } else {
+                    collapseInfo();
+                }
+            }
+        });
+
+        /* Listener del boton de la cesta */
+        mShareImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                _share();
             }
         });
 
@@ -343,6 +348,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que inicializa la ListView de iconos.
      */
+    @SuppressWarnings("deprecation")
     protected void _initIconListView()
     {
         mColorIconListView = (ListView)findViewById(R.id.product_info_list_colors);
@@ -471,6 +477,24 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 });
 
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    /**
+     * Metodo que
+     */
+    private void _share()
+    {
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+
+        intent.setType("image/png");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        String shareBody = "Mira lo que he encontrado en Cuoka!";
+
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + mBitmapUri));
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+
+        startActivity(Intent.createChooser(intent, "Compartir por"));
     }
 
     /**
@@ -843,5 +867,4 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) { return false; }
-
 }

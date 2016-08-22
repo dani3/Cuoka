@@ -94,7 +94,7 @@
                 android:layout_alignStart="@+id/product_info_description"/>
 
             <ImageButton
-                android:id="@+id/product_info_cart"
+                android:id="@+id/product_info_share"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginBottom="16dp"
@@ -105,7 +105,7 @@
                 android:layout_alignParentEnd="true"
                 android:background="@android:color/transparent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_cart"/>
+                android:src="@android:drawable/ic_menu_share"/>
 
         </RelativeLayout>
 
