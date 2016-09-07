@@ -29,25 +29,6 @@ public class RecommendedFragment extends Fragment
 {
     /* Constants */
     protected static int NUMBER_OF_CORES;
-    protected enum STATE
-    {
-        ERROR
-                { @Override
-                public String toString() { return "ERROR"; }
-                },
-        LOADING
-                { @Override
-                public String toString() { return "LOADING"; }
-                },
-        NODATA
-                { @Override
-                public String toString() { return "NO_DATA"; }
-                },
-        NORMAL
-                { @Override
-                public String toString() { return "NORMAL"; }
-                },
-    }
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
@@ -63,9 +44,6 @@ public class RecommendedFragment extends Fragment
 
     /* AsynTasks */
     protected AsyncTask mConnectToServer;
-
-    /* Others */
-    protected STATE mState;
 
     /* Constructor por defecto NECESARIO */
     public RecommendedFragment() {}
@@ -150,7 +128,6 @@ public class RecommendedFragment extends Fragment
             mGridLayoutManager = new GridLayoutManager(getActivity(), 1);
             mProductAdapter = new RecommendedListAdapter(getActivity()
                     , mProductsDisplayedList
-                    , 1
                     , mFrameLayout);
 
             mProductsRecyclerView.setHasFixedSize(true);

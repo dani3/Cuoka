@@ -17,6 +17,7 @@ import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -374,7 +375,29 @@ public class Controller
     public List<Product> getProducts( @PathVariable String shop )
     {
         LOG.info( "Peticion GET para obtener todos los productos de " + shop );
-        return productsRepository.findByShop( shop ) ;
+        return productsRepository.findByShop( shop );
+    }
+    
+    @RequestMapping( value = "/recommended/{id}", method = RequestMethod.GET )
+    public List<Product> getRecommendedProducts( @PathVariable long id )
+    {
+        LOG.info( "Peticion GET para obtener todos los productos recomendados del usuario " + id );
+        
+        List<Product> aux = productsRepository.findAll();
+        
+        List<Product> recommendedProducts = new ArrayList<>();
+        for ( int i = 0; i < 10; i++ )
+        {
+            Random rand = new Random();
+
+            // nextInt is normally exclusive of the top value,
+            // so add 1 to make it inclusive
+            int randomNum = rand.nextInt((3000 - 1) + 1) + 1;
+
+            recommendedProducts.add( aux.get( randomNum ) );
+        }
+        
+        return recommendedProducts;
     }
     
     /**
@@ -391,7 +414,7 @@ public class Controller
                             , @PathVariable String offset )
     {
         LOG.info( "Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias" );
-        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 130 ) ;
+        return productsRepository.findByShopAndDate( shop, Boolean.valueOf( man ), Integer.valueOf( offset ) + 140 ) ;
     }
     
     /**
@@ -549,12 +572,11 @@ public class Controller
                                 , @PathVariable String man
                                 , @PathVariable String search )
     {
-        List<Product> productList = new ArrayList<>();
         List<Product> newList = new ArrayList<>();
         String[] aux = search.split( " " ); 
         
         // Sacamos los productos de la tienda
-        productList = productsRepository.findByManAndShop( Boolean.valueOf( man ), shop );
+        List<Product> productList = productsRepository.findByManAndShop( Boolean.valueOf( man ), shop );
         
         // Eliminamos palabras irrelevantes ('a', 'de', etc)
         List<String> keywords = new ArrayList<>();
@@ -673,9 +695,7 @@ public class Controller
      * @return producto con el color buscado en primera posicion, null si no esta el color.
      */
     private Product _searchForColor( Product product, List<String> colors )
-    {        
-        boolean bingo = false;
-        
+    {                
         colors = colorManager.getEquivalentColors( colors );
         
         // Buscamos primero en el color
@@ -694,9 +714,7 @@ public class Controller
                                 .getJaroWinklerDistance( color
                                         , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
                     {
-                        bingo = true;
-                        if ( bingo )
-                            LOG.info( "Color '" + color + "' encontrado: " + single );
+                        LOG.info( "Color '" + color + "' encontrado: " + single );
                         
                         return _reorderColorVariants( product, pos );
                     }
@@ -719,9 +737,7 @@ public class Controller
                                 .getJaroWinklerDistance( color
                                         , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
                 {
-                    bingo = true;
-                    if ( bingo )
-                        LOG.info( "Color '" + color + "' encontrado: " + single );
+                    LOG.info( "Color '" + color + "' encontrado: " + single );
                     
                     return product;
                 }
@@ -738,9 +754,7 @@ public class Controller
      * @return true si alguna seccion esta en el producto.
      */
     private boolean _searchForSection( Product product, List<String> sections )
-    {   
-        boolean bingo = false;
-        
+    {           
         sections = sectionManager.getEquivalentSections( sections );
         
         // Buscamos primero en el campo seccion
@@ -750,9 +764,7 @@ public class Controller
                                 .getJaroWinklerDistance( section
                                         , product.getSection() ) >= Properties.MAX_SIMILARITY_THRESHOLD )
             {
-                bingo = true;
-                if ( bingo )
-                    LOG.info( "Seccion '" + section + "' encontrada: " + product.getSection() );
+                LOG.info( "Seccion '" + section + "' encontrada: " + product.getSection() );
                 
                 return true;
             }
@@ -771,9 +783,7 @@ public class Controller
                                 .getJaroWinklerDistance( section
                                         , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
                 {
-                    bingo = true;
-                    if ( bingo )
-                        LOG.info( "Seccion '" + section + "' encontrada: " + single );
+                    LOG.info( "Seccion '" + section + "' encontrada: " + single );
                     
                     return true;
                 }
@@ -811,9 +821,7 @@ public class Controller
      * @return true si el producto contiene la palabra.
      */
     private boolean _searchForKeyword( Product product, String keyword )
-    {
-        boolean bingo = false;
-        
+    {        
         // Buscamos la palabra en el nombre.        
         String[] decomposedName = product.getName().split( " " );
         for ( String single : decomposedName )
@@ -824,9 +832,7 @@ public class Controller
                             .getJaroWinklerDistance( keyword
                                     , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
             {
-                bingo = true;
-                if ( bingo )
-                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+                LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
 
                 return true;
             }
@@ -842,9 +848,7 @@ public class Controller
                             .getJaroWinklerDistance( keyword
                                     , single ) >= Properties.MAX_SIMILARITY_THRESHOLD )
             {
-                bingo = true;
-                if ( bingo )
-                    LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
+                LOG.info( "Keyword '" + keyword + "' encontrado: " + single );
 
                 return true;
             }
