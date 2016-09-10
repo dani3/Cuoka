@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @class Clase que representa una imagen de un producto, contendra la url y el path en nuestro servidor
+ * Clase que representa una imagen de un producto, contendra la url y el path en nuestro servidor
  * @author Daniel Mancebo Aldea
  */
 

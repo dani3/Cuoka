@@ -11,7 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @class Clase que se encarga del cifrado, hashing, etc.
+ * Clase que se encarga del cifrado, hashing, etc.
  * @author Daniel Mancebo Aldea
  */
 

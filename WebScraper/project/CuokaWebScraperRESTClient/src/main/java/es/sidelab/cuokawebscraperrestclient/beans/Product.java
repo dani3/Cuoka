@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * @class Clase que representa un producto. Si este tiene un solo color, la lista 
- *        colors contendra solo un objeto ColorVariant.
+ * Clase que representa un producto. Si este tiene un solo color, la lista 
+ *       colors contendra solo un objeto ColorVariant.
  * 
  * @author Daniel Mancebo Aldea
  */

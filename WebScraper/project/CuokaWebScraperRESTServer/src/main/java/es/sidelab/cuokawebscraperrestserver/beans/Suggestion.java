@@ -3,7 +3,7 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 import java.util.List;
 
 /**
- * @class Clase que representa una lista de sugerencias.
+ * Clase que representa una lista de sugerencias.
  * @author Daniel Mancebo Aldea
  */
 

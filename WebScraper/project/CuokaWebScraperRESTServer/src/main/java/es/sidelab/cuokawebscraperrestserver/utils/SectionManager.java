@@ -11,7 +11,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 /**
- * @class Clase que maneja las correspondencias entre secciones. 
+ * Clase que maneja las correspondencias entre secciones. 
  * @author Daniel Mancebo Aldea
  */
 

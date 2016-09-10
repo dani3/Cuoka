@@ -19,7 +19,7 @@ import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * @class Clase que gestiona todas las tareas que se realicen en paralelo.
+ * Clase que gestiona todas las tareas que se realicen en paralelo.
  * @author Daniel Mancebo Aldea
  */
 

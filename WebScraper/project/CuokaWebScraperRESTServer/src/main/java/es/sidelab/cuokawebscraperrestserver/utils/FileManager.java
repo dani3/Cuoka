@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @class Clase que gestionara todo lo relacionado con directorios y ficheros.
+ * Clase que gestionara todo lo relacionado con directorios y ficheros.
  * @author Daniel Mancebo Aldea
  */
 

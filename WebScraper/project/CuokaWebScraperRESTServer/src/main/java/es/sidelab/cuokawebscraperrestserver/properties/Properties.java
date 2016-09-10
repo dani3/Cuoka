@@ -1,7 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.properties;
 
 /**
- * @class Clase que proporciona todas las constantes necesarias
+ * Clase que proporciona todas las constantes necesarias
  * @author Daniel Mancebo Aldea
  */
 

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @class Clase que representa el registro de un usuario.
+ * Clase que representa el registro de un usuario.
  * @author Daniel Mancebo Aldea
  */
 

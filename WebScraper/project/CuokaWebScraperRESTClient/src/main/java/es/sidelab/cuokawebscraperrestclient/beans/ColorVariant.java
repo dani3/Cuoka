@@ -3,7 +3,7 @@ package es.sidelab.cuokawebscraperrestclient.beans;
 import java.util.List;
 
 /**
- * @class Clase que representa las distintas versiones de color de un producto.
+ * Clase que representa las distintas versiones de color de un producto.
  * @author Daniel Mancebo Aldea
  */
 

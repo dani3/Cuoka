@@ -11,7 +11,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 /**
- * @class Clase que se encarga de los colores.
+ * Clase que se encarga de los colores.
  * @author Daniel Mancebo Aldea
  */
 

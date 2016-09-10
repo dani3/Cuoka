@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @class Clase que gestiona la comunicacion con el servidor REST.
+ * Clase que gestiona la comunicacion con el servidor REST.
  * @author Daniel Mancebo Aldea
  */
 

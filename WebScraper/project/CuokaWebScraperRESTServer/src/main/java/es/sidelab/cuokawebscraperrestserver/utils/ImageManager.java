@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
 /**
- * @class Clase que gestionara todo lo relacionado con las imagenes de los productos.
+ * Clase que gestionara todo lo relacionado con las imagenes de los productos.
  * @author Daniel Mancebo Aldea
  */
 

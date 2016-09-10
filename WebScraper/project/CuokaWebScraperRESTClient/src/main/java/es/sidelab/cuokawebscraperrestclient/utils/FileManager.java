@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- * @class Clase que se encarga del tema de ficheros.
+ * Clase que se encarga del tema de ficheros.
  * @author Daniel Mancebo Aldea
  */
 

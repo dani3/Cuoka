@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @interface Interfaz de la que implementaran los scrapers especificos de cada tienda.
+ * Interfaz de la que implementaran los scrapers especificos de cada tienda.
  * @author Daniel Mancebo Aldea
  */
 

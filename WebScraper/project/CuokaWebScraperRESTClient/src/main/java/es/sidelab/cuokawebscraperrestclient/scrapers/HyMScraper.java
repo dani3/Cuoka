@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico para HyM.
+ * Scraper especifico para HyM.
  * @author Daniel Mancebo Aldea
  */
 

@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @class Controlador que proporcionara las URLs a los scrapers y tambien guardara los productos.
+ * Controlador que proporcionara las URLs a los scrapers y tambien guardara los productos.
  * @author Daniel Mancebo Aldea
  */
 

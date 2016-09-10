@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @class Repositorio que gestiona la tabla de productos
+ * Repositorio que gestiona la tabla de productos
  * @author Daniel Mancebo Aldea
  */
 

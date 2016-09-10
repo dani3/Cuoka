@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * @class Bean que representa un producto
+ * Bean que representa un producto
  * @author Daniel Mancebo Aldea
  */
 

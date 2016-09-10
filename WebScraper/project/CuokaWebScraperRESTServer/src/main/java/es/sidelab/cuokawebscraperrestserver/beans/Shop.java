@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @class Clase que representa una tienda.
+ * Clase que representa una tienda.
  * @author Daniel Mancebo Aldea
  */
 

@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * @class Clase que representa los productos que han sido añadidos en el pasado
+ * Clase que representa los productos que han sido añadidos en el pasado
  * @author Daniel Mancebo Aldea
  */
 

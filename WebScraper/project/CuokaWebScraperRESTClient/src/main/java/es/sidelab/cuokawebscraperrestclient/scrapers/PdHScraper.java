@@ -18,7 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico para Pedro Del Hierro
+ * Scraper especifico para Pedro Del Hierro
  * @author Daniel Mancebo Aldea
  */
 

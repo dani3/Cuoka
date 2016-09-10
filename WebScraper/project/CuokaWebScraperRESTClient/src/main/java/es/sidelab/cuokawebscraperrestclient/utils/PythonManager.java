@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 /**
- * @class Clase que gestiona todas las llamadas a scripts de Python.
+ * Clase que gestiona todas las llamadas a scripts de Python.
  * @author Daniel Mancebo Aldea
  */
 

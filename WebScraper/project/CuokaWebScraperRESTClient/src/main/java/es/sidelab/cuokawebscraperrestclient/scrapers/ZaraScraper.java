@@ -20,7 +20,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @class Scraper especifico de Zara.
+ * Scraper especifico de Zara.
  * @author Daniel Mancebo Aldea
  */
 
