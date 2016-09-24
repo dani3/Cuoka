@@ -58,7 +58,7 @@ public class ScraperManager
     }
     
     /**
-     * Metodo que recorre la ruta de htmls para sacar las tiendas online.
+     * Metodo que crea los objetos Shop y Section.
      * @return Lista de tiendas encontradas.
      */
     public static List<Shop> getArrayOfShops()

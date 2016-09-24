@@ -40,16 +40,17 @@ public class PythonManager
                     
                     for( File subFolder : subFolders )
                     {
+                        // Ignoramos el fichero 'url.txt'
                         if ( subFolder.isDirectory() )
                         {
                             // Sacamos si es hombre o mujer
                             String man = subFolder.getName();                            
                             String path = Properties.SHOPS_PATH + folderName + "\\" + man + "\\";
                             
-                            // Borramos los hmtls antes
+                            // Borramos los txt con los links generados de una ejecucion anterior
                             for ( File file : subFolder.listFiles() )
                             {
-                                if ( file.getName().contains( ".html" ) )
+                                if ( file.getName().contains( ".txt" ) )
                                 {
                                     file.delete();
                                 }
@@ -65,7 +66,7 @@ public class PythonManager
                                                     , Properties.CHROME_DRIVER
                                                     , path } );
                             
-                            Thread.sleep( 2500 );
+                            Thread.sleep( 10000 );
                             
                             // Nos quedamos esperando hasta que termine
                             File file = new File( path + "done.dat" );

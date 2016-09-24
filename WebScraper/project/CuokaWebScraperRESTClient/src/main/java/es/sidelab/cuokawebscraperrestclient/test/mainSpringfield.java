@@ -22,11 +22,12 @@ public class mainSpringfield
         Section section = new Section( "Jeans", "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\", false );
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".html" , url );
+        List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".txt" , url );
         
         for ( String productLink : productsLink )
         {
             try {
+                
                 // Obtener el HTML del producto
                 Document document = Jsoup.connect( productLink )
                                          .timeout( Properties.TIMEOUT )
