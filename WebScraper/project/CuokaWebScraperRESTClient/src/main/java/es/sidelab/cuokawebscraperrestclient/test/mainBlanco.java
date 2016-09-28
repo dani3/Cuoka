@@ -9,6 +9,7 @@ import es.sidelab.cuokawebscraperrestclient.utils.Printer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +50,21 @@ public class mainBlanco
         String link;
         List<ColorVariant> colors = new ArrayList<>();
         List<Image> images = new ArrayList<>();
+        Product product = null;
+        ColorVariant color = null;
         
         // Ignoramos la primera linea.
         String line = br.readLine();
-        while ( ( line = br.readLine() ) != null )
-        {            
-            
+        boolean done = false;
+        while(!done)
+        {
+            product = _readProductGeneralInfo(br);
+            br.readLine();
+            while
+                String _readProductColors(product, br);
         }
         
-        
+        /*********************************************************************/
         Printer.print( Integer.toString( productList.size() ) );
         
         Product p = productList.get( 0 );
@@ -81,12 +88,77 @@ public class mainBlanco
         }
     }
     
+    private static Product _readProductGeneralInfo(BufferedReader br) throws IOException
+    {
+        String name = br.readLine();
+        String description = br.readLine();
+        String price = br.readLine();
+        String link = br.readLine();
+        
+        if (name.contains("null") || price.contains("null"))
+        {
+            return null;
+        }
+        
+        Product product = new Product();
+        product.setName(name.replace("Nombre: ", ""));
+        product.setDescription(description.replace("Descripcion: ", ""));
+        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));
+        product.setLink(fixURL(link.replace("Link: ", "")));
+        
+        return product;        
+    }
+    
+    private static Product _readProductColors(Product product, BufferedReader br) throws IOException
+    {
+        //ignoramos la primera línea - lista de colores
+        //br.readLine();
+        boolean doneColor = false;
+        while (!doneColor)
+        {
+            ColorVariant color = new ColorVariant();
+            List<Image> images = new ArrayList<>();
+            
+            String colorName = br.readLine();
+            String colorIcon = br.readLine();
+            String reference = br.readLine();
+            if(colorName.contains("null") || reference.contains("null"))
+            {
+                return null;
+            }
+            color.setName(colorName.replace("Color: ", ""));
+            color.setColorURL(fixURL(colorIcon.replace("Icono: ", "")));
+            color.setReference(reference.replace("Referencia: ", ""));
+            
+            /*imagenes*/
+            boolean doneImages = false;
+            while (!doneImages)
+            {
+                String url = br.readLine();
+                if url.contains("Color: "){
+                    _readProductColors();
+                    break;
+                } 
+                if (url.contains("------"))
+                {
+                    doneImages = true;
+                    doneColor = true;
+                }
+                else{
+                    Image image = new Image(fixURL(url.replace("Imagen: ", "")));
+                    images.add(image);
+                }
+            }
+        }
+        
+    }
+    
     private static String fixURL( String url )
     {
         if ( url.startsWith( "//" ) )
             return "http:".concat( url ).replace( " " , "%20" );
         
-        return url;
+        return url.replace( " " , "%20" );
     }   
     
     private static int containsProduct( List<Product> productList, String reference )
