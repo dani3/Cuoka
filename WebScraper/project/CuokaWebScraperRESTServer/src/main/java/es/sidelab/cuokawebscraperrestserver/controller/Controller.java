@@ -390,7 +390,7 @@ public class Controller
         aux.addAll(productsRepository.findByManAndShop(false, "Springfield"));
         
         List<Product> recommendedProducts = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
         {
             Random rand = new Random();
 

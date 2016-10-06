@@ -208,12 +208,27 @@ public class RecommendedFragment extends Fragment
                         // Siempre que no se este cargando
                         if ((mState != ProductsFragment.STATE.LOADING))
                         {
-                            mConnectToServer = new ConnectToServer().execute();
+                            //mConnectToServer = new ConnectToServer().execute();
                         }
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
+        // la pantalla de un producto o de los filtros.
+        // Si venimos de un producto, tenemos que restaurar el footer.
+        if ((mProductAdapter != null) && (mProductAdapter.productClicked()))
+        {
+            Log.d(Properties.TAG, "Volviendo de ProductUI");
+            mProductAdapter.restore();
+        }
     }
 
     private class ConnectToServer extends AsyncTask<String, Void, Void>
@@ -519,5 +534,20 @@ public class RecommendedFragment extends Fragment
         mState = ProductsFragment.STATE.ERROR;
 
         Log.d(Properties.TAG, "Estado = " + mState.toString());
+    }
+
+    /**
+     * Metodo que redimensiona el grid de productos.
+     * @param reduction: porcentaje que se quiere reducir.
+     */
+    public void resizeGrid(final float reduction)
+    {
+        if (mProductsRecyclerView != null)
+        {
+            mProductsRecyclerView.animate()
+                    .setDuration(0)
+                    .scaleX(reduction)
+                    .scaleY(reduction);
+        }
     }
 }

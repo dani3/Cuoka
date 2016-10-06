@@ -69,7 +69,6 @@ public class ProductsFragment extends Fragment
 {
     /* Constants */
     protected static final String ALL = "All";
-    protected static final int NUM_CACHED_PRODUCTS = 8;
     protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
     protected static boolean MAN;
@@ -306,7 +305,6 @@ public class ProductsFragment extends Fragment
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setItemViewCacheSize(NUM_CACHED_PRODUCTS);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             boolean scrollingUp;

@@ -188,6 +188,7 @@ public class MainScreenUI extends AppCompatActivity
                 float normalizedOffset = 1 - ((0.1f - 0.0f) / (1.0f - 0.0f) * (slideOffset - 1.0f) + 0.1f);
 
                 mProductsFragment.resizeGrid(normalizedOffset);
+                mRecommendedFragment.resizeGrid(normalizedOffset);
             }
         };
 
