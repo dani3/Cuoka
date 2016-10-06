@@ -13,25 +13,25 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table( name = "SHOP" )
+@Table(name = "SHOP")
 public class Shop 
 {
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
-    @Column( name = "ID" )
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private long id;
     
-    @Column( name = "NAME" )
+    @Column(name = "NAME")
     private String name;
     
     public Shop() {}
     
-    public Shop( String name )
+    public Shop(String name)
     {
         this.name = name;
     }
     
     public String getName() { return this.name; }
     
-    public void setName( String name ) { this.name = name; }
+    public void setName(String name) { this.name = name; }
 }

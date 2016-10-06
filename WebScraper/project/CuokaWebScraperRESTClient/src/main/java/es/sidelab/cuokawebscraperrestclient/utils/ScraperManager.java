@@ -24,33 +24,33 @@ import java.util.List;
 
 public class ScraperManager 
 {
-    private static final Logger LOG = Logger.getLogger( ScraperManager.class );
+    private static final Logger LOG = Logger.getLogger(ScraperManager.class);
     
     /**
      * Metodo que dada una tienda devuelve su scraper.
      * @param shop: Nombre de la tienda.
      * @return Scraper especifico de la tienda.
      */
-    public static Scraper getScraper( Shop shop ) 
+    public static Scraper getScraper(Shop shop) 
     {
         try {
-            if ( shop.getName().equals( "Pedro Del Hierro" ) )
-                return ( Scraper ) new PdHScraper();
+            if (shop.getName().equals("Pedro Del Hierro"))
+                return (Scraper) new PdHScraper();
             else
-                return ( Scraper ) Class.forName( "es.sidelab.cuokawebscraperrestclient.scrapers." 
-                                            + shop.getName() + "Scraper" ).newInstance();
+                return (Scraper) Class.forName("es.sidelab.cuokawebscraperrestclient.scrapers." 
+                                            + shop.getName() + "Scraper").newInstance();
             
-        } catch ( ClassNotFoundException ex ) {
-            LOG.error( "ERROR: No se encontro la clase" );
-            LOG.error( ex.getMessage() );
+        } catch (ClassNotFoundException ex) {
+            LOG.error("ERROR: No se encontro la clase");
+            LOG.error(ex.getMessage());
             
-        } catch ( InstantiationException ex ) {
-            LOG.error( "ERROR: No se pudo instanciar la clase" );
-            LOG.error( ex.getMessage() );
+        } catch (InstantiationException ex) {
+            LOG.error("ERROR: No se pudo instanciar la clase");
+            LOG.error(ex.getMessage());
             
-        } catch ( IllegalAccessException ex ) {
-            LOG.error( "ERROR: Acceso no permitido" );
-            LOG.error( ex.getMessage() );
+        } catch (IllegalAccessException ex) {
+            LOG.error("ERROR: Acceso no permitido");
+            LOG.error(ex.getMessage());
         }
         
         // No debería llegar aquí
@@ -63,61 +63,61 @@ public class ScraperManager
      */
     public static List<Shop> getArrayOfShops()
     {
-        LOG.info( "Buscando tiendas online..." );
+        LOG.info("Buscando tiendas online...");
         
         List<Shop> shops = new ArrayList<>();
-        File[] folders = new File( Properties.SHOPS_PATH ).listFiles();
+        File[] folders = new File(Properties.SHOPS_PATH).listFiles();
         
         // Recorremos las tiendas
-        for ( File folder : folders )
+        for (File folder : folders)
         {
-            if ( folder.isDirectory() )
+            if (folder.isDirectory())
             {
                 List<SectionActivityStats> sectionsActivityList = new ArrayList<>();
 
                 // Sacamos el nombre de la tienda ('tienda_online')
                 String folderName = folder.getName();
 
-                ShopActivityStats shopActivity = new ShopActivityStats( 
-                                                            folderName.substring( 0, folderName.indexOf( "_" ) ) );
-                shopActivity.setOnline( folderName.contains( "true" ) );
+                ShopActivityStats shopActivity = new ShopActivityStats(
+                                                            folderName.substring(0, folderName.indexOf("_")));
+                shopActivity.setOnline(folderName.contains("true"));
 
-                if ( folderName.contains( "true" ) )
+                if (folderName.contains("true"))
                 {               
-                    LOG.info( folderName.replace( "_true" , "" ) + " esta ONLINE" );
+                    LOG.info(folderName.replace("_true" , "") + " esta ONLINE");
                     // Recorremos hombre y mujer si esta online
-                    File[] subFolders = new File( Properties.SHOPS_PATH + "\\" + folderName ).listFiles();
+                    File[] subFolders = new File(Properties.SHOPS_PATH + "\\" + folderName).listFiles();
                     List<Section> sectionsList = new ArrayList<>();
 
-                    for( File subFolder : subFolders )
+                    for(File subFolder : subFolders)
                     {
-                        if ( subFolder.isDirectory() )
+                        if (subFolder.isDirectory())
                         {
                             // Sacamos si es hombre o mujer
                             String man = subFolder.getName();
 
-                            if ( man.equals( "true" ) )
-                                shopActivity.setMan( true );
+                            if (man.equals("true"))
+                                shopActivity.setMan(true);
 
-                            if ( man.equals( "false" ) )
-                                shopActivity.setWoman( true);
+                            if (man.equals("false"))
+                                shopActivity.setWoman(true);
 
                             // Recorremos los txt dentro
-                            File[] sections = new File( Properties.SHOPS_PATH + "\\" 
-                                                    + folderName + "\\" + man ).listFiles();
+                            File[] sections = new File(Properties.SHOPS_PATH + "\\" 
+                                                    + folderName + "\\" + man).listFiles();
 
-                            for ( File section : sections )
+                            for (File section : sections)
                             {      
-                                if ( section.getName().contains( ".html" ) )
+                                if (section.getName().contains(".html"))
                                 {                             
                                     Section s = new Section();
-                                    String sectionName = section.getName().replace( ".html", "" );
+                                    String sectionName = section.getName().replace(".html", "");
 
-                                    s.setMan( Boolean.valueOf( man ) );
-                                    s.setName( sectionName );
-                                    s.setPath( section.getAbsolutePath().replace( section.getName(), "" ) );
+                                    s.setMan(Boolean.valueOf(man));
+                                    s.setName(sectionName);
+                                    s.setPath(section.getAbsolutePath().replace(section.getName(), ""));
 
-                                    sectionsList.add( s );
+                                    sectionsList.add(s);
                                 } 
                             } // for txts    
                         }                   
@@ -126,32 +126,32 @@ public class ScraperManager
                     try 
                     {                                        
                         // Una vez leidas todas las secciones, leemos la URL de la tienda
-                        BufferedReader br = new BufferedReader( new FileReader( new File( folder + "\\url.txt" ) ) );
+                        BufferedReader br = new BufferedReader(new FileReader(new File(folder + "\\url.txt")));
                         String url = br.readLine();
 
-                        shops.add( new Shop( folderName.substring( 0, folderName.indexOf( "_" ) )
-                                        , new URL( url )
+                        shops.add(new Shop(folderName.substring(0, folderName.indexOf("_"))
+                                        , new URL(url)
                                         , sectionsList
-                                        , true ) );
+                                        , true));
 
-                        shopActivity.setUrl( url );
+                        shopActivity.setUrl(url);
 
-                    } catch ( FileNotFoundException ex ) {
-                        LOG.error( "Error abriendo el fichero de 'url.txt'" );
+                    } catch (FileNotFoundException ex) {
+                        LOG.error("Error abriendo el fichero de 'url.txt'");
 
-                    } catch ( IOException ex ) {
-                        LOG.error( "Error leyendo el fichero 'url.txt' o formando la URL" );
-                        shopActivity.setUrl( ex.getMessage() );
+                    } catch (IOException ex) {
+                        LOG.error("Error leyendo el fichero 'url.txt' o formando la URL");
+                        shopActivity.setUrl(ex.getMessage());
 
                     } finally {
-                        shopActivity.setListSectionStats( sectionsActivityList );
+                        shopActivity.setListSectionStats(sectionsActivityList);
 
-                        ActivityStatsManager.addShopActivity( shopActivity );
+                        ActivityStatsManager.addShopActivity(shopActivity);
                     }     
 
                 } else {
-                    shopActivity.setOnline( false );
-                    ActivityStatsManager.addShopActivity( shopActivity );
+                    shopActivity.setOnline(false);
+                    ActivityStatsManager.addShopActivity(shopActivity);
                 }
             }
             

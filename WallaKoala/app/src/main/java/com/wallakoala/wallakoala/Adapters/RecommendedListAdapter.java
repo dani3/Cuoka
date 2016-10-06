@@ -30,7 +30,7 @@ import com.wallakoala.wallakoala.Views.LikeButtonView;
 import java.util.List;
 
 /**
- * @class Adapter para el grid de productos recomendados.
+ * Adapter para el grid de productos recomendados.
  * Created by Daniel Mancebo on 25/06/2016.
  */
 
@@ -242,6 +242,11 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         mFrameLayout = frameLayout;
 
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
+    }
+
+    public void updateProductList(List<Product> productList)
+    {
+        mProductList = productList;
     }
 
     @Override

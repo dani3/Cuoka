@@ -25,116 +25,116 @@ import java.util.concurrent.CountDownLatch;
 
 public class MultithreadManager 
 {
-    private static final Logger LOG = Logger.getLogger( MultithreadManager.class ); 
+    private static final Logger LOG = Logger.getLogger(MultithreadManager.class); 
     
     private static CountDownLatch countDownLatch;
     
     /*
      * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor.
      */
-    public static void parallelScrap( List<Shop> shops )
+    public static void parallelScrap(List<Shop> shops)
     {
-        LOG.info( "Iniciando proceso de scraping concurrentemente..." );
+        LOG.info("Iniciando proceso de scraping concurrentemente...");
         
         // Creamos un executor que creara un thread por cada tienda que haya.
-        ExecutorService executorShops = Executors.newFixedThreadPool( Properties.MAX_THREADS_SHOP );
+        ExecutorService executorShops = Executors.newFixedThreadPool(Properties.MAX_THREADS_SHOP);
         
-        countDownLatch = new CountDownLatch( shops.size() );
+        countDownLatch = new CountDownLatch(shops.size());
         
-        for ( int i = 0; i < shops.size(); i++ )
+        for (int i = 0; i < shops.size(); i++)
         {
             final int k = i;
             
-            final Shop shop = shops.get( i );
+            final Shop shop = shops.get(i);
             Runnable task = () -> {
                 // Sacamos el scraper especifico de la tienda
-                LOG.info( "Llamamos al ScraperManager para obtener el scraper de " + shop.getName() );
-                Scraper scraper = ScraperManager.getScraper( shop );
-                LOG.info( "Scraper de " + shop.getName() + " obtenido" );
+                LOG.info("Llamamos al ScraperManager para obtener el scraper de " + shop.getName());
+                Scraper scraper = ScraperManager.getScraper(shop);
+                LOG.info("Scraper de " + shop.getName() + " obtenido");
                  
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
-                ExecutorService executorSections = Executors.newFixedThreadPool( Properties.MAX_THREADS_SECTIONS );
+                ExecutorService executorSections = Executors.newFixedThreadPool(Properties.MAX_THREADS_SECTIONS);
                 CompletionService< List<Product> > completionSections =
-                        new ExecutorCompletionService<> ( executorSections );
+                        new ExecutorCompletionService<> (executorSections);
                 
                 // Vector de booleanos en el que cada thread actualiza su posicion cuando haya terminado
                 boolean[] finishedSections = new boolean[ shop.getSections().size() ];
                 
-                for ( int j = 0; j < shop.getSections().size(); j++ )
+                for (int j = 0; j < shop.getSections().size(); j++)
                 {
-                    final Section section = shop.getSections().get( j );
+                    final Section section = shop.getSections().get(j);
                     
                     // Tarea de cada scraper
-                    Callable<List<Product>> taskSection = () -> scraper.scrap( shop, section );
+                    Callable<List<Product>> taskSection = () -> scraper.scrap(shop, section);
                     
                     // Ejecucion de cada tarea
-                    LOG.info( "Se inicia el scraping de la seccion " 
-                            + section.getName() + " de la tienda " + shop.getName() );
-                    completionSections.submit( taskSection );
+                    LOG.info("Se inicia el scraping de la seccion " 
+                            + section.getName() + " de la tienda " + shop.getName());
+                    completionSections.submit(taskSection);
                     
                 } // for
                 
-                LOG.info( "Se han iniciado todos los threads de la tienda " + shop.getName() );
+                LOG.info("Se han iniciado todos los threads de la tienda " + shop.getName());
                 
                 // Esperamos a que terminen los threads
-                for ( int j = 0; j < shop.getSections().size(); j++ )
+                for (int j = 0; j < shop.getSections().size(); j++)
                 {
                     try
                     {
-                        LOG.info( "A la espera de que acabe un thread..." );
+                        LOG.info("A la espera de que acabe un thread...");
                         Future<List<Product>> future = completionSections.take();
                         List<Product> productList = future.get();  
-                        LOG.info( "Ha acabado la seccion de " + shop.getSections().get( j ).getName() + " de " + shop.getName()
-                                + "... Ha sacado " + productList.size() + " productos!" );
+                        LOG.info("Ha acabado la seccion de " + shop.getSections().get(j).getName() + " de " + shop.getName()
+                                + "... Ha sacado " + productList.size() + " productos!");
                         
                         // Ponemos nuestra posicion a true indicando que hemos terminado
                         finishedSections[ j ] = true;                        
-                        LOG.info( "Se marca el thread como finalizado... El estado de los threads de " 
-                                + shop.getName() + " es: " );
+                        LOG.info("Se marca el thread como finalizado... El estado de los threads de " 
+                                + shop.getName() + " es: ");
                                        
-                        LOG.info( threadStatus( finishedSections ) );
+                        LOG.info(threadStatus(finishedSections));
                         
                         // Comprobamos si somos el ultimo thread, en tal caso, inserto la lista en BD
-                        if ( hasEveryoneFinished( finishedSections ) ) 
+                        if (hasEveryoneFinished(finishedSections)) 
                         {
-                            LOG.info( "Todos los threads de " + shop.getName() + " han acabado" );
-                            LOG.info( "Llamando al servidor REST para almacenar los productos!" );
-                            LOG.info( "URL del servidor REST: " + Properties.SERVER );
-                            RestClient restClient = new RestClient( new URL( Properties.SERVER ) );
+                            LOG.info("Todos los threads de " + shop.getName() + " han acabado");
+                            LOG.info("Llamando al servidor REST para almacenar los productos!");
+                            LOG.info("URL del servidor REST: " + Properties.SERVER);
+                            RestClient restClient = new RestClient(new URL(Properties.SERVER));
                             
-                            restClient.saveProducts( productList, shop );
+                            restClient.saveProducts(productList, shop);
                             
                             countDownLatch.countDown();
                             
-                            LOG.info( "Finalizamos el executor de secciones de la tienda " + shop.getName() );
+                            LOG.info("Finalizamos el executor de secciones de la tienda " + shop.getName());
                             executorSections.shutdown();
                         }                        
                         
-                    } catch ( InterruptedException | ExecutionException ex ) {
-                        LOG.error( "ERROR: Se ha producido un error en un thread" );
-                        LOG.error( ex.getMessage() );
+                    } catch (InterruptedException | ExecutionException ex) {
+                        LOG.error("ERROR: Se ha producido un error en un thread");
+                        LOG.error(ex.getMessage());
                         
                         finishedSections[ j ] = true;  
                         
-                    } catch ( MalformedURLException ex ) {
-                        LOG.error( "ERROR: Error al formar la URL para contactar con el servidor REST" );
-                        LOG.error( ex.getMessage() );
+                    } catch (MalformedURLException ex) {
+                        LOG.error("ERROR: Error al formar la URL para contactar con el servidor REST");
+                        LOG.error(ex.getMessage());
                     }                    
                 }
             };
             
-            LOG.info( "El thread " + i + " de " + shop.getName() + " ha empezado..." );
-            executorShops.execute( task );
+            LOG.info("El thread " + i + " de " + shop.getName() + " ha empezado...");
+            executorShops.execute(task);
             
         } // for 
         
         try {
-            LOG.info( "MAIN THREAD : Esperando a que acaben todas las tiendas..." );
+            LOG.info("MAIN THREAD : Esperando a que acaben todas las tiendas...");
             countDownLatch.await();
-            LOG.info( "MAIN THREAD : Me despierto..." );
+            LOG.info("MAIN THREAD : Me despierto...");
             
-        } catch ( InterruptedException ex ) {
-            LOG.error( "ERROR: Se ha producido un error con el CountDownLatch" );
+        } catch (InterruptedException ex) {
+            LOG.error("ERROR: Se ha producido un error con el CountDownLatch");
             
         }
         
@@ -148,11 +148,11 @@ public class MultithreadManager
     /*
      * Metodo que comprueba si todos los threads han acabado.
      */
-    private static boolean hasEveryoneFinished( boolean[] finishedSections )
+    private static boolean hasEveryoneFinished(boolean[] finishedSections)
     {
         int i = 0;
-        while( i < finishedSections.length )
-            if ( ! finishedSections[ i++ ] )
+        while(i < finishedSections.length)
+            if (! finishedSections[ i++ ])
                 return false;
         
         return true;
@@ -161,11 +161,11 @@ public class MultithreadManager
     /*
      * Metodo que devuelve el estado de los threads.
      */
-    private static String threadStatus( boolean[] finishedSections )
+    private static String threadStatus(boolean[] finishedSections)
     {
         String state = "";
-        for ( int n = 0; n < finishedSections.length; n++ )
-            state = state.concat( "| " + finishedSections[ n ] + " | " );
+        for (int n = 0; n < finishedSections.length; n++)
+            state = state.concat("| " + finishedSections[ n ] + " | ");
         
         return state;
     }

@@ -20,17 +20,17 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableAutoConfiguration
 public class main 
 {
-    private static final Log LOG = LogFactory.getLog( main.class );
+    private static final Log LOG = LogFactory.getLog(main.class);
     
-    public static void main( String[] args ) 
+    public static void main(String[] args) 
     {
-        SpringApplication.run( main.class, args );
+        SpringApplication.run(main.class, args);
     }    
     
     @Bean
     public CacheManager cacheManager() 
     {
-        LOG.info( "Activando cache..." );
-    	return new ConcurrentMapCacheManager( "products" );
+        LOG.info("Activando cache...");
+    	return new ConcurrentMapCacheManager("products");
     }
 }

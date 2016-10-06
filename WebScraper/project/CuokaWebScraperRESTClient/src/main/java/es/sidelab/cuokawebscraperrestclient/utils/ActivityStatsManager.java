@@ -23,11 +23,11 @@ public class ActivityStatsManager
    private static CopyOnWriteArrayList<ShopActivityStats> shopActivityList = 
                                                                 new CopyOnWriteArrayList<>();
    
-   private static final Logger LOG = Logger.getLogger( ActivityStatsManager.class );
+   private static final Logger LOG = Logger.getLogger(ActivityStatsManager.class);
    
-   public static void addShopActivity( ShopActivityStats shopActivity )
+   public static void addShopActivity(ShopActivityStats shopActivity)
    {
-       shopActivityList.add( shopActivity );
+       shopActivityList.add(shopActivity);
    }
    
    public static void writeOnFile()
@@ -39,9 +39,9 @@ public class ActivityStatsManager
        int offlineShops = 0;
        
        /* Contamos las tiendas que estan online y offline */
-       for ( ShopActivityStats shopActivity : shopActivityList)
+       for (ShopActivityStats shopActivity : shopActivityList)
        {
-           if ( shopActivity.isOnline() )
+           if (shopActivity.isOnline())
                onlineShops++;
            else
                offlineShops++;
@@ -49,51 +49,51 @@ public class ActivityStatsManager
        
        try
        {
-           DateFormat df = new SimpleDateFormat( "yyyyMMdd" );
+           DateFormat df = new SimpleDateFormat("yyyyMMdd");
            Date today = new Date();
            
-           file = new FileWriter( Properties.ACTIVITY_PATH + "ActivityFile." + df.format( today ) + ".txt" );
-           pw = new PrintWriter( file );
+           file = new FileWriter(Properties.ACTIVITY_PATH + "ActivityFile." + df.format(today) + ".txt");
+           pw = new PrintWriter(file);
            
-           pw.println( "Numero de tiendas online: " + onlineShops );
-           pw.println( "Numero de tiendas offline: " + offlineShops );           
+           pw.println("Numero de tiendas online: " + onlineShops);
+           pw.println("Numero de tiendas offline: " + offlineShops);           
            pw.println();
            pw.println();           
            
            int i = 0;
-           for( ShopActivityStats shopActivity : shopActivityList )
+           for(ShopActivityStats shopActivity : shopActivityList)
            {
-                if( shopActivity.isOnline() )
+                if(shopActivity.isOnline())
                 {                    
-                    pw.println( "ShopActivityStat numero: " + i++ );
-                    pw.println( "La tienda es " + shopActivity.getShop() );
-                    pw.println( "URL: " + shopActivity.getUrl() );
-                    pw.println( "Está online: " + shopActivity.isOnline() );
-                    pw.println( "Hay hombre: " + shopActivity.isMan() );
+                    pw.println("ShopActivityStat numero: " + i++);
+                    pw.println("La tienda es " + shopActivity.getShop());
+                    pw.println("URL: " + shopActivity.getUrl());
+                    pw.println("Está online: " + shopActivity.isOnline());
+                    pw.println("Hay hombre: " + shopActivity.isMan());
                     
                     List<SectionActivityStats> listSectionStats = shopActivity.getListSectionStats();                   
-                    for ( SectionActivityStats sectionActivity : listSectionStats )
+                    for (SectionActivityStats sectionActivity : listSectionStats)
                     {
-                        if( sectionActivity.isMan() )
+                        if(sectionActivity.isMan())
                         {
-                            pw.println( "        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
-                                      + "  Html: " + sectionActivity.isHtmlOK() );
-                            pw.println( "            Productos OK: " + sectionActivity.getProdOK() );
-                            pw.println( "            Productos NOK: " + sectionActivity.getProdNOK() );
+                            pw.println("        " + sectionActivity.getSection().replaceAll(".txt", "") 
+                                      + "  Html: " + sectionActivity.isHtmlOK());
+                            pw.println("            Productos OK: " + sectionActivity.getProdOK());
+                            pw.println("            Productos NOK: " + sectionActivity.getProdNOK());
                         }
                     }
                     
                     pw.println();
-                    pw.println( "Hay mujer: " + shopActivity.isWoman() );
+                    pw.println("Hay mujer: " + shopActivity.isWoman());
                     
-                    for ( SectionActivityStats sectionActivity : listSectionStats)
+                    for (SectionActivityStats sectionActivity : listSectionStats)
                     {
-                        if( ! sectionActivity.isMan() )
+                        if(! sectionActivity.isMan())
                         {
-                            pw.println( "        " + sectionActivity.getSection().replaceAll( ".txt", "" ) 
-                                      + "  Html: " + sectionActivity.isHtmlOK() );
-                            pw.println( "            Productos OK: " + sectionActivity.getProdOK() );
-                            pw.println( "            Productos NOK: " + sectionActivity.getProdNOK() );
+                            pw.println("        " + sectionActivity.getSection().replaceAll(".txt", "") 
+                                      + "  Html: " + sectionActivity.isHtmlOK());
+                            pw.println("            Productos OK: " + sectionActivity.getProdOK());
+                            pw.println("            Productos NOK: " + sectionActivity.getProdNOK());
                         }
                     }
                     
@@ -102,9 +102,9 @@ public class ActivityStatsManager
                 
             } 
            
-       } catch ( Exception e ) {
+       } catch (Exception e) {
            e.printStackTrace();
-           LOG.error( "Error en fichero Activity" );
+           LOG.error("Error en fichero Activity");
             
        } finally {
            
@@ -113,8 +113,8 @@ public class ActivityStatsManager
               if (file != null)
                 file.close();
               
-           } catch ( Exception e ) {
-              LOG.error( "Error cerrando el fichero Activity.txt" );
+           } catch (Exception e) {
+              LOG.error("Error cerrando el fichero Activity.txt");
               
            }
            
@@ -122,29 +122,29 @@ public class ActivityStatsManager
        
    }
    
-   public static void updateProducts( String shop, Section section, int prodOK, int prodNOK )
+   public static void updateProducts(String shop, Section section, int prodOK, int prodNOK)
    {
        boolean shopFound = false;
        int i = 0;
        
        // Buscamos la tienda correspondiente
-       while( ( ! shopFound ) && ( i < shopActivityList.size() ) )
+       while((! shopFound) && (i < shopActivityList.size()))
        {
-           ShopActivityStats shopActivity = shopActivityList.get( i++ );
-           if( shopActivity.getShop().equals(shop) )
+           ShopActivityStats shopActivity = shopActivityList.get(i++);
+           if(shopActivity.getShop().equals(shop))
            {
                shopFound = true;
                boolean sectionFound = false;
                int j = 0;
                
                // Buscamos la seccion correspondiente
-               while( ( ! sectionFound ) && ( j < shopActivity.getListSectionStats().size() ) )
+               while((! sectionFound) && (j < shopActivity.getListSectionStats().size()))
                {
-                   SectionActivityStats sectionActivity = shopActivity.getListSectionStats().get( j++ );
-                   if( sectionActivity.getSection().equals( section.getName() ) && 
-                     ( sectionActivity.isMan() == section.isMan() ) )
+                   SectionActivityStats sectionActivity = shopActivity.getListSectionStats().get(j++);
+                   if(sectionActivity.getSection().equals(section.getName()) && 
+                     (sectionActivity.isMan() == section.isMan()))
                    {
-                       sectionActivity.updateProducts( prodOK, prodNOK );
+                       sectionActivity.updateProducts(prodOK, prodNOK);
                        sectionFound = true;
                    }
                    

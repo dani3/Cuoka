@@ -11,8 +11,8 @@ public class Printer
      * Metodo que pinta por pantalla.
      * @param message mensaje a escribir.
      */
-    public static void print( String message )
+    public static void print(String message)
     {
-        System.out.println( message );
+        System.out.println(message);
     }
 }

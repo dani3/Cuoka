@@ -13,7 +13,7 @@ public class Suggestion
     
     public Suggestion() {}
     
-    public Suggestion( List<String> suggestions )
+    public Suggestion(List<String> suggestions)
     {
         this.suggestions = suggestions;
     }

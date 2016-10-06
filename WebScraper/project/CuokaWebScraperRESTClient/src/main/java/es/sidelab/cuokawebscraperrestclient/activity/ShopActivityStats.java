@@ -17,7 +17,7 @@ public class ShopActivityStats
     
     private List<SectionActivityStats> listSectionStats;
 
-    public ShopActivityStats( String shop ) 
+    public ShopActivityStats(String shop) 
     {
         this.shop = shop;
     }
@@ -32,11 +32,11 @@ public class ShopActivityStats
         return listSectionStats; 
     }
 
-    public void setOnline( boolean online ) { this.online = online; }
-    public void setMan( boolean man ) { this.man = man; }
-    public void setWoman( boolean woman ) { this.woman = woman; }
-    public void setUrl( String url ) { this.url = url; }   
-    public void setListSectionStats( List<SectionActivityStats> listSectionStats ) 
+    public void setOnline(boolean online) { this.online = online; }
+    public void setMan(boolean man) { this.man = man; }
+    public void setWoman(boolean woman) { this.woman = woman; }
+    public void setUrl(String url) { this.url = url; }   
+    public void setListSectionStats(List<SectionActivityStats> listSectionStats) 
     { 
         this.listSectionStats = listSectionStats;
     }

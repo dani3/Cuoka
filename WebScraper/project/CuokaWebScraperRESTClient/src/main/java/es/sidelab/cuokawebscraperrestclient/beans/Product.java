@@ -25,14 +25,14 @@ public class Product
     
     public Product() {}
 
-    public Product( double price
+    public Product(double price
             , String name
             , String shop
             , String section
             , String link
             , String description
             , boolean man
-            , List<ColorVariant> colors ) 
+            , List<ColorVariant> colors) 
     {
         this.price = price;
         this.name = name;
@@ -46,16 +46,16 @@ public class Product
         this.insertDate = Calendar.getInstance();
     }  
     
-    public void setPrice( double price ) { this.price = price; }
-    public void setName( String name ) { this.name = name; }
-    public void setShop( String shop ) { this.shop = shop; }
-    public void setSection( String section ) { this.section = section; }
-    public void setDescription( String description ) { this.description = description; }
-    public void setLink( String link ) { this.link = link; }
-    public void setMan( boolean man ) { this.man = man; }
-    public void setColors( List<ColorVariant> colors ) { this.colors = colors; }
-    public void setNewness( boolean newness ) { this.newness = newness; }
-    public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
+    public void setPrice(double price) { this.price = price; }
+    public void setName(String name) { this.name = name; }
+    public void setShop(String shop) { this.shop = shop; }
+    public void setSection(String section) { this.section = section; }
+    public void setDescription(String description) { this.description = description; }
+    public void setLink(String link) { this.link = link; }
+    public void setMan(boolean man) { this.man = man; }
+    public void setColors(List<ColorVariant> colors) { this.colors = colors; }
+    public void setNewness(boolean newness) { this.newness = newness; }
+    public void setInsertDate(Calendar insertDate) { this.insertDate = insertDate; }
     
     public double getPrice() { return this.price; }
     public String getName() { return this.name; }

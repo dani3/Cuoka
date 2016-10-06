@@ -13,18 +13,18 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table( name = "IMAGE" )
+@Table(name = "IMAGE")
 public class Image 
 {
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
-    @Column( name = "ID" )
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private long id;
     
-    @Column( name = "URL" )
+    @Column(name = "URL")
     private String url;
     
-    @Column( name = "PATH" )
+    @Column(name = "PATH")
     private String path;
     
     public Image() {}
@@ -32,6 +32,6 @@ public class Image
     public String getUrl()  { return this.url; }
     public String getPath() { return this.path; }
 
-    public void setUrl( String url )   { this.url = url; }
-    public void setPath( String path ) { this.path = path; }
+    public void setUrl(String url)   { this.url = url; }
+    public void setPath(String path) { this.path = path; }
 }

@@ -12,4 +12,26 @@
         android:scrollbars="none"
         android:clipToPadding="false"/>
 
+    <!-- Loading View -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/recommended_avloadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/recommended_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
 </FrameLayout>

@@ -12,24 +12,24 @@ import org.apache.commons.logging.LogFactory;
 
 public class FileManager 
 {
-    private static final Log LOG = LogFactory.getLog( FileManager.class );
+    private static final Log LOG = LogFactory.getLog(FileManager.class);
     
     /**
      * Metodo que crea el directorio de una tienda si no existe.
      * @param shop: nombre de la tienda.
      */
-    public static void createProductsDirectory( String shop )
+    public static void createProductsDirectory(String shop)
     {
-        LOG.info( "Comprobamos que el directorio '" + Properties.IMAGE_PATH + shop + "' existe" );
-        File folder = new File( Properties.IMAGE_PATH + shop );
+        LOG.info("Comprobamos que el directorio '" + Properties.IMAGE_PATH + shop + "' existe");
+        File folder = new File(Properties.IMAGE_PATH + shop);
         
-        if ( ! folder.exists() )
+        if (! folder.exists())
         {   
-            LOG.info( "El directorio no existe, se crea" );
+            LOG.info("El directorio no existe, se crea");
             folder.mkdirs();
             
         } else        
-            LOG.info( "El directorio '" + Properties.IMAGE_PATH + shop + "' ya existe" );
+            LOG.info("El directorio '" + Properties.IMAGE_PATH + shop + "' ya existe");
     }
     
     /**
@@ -37,9 +37,9 @@ public class FileManager
      * @param file: nombre del fichero que se quiere comprobar.
      * @return true si el ficher existe.
      */
-    public static boolean existsFile( String file )
+    public static boolean existsFile(String file)
     {
-        return ( new File( file ).exists() );
+        return (new File(file).exists());
     }
     
     /**
@@ -47,8 +47,8 @@ public class FileManager
      * @param file: nombre del fichero a borrar.
      * @return true si se ha borrado correctamente.
      */
-    public static boolean deleteFile( String file )
+    public static boolean deleteFile(String file)
     {
-        return ( new File( file ).delete() );
+        return (new File(file).delete());
     }
 }

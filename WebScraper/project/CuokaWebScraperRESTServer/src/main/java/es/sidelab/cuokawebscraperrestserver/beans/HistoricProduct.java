@@ -14,36 +14,36 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table( name = "HISTORIC_PRODUCT" )
+@Table(name = "HISTORIC_PRODUCT")
 public class HistoricProduct 
 {
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
-    @Column( name = "ID" )
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private long id;
     
-    @Column( name = "SHOP" )
+    @Column(name = "SHOP")
     private String shop;
     
-    @Column( name = "SECTION" )
+    @Column(name = "SECTION")
     private String section;
     
-    @Column( name = "REFERENCE" )
+    @Column(name = "REFERENCE")
     private String reference;
     
-    @Column( name = "COLOR" )
+    @Column(name = "COLOR")
     private String color;
     
-    @Column( name = "INSERT_DATE" )
+    @Column(name = "INSERT_DATE")
     private Calendar insertDate;
 
     public HistoricProduct() {}
 
-    public HistoricProduct( String shop
+    public HistoricProduct(String shop
                 , String section
                 , String reference
                 , String color
-                , Calendar insertDate ) 
+                , Calendar insertDate) 
     {
         this.shop = shop;
         this.section = section;
@@ -58,9 +58,9 @@ public class HistoricProduct
     public String getSection() { return section; }
     public String getShop() { return shop; }
 
-    public void setColor( String color ) { this.color = color; }
-    public void setShop( String shop ) { this.shop = shop; }
-    public void setSection( String section ) { this.section = section; }
-    public void setReference( String reference ) { this.reference = reference; }
-    public void setInsertDate( Calendar insertDate ) { this.insertDate = insertDate; }
+    public void setColor(String color) { this.color = color; }
+    public void setShop(String shop) { this.shop = shop; }
+    public void setSection(String section) { this.section = section; }
+    public void setReference(String reference) { this.reference = reference; }
+    public void setInsertDate(Calendar insertDate) { this.insertDate = insertDate; }
 }

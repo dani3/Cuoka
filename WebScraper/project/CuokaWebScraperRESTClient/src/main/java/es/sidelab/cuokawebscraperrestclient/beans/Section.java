@@ -15,16 +15,16 @@ public class Section
     
     public Section() {}
     
-    public Section( String name, String path, boolean man )
+    public Section(String name, String path, boolean man)
     {
         this.name = name;
         this.path = path;
         this.man = man;
     }
 
-    public void setName( String name ) { this.name = name; }
-    public void setPath( String path ) { this.path = path; }
-    public void setMan( boolean man ) { this.man = man; }
+    public void setName(String name) { this.name = name; }
+    public void setPath(String path) { this.path = path; }
+    public void setMan(boolean man) { this.man = man; }
     
     public String getName() { return this.name; }
     public String getPath() { return this.path; }
