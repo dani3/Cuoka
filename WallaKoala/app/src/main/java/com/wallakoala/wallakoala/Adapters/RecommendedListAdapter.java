@@ -106,33 +106,33 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     final StringRequest stringRequest = new StringRequest(Request.Method.GET
                             , fixedURL
                             , new Response.Listener<String>()
-                    {
-                        @Override
-                        public void onResponse(String response)
-                        {
-                            Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                            if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                             {
-                                // Si contiene el producto, es que se quiere quitar de favoritos.
-                                if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                @Override
+                                public void onResponse(String response)
                                 {
-                                    user.getFavoriteProducts().remove(mProduct.getId());
+                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
 
-                                } else {
-                                    user.getFavoriteProducts().add(mProduct.getId());
+                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                    {
+                                        // Si contiene el producto, es que se quiere quitar de favoritos.
+                                        if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                        {
+                                            user.getFavoriteProducts().remove(mProduct.getId());
+
+                                        } else {
+                                            user.getFavoriteProducts().add(mProduct.getId());
+                                        }
+
+                                        mSharedPreferencesManager.insertUser(user);
+                                    }
                                 }
-
-                                mSharedPreferencesManager.insertUser(user);
                             }
-                        }
-                    }
                             , new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error)
-                        {}
-                    });
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
+                                {}
+                            });
 
                     VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
 
