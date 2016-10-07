@@ -2,9 +2,6 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -12,9 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -22,22 +17,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
-import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @class Pantalla principal de la app.
+ * Pantalla principal de la app.
  * Created by Daniel Mancebo on 09/11/2015.
  */
 
@@ -135,6 +124,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Inicializacion y configuracion del NavigationDrawer.
      */
+    @SuppressWarnings("deprecation")
     protected void _initNavigationDrawer()
     {
         mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);

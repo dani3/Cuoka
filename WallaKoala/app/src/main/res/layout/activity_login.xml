@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".Activities.LoginUI"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-    <in.championswimmer.libsocialbuttons.buttons.BtnFacebook
-        android:layout_width="278dp"
-        android:layout_height="wrap_content"
-        android:text="@string/login_facebook"
-        android:textSize="18dp"/>
-
-    <in.championswimmer.libsocialbuttons.buttons.BtnGoogleplus
-        android:layout_width="278dp"
-        android:layout_height="wrap_content"
-        android:text="@string/login_google"
-        android:textSize="18dp"/>
-
-    <in.championswimmer.libsocialbuttons.buttons.BtnInstagram
-        android:layout_width="278dp"
-        android:layout_height="wrap_content"
-        android:text="@string/login_instagram"
-        android:textSize="18dp"/>
+    <ImageView
+        android:id="@+id/login_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background"/>
 
     <LinearLayout
-        android:layout_width="278dp"
+        android:layout_gravity="bottom|center"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -39,9 +24,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="@string/login_login"
-            android:textColor="@color/colorMediumText"
+            android:textColor="@color/colorText"
             android:textSize="14dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+            android:background="@drawable/button_relief_white_left"/>
 
         <Button
             android:id="@+id/sign_up"
@@ -49,9 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="@string/login_sign_up"
+            android:textColor="@color/colorAccent"
             android:textSize="14dp"
-            style="@style/AppTheme.Button"/>
+            android:background="@drawable/button_relief_white_right"/>
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
