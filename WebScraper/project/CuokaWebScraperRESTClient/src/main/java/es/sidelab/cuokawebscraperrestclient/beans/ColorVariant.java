@@ -17,10 +17,10 @@ public class ColorVariant
     
     public ColorVariant() {}
     
-    public ColorVariant( String reference
+    public ColorVariant(String reference
                 , String name
                 , String colorURL
-                , List<Image> images )
+                , List<Image> images)
     {
         this.reference = reference;
         this.name = name;
@@ -34,9 +34,9 @@ public class ColorVariant
     public String getPath() { return this.path; }
     public List<Image> getImages() { return this.images; }
     
-    public void setReference( String reference ) { this.reference = reference; }
-    public void setName( String name ) { this.name = name; }
-    public void setColorURL( String colorURL ) { this.colorURL = colorURL; }
-    public void setPath( String path ) { this.path = path; }
-    public void setImages( List<Image> images ) { this.images = images; }
+    public void setReference(String reference) { this.reference = reference; }
+    public void setName(String name) { this.name = name; }
+    public void setColorURL(String colorURL) { this.colorURL = colorURL; }
+    public void setPath(String path) { this.path = path; }
+    public void setImages(List<Image> images) { this.images = images; }
 }

@@ -38,7 +38,7 @@ import com.wallakoala.wallakoala.Views.LikeButtonView;
 import java.util.List;
 
 /**
- * @class Adapter para el grid de productos.
+ * Adapter para el grid de productos.
  * Created by Daniel Mancebo Aldea on 10/11/2015.
  */
 

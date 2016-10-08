@@ -12,7 +12,7 @@ public class Image
     
     public Image() {}
 
-    public Image( String url ) 
+    public Image(String url) 
     {
         this.url = url;
     }
@@ -20,6 +20,6 @@ public class Image
     public String getUrl() { return url; }
     public String getPath() { return path; }
 
-    public void setUrl( String url ) { this.url = url; }
-    public void setPath( String path ) { this.path = path; }  
+    public void setUrl(String url) { this.url = url; }
+    public void setPath(String path) { this.path = path; }  
 }

@@ -18,12 +18,12 @@ public class Filter
     
     public Filter() {}
 
-    public Filter( boolean man
+    public Filter(boolean man
             , boolean newness
             , int priceFrom
             , int priceTo
             , List<String> colors
-            , List<String> sections ) 
+            , List<String> sections) 
     {
         this.man = man;
         this.newness = newness;

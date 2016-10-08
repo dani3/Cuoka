@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ShopsRepository extends JpaRepository<Shop, Long> 
 {
-    Shop findByName( String name );
+    Shop findByName(String name);
 }

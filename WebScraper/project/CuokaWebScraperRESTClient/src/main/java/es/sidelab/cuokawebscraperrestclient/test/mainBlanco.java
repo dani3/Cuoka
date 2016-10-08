@@ -16,7 +16,7 @@ import java.util.List;
 public class mainBlanco 
 {
     static boolean finished = false;
-    public static void main( String[] args ) throws Exception 
+    public static void main(String[] args) throws Exception 
     {        
         
         String url = "https://www.blanco.com/";
@@ -24,27 +24,27 @@ public class mainBlanco
         //Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false );
         /*
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Process p = Runtime.getRuntime().exec( new String[] { "python"
+        Process p = Runtime.getRuntime().exec(new String[] { "python"
                                 , section.getPath() + "renderProducts.py"
                                 , Properties.CHROME_DRIVER
                                 , section.getName()
-                                , section.getPath() } );
+                                , section.getPath() });
         
         // Nos quedamos suspendidos 10 segundos.
-        Thread.sleep( 10000 );
+        Thread.sleep(10000);
         
         // Nos quedamos esperando hasta que termine.
-        File file = new File( section.getPath() + section.getName() + "_done.dat" );
-        while ( ! file.exists() ) 
+        File file = new File(section.getPath() + section.getName() + "_done.dat");
+        while (! file.exists()) 
         {
-            file = new File( section.getPath() + "done.dat" );
+            file = new File(section.getPath() + "done.dat");
         }
 
         file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
-        BufferedReader br = new BufferedReader( 
-            new FileReader( new File( section.getPath() + section.getName() + "_products.txt" ) ) );
+        BufferedReader br = new BufferedReader(
+            new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
                
       
         List<Product> productList = new ArrayList<>();
@@ -62,29 +62,32 @@ public class mainBlanco
                     productList.add(product);
                 }
             }
-        }
-        
+        }        
+
         /**********************************************************************/
+
+        /*********************************************************************/
+
         Printer.print(Integer.toString(productList.size()));
         
-        Product p = productList.get( 0 );
+        Product p = productList.get(0);
         
-        System.out.println( "-------- INFO PRODUCTO ----------" );
-        System.out.println( "Nombre: " + p.getName() );
-        System.out.println( "Link: " + p.getLink() );
-        System.out.println( "Descripcion: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() + " €" );
-        System.out.println( "-------- INFO COLORES -----------" );
-        for ( ColorVariant cv : p.getColors() )
+        System.out.println("-------- INFO PRODUCTO ----------");
+        System.out.println("Nombre: " + p.getName());
+        System.out.println("Link: " + p.getLink());
+        System.out.println("Descripcion: " + p.getDescription());
+        System.out.println("Precio: " + p.getPrice() + " €");
+        System.out.println("-------- INFO COLORES -----------");
+        for (ColorVariant cv : p.getColors())
         {
-            System.out.println( " - Color: " + cv.getName() );
-            System.out.println( " - Icono: " + cv.getColorURL() );
-            System.out.println( " - Referencia: " + cv.getReference() );
-            for ( Image image : cv.getImages() )
-                System.out.println( " - " + image.getUrl() );
+            System.out.println(" - Color: " + cv.getName());
+            System.out.println(" - Icono: " + cv.getColorURL());
+            System.out.println(" - Referencia: " + cv.getReference());
+            for (Image image : cv.getImages())
+                System.out.println(" - " + image.getUrl());
           
             
-            System.out.println( "\n" );            
+            System.out.println("\n");            
         }
     }
     
@@ -167,19 +170,19 @@ public class mainBlanco
         return product;
     }
     
-    private static String fixURL( String url )
+    private static String fixURL(String url)
     {
-        if ( url.startsWith( "//" ) )
-            return "http:".concat( url ).replace( " " , "%20" );
+        if (url.startsWith("//"))
+            return "http:".concat(url).replace(" " , "%20");
         
-        return url.replace( " " , "%20" );
+        return url.replace(" " , "%20");
     }   
     
-    private static int containsProduct( List<Product> productList, String reference )
+    private static int containsProduct(List<Product> productList, String reference)
     {
-        for ( int i = 0; i < productList.size(); i++ )
-            for ( ColorVariant cv : productList.get( i ).getColors() )
-                if ( cv.getReference().equals( reference ) )
+        for (int i = 0; i < productList.size(); i++)
+            for (ColorVariant cv : productList.get(i).getColors())
+                if (cv.getReference().equals(reference))
                     return i;
         
         return -1;

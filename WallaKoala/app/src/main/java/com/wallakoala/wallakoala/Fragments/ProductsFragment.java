@@ -61,7 +61,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @class Fragmento con la pestaña de Novedades.
+ * Fragmento con la pestaña de Novedades.
  * Created by Daniel Mancebo Aldea on 29/05/2016.
  */
 
@@ -69,7 +69,6 @@ public class ProductsFragment extends Fragment
 {
     /* Constants */
     protected static final String ALL = "All";
-    protected static final int NUM_CACHED_PRODUCTS = 8;
     protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
     protected static boolean MAN;
@@ -236,7 +235,9 @@ public class ProductsFragment extends Fragment
         mShopsList               = new ArrayList<>();
 
         for (String shop : mSharedPreferences.retreiveUser().getShops())
+        {
             mShopsList.add(shop);
+        }
 
         start = count = 0;
         mBackPressed = 0;
@@ -304,7 +305,6 @@ public class ProductsFragment extends Fragment
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setItemViewCacheSize(NUM_CACHED_PRODUCTS);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             boolean scrollingUp;
@@ -493,8 +493,11 @@ public class ProductsFragment extends Fragment
         protected void onPreExecute()
         {
             if (mState != STATE.LOADING)
+            {
                 _loading(true, true);
-        }
+            }
+
+        } // onPreExecute
 
         @Override
         protected Void doInBackground(String... unused)
@@ -526,12 +529,15 @@ public class ProductsFragment extends Fragment
                     VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
 
                     if (isCancelled())
+                    {
                         return null;
+                    }
                 }
 
                 for (int i = 0; i < mShopsList.size(); i++)
                 {
-                    try {
+                    try
+                    {
                         final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
                         content.add(response);
@@ -542,7 +548,9 @@ public class ProductsFragment extends Fragment
                     }
 
                     if (isCancelled())
+                    {
                         return null;
+                    }
                 }
 
                 // Si content es vacio, es que han fallado todas las conexiones.
@@ -708,7 +716,6 @@ public class ProductsFragment extends Fragment
                 {
                     new MultithreadConversion().execute(content);
                 }
-
             }
         }
 
@@ -758,7 +765,9 @@ public class ProductsFragment extends Fragment
 
                 // Nos quedamos esperando a que terminen los threads
                 for (int i = 0; i < content.size(); i++)
+                {
                     completionService.take();
+                }
 
                 // Liberamos el executor ya que no hara falta.
                 executor.shutdown();
@@ -832,7 +841,7 @@ public class ProductsFragment extends Fragment
     } /* [END MultithreadConversion] */
 
     /**
-     * Metodo que crea maneja la interfaz en funcion de si esta cargando o no los productos.
+     * Metodo que maneja la interfaz en funcion de si esta cargando o no los productos.
      * @param loading: true indica que se inicia la carga, false que ha terminado.
      */
     private void _loading(boolean loading, boolean ok)

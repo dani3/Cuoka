@@ -19,7 +19,7 @@ public class Shop
     
     public Shop() {}
 
-    public Shop( String name, URL url, List<Section> sections, boolean offline ) 
+    public Shop(String name, URL url, List<Section> sections, boolean offline) 
     {
         this.name = name;
         this.url = url;
@@ -27,10 +27,10 @@ public class Shop
         this.offline = offline;
     }
 
-    public void setUrl( URL url ) { this.url = url; }
-    public void setName( String name ) { this.name = name; }
-    public void setSections( List<Section> sections ) { this.sections = sections; }  
-    public void setOffline( boolean offline ) { this.offline = offline; }
+    public void setUrl(URL url) { this.url = url; }
+    public void setName(String name) { this.name = name; }
+    public void setSections(List<Section> sections) { this.sections = sections; }  
+    public void setOffline(boolean offline) { this.offline = offline; }
     
     public String getName() { return name; }
     public URL getURL() { return url; }

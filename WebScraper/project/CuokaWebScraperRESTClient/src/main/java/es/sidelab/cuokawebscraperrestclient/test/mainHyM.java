@@ -19,83 +19,83 @@ import org.jsoup.select.Elements;
 
 public class mainHyM 
 {    
-    public static void main( String[] args ) throws Exception 
+    public static void main(String[] args) throws Exception 
     {        
         String url = "http://www2.hm.com/";
-        Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\", true );     
+        Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\", true);     
         List<Product> productList = new ArrayList<>();
         
-        List<String> productsLink = getListOfLinks( section.getPath() + section.getName() + ".html" , url );
+        List<String> productsLink = getListOfLinks(section.getPath() + section.getName() + ".html" , url);
         
         // Escribimos en fichero todos los links de la seccion
-        FileManager.writeLinksToFile( productsLink, section );
+        FileManager.writeLinksToFile(productsLink, section);
         // Ejecutamos el script que renderiza todos los productos
-        PythonManager.executeRenderProducts( section );
+        PythonManager.executeRenderProducts(section);
         
         int cont = 0;
-        for ( String productLink : productsLink )
+        for (String productLink : productsLink)
         {
             String pathProduct = section.getPath() + section.getName() + "_" + cont + ".html";
             
             try 
             {
-                File file = new File( pathProduct );
+                File file = new File(pathProduct);
 
-                while ( ! file.exists() ) {}
+                while (! file.exists()) {}
 
-                Thread.sleep( 500 );
-                file = new File( pathProduct );
+                Thread.sleep(500);
+                file = new File(pathProduct);
 
-                Document document = Jsoup.parse( file, "ISO-8859-1" );
+                Document document = Jsoup.parse(file, "ISO-8859-1");
 
                 // Obtener los atributos propios del producto
                 String link = productLink;
-                String name = document.select( "h1.product-item-headline" ).first().ownText(); 
-                String price = document.select( "div.product-item-price span" ).first().ownText()
-                                                                                       .replaceAll( "[^,.0-9]", "" )
-                                                                                       .replaceAll( ",", "." )
+                String name = document.select("h1.product-item-headline").first().ownText(); 
+                String price = document.select("div.product-item-price span").first().ownText()
+                                                                                       .replaceAll("[^,.0-9]", "")
+                                                                                       .replaceAll(",", ".")
                                                                                        .trim();
-                String reference = productLink.substring( productLink.indexOf( "." ) + 1 , productLink.lastIndexOf( "." ) );
-                String description = document.select( "p.product-detail-description-text" ).first().ownText()
-                                                                                                   .replaceAll( "\n", " " );
+                String reference = productLink.substring(productLink.indexOf(".") + 1 , productLink.lastIndexOf("."));
+                String description = document.select("p.product-detail-description-text").first().ownText()
+                                                                                                   .replaceAll("\n", " ");
 
-                if ( description.length() > 255 )
-                    description = description.substring( 0, 255 );
+                if (description.length() > 255)
+                    description = description.substring(0, 255);
 
-                if ( ! containsProduct( productList, reference ) )
+                if (! containsProduct(productList, reference))
                 {
                     // Obtener los colores
                     List<ColorVariant> variants = new ArrayList<>();
-                    Elements colors = document.select( "div.product-colors ul.inputlist li > label" );
-                    for ( Element color : colors )
+                    Elements colors = document.select("div.product-colors ul.inputlist li > label");
+                    for (Element color : colors)
                     {
                         // Nos conectamos al producto de cada color
-                        String colorLink = "http://www2.hm.com/" + "es_es/productpage." + color.select( "input" ).attr( "data-articlecode" ) + ".html";
-                        document = Jsoup.connect( colorLink ).timeout( Properties.TIMEOUT )
-                                                             .ignoreHttpErrors( true ).get();
+                        String colorLink = "http://www2.hm.com/" + "es_es/productpage." + color.select("input").attr("data-articlecode") + ".html";
+                        document = Jsoup.connect(colorLink).timeout(Properties.TIMEOUT)
+                                                             .ignoreHttpErrors(true).get();
 
-                        String colorReference = color.select( "input" ).attr( "data-articlecode" );
-                        String colorName = color.attr( "title" ).toUpperCase();
-                        String colorURL = fixURL( color.select( "div img" ).attr( "src" ) );
+                        String colorReference = color.select("input").attr("data-articlecode");
+                        String colorName = color.attr("title").toUpperCase();
+                        String colorURL = fixURL(color.select("div img").attr("src"));
 
                         List<Image> imagesURL = new ArrayList<>();
-                        Elements images = document.select( "div.product-detail-thumbnails li img" );
-                        for ( Element img : images )
-                            imagesURL.add( new Image( fixURL( img.attr( "src" ).replaceAll( "/product/thumb" , "/product/main" ) ) ) );
+                        Elements images = document.select("div.product-detail-thumbnails li img");
+                        for (Element img : images)
+                            imagesURL.add(new Image(fixURL(img.attr("src").replaceAll("/product/thumb" , "/product/main"))));
 
-                        variants.add( new ColorVariant( colorReference, colorName, colorURL, imagesURL ) );
+                        variants.add(new ColorVariant(colorReference, colorName, colorURL, imagesURL));
                     }
 
-                    productList.add( new Product( Double.parseDouble( price )
+                    productList.add(new Product(Double.parseDouble(price)
                                         , name
                                         , ""
                                         , ""
                                         , link 
                                         , description
                                         , true
-                                        , variants ) );
+                                        , variants));
                 }
-            } catch ( Exception e ) { 
+            } catch (Exception e) { 
                 e.printStackTrace(); 
                 
             } finally {                
@@ -106,67 +106,67 @@ public class mainHyM
         } // for products
         
         System.gc();
-        for ( int i = 0; i < productsLink.size(); i++ )
+        for (int i = 0; i < productsLink.size(); i++)
         {
-            FileManager.deleteFile( section.getPath() + section.getName() + "_" + i + ".html" );
+            FileManager.deleteFile(section.getPath() + section.getName() + "_" + i + ".html");
         }
         
         // Borramos el fichero de links
-        FileManager.deleteFile( section.getPath() + section.getName() + "_LINKS.txt" );
+        FileManager.deleteFile(section.getPath() + section.getName() + "_LINKS.txt");
         
-        Printer.print( Integer.toString( productList.size() ) );
+        Printer.print(Integer.toString(productList.size()));
         
-        Product p = productList.get( 2 );
+        Product p = productList.get(2);
         
-        System.out.println( "-------- INFO PRODUCTO ----------" );
-        System.out.println( "Nombre: " + p.getName() );
-        System.out.println( "Link: " + p.getLink() );
-        System.out.println( "Description: " + p.getDescription());
-        System.out.println( "Precio: " + p.getPrice() + " €" );
-        System.out.println( "-------- INFO COLORES -----------" );
-        for ( ColorVariant cv : p.getColors() )
+        System.out.println("-------- INFO PRODUCTO ----------");
+        System.out.println("Nombre: " + p.getName());
+        System.out.println("Link: " + p.getLink());
+        System.out.println("Description: " + p.getDescription());
+        System.out.println("Precio: " + p.getPrice() + " €");
+        System.out.println("-------- INFO COLORES -----------");
+        for (ColorVariant cv : p.getColors())
         {
-            System.out.println( " - Color: " + cv.getName() );
-            System.out.println( " - Icono: " + cv.getColorURL() );
-            System.out.println( " - Referencia: " + cv.getReference() );
-            for ( Image image : cv.getImages() )
-                System.out.println( " - " + image.getUrl() );
+            System.out.println(" - Color: " + cv.getName());
+            System.out.println(" - Icono: " + cv.getColorURL());
+            System.out.println(" - Referencia: " + cv.getReference());
+            for (Image image : cv.getImages())
+                System.out.println(" - " + image.getUrl());
             
-            System.out.println( "\n" );            
+            System.out.println("\n");            
         }
         
     }
     
-    private static String fixURL( String url )
+    private static String fixURL(String url)
     {
-        if ( url.startsWith( "//" ) )
-            return "http:".concat( url ).replace( " " , "%20" );
+        if (url.startsWith("//"))
+            return "http:".concat(url).replace(" " , "%20");
         
         return url;
     }   
     
-    private static boolean containsProduct( List<Product> productList, String reference )
+    private static boolean containsProduct(List<Product> productList, String reference)
     {
-        for ( Product p : productList )
-            for ( ColorVariant cv : p.getColors() )
-                if ( cv.getReference().equals( reference ) )
+        for (Product p : productList)
+            for (ColorVariant cv : p.getColors())
+                if (cv.getReference().equals(reference))
                     return true;
         
         return false;
     }
     
-    private static List<String> getListOfLinks( String htmlPath, String shopUrl ) throws IOException
+    private static List<String> getListOfLinks(String htmlPath, String shopUrl) throws IOException
     {
         List<String> links = new ArrayList<>();        
         
-        File html = new File( htmlPath);
-        Document document = Jsoup.parse( html, "UTF-8" );
+        File html = new File(htmlPath);
+        Document document = Jsoup.parse(html, "UTF-8");
                   
-        Elements products = document.select( "h3.product-item-headline a" );
+        Elements products = document.select("h3.product-item-headline a");
         
-        for( Element element : products )
+        for(Element element : products)
         {
-            links.add( fixURL( shopUrl + element.attr( "href" ) ) );
+            links.add(fixURL(shopUrl + element.attr("href")));
         }
         
         return links;

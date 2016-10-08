@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 
 public class ImageManager 
 {
-    private static final Log LOG = LogFactory.getLog( ImageManager.class );
+    private static final Log LOG = LogFactory.getLog(ImageManager.class);
     
     /**
      * Metodo que descarga las imagenes de los productos, las deja en la ruta predefinida
@@ -31,107 +31,107 @@ public class ImageManager
      * @param shop: Tienda a la que pertenecen los productos.
      * @return Lista de productos con los paths actualizados.
      */
-    public static List<Product> downloadImages( List<Product> products, String shop )
+    public static List<Product> downloadImages(List<Product> products, String shop)
     {
         List<Product> productsUpdated = new ArrayList<>();
         
         // Creamos los directorios si es necesario
-        FileManager.createProductsDirectory( shop );
+        FileManager.createProductsDirectory(shop);
         
-        for ( int i = 0; i < products.size(); i++ ) 
+        for (int i = 0; i < products.size(); i++) 
         {
-            Product product = products.get( i );
+            Product product = products.get(i);
             
-            for ( int j = 0; j < product.getColors().size(); j++ )
+            for (int j = 0; j < product.getColors().size(); j++)
             {
-                ColorVariant cv = product.getColors().get( j );
+                ColorVariant cv = product.getColors().get(j);
                 
                 // Descargar las imagenes si es necesario
-                if ( cv.getImages() != null )
+                if (cv.getImages() != null)
                 {
-                    for ( int k = 0; k < cv.getImages().size(); k++ )
+                    for (int k = 0; k < cv.getImages().size(); k++)
                     {
                         String path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + ".jpg";
                         String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + "_" + "Small.jpg";
-                        LOG.info( "Comprobando la imagen: " + path );
+                        LOG.info("Comprobando la imagen: " + path);
 
-                        if ( ! FileManager.existsFile( pathSmall ) )
+                        if (! FileManager.existsFile(pathSmall))
                         {
-                            LOG.info( "La imagen no existe, descargando" );
-                            boolean ok = downloadImage( cv.getImages().get( k ).getUrl(), pathSmall.replaceAll( "_Small" , "" ) );
+                            LOG.info("La imagen no existe, descargando");
+                            boolean ok = downloadImage(cv.getImages().get(k).getUrl(), pathSmall.replaceAll("_Small" , ""));
 
-                            if ( ok )
+                            if (ok)
                             {
-                                LOG.info( "Imagen descargada correctamente" );
-                                product.getColors().get( j )
-                                        .getImages().get( k ).setPath( path );
+                                LOG.info("Imagen descargada correctamente");
+                                product.getColors().get(j)
+                                        .getImages().get(k).setPath(path);
                                 
                             } else {
-                                product.getColors().get( j )
-                                        .getImages().get( k ).setPath( null );
+                                product.getColors().get(j)
+                                        .getImages().get(k).setPath(null);
                                 
                             }                            
                             
                         } else {
-                            LOG.info( "La imagen ya existe" );
-                            product.getColors().get( j )
-                                        .getImages().get( k ).setPath( path );                        
+                            LOG.info("La imagen ya existe");
+                            product.getColors().get(j)
+                                        .getImages().get(k).setPath(path);                        
                         }   
                         
                     } // for images
                     
-                    cv.setNumberOfImages( (short)cv.getImages().size() );
+                    cv.setNumberOfImages((short)cv.getImages().size());
                     
                 } // if images != null
                 
                 // Comprobamos que el link del color no este vacio
-                if ( ( cv.getColorURL() != null ) && ( ! cv.getColorURL().isEmpty() ) )
+                if ((cv.getColorURL() != null) && (! cv.getColorURL().isEmpty()))
                 {
                     // Descargar los iconos si es necesario
                     String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
-                                    + "_" + cv.getReference() + "_" + cv.getName().replaceAll( " " , "_" ) + "_ICON.jpg";
+                                    + "_" + cv.getReference() + "_" + cv.getName().replaceAll(" " , "_") + "_ICON.jpg";
                     
-                    if ( ! FileManager.existsFile( path ) )
+                    if (! FileManager.existsFile(path))
                     {
-                        boolean ok = downloadImage( cv.getColorURL(), path );
-                        if ( ok )
+                        boolean ok = downloadImage(cv.getColorURL(), path);
+                        if (ok)
                         {
-                            product.getColors().get( j ).setPath( "0" );
+                            product.getColors().get(j).setPath("0");
                             
                         } else {
-                            LOG.info( "URL del icono incorrecta. Se intenta averiguar el color..." );
+                            LOG.info("URL del icono incorrecta. Se intenta averiguar el color...");
                     
-                            String color_found = ColorManager.findOutColor( cv.getName() );
+                            String color_found = ColorManager.findOutColor(cv.getName());
 
-                            if ( color_found != null )
+                            if (color_found != null)
                             {
-                                LOG.info( "Color (" + cv.getName() +") encontrado!" );
-                                product.getColors().get( j ).setPath( color_found );
+                                LOG.info("Color (" + cv.getName() +") encontrado!");
+                                product.getColors().get(j).setPath(color_found);
 
                             } else {
-                                LOG.info( "Color (" + cv.getName() +") no encontrado" );
+                                LOG.info("Color (" + cv.getName() +") no encontrado");
 
                             }
                             
                         }
                         
                     } else
-                        product.getColors().get( j ).setPath( "0" );
+                        product.getColors().get(j).setPath("0");
                     
                 } else {
-                    LOG.info( "URL del icono vacio. Se intenta averiguar el color..." );
+                    LOG.info("URL del icono vacio. Se intenta averiguar el color...");
                     
-                    String color_path = ColorManager.findOutColor( cv.getName() );
+                    String color_path = ColorManager.findOutColor(cv.getName());
                     
-                    if ( color_path != null )
+                    if (color_path != null)
                     {
-                        LOG.info( "Color (" + cv.getName() +") encontrado!" );
-                        product.getColors().get( j ).setPath( color_path );
+                        LOG.info("Color (" + cv.getName() +") encontrado!");
+                        product.getColors().get(j).setPath(color_path);
                         
                     } else {
-                        LOG.info( "Color (" + cv.getName() +") no encontrado" );
+                        LOG.info("Color (" + cv.getName() +") no encontrado");
                         
                     }                        
                     
@@ -139,15 +139,15 @@ public class ImageManager
                 
             } // for colors      
             
-            productsUpdated.add( product );
+            productsUpdated.add(product);
             
         } // for products
         
-        LOG.info( "Todas las imagenes se han descargado correctamente, se reescalan" );
-        resizeImages( shop );        
+        LOG.info("Todas las imagenes se han descargado correctamente, se reescalan");
+        resizeImages(shop);        
         
-        LOG.info( "Se reescalan los iconos de los colores" );
-        resizeColors( shop );        
+        LOG.info("Se reescalan los iconos de los colores");
+        resizeColors(shop);        
         
         return productsUpdated;
     }
@@ -158,7 +158,7 @@ public class ImageManager
      * @param path: path donde se quiere dejar la imagen.
      * @return true si todo ha ido correctamente.
      */
-    private static boolean downloadImage( String imageURL, String path )
+    private static boolean downloadImage(String imageURL, String path)
     {
         InputStream in = null;
         ByteArrayOutputStream out = null;
@@ -166,34 +166,34 @@ public class ImageManager
                 
         try 
         {            
-            URL url = new URL( imageURL );
+            URL url = new URL(imageURL);
             
-            in = new BufferedInputStream( url.openStream() );
+            in = new BufferedInputStream(url.openStream());
             
             out = new ByteArrayOutputStream();
             byte[] buffer = new byte[ 1024 ];
 
             int i = 0;
-            while( ( i = in.read( buffer ) ) != -1 )
-                out.write( buffer, 0, i );
+            while((i = in.read(buffer)) != -1)
+                out.write(buffer, 0, i);
 
-            fos = new FileOutputStream( path );
-            fos.write( out.toByteArray() ); 
+            fos = new FileOutputStream(path);
+            fos.write(out.toByteArray()); 
 
             fos.close();
             out.close();
             in.close();
                         
-        } catch ( MalformedURLException ex ) {
-            LOG.error( "ERROR: Error al formar la URL de la imagen" );
-            LOG.error( "URL: " + imageURL );
-            LOG.error( ex.toString() );
+        } catch (MalformedURLException ex) {
+            LOG.error("ERROR: Error al formar la URL de la imagen");
+            LOG.error("URL: " + imageURL);
+            LOG.error(ex.toString());
             
             return false;
             
-        } catch ( IOException ex ) {
-            LOG.error( "ERROR: Error en la conexion" );
-            LOG.error( ex.toString() );
+        } catch (IOException ex) {
+            LOG.error("ERROR: Error en la conexion");
+            LOG.error(ex.toString());
             
             return false;
         }
@@ -205,39 +205,39 @@ public class ImageManager
      * Metodo que llama a un script de python para reescalar las imagenes de una tienda.
      * @param shop: Nombre de la tienda de la que se quieren reescalar las imagenes.
      */
-    private static void resizeImages( String shop )
+    private static void resizeImages(String shop)
     {
         try 
         {   
             double ASPECT_RATIO = 0.0f;
             
-            if ( shop.equalsIgnoreCase( "Pedro Del Hierro" ) )
+            if (shop.equalsIgnoreCase("Pedro Del Hierro"))
                 ASPECT_RATIO = Properties.PDH_ASPECT_RATIO;
             
-            if ( shop.equalsIgnoreCase( "Springfield" ) )
+            if (shop.equalsIgnoreCase("Springfield"))
                 ASPECT_RATIO = Properties.SPRINGFIELD_ASPECT_RATIO;
             
-            if ( shop.equalsIgnoreCase( "HyM" ) )
+            if (shop.equalsIgnoreCase("HyM"))
                 ASPECT_RATIO = Properties.HYM_ASPECT_RATIO;
             
-            if ( shop.equalsIgnoreCase( "Blanco" ) )
+            if (shop.equalsIgnoreCase("Blanco"))
                 ASPECT_RATIO = Properties.BLANCO_ASPECT_RATIO;
             
-            if ( shop.equalsIgnoreCase( "Zara" ) )
+            if (shop.equalsIgnoreCase("Zara"))
                 ASPECT_RATIO = Properties.ZARA_ASPECT_RATIO;
             
             // El script tiene que estar en el mismo path que el jar
-            Runtime.getRuntime().exec( new String[]{ "sudo"
+            Runtime.getRuntime().exec(new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "resizeProducts.py"
                         , Properties.IMAGE_PATH + shop
-                        , Double.toString( ASPECT_RATIO )
-                        , Integer.toString( Properties.IMAGE_HEIGHT_L )
-                        , Integer.toString( Properties.IMAGE_HEIGHT_S ) } );
+                        , Double.toString(ASPECT_RATIO)
+                        , Integer.toString(Properties.IMAGE_HEIGHT_L)
+                        , Integer.toString(Properties.IMAGE_HEIGHT_S) });
             
-        } catch ( IOException ex ) {
-            LOG.error( "ERROR: Error al ejecutar el script 'resizeProducts.py'" );
-            LOG.error( ex.getMessage() );            
+        } catch (IOException ex) {
+            LOG.error("ERROR: Error al ejecutar el script 'resizeProducts.py'");
+            LOG.error(ex.getMessage());            
         }
     }
     
@@ -245,21 +245,21 @@ public class ImageManager
      * Metodo que llama a un script de python para reescalar los iconos de los colores.
      * @param shop: Nombre de la tienda de la que se quieren reescalar los iconos.
      */
-    private static void resizeColors( String shop )
+    private static void resizeColors(String shop)
     {
         try 
         {      
             // El script tiene que estar en el mismo path que el jar
-            Runtime.getRuntime().exec( new String[]{ "sudo"
+            Runtime.getRuntime().exec(new String[]{ "sudo"
                         , "/usr/bin/python"
                         , "resizeColors.py"
                         , Properties.COLOR_PATH + shop
-                        , Integer.toString( Properties.ICON_WIDTH )
-                        , Integer.toString( Properties.ICON_HEIGHT ) } );
+                        , Integer.toString(Properties.ICON_WIDTH)
+                        , Integer.toString(Properties.ICON_HEIGHT) });
             
-        } catch ( IOException ex ) {
-            LOG.error( "ERROR: Error al ejecutar el script 'resizeColors.py'" );
-            LOG.error( ex.getMessage() );            
+        } catch (IOException ex) {
+            LOG.error("ERROR: Error al ejecutar el script 'resizeColors.py'");
+            LOG.error(ex.getMessage());            
         }
     }
 }

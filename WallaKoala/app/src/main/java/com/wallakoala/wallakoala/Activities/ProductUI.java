@@ -59,7 +59,7 @@ import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
 /**
- * @class Pantalla de un producto.
+ * Pantalla de un producto.
  * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 

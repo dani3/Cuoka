@@ -9,23 +9,23 @@ import org.apache.log4j.Logger;
 
 public class main 
 {
-    private static final Logger LOG = Logger.getLogger( main.class );   
+    private static final Logger LOG = Logger.getLogger(main.class);   
     
-    public static void main( String[] args ) throws Exception
+    public static void main(String[] args) throws Exception
     {    
-        LOG.info( "Renderizando paginas" );
+        LOG.info("Renderizando paginas");
         
-        if ( PythonManager.executeRenderSections() )
+        if (PythonManager.executeRenderSections())
         {
-            LOG.info( "Buscamos la lista de tiendas" );
+            LOG.info("Buscamos la lista de tiendas");
 
             // Sacamos la lista de tiendas
             List<Shop> shops = ScraperManager.getArrayOfShops();        
 
-            LOG.info( "Se han encontrado " + shops.size() + " tiendas" );
+            LOG.info("Se han encontrado " + shops.size() + " tiendas");
 
             // Ejecutamos concurrentemente los scrapers
-            MultithreadManager.parallelScrap( shops );
+            MultithreadManager.parallelScrap(shops);
         }        
     }    
 }

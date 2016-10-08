@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class EncryptionManager 
 {
-    private static final Log LOG = LogFactory.getLog( EncryptionManager.class );
+    private static final Log LOG = LogFactory.getLog(EncryptionManager.class);
     
     /**
      * Metodo que cifra el string con la clave recibida utilizando el algoritmo AES.
@@ -26,26 +26,26 @@ public class EncryptionManager
      * @param message: string a cifrar.
      * @return String con el mensaje cifrado.
      */
-    public static String encrypt( String key, byte[] initVector, String message ) 
+    public static String encrypt(String key, byte[] initVector, String message) 
     {
         try 
         {
-            LOG.info( "Cifrando " + message );
+            LOG.info("Cifrando " + message);
             
-            IvParameterSpec iv = new IvParameterSpec( initVector );            
-            SecretKeySpec skeySpec = new SecretKeySpec( key.getBytes( "UTF-8" ), "AES" );
+            IvParameterSpec iv = new IvParameterSpec(initVector);            
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-            Cipher cipher = Cipher.getInstance( "AES/CBC/PKCS5PADDING" );
-            cipher.init( Cipher.ENCRYPT_MODE, skeySpec, iv );
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
-            byte[] encrypted = cipher.doFinal( message.getBytes( "UTF-8" ) );
+            byte[] encrypted = cipher.doFinal(message.getBytes("UTF-8"));
             
-            LOG.info( "Contraseña cifrada con exito" );
+            LOG.info("Contraseña cifrada con exito");
 
-            return Base64.getEncoder().encodeToString( encrypted );
+            return Base64.getEncoder().encodeToString(encrypted);
             
-        } catch ( Exception ex ) {
-            LOG.error( "Error al cifrar (" + ex.getMessage() + ")" );
+        } catch (Exception ex) {
+            LOG.error("Error al cifrar (" + ex.getMessage() + ")");
             
         }
 
@@ -59,26 +59,26 @@ public class EncryptionManager
      * @param message: string a cifrar.
      * @return String con el mensaje descifrado.
      */
-    public static String decrypt( String key, byte[] initVector, String message ) 
+    public static String decrypt(String key, byte[] initVector, String message) 
     {
         try 
         {
-            LOG.info( "Descifrando..." );
+            LOG.info("Descifrando...");
             
-            IvParameterSpec iv = new IvParameterSpec( initVector );
-            SecretKeySpec skeySpec = new SecretKeySpec( key.getBytes( "UTF-8" ), "AES" );
+            IvParameterSpec iv = new IvParameterSpec(initVector);
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-            Cipher cipher = Cipher.getInstance( "AES/CBC/PKCS5PADDING" );
-            cipher.init( Cipher.DECRYPT_MODE, skeySpec, iv );
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
-            byte[] original = cipher.doFinal( Base64.getDecoder().decode( message ) );
+            byte[] original = cipher.doFinal(Base64.getDecoder().decode(message));
 
-            LOG.info( "Contraseña descifrada con exito" );
+            LOG.info("Contraseña descifrada con exito");
             
-            return new String( original );
+            return new String(original);
             
-        } catch ( Exception ex ) {
-            LOG.error( "Error al descifrar (" + ex.getMessage() + ")" );
+        } catch (Exception ex) {
+            LOG.error("Error al descifrar (" + ex.getMessage() + ")");
             
         }
 
@@ -91,26 +91,26 @@ public class EncryptionManager
      * @param algorithm: algoritmo deseado para realizar el hash.
      * @return hash de 16 bytes del texto recibido.
      */
-    public static String calculateMD5Hash( String input, String algorithm )
+    public static String calculateMD5Hash(String input, String algorithm)
     {
         try 
         {
-            LOG.info( "Calculando HASH usando " + algorithm );
+            LOG.info("Calculando HASH usando " + algorithm);
             
-            MessageDigest md = MessageDigest.getInstance( algorithm );
+            MessageDigest md = MessageDigest.getInstance(algorithm);
             
-            LOG.info( input.length() );
+            LOG.info(input.length());
             
-            md.update( input.getBytes( "UTF-8" ) );
-            MessageDigest in = ( MessageDigest )md.clone();
+            md.update(input.getBytes("UTF-8"));
+            MessageDigest in = (MessageDigest)md.clone();
             
-            String inDigest = new String( in.digest(), "UTF-8" );       
+            String inDigest = new String(in.digest(), "UTF-8");       
             
-            LOG.info( "Hash calculado: " + inDigest );
+            LOG.info("Hash calculado: " + inDigest);
             return inDigest;
             
-        } catch ( CloneNotSupportedException | NoSuchAlgorithmException | UnsupportedEncodingException ex ) {
-            LOG.error( "ERROR: No se ha podido calcular el hash (" + ex.getMessage() + ")" );
+        } catch (CloneNotSupportedException | NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            LOG.error("ERROR: No se ha podido calcular el hash (" + ex.getMessage() + ")");
             
         }
             

@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @class Pantalla para logearse de distinta formas.
+ * Pantalla para logearse de distinta formas.
  * Created by Daniel Mancebo on 18/06/2016.
  */
 
@@ -82,6 +85,8 @@ public class LoginUI extends AppCompatActivity
     /* AlertDialog View */
     private View mAlertDialogView;
 
+    private View mBackgroundImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -92,6 +97,12 @@ public class LoginUI extends AppCompatActivity
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
         _initButtons();
+
+        Animation zoomInAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom_in_animation);
+
+        mBackgroundImage = findViewById(R.id.login_background);
+
+        mBackgroundImage.startAnimation(zoomInAnimation);
     }
 
     /**

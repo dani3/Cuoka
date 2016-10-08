@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @class Activity con la pantalla de filtros.
+ * Activity con la pantalla de filtros.
  * Created by Daniel Mancebo Aldea on 11/02/2016.
  */
 
