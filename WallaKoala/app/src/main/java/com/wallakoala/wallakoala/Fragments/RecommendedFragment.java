@@ -208,7 +208,7 @@ public class RecommendedFragment extends Fragment
                         // Siempre que no se este cargando
                         if ((mState != ProductsFragment.STATE.LOADING))
                         {
-                            //mConnectToServer = new ConnectToServer().execute();
+                            mConnectToServer = new ConnectToServer().execute();
                         }
                     }
                 }

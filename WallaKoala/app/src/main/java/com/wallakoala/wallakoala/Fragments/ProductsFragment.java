@@ -1083,7 +1083,8 @@ public class ProductsFragment extends Fragment
      */
     public boolean canFilter()
     {
-        return ((mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
+        return ((mShopsList != null) && (!mShopsList.isEmpty()) &&
+                (mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
     }
 
     /**

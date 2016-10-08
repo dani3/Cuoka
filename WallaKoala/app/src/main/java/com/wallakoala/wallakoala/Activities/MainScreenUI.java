@@ -254,7 +254,6 @@ public class MainScreenUI extends AppCompatActivity
             }
 
             mBackPressed = System.currentTimeMillis();
-
         }
     }
 

@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
