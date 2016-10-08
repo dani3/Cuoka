@@ -15,11 +15,14 @@ import java.util.List;
 
 public class mainBlanco 
 {
+    static boolean finished = false;
     public static void main( String[] args ) throws Exception 
     {        
+        
         String url = "https://www.blanco.com/";
-        Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false );
-
+        Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\", false);
+        //Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false );
+        /*
         // Ejecutamos el script que crea el fichero con todos los productos.
         Process p = Runtime.getRuntime().exec( new String[] { "python"
                                 , section.getPath() + "renderProducts.py"
@@ -37,35 +40,32 @@ public class mainBlanco
             file = new File( section.getPath() + "done.dat" );
         }
 
-        file.delete();
+        file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader( 
             new FileReader( new File( section.getPath() + section.getName() + "_products.txt" ) ) );
-        
-        String name;
-        String description;
-        double price;
-        String reference;
-        String link;
-        List<ColorVariant> colors = new ArrayList<>();
-        List<Image> images = new ArrayList<>();
-        Product product = null;
-        ColorVariant color = null;
-        
-        // Ignoramos la primera linea.
-        String line = br.readLine();
-        boolean done = false;
-        while(!done)
-        {
+               
+      
+        List<Product> productList = new ArrayList<>();
+        Product product;
+        String str = br.readLine();
+        while(!finished) // linea de comienzo de producto ---
+        {   
+           //empezamos nuevo producto
             product = _readProductGeneralInfo(br);
-            br.readLine();
-            while
-                String _readProductColors(product, br);
+            if (product != null) //todo ha ido bien, seguimos leyendo los colores
+            {
+                product = _readProductColors(product, br);
+                if (product != null) // todo ha ido bien, añadimos a la lista
+                {
+                    productList.add(product);
+                }
+            }
         }
         
-        /*********************************************************************/
-        Printer.print( Integer.toString( productList.size() ) );
+        /**********************************************************************/
+        Printer.print(Integer.toString(productList.size()));
         
         Product p = productList.get( 0 );
         
@@ -95,7 +95,8 @@ public class mainBlanco
         String price = br.readLine();
         String link = br.readLine();
         
-        if (name.contains("null") || price.contains("null"))
+        // Podemos haber leido ya todos los productos, por lo que name puede ser null
+        if (name == null || name.contains("null") || price.contains("null"))
         {
             return null;
         }
@@ -111,11 +112,14 @@ public class mainBlanco
     
     private static Product _readProductColors(Product product, BufferedReader br) throws IOException
     {
-        //ignoramos la primera línea - lista de colores
-        //br.readLine();
+        
+        List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
+        br.readLine();   //leemos los *********
+        
         while (!doneColor)
         {
+            
             ColorVariant color = new ColorVariant();
             List<Image> images = new ArrayList<>();
             
@@ -127,7 +131,7 @@ public class mainBlanco
                 return null;
             }
             color.setName(colorName.replace("Color: ", ""));
-            color.setColorURL(fixURL(colorIcon.replace("Icono: ", "")));
+            color.setColorURL(fixURL(colorIcon.replace("  Icono: ", "")));            
             color.setReference(reference.replace("Referencia: ", ""));
             
             /*imagenes*/
@@ -135,22 +139,32 @@ public class mainBlanco
             while (!doneImages)
             {
                 String url = br.readLine();
-                if url.contains("Color: "){
-                    _readProductColors();
-                    break;
+                if (url == null){
+                    doneImages = true;
+                    doneColor = true;
+                    finished = true;
+                }
+                else if (url.contains("***")){
+                    /*hemos acabado con las imágenes pero no con los colores*/
+                    doneImages = true; 
                 } 
-                if (url.contains("------"))
+                else if (url.contains("------") || url.length() == 0) //producto final ==0
                 {
                     doneImages = true;
                     doneColor = true;
                 }
-                else{
-                    Image image = new Image(fixURL(url.replace("Imagen: ", "")));
+                else {
+                    Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                     images.add(image);
                 }
+ 
             }
+            color.setImages(images);
+            colors.add(color);
+            
         }
-        
+        product.setColors(colors);
+        return product;
     }
     
     private static String fixURL( String url )
