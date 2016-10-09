@@ -44,15 +44,13 @@ public class RecommendedFragment extends Fragment
 {
     /* Constants */
     protected static int NUMBER_OF_CORES;
-    protected static int NUMBER_OF_PRODUCTS = 20;
-    protected static boolean FIRST_CONNECTION;
+    protected static boolean ALREADY_SELECTED;
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
 
     /* Views */
     protected View mLoadingView;
-    protected View mLoadingServerView;
 
     /* Layouts */
     protected FrameLayout mFrameLayout;
@@ -80,7 +78,6 @@ public class RecommendedFragment extends Fragment
     protected User mUser;
     protected ProductsFragment.STATE mState;
     protected List<Product> mProductList;
-    protected int mOffset;
 
     /* Constructor por defecto NECESARIO */
     public RecommendedFragment() {}
@@ -113,8 +110,6 @@ public class RecommendedFragment extends Fragment
 
         // LoaderView
         mLoadingView       = getView().findViewById(R.id.recommended_avloadingIndicatorView);
-        mLoadingServerView = getView().findViewById(R.id.recommended_loading);
-        mLoadingServerView.setVisibility(View.GONE);
 
         // RecyclerView
         mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.recommended_grid_recycler);
@@ -123,15 +118,11 @@ public class RecommendedFragment extends Fragment
         if (mUser.getShops().isEmpty())
         {
             mLoadingView.setVisibility(View.GONE);
-            mLoadingServerView.setVisibility(View.GONE);
 
             // IMPORTANTE quitar el RecyclerView de los productos.
             mProductsRecyclerView.setVisibility(View.GONE);
 
             /* CREAR UNA ANIMACION DE UNA FLECHA */
-
-        } else {
-            mConnectToServer = new ConnectToServer().execute();
         }
     }
 
@@ -146,9 +137,7 @@ public class RecommendedFragment extends Fragment
 
         mProductList = new ArrayList<>();
 
-        mOffset = 0;
-
-        FIRST_CONNECTION = true;
+        ALREADY_SELECTED = false;
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
@@ -185,35 +174,6 @@ public class RecommendedFragment extends Fragment
 
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
-        mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            boolean scrollingUp;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                scrollingUp = dy > 0;
-
-                if (scrollingUp)
-                {
-                    // Detectamos cuando llegamos abajo para cargar nuevos productos
-                    int lastItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
-
-                    // Si los ultimos visibles son los ultimos productos
-                    if (lastItemPosition >= mProductList.size() - 1)
-                    {
-                        // Siempre que no se este cargando
-                        if ((mState != ProductsFragment.STATE.LOADING))
-                        {
-                            mConnectToServer = new ConnectToServer().execute();
-                        }
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -254,7 +214,7 @@ public class RecommendedFragment extends Fragment
                 RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
                 final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                        + "/recommended/" + mUser.getId() + "/" + (mOffset * NUMBER_OF_PRODUCTS));
+                        + "/recommended/" + mUser.getId());
 
                 Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer los productos recomendados");
 
@@ -329,25 +289,12 @@ public class RecommendedFragment extends Fragment
         protected Void doInBackground(JSONArray... params)
         {
             JSONArray content = params[0];
-            int start;
 
             try
             {
                 Log.d(Properties.TAG, "Tamano en bytes: " + (content.toString().getBytes().length / 1000) + "kB");
 
                 _convertJSONtoProduct(content);
-
-                // Si no es la primera conexion
-                if (!FIRST_CONNECTION)
-                {
-                    start = mOffset * NUMBER_OF_PRODUCTS;
-
-                    // Actualizamos la lista de productos del adapter
-                    mProductAdapter.updateProductList(mProductList);
-
-                    // Notificamos el cambio
-                    mProductAdapter.notifyItemRangeInserted(start, NUMBER_OF_PRODUCTS);
-                }
 
             } catch (Exception e) {
                 error = e.getMessage();
@@ -368,8 +315,6 @@ public class RecommendedFragment extends Fragment
             } else {
                 // Se han cargado los productos correctamente
                 _loading(false, true);
-
-                mOffset++;
             }
         }
     }
@@ -443,69 +388,35 @@ public class RecommendedFragment extends Fragment
         {
             if (ok)
             {
-                // Si no es la primera conexion no hace falta inicializar el RecyclerView
-                if (FIRST_CONNECTION)
+                // Cuando termine la animacion de la view de carga, mostramos el RecyclerView
+                mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
                 {
-                    // Cuando termine la animacion de la view de carga, mostramos el RecyclerView
-                    mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation)
                     {
-                        @Override
-                        public void onAnimationStart(Animation animation) {}
+                        mLoadingView.setVisibility(View.GONE);
 
-                        @Override
-                        public void onAnimationEnd(Animation animation)
-                        {
-                            mLoadingView.setVisibility(View.GONE);
+                        _initRecyclerView();
+                    }
 
-                            _initRecyclerView();
-                        }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {}
-                    });
+                mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
-                    mLoadingView.startAnimation(mMoveAndFadeAnimation);
-
-                    mState = ProductsFragment.STATE.NORMAL;
-
-                    FIRST_CONNECTION = false;
-
-                } else {
-                    mHideFromUp.setAnimationListener(new Animation.AnimationListener()
-                    {
-                        @Override
-                        public void onAnimationStart(Animation animation) {}
-
-                        @Override
-                        public void onAnimationEnd(Animation animation)
-                        {
-                            mLoadingServerView.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {}
-                    });
-
-                    mLoadingServerView.startAnimation(mHideFromUp);
-
-                    mState = ProductsFragment.STATE.NORMAL;
-                }
+                mState = ProductsFragment.STATE.NORMAL;
 
             } else {
                 mLoadingView.setVisibility(View.GONE);
-                mLoadingServerView.setVisibility(View.GONE);
             }
 
-        } else if (FIRST_CONNECTION) {
+        } else {
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
-
-            mState = ProductsFragment.STATE.LOADING;
-
-        } else {
-            // Icono de carga
-            mLoadingServerView.startAnimation(mShowFromDown);
-            mLoadingServerView.setVisibility(View.VISIBLE);
 
             mState = ProductsFragment.STATE.LOADING;
         }
@@ -534,6 +445,19 @@ public class RecommendedFragment extends Fragment
         mState = ProductsFragment.STATE.ERROR;
 
         Log.d(Properties.TAG, "Estado = " + mState.toString());
+    }
+
+    /**
+     * Metodo que llama al servidor para traer las recomendaciones, solo la primera vez que se selecciona.
+     */
+    public void select()
+    {
+        if ((!ALREADY_SELECTED) && (mUser.getShops() != null) && (!mUser.getShops().isEmpty()))
+        {
+            ALREADY_SELECTED = true;
+
+            mConnectToServer = new ConnectToServer().execute();
+        }
     }
 
     /**

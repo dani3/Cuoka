@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
+import com.wallakoala.wallakoala.Activities.MainScreenUI;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Adapters.ShopLogoAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
