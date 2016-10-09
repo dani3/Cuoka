@@ -260,48 +260,50 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             @Override
             public void onClick(View v)
             {
-                final User user = mSharedPreferencesManager.retreiveUser();
-                final long id = user.getId();
+                if (!mFavoriteImageButton.ANIMATING) {
+                    final User user = mSharedPreferencesManager.retreiveUser();
+                    final long id = user.getId();
 
-                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                        + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                            + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
 
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
 
-                final StringRequest stringRequest = new StringRequest(Request.Method.GET
-                        , fixedURL
-                        , new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response)
-                    {
-                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
-                        {
-                            // Si contiene el producto, es que se quiere quitar de favoritos.
-                            if (user.getFavoriteProducts().contains(mProduct.getId()))
+                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                            , fixedURL
+                            , new Response.Listener<String>()
                             {
-                                user.getFavoriteProducts().remove(mProduct.getId());
+                                @Override
+                                public void onResponse(String response)
+                                {
+                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
 
-                            } else {
-                                user.getFavoriteProducts().add(mProduct.getId());
+                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                    {
+                                        // Si contiene el producto, es que se quiere quitar de favoritos.
+                                        if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                        {
+                                            user.getFavoriteProducts().remove(mProduct.getId());
+
+                                        } else {
+                                            user.getFavoriteProducts().add(mProduct.getId());
+                                        }
+
+                                        mSharedPreferencesManager.insertUser(user);
+                                    }
+                                }
                             }
+                            , new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
+                                {}
+                            });
 
-                            mSharedPreferencesManager.insertUser(user);
-                        }
-                    }
+                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+
+                    mFavoriteImageButton.startAnimation();
                 }
-                        , new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {}
-                });
-
-                VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
-
-                mFavoriteImageButton.startAnimation();
             }
         });
 

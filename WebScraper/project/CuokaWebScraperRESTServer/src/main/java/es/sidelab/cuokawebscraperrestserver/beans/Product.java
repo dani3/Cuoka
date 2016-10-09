@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -118,4 +119,35 @@ public class Product
     public float getAspectRatio() { return this.aspectRatio; } 
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
+    
+    @Override
+    public boolean equals(Object other)
+    {
+        if (other instanceof Product)
+        {
+            Product product = (Product)other;
+            
+            return ((product.shop.equals(this.shop)) && 
+                    (product.section.equals(this.section)) && 
+                    (product.name.equals(this.name)) && 
+                    (product.link.equals(this.link)) && 
+                    (product.price == this.price) && 
+                    (product.colors.size() == this.colors.size()));
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode() 
+    {
+        int hash = 7;
+        
+        hash = 31 * hash + Objects.hashCode(this.name);
+        hash = 31 * hash + Objects.hashCode(this.shop);
+        hash = 31 * hash + Objects.hashCode(this.section);
+        hash = 31 * hash + Objects.hashCode(this.link);
+        
+        return hash;
+    }
 }

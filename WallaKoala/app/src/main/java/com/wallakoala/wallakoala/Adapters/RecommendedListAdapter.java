@@ -95,48 +95,52 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 @Override
                 public void onClick(View view)
                 {
-                    final User user = mSharedPreferencesManager.retreiveUser();
-                    final long id = user.getId();
+                    if (!mProductFavoriteImageButton.ANIMATING)
+                    {
+                        final User user = mSharedPreferencesManager.retreiveUser();
+                        final long id = user.getId();
 
-                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                            + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
+                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
 
-                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+                        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
 
-                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
-                            , fixedURL
-                            , new Response.Listener<String>()
-                            {
-                                @Override
-                                public void onResponse(String response)
+                        final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                                , fixedURL
+                                , new Response.Listener<String>()
                                 {
-                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                    @Override
+                                    public void onResponse(String response)
                                     {
-                                        // Si contiene el producto, es que se quiere quitar de favoritos.
-                                        if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                                         {
-                                            user.getFavoriteProducts().remove(mProduct.getId());
+                                            // Si contiene el producto, es que se quiere quitar de favoritos.
+                                            if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                            {
+                                                user.getFavoriteProducts().remove(mProduct.getId());
 
-                                        } else {
-                                            user.getFavoriteProducts().add(mProduct.getId());
+                                            } else {
+                                                user.getFavoriteProducts().add(mProduct.getId());
+                                            }
+
+                                            mSharedPreferencesManager.insertUser(user);
                                         }
-
-                                        mSharedPreferencesManager.insertUser(user);
                                     }
                                 }
-                            }
-                            , new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error)
-                                {}
-                            });
+                                , new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error)
+                                    {
+                                    }
+                                });
 
-                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+                        VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
 
-                    mProductFavoriteImageButton.startAnimation();
+                        mProductFavoriteImageButton.startAnimation();
+                    }
                 }
             });
         }
@@ -259,20 +263,20 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
 
                 if (mBitmapFileName != null)
                 {
-                    Activity activity = (Activity)mContext;
+                    Activity activity = (Activity) mContext;
 
-                    /* Sacamos las coordenadas de la imagen y del corazon */
+                    // Sacamos las coordenadas de la imagen y del corazon
                     int[] imageScreenLocation = new int[2];
                     mProductImageView.getLocationInWindow(imageScreenLocation);
 
                     int[] favoriteScreenLocation = new int[2];
                     mProductFavoriteImageButton.getLocationOnScreen(favoriteScreenLocation);
 
-                    /* Creamos el intent */
+                    // Creamos el intent
                     Intent intent = new Intent(mContext, ProductUI.class);
 
-                    /* Enviamos toda la informacion necesaria para que la siguiente activity
-                     * realice la animacion */
+                    // Enviamos toda la informacion necesaria para que la siguiente activity
+                    // realice la animacion
                     intent.putExtra(Properties.PACKAGE + ".Beans.Product", mProduct)
                           .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
                           .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
@@ -284,12 +288,12 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                           .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
                           .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
 
-                    /* Reseteamos el nombre del fichero */
+                    // Reseteamos el nombre del fichero
                     mBitmapFileName = null;
 
                     mContext.startActivity(intent);
 
-                    /* Desactivamos las transiciones por defecto */
+                    // Desactivamos las transiciones por defecto
                     activity.overridePendingTransition(0, 0);
 
                     mProductFavoriteImageButton.setVisibility(View.INVISIBLE);
@@ -316,11 +320,6 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         mFrameLayout = frameLayout;
 
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
-    }
-
-    public void updateProductList(List<Product> productList)
-    {
-        mProductList = productList;
     }
 
     /**

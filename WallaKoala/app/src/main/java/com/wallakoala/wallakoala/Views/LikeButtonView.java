@@ -8,6 +8,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -19,6 +20,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.wallakoala.wallakoala.R;
+
+import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 /**
  * Created by Miroslav on 04/06/2016.
@@ -42,6 +45,8 @@ public class LikeButtonView extends FrameLayout
 
     private boolean isChecked;
     private AnimatorSet animatorSet;
+
+    public boolean ANIMATING;
 
     public LikeButtonView(Context context)
     {
@@ -72,6 +77,7 @@ public class LikeButtonView extends FrameLayout
     {
         LayoutInflater.from(getContext()).inflate(R.layout.aux_explosive_button, this, true);
         ButterKnife.bind(this);
+        ANIMATING = false;
     }
 
     public void changeIcon(boolean isChecked)
@@ -133,6 +139,27 @@ public class LikeButtonView extends FrameLayout
                     starScaleXAnimator,
                     dotsAnimator
             );
+
+            animatorSet.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    ANIMATING = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    ANIMATING = false;
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {}
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {}
+            });
 
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
