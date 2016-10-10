@@ -298,9 +298,35 @@ public class Controller
     public ResponseEntity<Boolean> addProducts(@RequestBody List<Product> products
                                         , @PathVariable String shop)
     {
-        LOG.info("Peticion POST para anadir productos recibida");
+        LOG.info("Peticion POST para anadir productos de " + shop + " recibida");
         
-        Runnable task = () -> {
+        Runnable task = () -> {            
+            if (shopsRepository.findByName(shop) == null)
+            {            
+                LOG.info("Es una tienda nueva. La anadimos a la tabla 'shop'");
+                shopsRepository.save(new Shop(shop));
+            }
+            
+            // Obtenemos los productos que ya tenemos en base de datos.
+            List<Product> productsAlreadyInserted = productsRepository.findByShop(shop);
+            
+            LOG.info("Llamando a ImageManager para descargar las imagenes que no existan");
+            List<Product> productsUpdated = ImageManager.downloadImages(products, shop);
+            for (Product product : productsUpdated)
+            {
+                
+                
+                
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
             LOG.info("Eliminando los productos existentes de la tienda " + shop);
             List<Product> productsToBeRemoved = productsRepository.findByShop(shop);
             for (Product product : productsToBeRemoved)
@@ -380,21 +406,24 @@ public class Controller
         return productsRepository.findByShop(shop);
     }
     
-    @RequestMapping(value = "/recommended/{id}/{offset}", method = RequestMethod.GET)
-    public List<Product> getRecommendedProducts(@PathVariable long id
-                                    , @PathVariable int offset)
+    /**
+     * Metodo que devuelve la lista de productos recomendados de un usuario.
+     * @param id: id del usuario.
+     * @return Lista de productos recomendados.
+     */
+    @RequestMapping(value = "/recommended/{id}", method = RequestMethod.GET)
+    public List<Product> getRecommendedProducts(@PathVariable long id)
     {
         LOG.info("Peticion GET para obtener todos los productos recomendados del usuario " + id);
         
-        List<Product> aux = productsRepository.findByManAndShop(false, "Blanco");
-        aux.addAll(productsRepository.findByManAndShop(false, "Springfield"));
+        List<Product> aux = productsRepository.findByManAndShop(false, "Springfield");
         
         List<Product> recommendedProducts = new ArrayList<>();
         for (int i = 0; i < 100; i++)
         {
             Random rand = new Random();
 
-            int randomNum = rand.nextInt((800 - 1) + 1) + 1;
+            int randomNum = rand.nextInt((200 - 1) + 1) + 1;
 
             recommendedProducts.add(aux.get(randomNum));
         }

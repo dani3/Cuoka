@@ -32,6 +32,7 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wallakoala.wallakoala.Views.FlipLayout;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
@@ -71,6 +72,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private Bitmap mBitmap;
         private String mBitmapFileName;
 
+        private FlipLayout mFlippableView;
+
         private ImageView mProductImageView;
 
         private TextView mNameTextView, mShopTextView, mPriceTextView;
@@ -85,6 +88,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mShopTextView     = (TextView)itemView.findViewById(R.id.recommended_shop);
             mNameTextView     = (TextView)itemView.findViewById(R.id.recommended_name);
             mPriceTextView    = (TextView)itemView.findViewById(R.id.recommended_price);
+
+            mFlippableView = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
             mProductImageView.setOnClickListener(this);
 
@@ -281,8 +286,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                           .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
                           .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
                           .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
-                          .putExtra(Properties.PACKAGE + ".widthFav", mProductFavoriteImageButton.getWidth())
-                          .putExtra(Properties.PACKAGE + ".heightFav", mProductFavoriteImageButton.getHeight())
+                          .putExtra(Properties.PACKAGE + ".widthFav", mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getWidth())
+                          .putExtra(Properties.PACKAGE + ".heightFav", mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getHeight())
                           .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
                           .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
                           .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
