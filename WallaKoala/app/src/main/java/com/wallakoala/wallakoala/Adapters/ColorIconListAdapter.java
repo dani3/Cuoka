@@ -19,7 +19,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * @class: Adapter de la lista de iconos
+ * Adapter de la lista de iconos
  * Created by Daniel Mancebo Aldea on 04/02/2016.
  */
 
@@ -48,7 +48,7 @@ public class ColorIconListAdapter extends BaseAdapter
 
     /**
      * Constructor del adapter.
-     * @param context: contexto de la aplicacion.
+     * @param context: contexto (ProductUI).
      * @param colorVariants: lista de ColorVariants.
      */
     public ColorIconListAdapter(final Context context

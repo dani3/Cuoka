@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
+import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -74,6 +76,9 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private Bitmap mBitmap;
         private String mBitmapFileName;
 
+        private RecyclerView mIconListRecyclerView;
+        private RecommendedColorIconListAdapter mRecommendedColorIconListAdapter;
+
         private FlipLayout mFlippableView;
 
         private ImageView mProductImageView;
@@ -86,13 +91,13 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             super(itemView);
 
-            mProductImageView = (ImageView)itemView.findViewById(R.id.recommended_image);
-            mShopTextView     = (TextView)itemView.findViewById(R.id.recommended_shop);
-            mNameTextView     = (TextView)itemView.findViewById(R.id.recommended_name);
-            mPriceTextView    = (TextView)itemView.findViewById(R.id.recommended_price);
-            mDescriptionTextView = (TextView)itemView.findViewById(R.id.recommended_description);
-
-            mFlippableView = (FlipLayout)itemView.findViewById(R.id.flippable_view);
+            mProductImageView     = (ImageView)itemView.findViewById(R.id.recommended_image);
+            mShopTextView         = (TextView)itemView.findViewById(R.id.recommended_shop);
+            mNameTextView         = (TextView)itemView.findViewById(R.id.recommended_name);
+            mPriceTextView        = (TextView)itemView.findViewById(R.id.recommended_price);
+            mDescriptionTextView  = (TextView)itemView.findViewById(R.id.recommended_description);
+            mIconListRecyclerView = (RecyclerView)itemView.findViewById(R.id.recommended_icons_recycler);
+            mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
             mProductImageView.setOnClickListener(this);
             mFlippableView.setOnClickListener(this);
@@ -163,24 +168,36 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             mProduct = product;
 
+            List<ColorVariant> colorVariantList = product.getColors()/*.subList(
+                    0, (product.getColors().size() > 6) ? 6 : (product.getColors().size() - 1))*/;
+
+            mRecommendedColorIconListAdapter = new RecommendedColorIconListAdapter(mContext
+                                                            , colorVariantList
+                                                            , product.getShop()
+                                                            , product.getSection());
+
+            mIconListRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            mIconListRecyclerView.setAdapter(mRecommendedColorIconListAdapter);
+
+            // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
 
             boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
             String description = "<b>Descripción: </b>" +  (emptyDescription ? "No disponible" : mProduct.getDescription());
 
-            /* Inicializamos los TextViews */
+            // Inicializamos los TextViews
             mNameTextView.setText(product.getName().toUpperCase());
             mShopTextView.setText(product.getShop().toUpperCase());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
             mDescriptionTextView.setText(Html.fromHtml(description));
 
-            /* Inicializamos el boton de favorito */
+            // Inicializamos el boton de favorito
             mProductFavoriteImageButton.changeIcon(
                     mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
             mFlippableView.setFlipped(mItemsFlipped[this.getAdapterPosition()]);
 
-            /* Cargamos la imagen usando Picasso */
+            // Cargamos la imagen usando Picasso
             mTarget = new Target()
             {
                 @Override
