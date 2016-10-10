@@ -11,7 +11,7 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 
-public class FlipLayout extends FrameLayout implements View.OnClickListener
+public class FlipLayout extends FrameLayout
 {
     public static final int ANIM_DURATION_MILLIS = 400;
     private static final Interpolator fDefaultInterpolator = new OvershootInterpolator();
@@ -62,9 +62,7 @@ public class FlipLayout extends FrameLayout implements View.OnClickListener
         }
 
         frontView = getChildAt(0);
-        frontView.setOnClickListener(this);
         backView = getChildAt(1);
-        backView.setOnClickListener(this);
         reset();
     }
 
@@ -74,7 +72,7 @@ public class FlipLayout extends FrameLayout implements View.OnClickListener
             return;
         }
 
-        if (isFlipped) {
+        if (!isFlipped) {
             frontView.setVisibility(View.VISIBLE);
             backView.setVisibility(View.GONE);
         } else {
@@ -105,10 +103,22 @@ public class FlipLayout extends FrameLayout implements View.OnClickListener
         startAnimation(animator);
     }
 
-    @Override
-    public void onClick(View view)
+    public void flip()
     {
         toggleDown();
+    }
+
+    public void setFlipped(boolean flipped)
+    {
+        if (flipped) {
+            frontView.setVisibility(View.VISIBLE);
+            backView.setVisibility(View.GONE);
+        } else {
+            frontView.setVisibility(View.GONE);
+            backView.setVisibility(View.VISIBLE);
+        }
+
+        isFlipped = flipped;
     }
 
     private enum Direction
@@ -118,7 +128,6 @@ public class FlipLayout extends FrameLayout implements View.OnClickListener
 
     public class FlipAnimator extends Animation
     {
-        private static final float EXPERIMENTAL_VALUE = 50.f;
         private Camera camera;
         private float centerX;
         private float centerY;
@@ -155,8 +164,7 @@ public class FlipLayout extends FrameLayout implements View.OnClickListener
             // source view and show the destination view. We also need to change
             // the angle by 180 degrees so that the destination does not come in
             // flipped around. This is the main problem with SDK sample, it does
-            // not
-            // do this.
+            // not do this.
             if (interpolatedTime >= 0.5f) {
                 if (direction == Direction.UP) {
                     degrees += 180.f;
@@ -175,8 +183,6 @@ public class FlipLayout extends FrameLayout implements View.OnClickListener
             final Matrix matrix = t.getMatrix();
 
             camera.save();
-            //you can delete this line, it move camera a little far from view and get back
-            camera.translate(0.0f, 0.0f, (float) (EXPERIMENTAL_VALUE * Math.sin(radians)));
             camera.rotateX(degrees);
             camera.rotateY(0);
             camera.rotateZ(0);

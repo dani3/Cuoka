@@ -22,26 +22,18 @@
             android:layout_marginStart="16dp">
 
             <TextView
-                android:id="@+id/recommended_shop"
+                android:id="@+id/recommended_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_gravity="top"
-                android:text="@string/product_info_name"
+                android:text="@string/product_info_description"
                 android:textSize="12dp"
-                android:textColor="@android:color/white"/>
-
-            <TextView
-                android:id="@+id/recommended_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_gravity="top"
-                android:text="@string/product_info_name"
-                android:maxLines="1"
+                android:maxLines="3"
                 android:ellipsize="end"
-                android:textSize="12dp"
                 android:textColor="@android:color/white"/>
 
         </LinearLayout>
