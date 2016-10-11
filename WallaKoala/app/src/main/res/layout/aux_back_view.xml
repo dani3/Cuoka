@@ -37,10 +37,11 @@
                 android:ellipsize="end"
                 android:textColor="@android:color/white"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recommended_icons_recycler"
+            <LinearLayout
+                android:id="@+id/recommended_icons_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"/>

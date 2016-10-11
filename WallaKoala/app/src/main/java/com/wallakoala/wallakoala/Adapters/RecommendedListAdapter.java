@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -18,6 +17,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -39,6 +39,8 @@ import com.wallakoala.wallakoala.Views.FlipLayout;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
@@ -76,8 +78,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private Bitmap mBitmap;
         private String mBitmapFileName;
 
-        private RecyclerView mIconListRecyclerView;
-        private RecommendedColorIconListAdapter mRecommendedColorIconListAdapter;
+        private ViewGroup mIconList;
+        private CircleImageView[] mIconViews;
 
         private FlipLayout mFlippableView;
 
@@ -96,7 +98,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mNameTextView         = (TextView)itemView.findViewById(R.id.recommended_name);
             mPriceTextView        = (TextView)itemView.findViewById(R.id.recommended_price);
             mDescriptionTextView  = (TextView)itemView.findViewById(R.id.recommended_description);
-            mIconListRecyclerView = (RecyclerView)itemView.findViewById(R.id.recommended_icons_recycler);
+            mIconList             = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
             mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
             mProductImageView.setOnClickListener(this);
@@ -147,8 +149,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                                 {
                                     @Override
                                     public void onErrorResponse(VolleyError error)
-                                    {
-                                    }
+                                    {}
                                 });
 
                         VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
@@ -168,16 +169,49 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             mProduct = product;
 
-            List<ColorVariant> colorVariantList = product.getColors()/*.subList(
-                    0, (product.getColors().size() > 6) ? 6 : (product.getColors().size() - 1))*/;
+            mIconList.removeAllViews();
 
-            mRecommendedColorIconListAdapter = new RecommendedColorIconListAdapter(mContext
-                                                            , colorVariantList
-                                                            , product.getShop()
-                                                            , product.getSection());
+            mIconViews = new CircleImageView[mProduct.getColors().size()];
 
-            mIconListRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-            mIconListRecyclerView.setAdapter(mRecommendedColorIconListAdapter);
+            for (int i = 0; i < mProduct.getColors().size(); i++)
+            {
+                ColorVariant colorVariant = mProduct.getColors().get(i);
+
+                LayoutInflater  mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                mIconViews[i] = (CircleImageView) mInflater.inflate(
+                        R.layout.aux_recommended_color_icon, null).findViewById(R.id.recommended_color_icon);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mIconViews[i].getLayoutParams();
+                params.setMargins(8, params.topMargin, 8, params.bottomMargin);
+                mIconViews[i].setLayoutParams(params);
+
+                // Path != 0 -> Color predefinido
+                String url;
+                if (colorVariant.getColorPath().equals("0"))
+                {
+                    final String imageFile = product.getShop() + "_" + product.getSection() + "_"
+                            + colorVariant.getReference() + "_"
+                            + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+                    url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
+
+                } else {
+                    final String imageFile = colorVariant.getColorPath();
+
+                    url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+                }
+
+                Log.d(Properties.TAG, url);
+
+                Picasso.with(mContext)
+                        .load(url)
+                        .into(mIconViews[i]);
+
+                ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
+
+                mIconList.addView(mIconViews[i]);
+            }
 
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
