@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 public class RecommendedFragment extends Fragment
 {
     /* Constants */
-    protected static int NUMBER_OF_CORES;
     protected static boolean ALREADY_SELECTED;
 
     /* Container Views */
@@ -87,7 +86,6 @@ public class RecommendedFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        _initData();
         _initAnimations();
     }
 
@@ -138,10 +136,6 @@ public class RecommendedFragment extends Fragment
         mProductList = new ArrayList<>();
 
         ALREADY_SELECTED = false;
-
-        NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
-
-        Log.d(Properties.TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
     /**
@@ -452,6 +446,11 @@ public class RecommendedFragment extends Fragment
      */
     public void select()
     {
+        if (!ALREADY_SELECTED)
+        {
+            _initData();
+        }
+
         if ((!ALREADY_SELECTED) && (mUser.getShops() != null) && (!mUser.getShops().isEmpty()))
         {
             ALREADY_SELECTED = true;
