@@ -412,5 +412,4 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     {
         return mProductList.size();
     }
-
 }

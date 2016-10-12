@@ -25,7 +25,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
-import com.wallakoala.wallakoala.Activities.MainScreenUI;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
 import com.wallakoala.wallakoala.Adapters.ShopLogoAdapter;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
@@ -314,7 +313,8 @@ public class ProductsFragment extends Fragment
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
                 scrollingUp = dy > 0;
 
                 if (scrollingUp)

@@ -198,12 +198,14 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                             + colorVariant.getReference() + "_"
                             + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
 
-                    url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
+                    url = Utils.fixUrl(
+                            Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
 
                 } else {
                     final String imageFile = colorVariant.getColorPath();
 
-                    url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+                    url = Utils.fixUrl(
+                            Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
                 }
 
                 Log.d(Properties.TAG, url);
@@ -295,7 +297,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     + product.getColors().get(0).getReference() + "_"
                     + product.getColors().get(0).getColorName() + "_0_Small.jpg";
 
-            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
+            String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
 
             Picasso.with(mContext)
                    .load(url)
