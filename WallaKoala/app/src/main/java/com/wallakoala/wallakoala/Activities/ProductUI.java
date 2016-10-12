@@ -40,8 +40,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
+import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -149,6 +151,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         _initRecyclerView();
         _initAnimations();
         _sendViewedProduct();
+        _fetchImages();
 
         // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
@@ -475,6 +478,49 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 });
 
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    protected void _fetchImages()
+    {
+        ColorVariant colorVariant = mProduct.getColors().get(mCurrentColor);
+        for (int i = 0; i < colorVariant.getNumberOfImages(); i++)
+        {
+            String imageFile = mProduct.getShop() + "_" + mProduct.getSection() + "_"
+                    + colorVariant.getReference() + "_"
+                    + colorVariant.getColorName() + "_" + i + "_Large.jpg";
+
+            String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + mProduct.getShop() + "/" + imageFile);
+
+            // Pre-Cargamos la imagen utilizando Picasso.
+            Picasso.with(mContext)
+                   .load(url)
+                   .fetch();
+        }
+
+        for (int i = 0; i < mProduct.getColors().size(); i++)
+        {
+            // Path != 0 -> Color predefinido
+            String url;
+            if (mProduct.getColors().get(i).getColorPath().equals("0"))
+            {
+                final String imageFile = mProduct.getShop() + "_" + mProduct.getSection() + "_"
+                        + mProduct.getColors().get(i).getReference() + "_"
+                        + mProduct.getColors().get(i).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+                url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + mProduct.getShop() + "/" + imageFile);
+
+            } else {
+                final String imageFile = mProduct.getColors().get(i).getColorPath();
+
+                url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+            }
+
+            // Pre-Cargamos el icono utilizando Picasso.
+            Picasso.with(mContext)
+                   .load(url)
+                   .fetch();
+        }
     }
 
     /**

@@ -87,6 +87,7 @@ public class RecommendedFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         _initAnimations();
+        _initData();
     }
 
     @Override

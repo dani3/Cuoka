@@ -169,19 +169,23 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             mProduct = product;
 
+            // Eliminamos todos los iconos anteriores.
             mIconList.removeAllViews();
 
+            // Creamos un array con todos los iconos.
             mIconViews = new CircleImageView[mProduct.getColors().size()];
 
+            // Metemos cada icono en la lista.
             for (int i = 0; i < mProduct.getColors().size(); i++)
             {
                 ColorVariant colorVariant = mProduct.getColors().get(i);
 
+                // Inflamos la vista con el icono.
                 LayoutInflater  mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
                 mIconViews[i] = (CircleImageView) mInflater.inflate(
                         R.layout.aux_recommended_color_icon, null).findViewById(R.id.recommended_color_icon);
 
+                // Seteamos los margenes laterales para que no queden pegados unos con otros.
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mIconViews[i].getLayoutParams();
                 params.setMargins(8, params.topMargin, 8, params.bottomMargin);
                 mIconViews[i].setLayoutParams(params);
@@ -208,8 +212,9 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                         .load(url)
                         .into(mIconViews[i]);
 
+                // Eliminamos el padre de la vista del icono.
                 ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
-
+                // Lo añadimos a la lista de iconos.
                 mIconList.addView(mIconViews[i]);
             }
 
