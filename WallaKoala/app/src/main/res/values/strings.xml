@@ -110,4 +110,6 @@
 
     <string name="no_shops">Parece que no has añadido ninguna tienda</string>
     <string name="add_shops">Añade tus tiendas</string>
+
+    <string name="colors"><b>Colores: </b></string>
 </resources>

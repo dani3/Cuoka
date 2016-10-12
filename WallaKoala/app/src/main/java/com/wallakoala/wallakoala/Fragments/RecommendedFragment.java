@@ -120,8 +120,6 @@ public class RecommendedFragment extends Fragment
 
             // IMPORTANTE quitar el RecyclerView de los productos.
             mProductsRecyclerView.setVisibility(View.GONE);
-
-            /* CREAR UNA ANIMACION DE UNA FLECHA */
         }
     }
 
