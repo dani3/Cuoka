@@ -9,13 +9,14 @@
     app:layout_scrollFlags="scroll|enterAlways"
     android:elevation="4dp">
 
-    <TextView
+    <com.wallakoala.wallakoala.Views.ExistenceTextView
         android:id="@+id/toolbar_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/app_name"
         android:textSize="22dp"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorAccent"
+        app:customFont="Existence-StencilLight.otf"/>
 
 </android.support.v7.widget.Toolbar>

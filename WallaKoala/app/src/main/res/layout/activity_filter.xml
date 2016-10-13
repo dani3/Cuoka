@@ -7,9 +7,7 @@
 
     <!-- Toolbar -->
     <include android:id="@+id/filter_appbar"
-        layout="@layout/aux_toolbar_filter">
-
-    </include>
+        layout="@layout/aux_toolbar_filter"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -58,7 +56,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/icono_tienda_color"/>
 
-                        <TextView
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:id="@+id/filter_text_shop"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -66,7 +64,8 @@
                             android:textSize="14dp"
                             android:textColor="@color/colorLightText"
                             android:layout_below="@+id/filter_image_shop"
-                            android:layout_centerHorizontal="true"/>
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
 
                     </RelativeLayout>
 

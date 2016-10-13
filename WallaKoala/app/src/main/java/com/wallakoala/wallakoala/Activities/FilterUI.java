@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -297,8 +298,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initToolbar()
     {
+        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf");
+
         mToolbar = (Toolbar)findViewById(R.id.filter_appbar);
         mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
+
+        mToolbarTextView.setTypeface(type);
 
         mToolbarTextView.setText(getResources().getString(R.string.toolbar_filter));
 

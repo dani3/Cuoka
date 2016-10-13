@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <!-- Cabecera -->
-        <TextView
+        <com.wallakoala.wallakoala.Views.ExistenceTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="32dp"
@@ -19,8 +19,9 @@
             android:paddingLeft="48dp"
             android:paddingBottom="20dp"
             android:gravity="center"
-            android:textColor="@color/colorMediumText"
-            android:text="@string/sign_in_info"/>
+            android:textColor="@color/colorText"
+            android:text="@string/sign_in_info"
+            app:customFont="Existence-StencilLight.otf"/>
 
         <!-- Crear cuenta -->
         <Button
@@ -56,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:maxLength="64"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorMediumText"
@@ -81,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:maxLength="64"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorMediumText"
@@ -95,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remember_me"
-            android:textColor="@color/colorMediumText"
+            android:textColor="@color/colorText"
             android:layout_margin="24dp"
             app:buttonTint="@color/colorAccent"/>
 
@@ -118,14 +119,15 @@
             app:cpb_colorProgress="@android:color/transparent"/>
 
         <!-- Olvidar contraseña -->
-        <TextView
+        <com.wallakoala.wallakoala.Views.ExistenceTextView
             android:id="@+id/password_forgotten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/forget_password"
-            android:textColor="@color/colorMediumText"
+            android:textColor="@color/colorText"
             android:layout_margin="24dp"
-            android:gravity="right"/>
+            android:gravity="right"
+            app:customFont="Existence-StencilLight.otf"/>
 
     </LinearLayout>
 

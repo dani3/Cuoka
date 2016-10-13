@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -84,8 +85,6 @@ public class LoginUI extends AppCompatActivity
     /* AlertDialog View */
     private View mAlertDialogView;
 
-    private View mBackgroundImage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -99,9 +98,9 @@ public class LoginUI extends AppCompatActivity
 
         Animation zoomInAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom_in_animation);
 
-        mBackgroundImage = findViewById(R.id.login_background);
+        View backgroundImage = findViewById(R.id.login_background);
 
-        mBackgroundImage.startAnimation(zoomInAnimation);
+        backgroundImage.startAnimation(zoomInAnimation);
     }
 
     /**
@@ -111,6 +110,11 @@ public class LoginUI extends AppCompatActivity
     {
         final Button mSignInButton = (Button) findViewById(R.id.sign_in);
         final Button mSingUpButton = (Button) findViewById(R.id.sign_up);
+
+        mSignInButton.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mSingUpButton.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mSingUpButton.setOnClickListener(new View.OnClickListener()
         {
@@ -183,9 +187,15 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initSignInButtons(View parent)
     {
-        final Button mCreateAccountButton = (Button) parent.findViewById(R.id.create_account);
+        final Button mCreateAccountButton         = (Button) parent.findViewById(R.id.create_account);
         final CircularProgressButton mEnterButton = (CircularProgressButton) parent.findViewById(R.id.enter);
+
         mEnterButton.setIndeterminateProgressMode(true);
+
+        mCreateAccountButton.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mEnterButton.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mCreateAccountButton.setOnClickListener(new View.OnClickListener()
         {
@@ -288,8 +298,18 @@ public class LoginUI extends AppCompatActivity
         mEmailInputLayout    = (TextInputLayout)parent.findViewById(R.id.email_input_layout);
         mPasswordInputLayout = (TextInputLayout)parent.findViewById(R.id.password_input_layout);
 
+        mEmailInputLayout.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mPasswordInputLayout.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+
         mPasswordEdittext = (EditText)parent.findViewById(R.id.password_edittext);
         mEmailEdittext    = (EditText)parent.findViewById(R.id.email_edittext);
+
+        mPasswordEdittext.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mEmailEdittext.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
@@ -303,6 +323,9 @@ public class LoginUI extends AppCompatActivity
     {
         mRememberMeCheckBox = (AppCompatCheckBox)parent.findViewById(R.id.remember_me_checkbox);
         mRememberMeCheckBox.setChecked(true);
+
+        mRememberMeCheckBox.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         TextView mPasswordForgottenTextView = (TextView)parent.findViewById(R.id.password_forgotten);
         mPasswordForgottenTextView.setOnClickListener(new View.OnClickListener()
@@ -326,10 +349,28 @@ public class LoginUI extends AppCompatActivity
         mAgeInputLayout        = (TextInputLayout)parent.findViewById(R.id.age_input_layout);
         mPostalCodeInputLayout = (TextInputLayout)parent.findViewById(R.id.postal_code_input_layout);
 
+        mEmailInputLayout.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mPasswordInputLayout.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mAgeInputLayout.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mPostalCodeInputLayout.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+
         mPasswordEdittext      = (EditText)parent.findViewById(R.id.password_edittext);
         mEmailEdittext         = (EditText)parent.findViewById(R.id.email_edittext);
         mAgeEdittext           = (EditText)parent.findViewById(R.id.age_edittext);
         mPostalCodeEdittext    = (EditText)parent.findViewById(R.id.postal_code_edittext);
+
+        mPasswordEdittext.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mEmailEdittext.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mAgeEdittext.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mPostalCodeEdittext.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
@@ -440,6 +481,9 @@ public class LoginUI extends AppCompatActivity
     {
         mRegisterCircularButton = (CircularProgressButton)parent.findViewById(R.id.sign_up_accept);
         mRegisterCircularButton.setIndeterminateProgressMode(true);
+
+        mRegisterCircularButton.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mRegisterCircularButton.setOnClickListener(new View.OnClickListener()
         {

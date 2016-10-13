@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -176,7 +177,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mIconViews = new CircleImageView[mProduct.getColors().size()];
 
             // Metemos cada icono en la lista.
-            for (int i = 0; i < mProduct.getColors().size(); i++)
+            int max = (mProduct.getColors().size() > 3) ? 4 : mProduct.getColors().size();
+            for (int i = 0; i < max; i++)
             {
                 ColorVariant colorVariant = mProduct.getColors().get(i);
 
@@ -218,6 +220,11 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
                 // Lo añadimos a la lista de iconos.
                 mIconList.addView(mIconViews[i]);
+            }
+
+            if (max != mProduct.getColors().size())
+            {
+
             }
 
             // Reinicializamos el bitmap de la imagen
