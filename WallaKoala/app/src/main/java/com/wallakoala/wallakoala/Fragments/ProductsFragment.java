@@ -306,7 +306,6 @@ public class ProductsFragment extends Fragment
                                     , mProductsDisplayedList
                                     , mFrameLayout);
 
-        mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
@@ -1304,6 +1303,11 @@ public class ProductsFragment extends Fragment
         // Obtenemos los dos botones para Aceptar y Cancelar.
         final Button cancel = (Button) view.findViewById(R.id.add_shops_cancel);
         final Button accept = (Button) view.findViewById(R.id.add_shops_accept);
+
+        cancel.setTypeface(
+            Typeface.createFromAsset(getActivity().getAssets(),"fonts/Existence-StencilLight.otf"));
+        accept.setTypeface(
+                Typeface.createFromAsset(getActivity().getAssets(),"fonts/Existence-StencilLight.otf"));
 
         // Obtenemos la vista de carga.
         final View loadingIndicatorView = view.findViewById(R.id.add_shops_loading);

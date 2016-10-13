@@ -88,8 +88,8 @@
 
     <string name="morph_idle">Hecho</string>
 
-    <string name="accept">Aceptar</string>
-    <string name="cancel">Cancelar</string>
+    <string name="accept"><b>Aceptar</b></string>
+    <string name="cancel"><b>Cancelar</b></string>
 
     <string name="login_facebook">Login con Facebook</string>
     <string name="login_google">Login con Google+</string>
@@ -109,7 +109,7 @@
     <string name="terms_and_conditions">Al continuar aceptas también los <u><b>Términos del Servicio</b></u> y la <u><b>Política de Privacidad</b></u> de Cuoka</string>
 
     <string name="no_shops">Parece que no has añadido ninguna tienda</string>
-    <string name="add_shops">Añade tus tiendas</string>
+    <string name="add_shops"><b>Añade tus tiendas</b></string>
 
     <string name="colors"><b>Colores: </b></string>
 </resources>
