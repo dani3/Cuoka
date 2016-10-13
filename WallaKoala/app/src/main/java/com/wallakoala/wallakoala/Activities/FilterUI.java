@@ -252,42 +252,44 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initData()
     {
-        SHOP_FILTER_ACTIVE    = (mFilterShops != null);
+        SHOP_FILTER_ACTIVE = (mFilterShops != null);
         SECTION_FILTER_ACTIVE = (mFilterSections != null);
-        COLOR_FILTER_ACTIVE   = (mFilterColors != null);
-        PRICE_FILTER_ACTIVE   = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
+        COLOR_FILTER_ACTIVE = (mFilterColors != null);
+        PRICE_FILTER_ACTIVE = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
         NEWNESS_FILTER_ACTIVE = true;
 
-        mColorCheckBoxesList   = new ArrayList<>();
+        mColorCheckBoxesList = new ArrayList<>();
         mSectionCheckBoxesList = new ArrayList<>();
 
         mShopsList = new ArrayList<>();
         mSharedPreferences = new SharedPreferencesManager(this);
         for (String shop : mSharedPreferences.retreiveUser().getShops())
+        {
             mShopsList.add(shop);
+        }
 
-        SECTION_FILTER_MAN_1 = getResources().getString(R.string.filter_section_abrigos);
-        SECTION_FILTER_MAN_2 = getResources().getString(R.string.filter_section_americanas);
-        SECTION_FILTER_MAN_3 = getResources().getString(R.string.filter_section_camisas);
-        SECTION_FILTER_MAN_4 = getResources().getString(R.string.filter_section_camisetas);
-        SECTION_FILTER_MAN_5 = getResources().getString(R.string.filter_section_jerseis);
-        SECTION_FILTER_MAN_6 = getResources().getString(R.string.filter_section_pantalones);
-        SECTION_FILTER_MAN_7 = getResources().getString(R.string.filter_section_polos);
-        SECTION_FILTER_MAN_8 = getResources().getString(R.string.filter_section_shorts);
-        SECTION_FILTER_MAN_9 = getResources().getString(R.string.filter_section_sport);
+        SECTION_FILTER_MAN_1  = getResources().getString(R.string.filter_section_abrigos);
+        SECTION_FILTER_MAN_2  = getResources().getString(R.string.filter_section_americanas);
+        SECTION_FILTER_MAN_3  = getResources().getString(R.string.filter_section_camisas);
+        SECTION_FILTER_MAN_4  = getResources().getString(R.string.filter_section_camisetas);
+        SECTION_FILTER_MAN_5  = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_MAN_6  = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_MAN_7  = getResources().getString(R.string.filter_section_polos);
+        SECTION_FILTER_MAN_8  = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_MAN_9  = getResources().getString(R.string.filter_section_sport);
         SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_sudaderas);
         SECTION_FILTER_MAN_11 = getResources().getString(R.string.filter_section_trajes);
         SECTION_FILTER_MAN_12 = getResources().getString(R.string.filter_section_zapatos);
 
-        SECTION_FILTER_WOMAN_1 = getResources().getString(R.string.filter_section_abrigos);
-        SECTION_FILTER_WOMAN_2 = getResources().getString(R.string.filter_section_americanas);
-        SECTION_FILTER_WOMAN_3 = getResources().getString(R.string.filter_section_camisas);
-        SECTION_FILTER_WOMAN_4 = getResources().getString(R.string.filter_section_camisetas);
-        SECTION_FILTER_WOMAN_5 = getResources().getString(R.string.filter_section_faldas);
-        SECTION_FILTER_WOMAN_6 = getResources().getString(R.string.filter_section_jerseis);
-        SECTION_FILTER_WOMAN_7 = getResources().getString(R.string.filter_section_pantalones);
-        SECTION_FILTER_WOMAN_8 = getResources().getString(R.string.filter_section_monos);
-        SECTION_FILTER_WOMAN_9 = getResources().getString(R.string.filter_section_shorts);
+        SECTION_FILTER_WOMAN_1  = getResources().getString(R.string.filter_section_abrigos);
+        SECTION_FILTER_WOMAN_2  = getResources().getString(R.string.filter_section_americanas);
+        SECTION_FILTER_WOMAN_3  = getResources().getString(R.string.filter_section_camisas);
+        SECTION_FILTER_WOMAN_4  = getResources().getString(R.string.filter_section_camisetas);
+        SECTION_FILTER_WOMAN_5  = getResources().getString(R.string.filter_section_faldas);
+        SECTION_FILTER_WOMAN_6  = getResources().getString(R.string.filter_section_jerseis);
+        SECTION_FILTER_WOMAN_7  = getResources().getString(R.string.filter_section_pantalones);
+        SECTION_FILTER_WOMAN_8  = getResources().getString(R.string.filter_section_monos);
+        SECTION_FILTER_WOMAN_9  = getResources().getString(R.string.filter_section_shorts);
         SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_sport);
         SECTION_FILTER_WOMAN_11 = getResources().getString(R.string.filter_section_vestidos);
         SECTION_FILTER_WOMAN_12 = getResources().getString(R.string.filter_section_zapatos);
@@ -298,12 +300,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initToolbar()
     {
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf");
-
         mToolbar = (Toolbar)findViewById(R.id.filter_appbar);
         mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
-
-        mToolbarTextView.setTypeface(type);
 
         mToolbarTextView.setText(getResources().getString(R.string.toolbar_filter));
 
@@ -575,7 +573,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterColorImageView.setScaleY(1.1f);
             mFilterColorImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
-            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorText));
 
             mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
@@ -658,7 +656,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterSectionImageView.setScaleY(1.1f);
             mFilterSectionImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
-            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorText));
 
             for (String section : mFilterSections)
             {
@@ -683,7 +681,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         mFilterNewnessTextView = (TextView)findViewById(R.id.filter_text_newness);
 
-        mFilterNewnessTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+        mFilterNewnessTextView.setTextColor(getResources().getColor(R.color.colorText));
 
         if (NEWNESS_FILTER_ACTIVE)
         {
@@ -697,6 +695,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             mNewnessAllRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_all_radio_button);
             mNewnessNewRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_new_radio_button);
+
+            mNewnessAllRadioButton.setTypeface(
+                    Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+            mNewnessNewRadioButton.setTypeface(
+                    Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
             mNewnessNewRadioButton.setChecked(false);
             mNewnessNewRadioButton.setChecked(false);
@@ -732,6 +735,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
+
+        mPriceFromEditText.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+        mPriceToEditText.setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -800,7 +808,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterPriceImageView.setScaleY(1.1f);
             mFilterPriceImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
-            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorText));
 
             if (mFilterMinPrice > 0)
             {
@@ -858,6 +866,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             // Obtenemos el checkbox y le cambiamos el texto.
             final AppCompatCheckBox shopCheckbox = (AppCompatCheckBox) view.findViewById(R.id.shop_checkbox);
             shopCheckbox.setText(mShopsList.get(i));
+            shopCheckbox.setTypeface(
+                    Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+            shopCheckbox.setTextColor(getResources().getColor(R.color.colorText));
 
             // Lo guardamos en una lista.
             mShopsCheckBoxesList.add(shopCheckbox);
@@ -878,7 +889,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mFilterShopImageView.setScaleY(1.1f);
             mFilterShopImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
-            mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+            mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorText));
 
             ((ViewGroup)mFilterShopMenuLayout.getParent()).removeView(mFilterShopMenuLayout);
 
@@ -1061,7 +1072,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                               .alpha(ALPHA_ACTIVE_FILTER)
                                               .setInterpolator(new OvershootInterpolator());
 
-                mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+                mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorText));
 
                 mItemsMenuViewGroup.addView(mFilterShopMenuLayout, 0);
 
@@ -1095,7 +1106,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                  .alpha(ALPHA_ACTIVE_FILTER)
                                                  .setInterpolator(new OvershootInterpolator());
 
-                mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+                mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorText));
 
                 mItemsMenuViewGroup.addView(mFilterSectionMenuLayout, 0);
 
@@ -1129,7 +1140,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
-                mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+                mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorText));
 
                 mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
 
@@ -1163,7 +1174,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                                .alpha(ALPHA_ACTIVE_FILTER)
                                                .setInterpolator(new OvershootInterpolator());
 
-                mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorMediumText));
+                mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorText));
 
                 mItemsMenuViewGroup.addView(mFilterColorMenuLayout, 0);
 
@@ -1271,10 +1282,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
-                .setTextColor(getResources().getColor(R.color.colorMediumText));
+                .setTextColor(getResources().getColor(R.color.colorText));
 
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
-                .setHintTextColor(getResources().getColor(R.color.colorMediumText));
+                .setHintTextColor(getResources().getColor(R.color.colorText));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {

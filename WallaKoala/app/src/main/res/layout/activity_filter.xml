@@ -62,7 +62,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_shops"
                             android:textSize="14dp"
-                            android:textColor="@color/colorLightText"
+                            android:textColor="@color/colorMediumText"
                             android:layout_below="@+id/filter_image_shop"
                             android:layout_centerHorizontal="true"
                             app:customFont="Existence-StencilLight.otf"/>
@@ -86,15 +86,16 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/icono_secciones_color"/>
 
-                        <TextView
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:id="@+id/filter_text_section"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_sections"
                             android:textSize="14dp"
-                            android:textColor="@color/colorLightText"
+                            android:textColor="@color/colorMediumText"
                             android:layout_below="@+id/filter_image_section"
-                            android:layout_centerHorizontal="true"/>
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
 
                     </RelativeLayout>
 
@@ -115,15 +116,16 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/icono_dinero_color"/>
 
-                        <TextView
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:id="@+id/filter_text_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_price"
                             android:textSize="14dp"
-                            android:textColor="@color/colorLightText"
+                            android:textColor="@color/colorMediumText"
                             android:layout_below="@+id/filter_image_price"
-                            android:layout_centerHorizontal="true"/>
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
 
                     </RelativeLayout>
 
@@ -144,15 +146,16 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/icono_color_color"/>
 
-                        <TextView
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:id="@+id/filter_text_color"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_colors"
                             android:textSize="14dp"
-                            android:textColor="@color/colorLightText"
+                            android:textColor="@color/colorMediumText"
                             android:layout_below="@+id/filter_image_color"
-                            android:layout_centerHorizontal="true"/>
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
 
                     </RelativeLayout>
 
@@ -173,15 +176,16 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/icono_novedades_color"/>
 
-                        <TextView
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:id="@+id/filter_text_newness"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_newness"
                             android:textSize="14dp"
-                            android:textColor="@color/colorLightText"
+                            android:textColor="@color/colorMediumText"
                             android:layout_below="@+id/filter_image_newness"
-                            android:layout_centerHorizontal="true"/>
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
 
                     </RelativeLayout>
 
@@ -190,7 +194,6 @@
             </HorizontalScrollView>
 
         </android.support.v7.widget.CardView>
-
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"

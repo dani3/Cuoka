@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
@@ -11,32 +12,32 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 
 /**
- * TextView con la fuente actualizada.
+ * CheckBox con la fuente actualizada.
  * Created by Dani on 13/10/2016.
  */
-public class ExistenceTextView extends TextView
+public class ExistenceCheckBox extends AppCompatCheckBox
 {
-    public ExistenceTextView(Context context, AttributeSet attrs)
+    public ExistenceCheckBox(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         setCustomFont(context, attrs);
     }
 
-    public ExistenceTextView(Context context, AttributeSet attrs, int defStyle)
+    public ExistenceCheckBox(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
         setCustomFont(context, attrs);
     }
 
-    public ExistenceTextView(Context context)
+    public ExistenceCheckBox(Context context)
     {
         super(context);
     }
 
     private void setCustomFont(Context ctx, AttributeSet attrs)
     {
-        TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.ExistenceTextView);
-        String customFont = a.getString(R.styleable.ExistenceTextView_customFont);
+        TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.ExistenceCheckBox);
+        String customFont = a.getString(R.styleable.ExistenceCheckBox_customFontCh);
         setCustomFont(ctx, customFont);
         a.recycle();
     }
