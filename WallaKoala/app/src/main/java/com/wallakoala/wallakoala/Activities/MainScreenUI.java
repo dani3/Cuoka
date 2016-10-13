@@ -124,7 +124,8 @@ public class MainScreenUI extends AppCompatActivity
         mViewPager.setCurrentItem(1);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+        {
             @Override
             public void onTabSelected(TabLayout.Tab tab)
             {

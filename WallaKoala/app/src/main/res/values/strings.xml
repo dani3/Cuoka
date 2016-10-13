@@ -16,10 +16,10 @@
     <string name="footer_shop">TIENDA</string>
     <string name="footer_section">SECCION</string>
 
-    <string name="product_info_name">NOMBRE DEL PRODUCTO</string>
+    <string name="product_info_name"><b>NOMBRE DEL PRODUCTO</b></string>
     <string name="product_info_price">29.99€</string>
     <string name="product_info_description">Camisa de manga larga entallada con cuello inglés y pinzas que moldean la espalda. Planchado fácil. Corte ajustado.</string>
-    <string name="product_info_reference">Referencia: 123456789</string>
+    <string name="product_info_reference"><b>Referencia:</b> 123456789</string>
 
     <string name="error_message">Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado…</string>

@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Fragments;
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -192,6 +193,9 @@ public class ProductsFragment extends Fragment
         // No shops
         mNoShopsView    = getView().findViewById(R.id.no_shops);
         mAddShopsButton = (Button) getView().findViewById(R.id.add_shops_button);
+
+        mAddShopsButton.setTypeface(
+                Typeface.createFromAsset(getActivity().getAssets(),"fonts/Existence-StencilLight.otf"));
 
         // Listener para abrir el dialogo para anadir tiendas.
         mAddShopsButton.setOnClickListener(new View.OnClickListener()

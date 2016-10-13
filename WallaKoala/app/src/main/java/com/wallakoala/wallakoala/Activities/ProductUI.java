@@ -246,12 +246,13 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mShareImageButton           = (ImageButton)findViewById(R.id.product_info_share);
 
         /* Inicializamos la info del producto */
+        String name = "<b>" + mProduct.getName() + "</b>";
         boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
         String description = "<b>Descripción: </b>" +  (emptyDescription ? "No disponible" : mProduct.getDescription());
         SpannableString price = Utils.priceToString(mProduct.getPrice());
 
-        mProductNameTextView.setText(mProduct.getName());
+        mProductNameTextView.setText(Html.fromHtml(name));
         mProductShopTextView.setText(mProduct.getShop());
         mProductDescriptionTextView.setText(Html.fromHtml(description));
         mProductReferenceTextView.setText(Html.fromHtml(reference));

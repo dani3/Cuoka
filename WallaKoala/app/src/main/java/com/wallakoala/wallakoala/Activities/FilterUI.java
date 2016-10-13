@@ -1287,6 +1287,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
                 .setHintTextColor(getResources().getColor(R.color.colorText));
 
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTypeface(
+                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {
             @Override
@@ -1374,7 +1377,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             BufferedReader reader = null;
             URL url;
 
-            try {
+            try
+            {
                 final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                         + "/suggest/" + params[0]);
 
@@ -1418,7 +1422,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     Log.d(Properties.TAG, "Error cerrando conexion con el servidor");
 
                 }
-
             }
 
             return null;

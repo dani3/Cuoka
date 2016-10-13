@@ -22,7 +22,7 @@
             android:layout_marginStart="16dp"
             android:gravity="start">
 
-            <TextView
+            <com.wallakoala.wallakoala.Views.ExistenceTextView
                 android:id="@+id/recommended_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,7 +35,8 @@
                 android:textSize="12dp"
                 android:maxLines="3"
                 android:ellipsize="end"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                app:customFont="Existence-StencilLight.otf"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -45,12 +46,13 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp">
 
-                <TextView
+                <com.wallakoala.wallakoala.Views.ExistenceTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/colors"
                     android:textSize="12dp"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    app:customFont="Existence-StencilLight.otf"/>
 
                 <LinearLayout
                     android:id="@+id/recommended_icons_list"
