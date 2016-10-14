@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.wallakoala.wallakoala.Fragments.ProductsFragment.NUM_PRODUCTS_CACHED;
+
 /**
  * Fragmento con la pestaña de Descubre.
  * Created by Daniel Mancebo Aldea on 29/05/2016.
@@ -165,6 +167,7 @@ public class RecommendedFragment extends Fragment
                 , mProductList
                 , mFrameLayout);
 
+        mProductsRecyclerView.setItemViewCacheSize(NUM_PRODUCTS_CACHED);
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
     }
