@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.RangeSeekBar;
@@ -696,10 +697,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mNewnessAllRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_all_radio_button);
             mNewnessNewRadioButton = (AppCompatRadioButton)findViewById(R.id.newness_new_radio_button);
 
-            mNewnessAllRadioButton.setTypeface(
-                    Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
-            mNewnessNewRadioButton.setTypeface(
-                    Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+            mNewnessAllRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+            mNewnessNewRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
             mNewnessNewRadioButton.setChecked(false);
             mNewnessNewRadioButton.setChecked(false);
@@ -735,11 +734,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
         mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
-
-        mPriceFromEditText.setTypeface(
-                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
-        mPriceToEditText.setTypeface(
-                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
 
         mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -866,9 +860,6 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             // Obtenemos el checkbox y le cambiamos el texto.
             final AppCompatCheckBox shopCheckbox = (AppCompatCheckBox) view.findViewById(R.id.shop_checkbox);
             shopCheckbox.setText(mShopsList.get(i));
-            shopCheckbox.setTypeface(
-                    Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
-            shopCheckbox.setTextColor(getResources().getColor(R.color.colorText));
 
             // Lo guardamos en una lista.
             mShopsCheckBoxesList.add(shopCheckbox);
@@ -1288,7 +1279,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 .setHintTextColor(getResources().getColor(R.color.colorText));
 
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTypeface(
-                Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+                TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {

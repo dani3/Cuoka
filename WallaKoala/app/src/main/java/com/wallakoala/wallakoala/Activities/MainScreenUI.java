@@ -30,6 +30,7 @@ import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -150,8 +151,7 @@ public class MainScreenUI extends AppCompatActivity
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView)
                 {
-                    ((TextView)tabViewChild).setTypeface(
-                            Typeface.createFromAsset(getAssets(),"fonts/Existence-StencilLight.otf"));
+                    ((TextView)tabViewChild).setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
                 }
             }
         }

@@ -33,6 +33,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -194,8 +195,7 @@ public class ProductsFragment extends Fragment
         mNoShopsView    = getView().findViewById(R.id.no_shops);
         mAddShopsButton = (Button) getView().findViewById(R.id.add_shops_button);
 
-        mAddShopsButton.setTypeface(
-                Typeface.createFromAsset(getActivity().getAssets(),"fonts/Existence-StencilLight.otf"));
+        mAddShopsButton.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));;
 
         // Listener para abrir el dialogo para anadir tiendas.
         mAddShopsButton.setOnClickListener(new View.OnClickListener()
@@ -1304,10 +1304,8 @@ public class ProductsFragment extends Fragment
         final Button cancel = (Button) view.findViewById(R.id.add_shops_cancel);
         final Button accept = (Button) view.findViewById(R.id.add_shops_accept);
 
-        cancel.setTypeface(
-            Typeface.createFromAsset(getActivity().getAssets(),"fonts/Existence-StencilLight.otf"));
-        accept.setTypeface(
-                Typeface.createFromAsset(getActivity().getAssets(),"fonts/Existence-StencilLight.otf"));
+        cancel.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
+        accept.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
 
         // Obtenemos la vista de carga.
         final View loadingIndicatorView = view.findViewById(R.id.add_shops_loading);

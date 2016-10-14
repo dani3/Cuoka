@@ -137,7 +137,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center">
 
-                        <EditText
+                        <com.wallakoala.wallakoala.Views.ExistenceEditText
                             android:id="@+id/filter_price_from"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
@@ -149,7 +149,8 @@
                             android:layout_marginBottom="8dp"
                             android:textColor="@color/colorMediumText"
                             android:maxLines="1"
-                            android:background="@drawable/rounded_edittext"/>
+                            android:background="@drawable/rounded_edittext"
+                            app:customFontEd="Existence-StencilLight.otf"/>
 
                         <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:layout_width="wrap_content"
@@ -171,7 +172,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center">
 
-                        <EditText
+                        <com.wallakoala.wallakoala.Views.ExistenceEditText
                             android:id="@+id/filter_price_to"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
@@ -183,7 +184,8 @@
                             android:layout_marginBottom="8dp"
                             android:textColor="@color/colorMediumText"
                             android:maxLines="1"
-                            android:background="@drawable/rounded_edittext"/>
+                            android:background="@drawable/rounded_edittext"
+                            app:customFontEd="Existence-StencilLight.otf"/>
 
                         <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:layout_width="wrap_content"

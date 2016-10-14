@@ -15,4 +15,8 @@
         <attr name="customFontCh" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="ExistenceEditText">
+        <attr name="customFontEd" format="string"/>
+    </declare-styleable>
+
 </resources>

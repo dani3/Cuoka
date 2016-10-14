@@ -2,20 +2,23 @@ package com.wallakoala.wallakoala.Views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
-import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 
 /**
  * TextView con la fuente actualizada.
- * Created by Dani on 13/10/2016.
+ * Created by Daniel Mancebo Aldea on 13/10/2016.
  */
 public class ExistenceTextView extends TextView
 {
+    public ExistenceTextView(Context context)
+    {
+        super(context);
+    }
+
     public ExistenceTextView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
@@ -28,11 +31,6 @@ public class ExistenceTextView extends TextView
         setCustomFont(context, attrs);
     }
 
-    public ExistenceTextView(Context context)
-    {
-        super(context);
-    }
-
     private void setCustomFont(Context ctx, AttributeSet attrs)
     {
         TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.ExistenceTextView);
@@ -41,16 +39,10 @@ public class ExistenceTextView extends TextView
         a.recycle();
     }
 
-    public boolean setCustomFont(Context ctx, String asset) {
-        Typeface tf = null;
-        try {
-            tf = Typeface.createFromAsset(ctx.getAssets(), "fonts/" + asset);
-        } catch (Exception e) {
-            Log.e(Properties.TAG, "Could not get typeface: "+e.getMessage());
-            return false;
-        }
+    public boolean setCustomFont(Context ctx, String asset)
+    {
+        setTypeface(TypeFaceSingleton.getTypeFace(ctx, asset));
 
-        setTypeface(tf);
         return true;
     }
 }
