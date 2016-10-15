@@ -481,6 +481,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Metodo que precarga las imagenes antes de que aparezcan por pantalla.
+     */
     protected void _fetchImages()
     {
         ColorVariant colorVariant = mProduct.getColors().get(mCurrentColor);

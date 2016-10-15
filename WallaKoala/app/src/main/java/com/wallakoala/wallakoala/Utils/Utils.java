@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * @class Clase con metodos varios.
+ * Clase con metodos varios.
  * Created by Daniel Mancebo Aldea on 02/02/2016.
  */
 

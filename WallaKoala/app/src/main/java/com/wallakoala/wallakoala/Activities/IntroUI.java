@@ -27,8 +27,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @class Pantalla de introduccion de la app.
- * Created by Daniel Mancebo on 09/11/2015.
+ * Pantalla de introduccion de la app.
+ * Created by Daniel Mancebo Aldea on 09/11/2015.
  */
 
 public class IntroUI extends AppCompatActivity

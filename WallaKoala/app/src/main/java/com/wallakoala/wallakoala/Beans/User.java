@@ -3,9 +3,10 @@ package com.wallakoala.wallakoala.Beans;
 import java.util.Set;
 
 /**
- * @class Clase que representa un usuario.
+ * Clase que representa un usuario.
  * Created by Daniel Mancebo Aldea on 04/07/2016.
  */
+
 public class User
 {
     private long id;

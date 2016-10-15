@@ -3,8 +3,8 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -22,7 +22,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCT")
-public class Product 
+public class Product implements Comparator
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -65,16 +65,6 @@ public class Product
     private Calendar insertDate;
     
     public Product() {}
-    
-    @Override
-    public String toString() 
-    {
-        return ("Name: " + this.name
-             + "\nShop: " + this.shop
-             + "\nSection: " + this.shop
-             + "\nPrice: " + this.price
-             + "\nNumero de colores: " + this.colors.size());
-    }
     
     @JsonProperty("price")
     public void setPrice(double price) { this.price = price; }
@@ -120,34 +110,46 @@ public class Product
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
     
-    @Override
-    public boolean equals(Object other)
+    public void update(Product product, boolean equal)
     {
-        if (other instanceof Product)
-        {
-            Product product = (Product)other;
-            
-            return ((product.shop.equals(this.shop)) && 
-                    (product.section.equals(this.section)) && 
-                    (product.name.equals(this.name)) && 
-                    (product.link.equals(this.link)) && 
-                    (product.price == this.price) && 
-                    (product.colors.size() == this.colors.size()));
-        }
+        this.price = product.price;
+        this.link = product.link;
+        this.description = product.description;
+        this.colors = product.colors;
+        this.aspectRatio = product.aspectRatio;
         
-        return false;
+        if (!equal)
+        {
+            this.insertDate = Calendar.getInstance();
+        }
     }
 
     @Override
-    public int hashCode() 
+    public int compare(Object origin, Object other) 
     {
-        int hash = 7;
+        Product thisProduct = (Product)origin;
+        Product otherProduct = (Product)other;
         
-        hash = 31 * hash + Objects.hashCode(this.name);
-        hash = 31 * hash + Objects.hashCode(this.shop);
-        hash = 31 * hash + Objects.hashCode(this.section);
-        hash = 31 * hash + Objects.hashCode(this.link);
-        
-        return hash;
+        // Si se cumple todo, es el mismo producto.
+        if ((thisProduct.shop.equals(otherProduct.shop)) && 
+            (thisProduct.section.equals(otherProduct.section)) && 
+            (thisProduct.name.equals(otherProduct.name)) && 
+            (thisProduct.man == otherProduct.man) &&
+            (thisProduct.colors.get(0).getReference().equals(otherProduct.colors.get(0).getReference())))
+        {
+            return (thisProduct.price == otherProduct.price) ? 0 : 1;
+        }
+     
+        return -1;
+    }
+    
+    @Override
+    public String toString() 
+    {
+        return ("Name: " + this.name
+             + "\nShop: " + this.shop
+             + "\nSection: " + this.shop
+             + "\nPrice: " + this.price
+             + "\nNumero de colores: " + this.colors.size());
     }
 }

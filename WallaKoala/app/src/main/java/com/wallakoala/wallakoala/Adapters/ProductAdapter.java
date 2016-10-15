@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 /**
- * @class Adapter para la lista de imagenes de un producto.
+ * Adapter para la lista de imagenes de un producto.
  * Created by Daniel Mancebo Aldea on 23/01/2016.
  */
 

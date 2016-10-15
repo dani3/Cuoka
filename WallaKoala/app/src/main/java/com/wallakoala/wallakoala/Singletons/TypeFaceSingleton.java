@@ -14,7 +14,7 @@ public class TypeFaceSingleton
 {
     public static final String TYPEFACE_FOLDER = "fonts";
 
-    private static Hashtable<String, Typeface> sTypeFaces = new Hashtable<>(4);
+    private static Hashtable<String, Typeface> sTypeFaces = new Hashtable<>(1);
 
     public static Typeface getTypeFace(Context context, String fileName)
     {
