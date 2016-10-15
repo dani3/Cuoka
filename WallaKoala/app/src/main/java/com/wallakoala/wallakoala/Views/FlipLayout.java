@@ -57,7 +57,8 @@ public class FlipLayout extends FrameLayout
     {
         super.onFinishInflate();
 
-        if (getChildCount() > 2) {
+        if (getChildCount() > 2)
+        {
             throw new IllegalStateException("FlipLayout can host only two direct children");
         }
 
@@ -68,11 +69,13 @@ public class FlipLayout extends FrameLayout
 
     private void toggleView()
     {
-        if (frontView == null || backView == null) {
+        if (frontView == null || backView == null)
+        {
             return;
         }
 
-        if (!isFlipped) {
+        if (!isFlipped)
+        {
             frontView.setVisibility(View.VISIBLE);
             backView.setVisibility(View.GONE);
         } else {
@@ -110,7 +113,8 @@ public class FlipLayout extends FrameLayout
 
     public void setFlipped(boolean flipped)
     {
-        if (flipped) {
+        if (flipped)
+        {
             frontView.setVisibility(View.VISIBLE);
             backView.setVisibility(View.GONE);
         } else {
@@ -141,7 +145,8 @@ public class FlipLayout extends FrameLayout
             visibilitySwapped = false;
         }
 
-        @Override public void initialize(int width, int height, int parentWidth, int parentHeight) {
+        @Override public void initialize(int width, int height, int parentWidth, int parentHeight)
+        {
             super.initialize(width, height, parentWidth, parentHeight);
             camera = new Camera();
             this.centerX = width / 2;
@@ -149,14 +154,16 @@ public class FlipLayout extends FrameLayout
         }
 
         @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
+        protected void applyTransformation(float interpolatedTime, Transformation t)
+        {
             // Angle around the y-axis of the rotation at the given time. It is
             // calculated both in radians and in the equivalent degrees.
             final double radians = Math.PI * interpolatedTime;
 
             float degrees = (float) (180.0 * radians / Math.PI);
 
-            if (direction == Direction.UP) {
+            if (direction == Direction.UP)
+            {
                 degrees = -degrees;
             }
 
@@ -165,16 +172,20 @@ public class FlipLayout extends FrameLayout
             // the angle by 180 degrees so that the destination does not come in
             // flipped around. This is the main problem with SDK sample, it does
             // not do this.
-            if (interpolatedTime >= 0.5f) {
-                if (direction == Direction.UP) {
+            if (interpolatedTime >= 0.5f)
+            {
+                if (direction == Direction.UP)
+                {
                     degrees += 180.f;
                 }
 
-                if (direction == Direction.DOWN) {
+                if (direction == Direction.DOWN)
+                {
                     degrees -= 180.f;
                 }
 
-                if (!visibilitySwapped) {
+                if (!visibilitySwapped)
+                {
                     toggleView();
                     visibilitySwapped = true;
                 }

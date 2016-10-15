@@ -71,7 +71,7 @@
             android:text="@string/accept"
             android:textSize="15dp"
             android:padding="16dp"
-            style="@style/AppTheme.Button"/>
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
 
     </LinearLayout>
 

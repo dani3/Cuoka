@@ -298,7 +298,9 @@ public class MainScreenUI extends AppCompatActivity
     {
         super.onPostCreate(savedInstanceState);
         if(mLeftDrawerToggle != null)
+        {
             mLeftDrawerToggle.syncState();
+        }
     }
 
     @Override
@@ -306,7 +308,9 @@ public class MainScreenUI extends AppCompatActivity
     {
         super.onConfigurationChanged(newConfig);
         if(mLeftDrawerToggle != null)
+        {
             mLeftDrawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override

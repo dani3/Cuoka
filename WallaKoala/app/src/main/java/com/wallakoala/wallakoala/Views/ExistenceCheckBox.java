@@ -13,7 +13,7 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 
 /**
- * CheckBox con la fuente actualizada.
+ * CheckBox con la fuente personalizada.
  * Created by Daniel Mancebo Aldea on 13/10/2016.
  */
 public class ExistenceCheckBox extends AppCompatCheckBox
