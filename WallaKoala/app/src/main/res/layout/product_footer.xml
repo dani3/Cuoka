@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/footer_height"
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <com.wallakoala.wallakoala.Views.ExistenceTextView
             android:id="@+id/footer_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,9 +22,10 @@
             android:textSize="16dp"
             android:textColor="@android:color/white"
             android:ellipsize="end"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            app:customFont="Existence-StencilLight.otf"/>
 
-        <TextView
+        <com.wallakoala.wallakoala.Views.ExistenceTextView
             android:id="@+id/footer_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,9 +37,10 @@
             android:maxLines="1"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            app:customFont="Existence-StencilLight.otf"/>
 
-        <TextView
+        <com.wallakoala.wallakoala.Views.ExistenceTextView
             android:id="@+id/footer_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +54,8 @@
             android:textColor="@android:color/white"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            app:customFont="Existence-StencilLight.otf"/>
 
     </RelativeLayout>
 

@@ -1,9 +1,7 @@
 package com.wallakoala.wallakoala.Properties;
 
-import com.android.volley.toolbox.StringRequest;
-
 /**
- * @class Clase que todos las constantes necesarias.
+ * Clase que todos las constantes necesarias.
  * Created by Daniel Mancebo Aldea on 18/04/2016.
  */
 

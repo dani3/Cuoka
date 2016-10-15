@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Fragments;
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -32,6 +33,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -71,6 +73,7 @@ public class ProductsFragment extends Fragment
     protected static final String ALL = "All";
     protected static final int NUM_PRODUCTS_DISPLAYED = 100;
     protected static final int MIN_PRODUCTS = 8;
+    protected static final int NUM_PRODUCTS_CACHED = 10;
     protected static boolean MAN;
     protected static boolean FIRST_CONNECTION;
     protected static boolean ON_CREATE_FLAG;
@@ -193,6 +196,8 @@ public class ProductsFragment extends Fragment
         mNoShopsView    = getView().findViewById(R.id.no_shops);
         mAddShopsButton = (Button) getView().findViewById(R.id.add_shops_button);
 
+        mAddShopsButton.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));;
+
         // Listener para abrir el dialogo para anadir tiendas.
         mAddShopsButton.setOnClickListener(new View.OnClickListener()
         {
@@ -302,7 +307,7 @@ public class ProductsFragment extends Fragment
                                     , mProductsDisplayedList
                                     , mFrameLayout);
 
-        mProductsRecyclerView.setHasFixedSize(true);
+        mProductsRecyclerView.setItemViewCacheSize(NUM_PRODUCTS_CACHED);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
@@ -313,7 +318,8 @@ public class ProductsFragment extends Fragment
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
                 scrollingUp = dy > 0;
 
                 if (scrollingUp)
@@ -1083,7 +1089,8 @@ public class ProductsFragment extends Fragment
      */
     public boolean canFilter()
     {
-        return ((mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
+        return ((mShopsList != null) && (!mShopsList.isEmpty()) &&
+                (mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
     }
 
     /**
@@ -1298,6 +1305,9 @@ public class ProductsFragment extends Fragment
         // Obtenemos los dos botones para Aceptar y Cancelar.
         final Button cancel = (Button) view.findViewById(R.id.add_shops_cancel);
         final Button accept = (Button) view.findViewById(R.id.add_shops_accept);
+
+        cancel.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
+        accept.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
 
         // Obtenemos la vista de carga.
         final View loadingIndicatorView = view.findViewById(R.id.add_shops_loading);

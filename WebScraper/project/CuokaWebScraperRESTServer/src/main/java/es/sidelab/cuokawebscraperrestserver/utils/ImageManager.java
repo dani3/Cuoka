@@ -160,9 +160,9 @@ public class ImageManager
      */
     private static boolean downloadImage(String imageURL, String path)
     {
-        InputStream in = null;
-        ByteArrayOutputStream out = null;
-        FileOutputStream fos = null;
+        InputStream in;
+        ByteArrayOutputStream out;
+        FileOutputStream fos;
                 
         try 
         {            
@@ -173,7 +173,7 @@ public class ImageManager
             out = new ByteArrayOutputStream();
             byte[] buffer = new byte[ 1024 ];
 
-            int i = 0;
+            int i;
             while((i = in.read(buffer)) != -1)
                 out.write(buffer, 0, i);
 
@@ -227,13 +227,13 @@ public class ImageManager
                 ASPECT_RATIO = Properties.ZARA_ASPECT_RATIO;
             
             // El script tiene que estar en el mismo path que el jar
-            Runtime.getRuntime().exec(new String[]{ "sudo"
+            Runtime.getRuntime().exec(new String[]{"sudo"
                         , "/usr/bin/python"
                         , "resizeProducts.py"
                         , Properties.IMAGE_PATH + shop
                         , Double.toString(ASPECT_RATIO)
                         , Integer.toString(Properties.IMAGE_HEIGHT_L)
-                        , Integer.toString(Properties.IMAGE_HEIGHT_S) });
+                        , Integer.toString(Properties.IMAGE_HEIGHT_S)});
             
         } catch (IOException ex) {
             LOG.error("ERROR: Error al ejecutar el script 'resizeProducts.py'");
@@ -250,12 +250,12 @@ public class ImageManager
         try 
         {      
             // El script tiene que estar en el mismo path que el jar
-            Runtime.getRuntime().exec(new String[]{ "sudo"
+            Runtime.getRuntime().exec(new String[]{"sudo"
                         , "/usr/bin/python"
                         , "resizeColors.py"
                         , Properties.COLOR_PATH + shop
                         , Integer.toString(Properties.ICON_WIDTH)
-                        , Integer.toString(Properties.ICON_HEIGHT) });
+                        , Integer.toString(Properties.ICON_HEIGHT)});
             
         } catch (IOException ex) {
             LOG.error("ERROR: Error al ejecutar el script 'resizeColors.py'");

@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.wallakoala.wallakoala.Beans.User;
 
 /**
- * @class Clase que gestionara el fichero de preferencias.
+ * Clase que gestionara el fichero de preferencias.
  * Created by Daniel Mancebo Aldea on 11/01/2016.
  */
 

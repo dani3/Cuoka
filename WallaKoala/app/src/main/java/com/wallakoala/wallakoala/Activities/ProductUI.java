@@ -4,13 +4,11 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -42,8 +40,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
+import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -151,6 +151,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         _initRecyclerView();
         _initAnimations();
         _sendViewedProduct();
+        _fetchImages();
 
         // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
@@ -175,13 +176,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                     mHeightScaleImage = mThumbnailHeight / mImageView.getHeight();
 
                     // Lo mismo para el boton de favorito
-                    int[] favScreenLocation = new int[2];
-                    mFavoriteImageButton.getLocationOnScreen(favScreenLocation);
-                    mLeftDeltaFav = mThumbnailLeftFav - favScreenLocation[0];
-                    mTopDeltaFav  = mThumbnailTopFav - favScreenLocation[1];
+                    if (mThumbnailWidthFav != 0)
+                    {
+                        int[] favScreenLocation = new int[2];
+                        mFavoriteImageButton.getLocationOnScreen(favScreenLocation);
+                        mLeftDeltaFav = mThumbnailLeftFav - favScreenLocation[0];
+                        mTopDeltaFav  = mThumbnailTopFav - favScreenLocation[1];
 
-                    mWidthScaleFav  = mThumbnailWidthFav / mFavoriteImageButton.getWidth();
-                    mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
+                        mWidthScaleFav  = mThumbnailWidthFav / mFavoriteImageButton.getWidth();
+                        mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
+                    }
 
                     runEnterAnimation();
 
@@ -242,12 +246,13 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mShareImageButton           = (ImageButton)findViewById(R.id.product_info_share);
 
         /* Inicializamos la info del producto */
+        String name = "<b>" + mProduct.getName() + "</b>";
         boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
         String description = "<b>Descripción: </b>" +  (emptyDescription ? "No disponible" : mProduct.getDescription());
         SpannableString price = Utils.priceToString(mProduct.getPrice());
 
-        mProductNameTextView.setText(mProduct.getName());
+        mProductNameTextView.setText(Html.fromHtml(name));
         mProductShopTextView.setText(mProduct.getShop());
         mProductDescriptionTextView.setText(Html.fromHtml(description));
         mProductReferenceTextView.setText(Html.fromHtml(reference));
@@ -260,48 +265,50 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             @Override
             public void onClick(View v)
             {
-                final User user = mSharedPreferencesManager.retreiveUser();
-                final long id = user.getId();
+                if (!mFavoriteImageButton.ANIMATING) {
+                    final User user = mSharedPreferencesManager.retreiveUser();
+                    final long id = user.getId();
 
-                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                        + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                            + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
 
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
 
-                final StringRequest stringRequest = new StringRequest(Request.Method.GET
-                        , fixedURL
-                        , new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response)
-                    {
-                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
-                        {
-                            // Si contiene el producto, es que se quiere quitar de favoritos.
-                            if (user.getFavoriteProducts().contains(mProduct.getId()))
+                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                            , fixedURL
+                            , new Response.Listener<String>()
                             {
-                                user.getFavoriteProducts().remove(mProduct.getId());
+                                @Override
+                                public void onResponse(String response)
+                                {
+                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
 
-                            } else {
-                                user.getFavoriteProducts().add(mProduct.getId());
+                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                    {
+                                        // Si contiene el producto, es que se quiere quitar de favoritos.
+                                        if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                        {
+                                            user.getFavoriteProducts().remove(mProduct.getId());
+
+                                        } else {
+                                            user.getFavoriteProducts().add(mProduct.getId());
+                                        }
+
+                                        mSharedPreferencesManager.insertUser(user);
+                                    }
+                                }
                             }
+                            , new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
+                                {}
+                            });
 
-                            mSharedPreferencesManager.insertUser(user);
-                        }
-                    }
+                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+
+                    mFavoriteImageButton.startAnimation();
                 }
-                        , new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {}
-                });
-
-                VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
-
-                mFavoriteImageButton.startAnimation();
             }
         });
 
@@ -319,16 +326,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 } else {
                     collapseInfo();
                 }
-            }
-        });
-
-        /* Listener del boton de la cesta */
-        mShareImageButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                _share();
             }
         });
 
@@ -410,10 +407,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mImagesRecylcerView.setAdapter(mImagesAdapter);
 
-        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            }
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -432,19 +429,24 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
         mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode_animation);
 
-        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
+        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
-            public void onAnimationEnd(Animation animation) {
+            public void onAnimationEnd(Animation animation)
+            {
                 mFloatingActionButtonPlus.setVisibility(View.GONE);
+
+                if (mThumbnailWidthFav == 0)
+                {
+                    mFavoriteImageButton.setVisibility(View.GONE);
+                }
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 
@@ -480,21 +482,49 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     }
 
     /**
-     * Metodo que
+     * Metodo que precarga las imagenes antes de que aparezcan por pantalla.
      */
-    private void _share()
+    protected void _fetchImages()
     {
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        ColorVariant colorVariant = mProduct.getColors().get(mCurrentColor);
+        for (int i = 0; i < colorVariant.getNumberOfImages(); i++)
+        {
+            String imageFile = mProduct.getShop() + "_" + mProduct.getSection() + "_"
+                    + colorVariant.getReference() + "_"
+                    + colorVariant.getColorName() + "_" + i + "_Large.jpg";
 
-        intent.setType("image/png");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + mProduct.getShop() + "/" + imageFile);
 
-        String shareBody = "Mira lo que he encontrado en Cuoka!";
+            // Pre-Cargamos la imagen utilizando Picasso.
+            Picasso.with(mContext)
+                   .load(url)
+                   .fetch();
+        }
 
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + mBitmapUri));
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        for (int i = 0; i < mProduct.getColors().size(); i++)
+        {
+            // Path != 0 -> Color predefinido
+            String url;
+            if (mProduct.getColors().get(i).getColorPath().equals("0"))
+            {
+                final String imageFile = mProduct.getShop() + "_" + mProduct.getSection() + "_"
+                        + mProduct.getColors().get(i).getReference() + "_"
+                        + mProduct.getColors().get(i).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
 
-        startActivity(Intent.createChooser(intent, "Compartir por"));
+                url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + mProduct.getShop() + "/" + imageFile);
+
+            } else {
+                final String imageFile = mProduct.getColors().get(i).getColorPath();
+
+                url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+            }
+
+            // Pre-Cargamos el icono utilizando Picasso.
+            Picasso.with(mContext)
+                   .load(url)
+                   .fetch();
+        }
     }
 
     /**
@@ -513,18 +543,23 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mFavoriteImageButton.changeIcon(
                 mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
-        mFavoriteImageButton.setPivotX(0);
-        mFavoriteImageButton.setPivotY(0);
-        mFavoriteImageButton.setScaleX(mWidthScaleFav);
-        mFavoriteImageButton.setScaleY(mHeightScaleFav);
-        mFavoriteImageButton.setTranslationX(mLeftDeltaFav);
-        mFavoriteImageButton.setTranslationY(mTopDeltaFav);
+        if (mThumbnailWidthFav != 0)
+        {
+            mFavoriteImageButton.setPivotX(0);
+            mFavoriteImageButton.setPivotY(0);
+            mFavoriteImageButton.setScaleX(mWidthScaleFav);
+            mFavoriteImageButton.setScaleY(mHeightScaleFav);
+            mFavoriteImageButton.setTranslationX(mLeftDeltaFav);
+            mFavoriteImageButton.setTranslationY(mTopDeltaFav);
 
-        // Animacion de escalado y desplazamiento hasta el tamaño grande
-        mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
-                                      .scaleX(1).scaleY(1)
-                                      .translationX(0).translationY(0)
-                                      .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
+            // Animacion de escalado y desplazamiento hasta el tamaño grande
+            mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
+                    .scaleX(1).scaleY(1)
+                    .translationX(0).translationY(0)
+                    .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
+        } else {
+            mFavoriteImageButton.setVisibility(View.GONE);
+        }
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande
         mImageView.animate().setDuration(ANIM_DURATION)
@@ -562,16 +597,21 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
                                         mRadiusReveal = Math.max(mProductInfoLayout.getWidth()
                                                             , mProductInfoLayout.getHeight());
+
+                                        // Hacemos aparecer el el boton de favorito
+                                        if (mThumbnailWidthFav == 0)
+                                        {
+                                            mFavoriteImageButton.setVisibility(View.VISIBLE);
+                                            mFavoriteImageButton.startAnimation(mExplodeAnimation);
+                                        }
                                     }
                                 }
 
                                 @Override
-                                public void onAnimationCancel(Animator animation) {
-                                }
+                                public void onAnimationCancel(Animator animation) {}
 
                                 @Override
-                                public void onAnimationRepeat(Animator animation) {
-                                }
+                                public void onAnimationRepeat(Animator animation) {}
                             });
 
         // Efecto fade para oscurecer la pantalla
@@ -581,8 +621,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     }
 
     /**
-     * La animacion de sali
-     * da es la misma animacion de entrada pero al reves
+     * La animacion de salida es la misma animacion de entrada pero al reves
      * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
     private void runExitAnimation(final Runnable endAction)
@@ -601,11 +640,14 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                             .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
                             .withEndAction(endAction);
 
-        mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
-                                      .setStartDelay(75)
-                                      .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
-                                      .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
-                                      .withEndAction(endAction);
+        if (mThumbnailWidthFav != 0)
+        {
+            mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
+                    .setStartDelay(75)
+                    .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
+                    .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
+                    .withEndAction(endAction);
+        }
 
         mFavoriteImageButton.changeIcon(
                 mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
@@ -614,6 +656,11 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             collapseInfo();
 
         mFloatingActionButtonPlus.startAnimation(mImplodeAnimation);
+
+        if (mThumbnailWidthFav == 0)
+        {
+            mFavoriteImageButton.startAnimation(mImplodeAnimation);
+        }
 
         // Aclarar el fondo
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);

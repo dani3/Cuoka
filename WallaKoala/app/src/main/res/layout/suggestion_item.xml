@@ -1,7 +1,7 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <LinearLayout
@@ -11,15 +11,16 @@
         android:background="@drawable/bottom_border"
         android:layout_marginLeft="16dp">
 
-        <TextView
+        <com.wallakoala.wallakoala.Views.ExistenceTextView
             android:id="@+id/suggestion_item"
             android:layout_width="0dp"
             android:layout_weight="0.8"
             android:layout_height="wrap_content"
             android:textSize="14dp"
             android:padding="14dp"
-            android:textColor="@color/colorMediumText"
-            android:onClick="onClickText"/>
+            android:textColor="@color/colorText"
+            android:onClick="onClickText"
+            app:customFont="Existence-StencilLight.otf"/>
 
         <ImageButton
             android:id="@+id/suggestion_include"

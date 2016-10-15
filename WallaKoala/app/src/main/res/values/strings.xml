@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">cuoka</string>
+    <string name="app_name">Cuoka</string>
     <string name="toolbar_filter">Filtros</string>
 
     <string name="open_drawer">Menu Abierto</string>
@@ -16,10 +16,10 @@
     <string name="footer_shop">TIENDA</string>
     <string name="footer_section">SECCION</string>
 
-    <string name="product_info_name">NOMBRE DEL PRODUCTO</string>
+    <string name="product_info_name"><b>NOMBRE DEL PRODUCTO</b></string>
     <string name="product_info_price">29.99€</string>
     <string name="product_info_description">Camisa de manga larga entallada con cuello inglés y pinzas que moldean la espalda. Planchado fácil. Corte ajustado.</string>
-    <string name="product_info_reference">Referencia: 123456789</string>
+    <string name="product_info_reference"><b>Referencia:</b> 123456789</string>
 
     <string name="error_message">Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado…</string>
@@ -88,8 +88,8 @@
 
     <string name="morph_idle">Hecho</string>
 
-    <string name="accept">Aceptar</string>
-    <string name="cancel">Cancelar</string>
+    <string name="accept"><b>Aceptar</b></string>
+    <string name="cancel"><b>Cancelar</b></string>
 
     <string name="login_facebook">Login con Facebook</string>
     <string name="login_google">Login con Google+</string>
@@ -109,5 +109,7 @@
     <string name="terms_and_conditions">Al continuar aceptas también los <u><b>Términos del Servicio</b></u> y la <u><b>Política de Privacidad</b></u> de Cuoka</string>
 
     <string name="no_shops">Parece que no has añadido ninguna tienda</string>
-    <string name="add_shops">Añade tus tiendas</string>
+    <string name="add_shops"><b>Añade tus tiendas</b></string>
+
+    <string name="colors"><b>Colores: </b></string>
 </resources>

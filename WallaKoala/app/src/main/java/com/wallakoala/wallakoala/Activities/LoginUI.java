@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -32,6 +31,7 @@ import com.dd.CircularProgressButton;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -85,8 +85,6 @@ public class LoginUI extends AppCompatActivity
     /* AlertDialog View */
     private View mAlertDialogView;
 
-    private View mBackgroundImage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -100,9 +98,9 @@ public class LoginUI extends AppCompatActivity
 
         Animation zoomInAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom_in_animation);
 
-        mBackgroundImage = findViewById(R.id.login_background);
+        View backgroundImage = findViewById(R.id.login_background);
 
-        mBackgroundImage.startAnimation(zoomInAnimation);
+        backgroundImage.startAnimation(zoomInAnimation);
     }
 
     /**
@@ -112,6 +110,9 @@ public class LoginUI extends AppCompatActivity
     {
         final Button mSignInButton = (Button) findViewById(R.id.sign_in);
         final Button mSingUpButton = (Button) findViewById(R.id.sign_up);
+
+        mSignInButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mSingUpButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mSingUpButton.setOnClickListener(new View.OnClickListener()
         {
@@ -184,9 +185,13 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initSignInButtons(View parent)
     {
-        final Button mCreateAccountButton = (Button) parent.findViewById(R.id.create_account);
+        final Button mCreateAccountButton         = (Button) parent.findViewById(R.id.create_account);
         final CircularProgressButton mEnterButton = (CircularProgressButton) parent.findViewById(R.id.enter);
+
         mEnterButton.setIndeterminateProgressMode(true);
+
+        mCreateAccountButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mEnterButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mCreateAccountButton.setOnClickListener(new View.OnClickListener()
         {
@@ -289,8 +294,14 @@ public class LoginUI extends AppCompatActivity
         mEmailInputLayout    = (TextInputLayout)parent.findViewById(R.id.email_input_layout);
         mPasswordInputLayout = (TextInputLayout)parent.findViewById(R.id.password_input_layout);
 
+        mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+
         mPasswordEdittext = (EditText)parent.findViewById(R.id.password_edittext);
         mEmailEdittext    = (EditText)parent.findViewById(R.id.email_edittext);
+
+        mPasswordEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mEmailEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
@@ -304,6 +315,8 @@ public class LoginUI extends AppCompatActivity
     {
         mRememberMeCheckBox = (AppCompatCheckBox)parent.findViewById(R.id.remember_me_checkbox);
         mRememberMeCheckBox.setChecked(true);
+
+        mRememberMeCheckBox.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         TextView mPasswordForgottenTextView = (TextView)parent.findViewById(R.id.password_forgotten);
         mPasswordForgottenTextView.setOnClickListener(new View.OnClickListener()
@@ -327,10 +340,20 @@ public class LoginUI extends AppCompatActivity
         mAgeInputLayout        = (TextInputLayout)parent.findViewById(R.id.age_input_layout);
         mPostalCodeInputLayout = (TextInputLayout)parent.findViewById(R.id.postal_code_input_layout);
 
+        mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mAgeInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mPostalCodeInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+
         mPasswordEdittext      = (EditText)parent.findViewById(R.id.password_edittext);
         mEmailEdittext         = (EditText)parent.findViewById(R.id.email_edittext);
         mAgeEdittext           = (EditText)parent.findViewById(R.id.age_edittext);
         mPostalCodeEdittext    = (EditText)parent.findViewById(R.id.postal_code_edittext);
+
+        mPasswordEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mEmailEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mAgeEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mPostalCodeEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
@@ -441,6 +464,8 @@ public class LoginUI extends AppCompatActivity
     {
         mRegisterCircularButton = (CircularProgressButton)parent.findViewById(R.id.sign_up_accept);
         mRegisterCircularButton.setIndeterminateProgressMode(true);
+
+        mRegisterCircularButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mRegisterCircularButton.setOnClickListener(new View.OnClickListener()
         {

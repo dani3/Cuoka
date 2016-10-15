@@ -9,7 +9,7 @@ import com.android.volley.toolbox.Volley;
 import com.wallakoala.wallakoala.Properties.Properties;
 
 /**
- * @class Singleton para manejar una instancia de Volley.
+ * Singleton para manejar una instancia de Volley.
  * Created by Daniel Mancebo Aldea on 31/05/2016.
  */
 

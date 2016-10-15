@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @class: Clase para realizar una peticion customizada para Volley.
+ *  Clase para realizar una peticion customizada para Volley.
  * Created by Daniel Mancebo Aldea on 01/06/2016.
  */
 

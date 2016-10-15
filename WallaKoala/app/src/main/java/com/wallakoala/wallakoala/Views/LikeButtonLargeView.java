@@ -45,6 +45,8 @@ public class LikeButtonLargeView extends FrameLayout
     private boolean isChecked;
     private AnimatorSet animatorSet;
 
+    public boolean ANIMATING;
+
     public LikeButtonLargeView(Context context)
     {
         super(context);
@@ -74,6 +76,7 @@ public class LikeButtonLargeView extends FrameLayout
     {
         LayoutInflater.from(getContext()).inflate(R.layout.aux_explosive_button_large, this, true);
         ButterKnife.bind(this);
+        ANIMATING = false;
     }
 
     public void changeIcon(boolean isChecked)
@@ -135,6 +138,27 @@ public class LikeButtonLargeView extends FrameLayout
                     starScaleXAnimator,
                     dotsAnimator
             );
+
+            animatorSet.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    ANIMATING = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    ANIMATING = false;
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {}
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {}
+            });
 
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override

@@ -37,7 +37,7 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_clear_black"/>
 
-            <TextView
+            <com.wallakoala.wallakoala.Views.ExistenceTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -49,8 +49,9 @@
                 android:paddingLeft="8dp"
                 android:text="@string/filter_item_sections"
                 android:textSize="12dp"
-                android:textColor="@color/colorLightText"
-                android:background="@drawable/filter_bottom_border"/>
+                android:textColor="@color/colorMediumText"
+                android:background="@drawable/filter_bottom_border"
+                app:customFont="Existence-StencilLight.otf"/>
 
         </RelativeLayout>
 
@@ -76,59 +77,65 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_abrigos"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_americanas"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_camisas"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_camisetas"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_camisetas"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_jerseis"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
             </LinearLayout>
 
@@ -139,59 +146,65 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_pantalones"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_sudaderas"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_trajes"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_zapatos"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_sport"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_section_polos"
-                    android:textColor="@color/colorMediumText"
+                    android:textColor="@color/colorText"
                     android:layout_marginBottom="8dp"
-                    app:buttonTint="@color/colorAccent"/>
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
 
             </LinearLayout>
 

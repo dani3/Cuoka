@@ -7,4 +7,16 @@
         <attr name="singleThumb" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="ExistenceTextView">
+        <attr name="customFont" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="ExistenceCheckBox">
+        <attr name="customFontCh" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="ExistenceEditText">
+        <attr name="customFontEd" format="string"/>
+    </declare-styleable>
+
 </resources>

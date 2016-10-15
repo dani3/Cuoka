@@ -26,7 +26,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="8dp">
 
-            <TextView
+            <com.wallakoala.wallakoala.Views.ExistenceTextView
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:layout_marginLeft="8dp"
@@ -36,8 +36,9 @@
                 android:paddingLeft="8dp"
                 android:text="@string/filter_item_newness"
                 android:textSize="12dp"
-                android:textColor="@color/colorLightText"
-                android:background="@drawable/filter_bottom_border"/>
+                android:textColor="@color/colorMediumText"
+                android:background="@drawable/filter_bottom_border"
+                app:customFont="Existence-StencilLight.otf"/>
 
         </RelativeLayout>
 
@@ -60,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/filter_newness_2"
                 android:textSize="16dp"
-                android:textColor="@color/colorMediumText"
+                android:textColor="@color/colorText"
                 android:layout_marginBottom="4dp"
                 app:buttonTint="@color/colorAccent"/>
 
@@ -70,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/filter_newness_1"
                 android:textSize="16dp"
-                android:textColor="@color/colorMediumText"
+                android:textColor="@color/colorText"
                 app:buttonTint="@color/colorAccent"/>
 
         </RadioGroup>

@@ -20,13 +20,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,6 +104,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Inicializacion del ViewPager.
      */
+    @SuppressWarnings("deprecation")
     private void _initViewPager()
     {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -119,6 +123,37 @@ public class MainScreenUI extends AppCompatActivity
         // Marcamos como activo la segunda pestaña (NOVEDADES)
         mViewPager.setCurrentItem(1);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+        {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
+            {
+                mRecommendedFragment.select();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        ViewGroup vg = (ViewGroup)mTabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++)
+        {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++)
+            {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView)
+                {
+                    ((TextView)tabViewChild).setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+                }
+            }
+        }
     }
 
     /**
@@ -254,7 +289,6 @@ public class MainScreenUI extends AppCompatActivity
             }
 
             mBackPressed = System.currentTimeMillis();
-
         }
     }
 
@@ -263,7 +297,9 @@ public class MainScreenUI extends AppCompatActivity
     {
         super.onPostCreate(savedInstanceState);
         if(mLeftDrawerToggle != null)
+        {
             mLeftDrawerToggle.syncState();
+        }
     }
 
     @Override
@@ -271,7 +307,9 @@ public class MainScreenUI extends AppCompatActivity
     {
         super.onConfigurationChanged(newConfig);
         if(mLeftDrawerToggle != null)
+        {
             mLeftDrawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override

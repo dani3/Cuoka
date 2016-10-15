@@ -3,8 +3,8 @@ package com.wallakoala.wallakoala.Beans;
 import java.io.Serializable;
 import java.util.List;
 
-/*
- * @class Clase que representa un producto.
+/**
+ * Clase que representa un producto.
  * Created by Daniel Mancebo on 11/12/2015.
  */
 

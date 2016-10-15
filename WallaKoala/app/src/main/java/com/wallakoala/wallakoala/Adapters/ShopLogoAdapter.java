@@ -21,7 +21,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * @class Adapter para mostrar la lista de tiendas.
+ * Adapter para mostrar la lista de tiendas.
  * Created by Daniel Mancebo Aldea on 06/07/2016.
  */
 

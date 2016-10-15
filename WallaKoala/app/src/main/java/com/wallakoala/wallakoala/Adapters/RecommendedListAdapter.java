@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -25,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
+import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -32,9 +35,12 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wallakoala.wallakoala.Views.FlipLayout;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
@@ -57,6 +63,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
     /* Data */
     private static List<Product> mProductList;
     private static ProductHolder mProductClicked;
+    private static boolean[] mItemsFlipped;
 
     /**
      * ViewHolder del producto con todos los componentes graficos necesarios
@@ -71,9 +78,14 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private Bitmap mBitmap;
         private String mBitmapFileName;
 
+        private ViewGroup mIconList;
+        private CircleImageView[] mIconViews;
+
+        private FlipLayout mFlippableView;
+
         private ImageView mProductImageView;
 
-        private TextView mNameTextView, mShopTextView, mPriceTextView;
+        private TextView mNameTextView, mShopTextView, mPriceTextView, mDescriptionTextView;
 
         private LikeButtonView mProductFavoriteImageButton;
 
@@ -81,12 +93,16 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             super(itemView);
 
-            mProductImageView = (ImageView)itemView.findViewById(R.id.recommended_image);
-            mShopTextView     = (TextView)itemView.findViewById(R.id.recommended_shop);
-            mNameTextView     = (TextView)itemView.findViewById(R.id.recommended_name);
-            mPriceTextView    = (TextView)itemView.findViewById(R.id.recommended_price);
+            mProductImageView     = (ImageView)itemView.findViewById(R.id.recommended_image);
+            mShopTextView         = (TextView)itemView.findViewById(R.id.recommended_shop);
+            mNameTextView         = (TextView)itemView.findViewById(R.id.recommended_name);
+            mPriceTextView        = (TextView)itemView.findViewById(R.id.recommended_price);
+            mDescriptionTextView  = (TextView)itemView.findViewById(R.id.recommended_description);
+            mIconList             = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
+            mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
             mProductImageView.setOnClickListener(this);
+            mFlippableView.setOnClickListener(this);
 
             mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.recommended_item_favorite);
 
@@ -95,48 +111,51 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 @Override
                 public void onClick(View view)
                 {
-                    final User user = mSharedPreferencesManager.retreiveUser();
-                    final long id = user.getId();
+                    if (!mProductFavoriteImageButton.ANIMATING)
+                    {
+                        final User user = mSharedPreferencesManager.retreiveUser();
+                        final long id = user.getId();
 
-                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                            + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
+                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
 
-                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+                        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
 
-                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
-                            , fixedURL
-                            , new Response.Listener<String>()
-                            {
-                                @Override
-                                public void onResponse(String response)
+                        final StringRequest stringRequest = new StringRequest(Request.Method.GET
+                                , fixedURL
+                                , new Response.Listener<String>()
                                 {
-                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                    @Override
+                                    public void onResponse(String response)
                                     {
-                                        // Si contiene el producto, es que se quiere quitar de favoritos.
-                                        if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                                         {
-                                            user.getFavoriteProducts().remove(mProduct.getId());
+                                            // Si contiene el producto, es que se quiere quitar de favoritos.
+                                            if (user.getFavoriteProducts().contains(mProduct.getId()))
+                                            {
+                                                user.getFavoriteProducts().remove(mProduct.getId());
 
-                                        } else {
-                                            user.getFavoriteProducts().add(mProduct.getId());
+                                            } else {
+                                                user.getFavoriteProducts().add(mProduct.getId());
+                                            }
+
+                                            mSharedPreferencesManager.insertUser(user);
                                         }
-
-                                        mSharedPreferencesManager.insertUser(user);
                                     }
                                 }
-                            }
-                            , new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error)
-                                {}
-                            });
+                                , new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error)
+                                    {}
+                                });
 
-                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+                        VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
 
-                    mProductFavoriteImageButton.startAnimation();
+                        mProductFavoriteImageButton.startAnimation();
+                    }
                 }
             });
         }
@@ -145,22 +164,87 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
          * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
          * @param product: producto con el que se inicializa un item.
          */
+        @SuppressWarnings("deprecation")
         public void bindProduct(Product product)
         {
             mProduct = product;
 
+            // Eliminamos todos los iconos anteriores.
+            mIconList.removeAllViews();
+
+            // Creamos un array con todos los iconos.
+            mIconViews = new CircleImageView[mProduct.getColors().size()];
+
+            // Metemos cada icono en la lista.
+            int max = (mProduct.getColors().size() > 3) ? 4 : mProduct.getColors().size();
+            for (int i = 0; i < max; i++)
+            {
+                ColorVariant colorVariant = mProduct.getColors().get(i);
+
+                // Inflamos la vista con el icono.
+                LayoutInflater  mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                mIconViews[i] = (CircleImageView) mInflater.inflate(
+                        R.layout.aux_recommended_color_icon, null).findViewById(R.id.recommended_color_icon);
+
+                // Seteamos los margenes laterales para que no queden pegados unos con otros.
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mIconViews[i].getLayoutParams();
+                params.setMargins(8, params.topMargin, 8, params.bottomMargin);
+                mIconViews[i].setLayoutParams(params);
+
+                // Path != 0 -> Color predefinido
+                String url;
+                if (colorVariant.getColorPath().equals("0"))
+                {
+                    final String imageFile = product.getShop() + "_" + product.getSection() + "_"
+                            + colorVariant.getReference() + "_"
+                            + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+                    url = Utils.fixUrl(
+                            Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
+
+                } else {
+                    final String imageFile = colorVariant.getColorPath();
+
+                    url = Utils.fixUrl(
+                            Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+                }
+
+                Log.d(Properties.TAG, url);
+
+                Picasso.with(mContext)
+                        .load(url)
+                        .into(mIconViews[i]);
+
+                // Eliminamos el padre de la vista del icono.
+                ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
+                // Lo añadimos a la lista de iconos.
+                mIconList.addView(mIconViews[i]);
+            }
+
+            if (max != mProduct.getColors().size())
+            {
+
+            }
+
+            // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
 
-            /* Inicializamos los TextViews */
+            boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
+            String description = "<b>Descripción: </b>" +  (emptyDescription ? "No disponible" : mProduct.getDescription());
+
+            // Inicializamos los TextViews
             mNameTextView.setText(product.getName().toUpperCase());
             mShopTextView.setText(product.getShop().toUpperCase());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
+            mDescriptionTextView.setText(Html.fromHtml(description));
 
-            /* Inicializamos el boton de favorito */
+            // Inicializamos el boton de favorito
             mProductFavoriteImageButton.changeIcon(
                     mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
-            /* Cargamos la imagen usando Picasso */
+            mFlippableView.setFlipped(mItemsFlipped[this.getAdapterPosition()]);
+
+            // Cargamos la imagen usando Picasso
             mTarget = new Target()
             {
                 @Override
@@ -219,12 +303,13 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     + product.getColors().get(0).getReference() + "_"
                     + product.getColors().get(0).getColorName() + "_0_Small.jpg";
 
-            String url = Utils.fixUrl(Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
+            String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
 
             Picasso.with(mContext)
-                    .load(url)
-                    .noFade()
-                    .into(mTarget);
+                   .load(url)
+                   .noFade()
+                   .into(mTarget);
 
             mProduct = product;
         }
@@ -249,53 +334,62 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         @Override
         public void onClick(View v)
         {
-            if (!ERROR && LOADED && mProductClicked == null)
+            if (v.getId() == mFlippableView.getId())
             {
-                mProductClicked = this;
+                mFlippableView.flip();
 
-                // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
-                // y ralentiza la animacion
-                mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
+                mItemsFlipped[this.getAdapterPosition()] = !mItemsFlipped[this.getAdapterPosition()];
 
-                if (mBitmapFileName != null)
+            } else if (v.getId() == mProductImageView.getId()) {
+
+                if (!ERROR && LOADED && mProductClicked == null)
                 {
-                    Activity activity = (Activity)mContext;
+                    mProductClicked = this;
 
-                    /* Sacamos las coordenadas de la imagen y del corazon */
-                    int[] imageScreenLocation = new int[2];
-                    mProductImageView.getLocationInWindow(imageScreenLocation);
+                    // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
+                    // y ralentiza la animacion
+                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
 
-                    int[] favoriteScreenLocation = new int[2];
-                    mProductFavoriteImageButton.getLocationOnScreen(favoriteScreenLocation);
+                    if (mBitmapFileName != null)
+                    {
+                        Activity activity = (Activity) mContext;
 
-                    /* Creamos el intent */
-                    Intent intent = new Intent(mContext, ProductUI.class);
+                        // Sacamos las coordenadas de la imagen y del corazon
+                        int[] imageScreenLocation = new int[2];
+                        mProductImageView.getLocationInWindow(imageScreenLocation);
 
-                    /* Enviamos toda la informacion necesaria para que la siguiente activity
-                     * realice la animacion */
-                    intent.putExtra(Properties.PACKAGE + ".Beans.Product", mProduct)
-                          .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
-                          .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
-                          .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
-                          .putExtra(Properties.PACKAGE + ".widthFav", mProductFavoriteImageButton.getWidth())
-                          .putExtra(Properties.PACKAGE + ".heightFav", mProductFavoriteImageButton.getHeight())
-                          .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
-                          .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
-                          .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
-                          .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
+                        int[] favoriteScreenLocation = new int[2];
+                        mProductFavoriteImageButton.getLocationOnScreen(favoriteScreenLocation);
 
-                    /* Reseteamos el nombre del fichero */
-                    mBitmapFileName = null;
+                        // Creamos el intent
+                        Intent intent = new Intent(mContext, ProductUI.class);
 
-                    mContext.startActivity(intent);
+                        // Enviamos toda la informacion necesaria para que la siguiente activity
+                        // realice la animacion
+                        intent.putExtra(Properties.PACKAGE + ".Beans.Product", mProduct)
+                                .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
+                                .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
+                                .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
+                                .putExtra(Properties.PACKAGE + ".widthFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getWidth())
+                                .putExtra(Properties.PACKAGE + ".heightFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getHeight())
+                                .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
+                                .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
+                                .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
+                                .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
 
-                    /* Desactivamos las transiciones por defecto */
-                    activity.overridePendingTransition(0, 0);
+                        // Reseteamos el nombre del fichero
+                        mBitmapFileName = null;
 
-                    mProductFavoriteImageButton.setVisibility(View.INVISIBLE);
+                        mContext.startActivity(intent);
 
-                } else {
-                    Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                        // Desactivamos las transiciones por defecto
+                        activity.overridePendingTransition(0, 0);
+
+                        mProductFavoriteImageButton.setVisibility(View.INVISIBLE);
+
+                    } else {
+                        Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -313,14 +407,15 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         mContext = context;
         mProductList = productList;
 
+        mItemsFlipped = new boolean[mProductList.size()];
+        for (int i = 0; i < mItemsFlipped.length; i++)
+        {
+            mItemsFlipped[i] = true;
+        }
+
         mFrameLayout = frameLayout;
 
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
-    }
-
-    public void updateProductList(List<Product> productList)
-    {
-        mProductList = productList;
     }
 
     /**
