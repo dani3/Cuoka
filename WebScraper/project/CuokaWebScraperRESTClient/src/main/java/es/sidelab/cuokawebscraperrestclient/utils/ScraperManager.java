@@ -108,10 +108,10 @@ public class ScraperManager
 
                             for (File section : sections)
                             {      
-                                if (section.getName().contains(".html"))
+                                if (section.getName().contains(".txt"))
                                 {                             
                                     Section s = new Section();
-                                    String sectionName = section.getName().replace(".html", "");
+                                    String sectionName = section.getName().replace(".txt", "");
 
                                     s.setMan(Boolean.valueOf(man));
                                     s.setName(sectionName);
@@ -144,14 +144,10 @@ public class ScraperManager
                         shopActivity.setUrl(ex.getMessage());
 
                     } finally {
-                        shopActivity.setListSectionStats(sectionsActivityList);
-
-                        ActivityStatsManager.addShopActivity(shopActivity);
                     }     
 
                 } else {
                     shopActivity.setOnline(false);
-                    ActivityStatsManager.addShopActivity(shopActivity);
                 }
             }
             

@@ -58,7 +58,7 @@ public class MultithreadManager
                         new ExecutorCompletionService<> (executorSections);
                 
                 // Vector de booleanos en el que cada thread actualiza su posicion cuando haya terminado
-                boolean[] finishedSections = new boolean[ shop.getSections().size() ];
+                boolean[] finishedSections = new boolean[shop.getSections().size()];
                 
                 for (int j = 0; j < shop.getSections().size(); j++)
                 {
@@ -88,7 +88,7 @@ public class MultithreadManager
                                 + "... Ha sacado " + productList.size() + " productos!");
                         
                         // Ponemos nuestra posicion a true indicando que hemos terminado
-                        finishedSections[ j ] = true;                        
+                        finishedSections[j] = true;                        
                         LOG.info("Se marca el thread como finalizado... El estado de los threads de " 
                                 + shop.getName() + " es: ");
                                        
@@ -123,7 +123,7 @@ public class MultithreadManager
                 }
             };
             
-            LOG.info("El thread " + i + " de " + shop.getName() + " ha empezado...");
+            LOG.info("El thread " + i + "(" + shop.getName() + ") ha empezado...");
             executorShops.execute(task);
             
         } // for 
@@ -138,9 +138,7 @@ public class MultithreadManager
             
         }
         
-        // Escribimos en fichero la info de como han ido los scrapers
-        ActivityStatsManager.writeOnFile();
-    
+        // Escribimos en fichero la info de como han ido los scrapers    
         // Detenemos el executor
         executorShops.shutdown();       
     }
