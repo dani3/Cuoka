@@ -22,9 +22,9 @@ public class mainBlanco
         String url = "https://www.blanco.com/";
         Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\", false);
         //Section section = new Section( "Camisas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false );
-        /*
+        
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Process p = Runtime.getRuntime().exec(new String[] { "python"
+        /*Process process = Runtime.getRuntime().exec(new String[] { "python"
                                 , section.getPath() + "renderProducts.py"
                                 , Properties.CHROME_DRIVER
                                 , section.getName()
@@ -35,13 +35,13 @@ public class mainBlanco
         
         // Nos quedamos esperando hasta que termine.
         File file = new File(section.getPath() + section.getName() + "_done.dat");
-        while (! file.exists()) 
+        while (!file.exists()) 
         {
-            file = new File(section.getPath() + "done.dat");
+            file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();*/
-        
+        file.delete();
+        */
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
             new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
@@ -49,7 +49,7 @@ public class mainBlanco
       
         List<Product> productList = new ArrayList<>();
         Product product;
-        String str = br.readLine();
+        br.readLine();
         while(!finished) // linea de comienzo de producto ---
         {   
            //empezamos nuevo producto
@@ -64,14 +64,9 @@ public class mainBlanco
             }
         }        
 
-        /**********************************************************************/
-
         /*********************************************************************/
 
-        Printer.print(Integer.toString(productList.size()));
-        
-        Product p = productList.get(0);
-        
+        for (Product p: productList) {
         System.out.println("-------- INFO PRODUCTO ----------");
         System.out.println("Nombre: " + p.getName());
         System.out.println("Link: " + p.getLink());
@@ -81,13 +76,14 @@ public class mainBlanco
         for (ColorVariant cv : p.getColors())
         {
             System.out.println(" - Color: " + cv.getName());
-            System.out.println(" - Icono: " + cv.getColorURL());
+            System.out.println(cv.getColorURL());
             System.out.println(" - Referencia: " + cv.getReference());
             for (Image image : cv.getImages())
                 System.out.println(" - " + image.getUrl());
           
             
             System.out.println("\n");            
+        }
         }
     }
     
@@ -109,6 +105,8 @@ public class mainBlanco
         product.setDescription(description.replace("Descripcion: ", ""));
         product.setPrice(Double.valueOf(price.replace("Precio: ", "")));
         product.setLink(fixURL(link.replace("Link: ", "")));
+        
+        
         
         return product;        
     }
@@ -133,9 +131,9 @@ public class mainBlanco
             {
                 return null;
             }
-            color.setName(colorName.replace("Color: ", ""));
-            color.setColorURL(fixURL(colorIcon.replace("  Icono: ", "")));            
-            color.setReference(reference.replace("Referencia: ", ""));
+            color.setName(colorName.replace("  Color: ", ""));
+            color.setColorURL(fixURL(colorIcon.replace("  Icono: ", ""))); 
+            color.setReference(reference.replace("  Referencia: ", ""));
             
             /*imagenes*/
             boolean doneImages = false;
@@ -177,14 +175,4 @@ public class mainBlanco
         
         return url.replace(" " , "%20");
     }   
-    
-    private static int containsProduct(List<Product> productList, String reference)
-    {
-        for (int i = 0; i < productList.size(); i++)
-            for (ColorVariant cv : productList.get(i).getColors())
-                if (cv.getReference().equals(reference))
-                    return i;
-        
-        return -1;
-    }
 }
