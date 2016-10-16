@@ -308,30 +308,40 @@ public class Controller
             LOG.info("Llamando a ImageManager para descargar las imagenes que no existan");
             List<Product> productsScraped = ImageManager.downloadImages(products, shop);
             
-            for (Product productScraped : productsScraped)
+            if (!productsInDB.isEmpty())
             {
-                boolean found = false;
-                int i = 0;
-                while ((!found) && (i < productsInDB.size()))
+                for (Product productScraped : productsScraped)
                 {
-                    Product productInDB = productsInDB.get(i++);
-                    
-                    int comparison = productInDB.compare(productInDB, productScraped);
-                    
-                    if (comparison >= 0)
+                    boolean found = false;
+                    int i = 0;
+                    while ((!found) && (i < productsInDB.size()))
                     {
-                        productInDB.update(productScraped, (comparison == 0));
-                        
-                        productsRepository.save(productInDB);
-                        
-                    } else {
-                        productScraped.setInsertDate(Calendar.getInstance());
-                        
-                        productsRepository.save(productScraped);                        
-                    }
+                        Product productInDB = productsInDB.get(i++);
+
+                        int comparison = productInDB.compare(productInDB, productScraped);
+
+                        if (comparison >= 0)
+                        {
+                            productInDB.update(productScraped, (comparison == 0));
+
+                            productsRepository.save(productInDB);
+
+                        } else {
+                            productScraped.setInsertDate(Calendar.getInstance());
+
+                            productsRepository.save(productScraped);                        
+                        }
+
+                        found = (comparison >= 0);
+                    }    
+                }
+            } else {
+                for (Product productScraped : productsScraped)
+                {
+                    productScraped.setInsertDate(Calendar.getInstance());
                     
-                    found = (comparison >= 0);
-                }    
+                    productsRepository.save(productScraped);
+                }                
             }
             
             productsInDB = productsRepository.findByShop(shop);
@@ -415,7 +425,7 @@ public class Controller
                             , @PathVariable String offset)
     {
         LOG.info("Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
-        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 175) ;
+        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0) ;
     }
     
     /**

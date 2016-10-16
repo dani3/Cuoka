@@ -114,7 +114,6 @@ public class ImageManager
                                 LOG.info("Color (" + cv.getName() +") no encontrado");
 
                             }
-                            
                         }
                         
                     } else
@@ -133,10 +132,8 @@ public class ImageManager
                     } else {
                         LOG.info("Color (" + cv.getName() +") no encontrado");
                         
-                    }                        
-                    
+                    }     
                 }
-                
             } // for colors      
             
             productsUpdated.add(product);
@@ -227,13 +224,13 @@ public class ImageManager
                 ASPECT_RATIO = Properties.ZARA_ASPECT_RATIO;
             
             // El script tiene que estar en el mismo path que el jar
-            Runtime.getRuntime().exec(new String[]{"sudo"
-                        , "/usr/bin/python"
-                        , "resizeProducts.py"
-                        , Properties.IMAGE_PATH + shop
-                        , Double.toString(ASPECT_RATIO)
-                        , Integer.toString(Properties.IMAGE_HEIGHT_L)
-                        , Integer.toString(Properties.IMAGE_HEIGHT_S)});
+            Process p = Runtime.getRuntime().exec(new String[]{"sudo"
+                                    , "/usr/bin/python"
+                                    , "resizeProducts.py"
+                                    , Properties.IMAGE_PATH + shop
+                                    , Double.toString(ASPECT_RATIO)
+                                    , Integer.toString(Properties.IMAGE_HEIGHT_L)
+                                    , Integer.toString(Properties.IMAGE_HEIGHT_S)});
             
         } catch (IOException ex) {
             LOG.error("ERROR: Error al ejecutar el script 'resizeProducts.py'");
@@ -250,12 +247,12 @@ public class ImageManager
         try 
         {      
             // El script tiene que estar en el mismo path que el jar
-            Runtime.getRuntime().exec(new String[]{"sudo"
-                        , "/usr/bin/python"
-                        , "resizeColors.py"
-                        , Properties.COLOR_PATH + shop
-                        , Integer.toString(Properties.ICON_WIDTH)
-                        , Integer.toString(Properties.ICON_HEIGHT)});
+            Process p = Runtime.getRuntime().exec(new String[]{"sudo"
+                                    , "/usr/bin/python"
+                                    , "resizeColors.py"
+                                    , Properties.COLOR_PATH + shop
+                                    , Integer.toString(Properties.ICON_WIDTH)
+                                    , Integer.toString(Properties.ICON_HEIGHT)});
             
         } catch (IOException ex) {
             LOG.error("ERROR: Error al ejecutar el script 'resizeColors.py'");
