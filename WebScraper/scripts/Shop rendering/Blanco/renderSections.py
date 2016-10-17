@@ -7,14 +7,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
-#path_to_chromedriver = sys.argv[1]
+path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
-path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
+#path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
-#path = sys.argv[2]
+path = sys.argv[2]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\"
-path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\"
 
 # Lista de secciones con sus URL's
 urls = [("Camisetas", "http://www.blanco.com/es/es_es/partes-de-arriba/camisetas.html"),

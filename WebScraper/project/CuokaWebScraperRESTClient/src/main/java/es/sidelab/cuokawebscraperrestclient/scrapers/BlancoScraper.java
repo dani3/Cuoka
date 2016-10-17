@@ -11,9 +11,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,10 +24,11 @@ public class BlancoScraper implements Scraper
 {
     private static final Logger LOG = Logger.getLogger(BlancoScraper.class);
     
-    // Lista preparada para la concurrencia donde escribiran todos los scrapers
-    private static final List<Product> productList = new CopyOnWriteArrayList<>();
+    // Lista preparada para la concurrencia donde escribiran todos los scrapers.
+    private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
     
-    private static final ThreadLocal<Boolean> threadFinished = 
+    // Atributo local para comprobar que se ha terminado.
+    private final ThreadLocal<Boolean> threadFinished = 
             new ThreadLocal<Boolean>() 
             {
                 @Override 
@@ -40,7 +40,11 @@ public class BlancoScraper implements Scraper
     
     @Override
     public List<Product> scrap(Shop shop, Section section) throws IOException
-    {
+    {        
+        threadFinished.set(false);
+        
+        LOG.info("Se inicia el scraping de la seccion " + section.getName() + " de la tienda " + shop.getName());
+        
         // Ejecutamos el script que crea el fichero con todos los productos.
         Process process = Runtime.getRuntime().exec(new String[] {"python"
                                 , section.getPath() + "renderProducts.py"
@@ -62,14 +66,16 @@ public class BlancoScraper implements Scraper
             new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
                
         br.readLine();
-        while(!get()) // linea de comienzo de producto ---
+        while(!get())
         {   
-           //empezamos nuevo producto
+            // Empezamos nuevo producto
             Product product = _readProductGeneralInfo(br);
             if (product != null) //todo ha ido bien, seguimos leyendo los colores
             {
                 product = _readProductColors(product, br);
-                if (product != null) // todo ha ido bien, añadimos a la lista
+                
+                // Si todo ha ido bien, añadimos a la lista
+                if ((product != null) && (!containsProduct(productList, product.getColors().get(0).getReference()))) 
                 {
                     product.setShop(shop.getName());
                     product.setSection(section.getName());
@@ -79,6 +85,9 @@ public class BlancoScraper implements Scraper
                 }
             }
         }
+        
+        LOG.info("El scraping de la seccion " + section.getName() + " de la tienda " + shop.getName() + " ha terminado");
+        LOG.info("Ha sacado " + productList.size() + " productos");
         
         return productList;
     }
@@ -111,8 +120,9 @@ public class BlancoScraper implements Scraper
         
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
-        br.readLine();   //leemos los *********
         
+        // Leemos los asteriscos
+        br.readLine();       
         while (!doneColor)
         {
             
@@ -126,11 +136,12 @@ public class BlancoScraper implements Scraper
             {
                 return null;
             }
+            
             color.setName(colorName.replace("  Color: ", ""));
-            color.setColorURL(fixURL(colorIcon.replace("  Icono: ", "")));            
+            color.setColorURL(null);            
             color.setReference(reference.replace("  Referencia: ", ""));
             
-            /*imagenes*/
+            // Leemos las imagenes
             boolean doneImages = false;
             while (!doneImages)
             {
@@ -180,5 +191,18 @@ public class BlancoScraper implements Scraper
     private void set(Boolean value) 
     {
         threadFinished.set(value);
+    }
+    
+    private static boolean containsProduct(List<Product> productList, String reference)
+    {
+        synchronized (productList)
+        {
+            for (Product p : productList)
+                for (ColorVariant cv : p.getColors())
+                    if (cv.getReference().equals(reference))
+                        return true;
+        }
+            
+        return false;
     }
 }

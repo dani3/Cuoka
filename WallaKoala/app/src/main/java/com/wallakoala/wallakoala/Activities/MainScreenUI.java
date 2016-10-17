@@ -373,6 +373,8 @@ public class MainScreenUI extends AppCompatActivity
         // Si ha ido bien
         if (resultCode == RESULT_OK)
         {
+            mViewPager.setCurrentItem(1);
+
             // Sacamos la cadena de busqueda.
             SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
 

@@ -19,8 +19,8 @@ import com.wallakoala.wallakoala.Utils.Utils;
 
 public class CircleView extends View
 {
-    private static final int START_COLOR = 0xFFF20B41;
-    private static final int END_COLOR = 0xFFF12041;
+    private static final int START_COLOR = 0xFF6C1E34;
+    private static final int END_COLOR = 0xFF6C1E34;
 
     private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 

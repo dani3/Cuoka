@@ -310,32 +310,66 @@ public class Controller
             
             if (!productsInDB.isEmpty())
             {
+                // Si hay productos de esta tienda en BD, miramos que productos necesitan actualizarse o añadirse.
                 for (Product productScraped : productsScraped)
                 {
                     boolean found = false;
                     int i = 0;
+                    
+                    // Buscamos el producto scrapeado en la lista sacada de BD.
                     while ((!found) && (i < productsInDB.size()))
                     {
                         Product productInDB = productsInDB.get(i++);
 
+                        // Miramos si el producto es igual, distinto, o el mismo pero con alguna modificacion.
                         int comparison = productInDB.compare(productInDB, productScraped);
 
+                        // Si es el mismo producto.
                         if (comparison >= 0)
                         {
+                            // Actualizamos el producto.
+                            LOG.info("Producto encontrado, se actualiza " + ((comparison == 0) ? "" : " y se anade como novedad"));
                             productInDB.update(productScraped, (comparison == 0));
 
+                            // Y lo guardamos.
                             productsRepository.save(productInDB);
 
-                        } else {
-                            productScraped.setInsertDate(Calendar.getInstance());
-
-                            productsRepository.save(productScraped);                        
+                            found = true;
                         }
+                    }
+                    
+                    if (!found)
+                    {
+                        LOG.info("Producto NO encontrado, lo insertamos como novedad");
+                        productScraped.setInsertDate(Calendar.getInstance());
 
-                        found = (comparison >= 0);
-                    }    
+                        productsRepository.save(productScraped);  
+                    }                        
                 }
+                
+                LOG.info("Productos actualizados, se borran los productos antiguos");
+                productsInDB = productsRepository.findByShop(shop);
+                for (Product productInDB : productsInDB)
+                {
+                    boolean found = false;
+                    int i = 0;
+                    while ((!found) && (i < productsScraped.size()))
+                    {
+                        Product productScraped = productsScraped.get(i++);
+
+                        found = (productScraped.compare(productScraped, productInDB) >= 0);
+                    }
+
+                    if (!found)
+                    {
+                        LOG.info("Producto NO encontrado, se borra");
+                        productsRepository.delete(productInDB.getId());
+                    }
+                } 
+                
             } else {
+                LOG.info("No hay ningun producto de la tienda " + shop);
+                LOG.info("Los productos se insertan directamente");
                 for (Product productScraped : productsScraped)
                 {
                     productScraped.setInsertDate(Calendar.getInstance());
@@ -344,28 +378,7 @@ public class Controller
                 }                
             }
             
-            productsInDB = productsRepository.findByShop(shop);
-            for (Product productInDB : productsInDB)
-            {
-                boolean found = false;
-                int i = 0;
-                while ((!found) && (i < productsScraped.size()))
-                {
-                    Product productScraped = productsScraped.get(i++);
-                    
-                    found = (productScraped.compare(productScraped, productInDB) >= 0);
-                }
-                
-                if (!found)
-                {
-                    productsRepository.delete(productInDB.getId());
-                }
-            } 
-            
-            LOG.info("Todas las imagenes han sido reescaladas correctamente");
-            LOG.info("Todos los iconos han sido reescalados correctamente");
-            
-            LOG.info("Productos de " + shop + " insertados correctamente");        
+            LOG.info(productsScraped.size() + " productos de " + shop + " insertados correctamente");        
             LOG.info("Saliendo del metodo addShop");
         };
         

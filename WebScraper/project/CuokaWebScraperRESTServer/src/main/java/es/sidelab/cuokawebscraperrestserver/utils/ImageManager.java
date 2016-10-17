@@ -4,12 +4,13 @@ import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +58,7 @@ public class ImageManager
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + "_" + "Small.jpg";
                         LOG.info("Comprobando la imagen: " + path);
 
-                        if (! FileManager.existsFile(pathSmall))
+                        if (!FileManager.existsFile(pathSmall))
                         {
                             LOG.info("La imagen no existe, descargando");
                             boolean ok = downloadImage(cv.getImages().get(k).getUrl(), pathSmall.replaceAll("_Small" , ""));
@@ -70,8 +71,7 @@ public class ImageManager
                                 
                             } else {
                                 product.getColors().get(j)
-                                        .getImages().get(k).setPath(null);
-                                
+                                        .getImages().get(k).setPath(null);                                
                             }                            
                             
                         } else {
@@ -87,13 +87,13 @@ public class ImageManager
                 } // if images != null
                 
                 // Comprobamos que el link del color no este vacio
-                if ((cv.getColorURL() != null) && (! cv.getColorURL().isEmpty()))
+                if ((cv.getColorURL() != null) && (!cv.getColorURL().isEmpty()))
                 {
                     // Descargar los iconos si es necesario
                     String path = Properties.COLOR_PATH + shop + "/" + shop + "_" + product.getSection() 
                                     + "_" + cv.getReference() + "_" + cv.getName().replaceAll(" " , "_") + "_ICON.jpg";
                     
-                    if (! FileManager.existsFile(path))
+                    if (!FileManager.existsFile(path))
                     {
                         boolean ok = downloadImage(cv.getColorURL(), path);
                         if (ok)
@@ -112,12 +112,12 @@ public class ImageManager
 
                             } else {
                                 LOG.info("Color (" + cv.getName() +") no encontrado");
-
                             }
                         }
                         
-                    } else
+                    } else {
                         product.getColors().get(j).setPath("0");
+                    }
                     
                 } else {
                     LOG.info("URL del icono vacio. Se intenta averiguar el color...");
@@ -130,8 +130,7 @@ public class ImageManager
                         product.getColors().get(j).setPath(color_path);
                         
                     } else {
-                        LOG.info("Color (" + cv.getName() +") no encontrado");
-                        
+                        LOG.info("Color (" + cv.getName() +") no encontrado");                        
                     }     
                 }
             } // for colors      
@@ -141,7 +140,7 @@ public class ImageManager
         } // for products
         
         LOG.info("Todas las imagenes se han descargado correctamente, se reescalan");
-        resizeImages(shop);        
+        resizeImages(shop);    
         
         LOG.info("Se reescalan los iconos de los colores");
         resizeColors(shop);        
@@ -158,8 +157,6 @@ public class ImageManager
     private static boolean downloadImage(String imageURL, String path)
     {
         InputStream in;
-        ByteArrayOutputStream out;
-        FileOutputStream fos;
                 
         try 
         {            
@@ -167,19 +164,7 @@ public class ImageManager
             
             in = new BufferedInputStream(url.openStream());
             
-            out = new ByteArrayOutputStream();
-            byte[] buffer = new byte[ 1024 ];
-
-            int i;
-            while((i = in.read(buffer)) != -1)
-                out.write(buffer, 0, i);
-
-            fos = new FileOutputStream(path);
-            fos.write(out.toByteArray()); 
-
-            fos.close();
-            out.close();
-            in.close();
+            Files.copy(in, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
                         
         } catch (MalformedURLException ex) {
             LOG.error("ERROR: Error al formar la URL de la imagen");
