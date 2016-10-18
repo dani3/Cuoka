@@ -308,6 +308,7 @@ public class ProductsFragment extends Fragment
                                     , mProductsDisplayedList
                                     , mFrameLayout);
 
+        mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setItemViewCacheSize(NUM_PRODUCTS_CACHED);
         mProductsRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);

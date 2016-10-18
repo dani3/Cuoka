@@ -184,6 +184,33 @@ public class ImageManager
     }
     
     /**
+     * Metodo que devuelve el aspect ratio de las imagenes.
+     * @param shop: tienda a la pertenecen las imágenes.
+     * @return aspect ratio de la imagen.
+     */
+    public static float getAspectRatio(String shop)
+    {
+        float aspectRatio = 0.0f;
+            
+        if (shop.equalsIgnoreCase("Pedro Del Hierro"))
+            aspectRatio = Properties.PDH_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Springfield"))
+            aspectRatio = Properties.SPRINGFIELD_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("HyM"))
+            aspectRatio = Properties.HYM_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Blanco"))
+            aspectRatio = Properties.BLANCO_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Zara"))
+            aspectRatio = Properties.ZARA_ASPECT_RATIO;
+        
+        return aspectRatio;
+    }
+    
+    /**
      * Metodo que llama a un script de python para reescalar las imagenes de una tienda.
      * @param shop: Nombre de la tienda de la que se quieren reescalar las imagenes.
      */
@@ -191,29 +218,14 @@ public class ImageManager
     {
         try 
         {   
-            double ASPECT_RATIO = 0.0f;
-            
-            if (shop.equalsIgnoreCase("Pedro Del Hierro"))
-                ASPECT_RATIO = Properties.PDH_ASPECT_RATIO;
-            
-            if (shop.equalsIgnoreCase("Springfield"))
-                ASPECT_RATIO = Properties.SPRINGFIELD_ASPECT_RATIO;
-            
-            if (shop.equalsIgnoreCase("HyM"))
-                ASPECT_RATIO = Properties.HYM_ASPECT_RATIO;
-            
-            if (shop.equalsIgnoreCase("Blanco"))
-                ASPECT_RATIO = Properties.BLANCO_ASPECT_RATIO;
-            
-            if (shop.equalsIgnoreCase("Zara"))
-                ASPECT_RATIO = Properties.ZARA_ASPECT_RATIO;
+            double aspectRatio = getAspectRatio(shop);
             
             // El script tiene que estar en el mismo path que el jar
             Process p = Runtime.getRuntime().exec(new String[]{"sudo"
                                     , "/usr/bin/python"
                                     , "resizeProducts.py"
                                     , Properties.IMAGE_PATH + shop
-                                    , Double.toString(ASPECT_RATIO)
+                                    , Double.toString(aspectRatio)
                                     , Integer.toString(Properties.IMAGE_HEIGHT_L)
                                     , Integer.toString(Properties.IMAGE_HEIGHT_S)});
             

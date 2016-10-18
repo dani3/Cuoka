@@ -2,6 +2,7 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -117,7 +118,7 @@ public class Product implements Comparator
         this.link = product.link;
         this.description = product.description;
         this.colors = product.colors;
-        this.aspectRatio = product.aspectRatio;
+        this.aspectRatio = ImageManager.getAspectRatio(shop);
         
         if (!equal)
         {

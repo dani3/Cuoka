@@ -316,6 +316,8 @@ public class Controller
                     boolean found = false;
                     int i = 0;
                     
+                    productScraped.setAspectRatio(ImageManager.getAspectRatio(shop));
+                    
                     // Buscamos el producto scrapeado en la lista sacada de BD.
                     while ((!found) && (i < productsInDB.size()))
                     {
@@ -372,6 +374,7 @@ public class Controller
                 LOG.info("Los productos se insertan directamente");
                 for (Product productScraped : productsScraped)
                 {
+                    productScraped.setAspectRatio(ImageManager.getAspectRatio(shop));
                     productScraped.setInsertDate(Calendar.getInstance());
                     
                     productsRepository.save(productScraped);

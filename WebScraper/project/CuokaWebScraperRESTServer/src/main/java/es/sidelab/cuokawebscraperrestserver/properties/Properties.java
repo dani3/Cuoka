@@ -36,11 +36,11 @@ public class Properties
     public static final int ICON_HEIGHT = 50;
     
     /* Aspect ratios de las imagenes de cada tienda */
-    public static final double PDH_ASPECT_RATIO         = 1.5f;
-    public static final double SPRINGFIELD_ASPECT_RATIO = 1.12f;
-    public static final double HYM_ASPECT_RATIO         = 1.5f;
-    public static final double BLANCO_ASPECT_RATIO      = 1.28f;
-    public static final double ZARA_ASPECT_RATIO        = 1.24f;
+    public static final float PDH_ASPECT_RATIO         = 1.5f;
+    public static final float SPRINGFIELD_ASPECT_RATIO = 1.12f;
+    public static final float HYM_ASPECT_RATIO         = 1.5f;
+    public static final float BLANCO_ASPECT_RATIO      = 1.28f;
+    public static final float ZARA_ASPECT_RATIO        = 1.24f;
     
     /* Parametros para las busquedas */
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;
