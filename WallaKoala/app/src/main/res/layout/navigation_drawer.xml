@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/leftDrawerLayout"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -17,7 +16,7 @@
         app:itemIconTint="@color/colorText"
         app:itemTextColor="@color/colorText"
         app:itemBackground="@color/navigation_item_colors"
-        app:headerLayout="@layout/left_navigation_drawer_header"
+        app:headerLayout="@layout/navigation_drawer_header"
         app:menu="@menu/left_navigation_drawer_menu">
 
     </android.support.design.widget.NavigationView>

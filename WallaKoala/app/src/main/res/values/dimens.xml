@@ -6,7 +6,7 @@
     <dimen name="action_bar_height">50dp</dimen>
 
     <dimen name="header_left_padding">16dp</dimen>
-    <dimen name="header_height">192dp</dimen>
+    <dimen name="header_height">118dp</dimen>
 
     <dimen name="image_profile">64dp</dimen>
 

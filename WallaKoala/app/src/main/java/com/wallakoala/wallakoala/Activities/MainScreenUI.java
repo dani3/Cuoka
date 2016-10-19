@@ -2,6 +2,8 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -25,16 +27,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Pantalla principal de la app.
@@ -49,7 +55,7 @@ public class MainScreenUI extends AppCompatActivity
     protected static String SEARCH_QUERY;
 
     /* Container Views */
-    protected NavigationView mLeftNavigationVew;
+    protected NavigationView mNavigationVew;
     protected DrawerLayout mDrawerLayout;
     protected CoordinatorLayout mCoordinatorLayout;
     protected ViewPager mViewPager;
@@ -69,6 +75,9 @@ public class MainScreenUI extends AppCompatActivity
     protected RecommendedFragment mRecommendedFragment;
     protected ProductsFragment mProductsFragment;
 
+    /* SharedPreference */
+    protected SharedPreferencesManager mSharedPreferencesManager;
+
     /* Other */
     protected long mBackPressed;
 
@@ -79,12 +88,18 @@ public class MainScreenUI extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
+        _initData();
         _initToolbar();
         _initViewPager();
         _initNavigationDrawer();
         _initAnimations();
 
         mBackPressed = 0;
+    }
+
+    protected void _initData()
+    {
+        mSharedPreferencesManager = new SharedPreferencesManager(this);
     }
 
     /**
@@ -163,8 +178,32 @@ public class MainScreenUI extends AppCompatActivity
     protected void _initNavigationDrawer()
     {
         mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
-        mLeftNavigationVew = (NavigationView)findViewById(R.id.nav_view);
+        mNavigationVew     = (NavigationView)findViewById(R.id.nav_view);
         mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        User user = mSharedPreferencesManager.retreiveUser();
+
+        View navHeader = mNavigationVew.getHeaderView(0);
+
+        CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
+        Bitmap profile = (user.getMan() ?
+                BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
+
+        profilePic.setImageBitmap(profile);
+
+        profilePic.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(MainScreenUI.this, ProfileUI.class);
+
+                startActivity(intent);
+            }
+        });
+
+        TextView email = (TextView)navHeader.findViewById(R.id.email);
+        email.setText(user.getEmail());
 
         _initDrawerToggle();
 

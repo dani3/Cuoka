@@ -112,4 +112,10 @@
     <string name="add_shops"><b>Añade tus tiendas</b></string>
 
     <string name="colors"><b>Colores: </b></string>
+
+    <string name="profile_name">Nombre:</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_password">Contraseña:</string>
+    <string name="profile_age">Edad:</string>
+    <string name="profile_cp">Codigo postal:</string>
 </resources>

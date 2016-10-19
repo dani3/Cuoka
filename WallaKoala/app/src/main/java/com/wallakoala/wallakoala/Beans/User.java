@@ -10,6 +10,7 @@ import java.util.Set;
 public class User
 {
     private long id;
+    private String name;
     private String email;
     private String password;
     private int age;
@@ -22,6 +23,7 @@ public class User
 
     public long getId()         { return this.id; }
     public String getEmail()    { return this.email; }
+    public String getName()     { return this.name; }
     public String getPassword() { return this.password; }
     public int getAge()         { return this.age; }
     public boolean getMan()     { return this.man; }
@@ -31,6 +33,7 @@ public class User
     public Set<String> getShops()          { return this.shops; }
 
     public void setId(long id)                { this.id = id; }
+    public void setName(String name)          { this.name = name; }
     public void setEmail(String email)        { this.email = email; }
     public void setPassword(String password)  { this.password = password; }
     public void setAge(int age)               { this.age = age; }
