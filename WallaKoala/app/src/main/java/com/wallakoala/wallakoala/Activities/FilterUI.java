@@ -311,6 +311,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
         }
     }
 

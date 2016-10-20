@@ -5,7 +5,7 @@
 
     <item android:id="@+id/menu_item_filter"
         android:title="Hecho"
-        android:icon="@drawable/ic_done_white"
+        android:icon="@drawable/ic_done_menu"
         app:showAsAction="always"/>
 
 </menu>

@@ -11,7 +11,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -25,11 +26,13 @@ import com.wallakoala.wallakoala.R;
  */
 
 public class ProfileUI extends AppCompatActivity
-{/* Constants */
+{
+    /* Constants */
     protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     protected static final int ANIM_DURATION = 250;
     protected static boolean EXITING;
 
+    /* Data */
     protected int mThumbnailTop;
     protected int mThumbnailLeft;
     protected int mThumbnailWidth;
@@ -40,11 +43,14 @@ public class ProfileUI extends AppCompatActivity
     protected float mWidthScaleImage;
     protected float mHeightScaleImage;
 
+    /* Container Layouts */
     protected CoordinatorLayout mTopLevelLayout;
     protected CollapsingToolbarLayout mCollapsingToolbarLayout;
 
+    /* Floating Action Button */
     protected FloatingActionButton mProfileFAB;
 
+    /* Other */
     protected ColorDrawable mBackground;
 
     @Override
@@ -53,26 +59,9 @@ public class ProfileUI extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null)
-        {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_layout);
-        mTopLevelLayout = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
-
-        mProfileFAB = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
-
-        /* Background */
-        mBackground = new ColorDrawable(Color.WHITE);
-        mTopLevelLayout.setBackground(mBackground);
-
+        _initToolbar();
         _initData();
+        _initViews();
 
         // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
@@ -114,6 +103,38 @@ public class ProfileUI extends AppCompatActivity
         mThumbnailLeft      = bundle.getInt(Properties.PACKAGE + ".left");
         mThumbnailWidth     = bundle.getInt(Properties.PACKAGE + ".width");
         mThumbnailHeight    = bundle.getInt(Properties.PACKAGE + ".height");
+
+        // Background
+        mBackground = new ColorDrawable(Color.WHITE);
+    }
+
+    /**
+     * Metodo que inicializa la Toolbar
+     */
+    private void _initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        }
+    }
+
+    /**
+     * Metodo que inicializa las vistas.
+     */
+    private void _initViews()
+    {
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_layout);
+        mTopLevelLayout          = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
+        mProfileFAB              = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
+
+        mTopLevelLayout.setBackground(mBackground);
     }
 
     @Override
@@ -133,6 +154,27 @@ public class ProfileUI extends AppCompatActivity
                 finish();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.toolbar_menu_profile, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home)
+        {
+            onBackPressed();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -157,25 +199,11 @@ public class ProfileUI extends AppCompatActivity
         mProfileFAB.setTranslationY(mTopDeltaImage);
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande
-        mProfileFAB.animate().setDuration(ANIM_DURATION)
-                .scaleX(1).scaleY(1)
-                .translationX(0).translationY(0)
-                .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR)
-                .setStartDelay(75)
-                .setListener(new Animator.AnimatorListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animator animation) {}
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {}
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {}
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {}
-                });
+        mProfileFAB.animate()
+                   .setDuration(ANIM_DURATION)
+                   .scaleX(1).scaleY(1)
+                   .translationX(0).translationY(0)
+                   .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
 
         // Efecto fade para oscurecer la pantalla
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
@@ -191,12 +219,13 @@ public class ProfileUI extends AppCompatActivity
     {
         EXITING = true;
 
+        // En caso de que haya cambiado de posicion, se recalcula el desplazamiento
         int[] currentLocation = new int[2];
         mProfileFAB.getLocationOnScreen(currentLocation);
-
         mTopDeltaImage = mThumbnailTop - currentLocation[1];
 
-        mProfileFAB.animate().setDuration(ANIM_DURATION)
+        mProfileFAB.animate()
+                   .setDuration(ANIM_DURATION)
                    .setStartDelay(0)
                    .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
                    .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
