@@ -58,9 +58,102 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="62dp"
+            android:paddingBottom="48dp"
+            android:layout_marginTop="48dp"
             android:layout_marginRight="24dp"
             android:layout_marginLeft="24dp">
+
+            <!-- Favoritos y Tiendas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
+                android:gravity="center">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="28dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/white">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_gravity="center"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_favorite_grey"/>
+
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginRight="8dp"
+                            android:text="12"
+                            android:textColor="@color/colorText"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardPreventCornerOverlap="false"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/white">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_gravity="center"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_local_mall_black"
+                            android:tint="@color/colorMediumText"/>
+
+                        <com.wallakoala.wallakoala.Views.ExistenceTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginRight="8dp"
+                            android:text="5"
+                            android:textColor="@color/colorText"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
 
             <!-- Nombre -->
             <LinearLayout
@@ -288,6 +381,15 @@
                 </com.wallakoala.wallakoala.Views.TextInputLayout>
 
             </LinearLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_trash"
+                android:layout_gravity="end"
+                android:layout_margin="24dp"
+                android:tint="@android:color/white"
+                app:fabSize="normal"/>
 
         </LinearLayout>
 

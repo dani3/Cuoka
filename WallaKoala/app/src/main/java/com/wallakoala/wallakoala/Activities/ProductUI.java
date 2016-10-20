@@ -187,7 +187,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                         mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
                     }
 
-                    runEnterAnimation();
+                    _runEnterAnimation();
 
                     return true;
                 }
@@ -321,10 +321,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             {
                 if (mProductInfoLayout.getVisibility() == View.INVISIBLE)
                 {
-                    expandInfo();
+                    _expandInfo();
 
                 } else {
-                    collapseInfo();
+                    _collapseInfo();
                 }
             }
         });
@@ -531,7 +531,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      * La animacion de entrada escala la imagen desde la pequeña hasta la posicion/tamaño de la grande.
      * En paralelo, el fondo se va oscureciendo.
      */
-    private void runEnterAnimation()
+    private void _runEnterAnimation()
     {
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
@@ -624,7 +624,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      * La animacion de salida es la misma animacion de entrada pero al reves
      * @param endAction: Accion que se ejecuta cuando termine la animacion.
      */
-    private void runExitAnimation(final Runnable endAction)
+    private void _runExitAnimation(final Runnable endAction)
     {
         EXITING = true;
 
@@ -653,7 +653,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
-            collapseInfo();
+            _collapseInfo();
 
         mFloatingActionButtonPlus.startAnimation(mImplodeAnimation);
 
@@ -675,7 +675,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         {
             mContext.deleteFile(mBitmapUri);
 
-            runExitAnimation(new Runnable()
+            _runExitAnimation(new Runnable()
             {
                 public void run() {
                     finish();
@@ -696,7 +696,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      * Metodo que expande la ventana de informacion.
      */
     @SuppressWarnings("deprecation")
-    private void expandInfo()
+    private void _expandInfo()
     {
         // Calculamos cuanto hay que desplazar el FAB hasta el borde del layout de info.
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -760,7 +760,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      * Metodo que hace desaparecer la ventana de informacion.
      */
     @SuppressWarnings("deprecation")
-    private void collapseInfo()
+    private void _collapseInfo()
     {
         COLLAPSING = true;
 
@@ -885,7 +885,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         {
             Log.d(Properties.TAG, "OnSingleTap: Collapsing info");
 
-            collapseInfo();
+            _collapseInfo();
         }
 
         return true;

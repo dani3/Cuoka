@@ -367,15 +367,15 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                         // Enviamos toda la informacion necesaria para que la siguiente activity
                         // realice la animacion
                         intent.putExtra(Properties.PACKAGE + ".Beans.Product", mProduct)
-                                .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
-                                .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
-                                .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
-                                .putExtra(Properties.PACKAGE + ".widthFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getWidth())
-                                .putExtra(Properties.PACKAGE + ".heightFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getHeight())
-                                .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
-                                .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
-                                .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
-                                .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
+                              .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
+                              .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
+                              .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
+                              .putExtra(Properties.PACKAGE + ".widthFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getWidth())
+                              .putExtra(Properties.PACKAGE + ".heightFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getHeight())
+                              .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
+                              .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
+                              .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
+                              .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
 
                         // Reseteamos el nombre del fichero
                         mBitmapFileName = null;

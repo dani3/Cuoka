@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -185,7 +186,7 @@ public class MainScreenUI extends AppCompatActivity
 
         View navHeader = mNavigationVew.getHeaderView(0);
 
-        CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
+        final CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
 
@@ -196,9 +197,23 @@ public class MainScreenUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
+                Activity activity = MainScreenUI.this;
+
                 Intent intent = new Intent(MainScreenUI.this, ProfileUI.class);
 
+                // Sacamos las coordenadas de la imagen
+                int[] imageScreenLocation = new int[2];
+                profilePic.getLocationInWindow(imageScreenLocation);
+
+                intent.putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
+                      .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
+                      .putExtra(Properties.PACKAGE + ".width", profilePic.getWidth())
+                      .putExtra(Properties.PACKAGE + ".height", profilePic.getHeight());
+
                 startActivity(intent);
+
+                // Desactivamos las transiciones por defecto
+                activity.overridePendingTransition(0, 0);
             }
         });
 
