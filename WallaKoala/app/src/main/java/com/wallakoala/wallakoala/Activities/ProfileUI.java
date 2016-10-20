@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.graphics.Color;
@@ -93,6 +92,9 @@ public class ProfileUI extends AppCompatActivity
         }
     }
 
+    /**
+     * Metodo para inicializar los datos.
+     */
     private void _initData()
     {
         EXITING = false;

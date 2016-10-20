@@ -63,29 +63,62 @@
 
             </com.wallakoala.wallakoala.Views.TextInputLayout>
 
-            <!-- Contraseña -->
-            <com.wallakoala.wallakoala.Views.TextInputLayout
-                android:id="@+id/password_input_layout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="12dp"
-                android:theme="@style/TextLabel">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
-                <com.wallakoala.wallakoala.Views.ExistenceEditText
-                    android:id="@+id/password_edittext"
-                    android:layout_width="match_parent"
+                <!-- Contraseña -->
+                <com.wallakoala.wallakoala.Views.TextInputLayout
+                    android:id="@+id/password_input_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:maxLength="64"
-                    android:textColor="@color/colorText"
-                    android:textColorHint="@color/colorText"
-                    android:hint="@string/password_hint"
-                    app:customFontEd="Existence-StencilLight.otf"/>
+                    android:layout_weight="0.5"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="12dp"
+                    android:theme="@style/TextLabel">
 
-            </com.wallakoala.wallakoala.Views.TextInputLayout>
+                    <com.wallakoala.wallakoala.Views.ExistenceEditText
+                        android:id="@+id/password_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:maxLength="64"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        android:hint="@string/password_hint"
+                        app:customFontEd="Existence-StencilLight.otf"/>
+
+                </com.wallakoala.wallakoala.Views.TextInputLayout>
+
+                <!-- Contraseña -->
+                <com.wallakoala.wallakoala.Views.TextInputLayout
+                    android:id="@+id/name_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="12dp"
+                    android:theme="@style/TextLabel">
+
+                    <com.wallakoala.wallakoala.Views.ExistenceEditText
+                        android:id="@+id/name_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:maxLength="64"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        android:hint="@string/name_hint"
+                        app:customFontEd="Existence-StencilLight.otf"/>
+
+                </com.wallakoala.wallakoala.Views.TextInputLayout>
+
+            </LinearLayout>
 
             <!-- Edad y Codigo postal -->
             <LinearLayout

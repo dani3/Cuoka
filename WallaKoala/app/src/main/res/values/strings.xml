@@ -85,6 +85,7 @@
     <string name="password_hint">Contraseña</string>
     <string name="age_hint">Edad</string>
     <string name="postal_code_hint">Código postal</string>
+    <string name="name_hint">Nombre</string>
 
     <string name="morph_idle">Hecho</string>
 
