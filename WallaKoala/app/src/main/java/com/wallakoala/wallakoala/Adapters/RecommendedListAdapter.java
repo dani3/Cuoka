@@ -177,11 +177,6 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 mIconList.addView(mIconViews[i]);
             }
 
-            if (max != mProduct.getColors().size())
-            {
-
-            }
-
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
 

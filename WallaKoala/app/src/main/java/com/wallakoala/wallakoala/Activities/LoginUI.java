@@ -351,11 +351,11 @@ public class LoginUI extends AppCompatActivity
         mPostalCodeInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mNameInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
-        mPasswordEdittext      = (EditText)parent.findViewById(R.id.password_edittext);
-        mEmailEdittext         = (EditText)parent.findViewById(R.id.email_edittext);
-        mAgeEdittext           = (EditText)parent.findViewById(R.id.age_edittext);
-        mPostalCodeEdittext    = (EditText)parent.findViewById(R.id.postal_code_edittext);
-        mNameEdittext          = (EditText)parent.findViewById(R.id.name_edittext);
+        mPasswordEdittext   = (EditText)parent.findViewById(R.id.password_edittext);
+        mEmailEdittext      = (EditText)parent.findViewById(R.id.email_edittext);
+        mAgeEdittext        = (EditText)parent.findViewById(R.id.age_edittext);
+        mPostalCodeEdittext = (EditText)parent.findViewById(R.id.postal_code_edittext);
+        mNameEdittext       = (EditText)parent.findViewById(R.id.name_edittext);
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));

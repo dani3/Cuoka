@@ -402,14 +402,14 @@ public class Controller
     {
         LOG.info("Peticion GET para obtener todos los productos recomendados del usuario " + id);
         
-        List<Product> aux = productsRepository.findByManAndShop(false, "Springfield");
+        List<Product> aux = productsRepository.findByManAndShop(false, "Blanco");
         
         List<Product> recommendedProducts = new ArrayList<>();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 10; i++)
         {
             Random rand = new Random();
 
-            int randomNum = rand.nextInt((200 - 1) + 1) + 1;
+            int randomNum = rand.nextInt((50 - 1) + 1) + 1;
 
             recommendedProducts.add(aux.get(randomNum));
         }

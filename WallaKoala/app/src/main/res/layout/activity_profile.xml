@@ -87,6 +87,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_gravity="center"
                         android:scaleType="centerCrop"
+                        android:tint="@color/colorText"
                         android:src="@drawable/ic_favorite_grey"/>
 
                     <com.wallakoala.wallakoala.Views.ExistenceTextView
@@ -140,8 +141,7 @@
             <!-- Nombre -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_height="84dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -156,15 +156,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
                     android:text="@string/profile_name"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
-                    android:id="@+id/profile_name"
+                    android:id="@+id/profile_name_input"
                     android:layout_width="0dp"
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
@@ -191,8 +191,7 @@
             <!-- Email -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_height="84dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -200,15 +199,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
                     android:text="@string/profile_email"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
-                    android:id="@+id/profile_email"
+                    android:id="@+id/profile_email_input"
                     android:layout_width="0dp"
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
@@ -235,8 +234,7 @@
             <!-- Contraseña -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_height="84dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -244,15 +242,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
                     android:text="@string/profile_password"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
-                    android:id="@+id/profile_password"
+                    android:id="@+id/profile_password_input"
                     android:layout_width="0dp"
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
@@ -264,7 +262,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:inputType="text"
+                        android:inputType="textVisiblePassword"
                         android:maxLines="1"
                         android:maxLength="64"
                         android:textColor="@color/colorText"
@@ -279,8 +277,7 @@
             <!-- Edad -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_height="84dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -288,15 +285,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
                     android:text="@string/profile_age"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
-                    android:id="@+id/profile_age"
+                    android:id="@+id/profile_age_input"
                     android:layout_width="0dp"
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
@@ -323,8 +320,7 @@
             <!-- Codigo postal -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_height="84dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -332,15 +328,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
                     android:text="@string/profile_cp"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
-                    android:id="@+id/profile_cp"
+                    android:id="@+id/profile_cp_input"
                     android:layout_width="0dp"
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"

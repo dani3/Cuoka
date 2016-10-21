@@ -5,20 +5,27 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Utils.Utils;
 
 /**
  * Pantalla del perfil del usuario.
@@ -57,6 +64,20 @@ public class ProfileUI extends AppCompatActivity
     protected TextView mFavoriteTextView;
     protected TextView mShopsTextView;
 
+    /* TextInputLayouts */
+    private TextInputLayout mEmailInputLayout;
+    private TextInputLayout mPasswordInputLayout;
+    private TextInputLayout mAgeInputLayout;
+    private TextInputLayout mPostalCodeInputLayout;
+    private TextInputLayout mNameInputLayout;
+
+    /* EditTexts */
+    private EditText mEmailEdittext;
+    private EditText mPasswordEdittext;
+    private EditText mAgeEdittext;
+    private EditText mPostalCodeEdittext;
+    private EditText mNameEdittext;
+
     /* Floating Action Button */
     protected FloatingActionButton mProfileFAB;
 
@@ -69,6 +90,7 @@ public class ProfileUI extends AppCompatActivity
         _initToolbar();
         _initData();
         _initViews();
+        _initEditTexts();
 
         // Solo lo ejecutamos si venimos de la activity padre
         if (savedInstanceState == null)
@@ -120,7 +142,7 @@ public class ProfileUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa la Toolbar
+     * Metodo que inicializa la Toolbar.
      */
     private void _initToolbar()
     {
@@ -150,6 +172,30 @@ public class ProfileUI extends AppCompatActivity
 
         mFavoriteTextView.setText(Integer.toString(mUser.getFavoriteProducts().size()));
         mShopsTextView.setText(Integer.toString(mUser.getShops().size()));
+    }
+
+    /**
+     * Metodo que inicializa los EditTexts.
+     */
+    private void _initEditTexts()
+    {
+        mEmailInputLayout      = (TextInputLayout)findViewById(R.id.profile_email_input);
+        mPasswordInputLayout   = (TextInputLayout)findViewById(R.id.profile_password_input);
+        mAgeInputLayout        = (TextInputLayout)findViewById(R.id.profile_age_input);
+        mPostalCodeInputLayout = (TextInputLayout)findViewById(R.id.profile_cp_input);
+        mNameInputLayout       = (TextInputLayout)findViewById(R.id.profile_name_input);
+
+        mPasswordEdittext   = (EditText)findViewById(R.id.profile_password_edittext);
+        mEmailEdittext      = (EditText)findViewById(R.id.profile_email_edittext);
+        mAgeEdittext        = (EditText)findViewById(R.id.profile_age_edittext);
+        mPostalCodeEdittext = (EditText)findViewById(R.id.profile_cp_edittext);
+        mNameEdittext       = (EditText)findViewById(R.id.profile_name_edittext);
+
+        mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
+        mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
+        mAgeEdittext.addTextChangedListener(new MyTextWatcher(mAgeEdittext));
+        mPostalCodeEdittext.addTextChangedListener(new MyTextWatcher(mPostalCodeEdittext));
+        mNameEdittext.addTextChangedListener(new MyTextWatcher(mNameEdittext));
     }
 
     @Override
@@ -248,5 +294,184 @@ public class ProfileUI extends AppCompatActivity
 
         // Aclarar el fondo
         mTopLevelLayout.animate().alpha(0.0f).setDuration(ANIM_DURATION).start();
+    }
+
+    /**
+     * Metodo que valida el email y muestra un error si es necesario.
+     * @return true si el email es correcto.
+     */
+    private boolean _validateEmail()
+    {
+        String email = mEmailEdittext.getText().toString().trim();
+
+        if (!email.isEmpty() && (!Utils.isValidEmail(email)))
+        {
+            mEmailInputLayout.setErrorEnabled(true);
+            mEmailInputLayout.setError("Email incorrecto");
+
+            _requestFocus(mEmailEdittext);
+
+            return false;
+
+        } else {
+            mEmailInputLayout.setError(null);
+            mEmailInputLayout.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    /**
+     * Metodo que valida la contraseña y muestra un error si es necesario.
+     * @return true si la contraseña es correcta.
+     */
+    private boolean _validatePassword()
+    {
+        String password = mPasswordEdittext.getText().toString();
+
+        if (!password.isEmpty() && (!Utils.isValidPassword(password)))
+        {
+            mPasswordInputLayout.setErrorEnabled(true);
+            mPasswordInputLayout.setError("Mínimo 6 caracteres");
+
+            _requestFocus(mPasswordEdittext);
+
+            return false;
+
+        } else {
+            mPasswordInputLayout.setError(null);
+            mPasswordInputLayout.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    /**
+     * Metodo que valida la edad y muestra un error si es necesario.
+     * @return true si la edad es correcta.
+     */
+    private boolean _validateAge()
+    {
+        String age = mAgeEdittext.getText().toString();
+
+        if (!age.isEmpty() && (!Utils.isValidAge(age)))
+        {
+            mAgeInputLayout.setErrorEnabled(true);
+            mAgeInputLayout.setError("Edad incorrecta");
+
+            _requestFocus(mAgeEdittext);
+
+            return false;
+
+        } else {
+            mAgeInputLayout.setError(null);
+            mAgeInputLayout.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    /**
+     * Metodo que valida el CP y muestra un error si es necesario.
+     * @return true si el CP es correcto.
+     */
+    private boolean _validatePostalCode()
+    {
+        String postalCode = mPostalCodeEdittext.getText().toString();
+
+        if (!postalCode.isEmpty() && (!Utils.isValidPostalCode(postalCode)))
+        {
+            mPostalCodeInputLayout.setErrorEnabled(true);
+            mPostalCodeInputLayout.setError("Código postal incorrecto");
+
+            _requestFocus(mPostalCodeEdittext);
+
+            return false;
+
+        } else {
+            mPostalCodeInputLayout.setError(null);
+            mPostalCodeInputLayout.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    /**
+     * Metodo que valida el nombre y muestra un error si es necesario.
+     * @return true si el nombre es correcto.
+     */
+    private boolean _validateName()
+    {
+        String name = mNameEdittext.getText().toString();
+
+        if (!name.isEmpty() && (!Utils.isValidName(name)))
+        {
+            mNameInputLayout.setErrorEnabled(true);
+            mNameInputLayout.setError("Nombre incorrecto");
+
+            _requestFocus(mNameEdittext);
+
+            return false;
+
+        } else {
+            mNameInputLayout.setError(null);
+            mNameInputLayout.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    /**
+     * TextWatcher propio para validar todos los campos.
+     */
+    private class MyTextWatcher implements TextWatcher
+    {
+        private View view;
+
+        private MyTextWatcher(View view)
+        {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable)
+        {
+            switch (view.getId())
+            {
+                case R.id.profile_email_edittext:
+                    _validateEmail();
+                    break;
+
+                case R.id.profile_password_edittext:
+                    _validatePassword();
+                    break;
+
+                case R.id.profile_age_edittext:
+                    _validateAge();
+                    break;
+
+                case R.id.profile_cp_edittext:
+                    _validatePostalCode();
+                    break;
+                case R.id.profile_name_edittext:
+                    _validateName();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Metodo que pone el foco en la vista.
+     * @param view: vista a la que se quiere poner el foco.
+     */
+    private void _requestFocus(final View view)
+    {
+        if (view.requestFocus())
+        {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 }

@@ -10,7 +10,7 @@
     <string name="profile_item">Mi cuenta</string>
     <string name="shops_item">Mis tiendas</string>
     <string name="favorites_item">Mis favoritos</string>
-    <string name="feedback_item">Dános tu opinión</string>
+    <string name="feedback_item">Danos tu opinión</string>
     <string name="more_shops_item">Más tiendas</string>
     <string name="about_us_item">Sobre Cuoka</string>
     <string name="terms_item">Términos y condiciones</string>
@@ -95,9 +95,6 @@
     <string name="accept"><b>Aceptar</b></string>
     <string name="cancel"><b>Cancelar</b></string>
 
-    <string name="login_facebook">Login con Facebook</string>
-    <string name="login_google">Login con Google+</string>
-    <string name="login_instagram">Login con Instagram</string>
     <string name="login_login">Iniciar sesión</string>
     <string name="login_sign_up">Registrarse</string>
     <string name="login_sign_in">Entrar</string>
