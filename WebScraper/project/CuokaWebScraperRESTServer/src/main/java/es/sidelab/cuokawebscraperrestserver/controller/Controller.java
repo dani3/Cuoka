@@ -82,16 +82,6 @@ public class Controller
         // Asignamos la fecha de registro.
         user.setRegistrationDate(Calendar.getInstance());
         
-        // Ciframos la contraseña.
-        /*SecureRandom sr = new SecureRandom();
-        byte[] IV = sr.generateSeed(Properties.IV_LENGTH);
-        
-        final String encryptedPassword = EncryptionManager.encrypt(Properties.KEY, IV, user.getPassword());
-        
-        // Asignamos la nueva contraseña cifrada y su IV
-        user.setInitializationVector(IV);
-        user.setPassword(encryptedPassword);*/
-        
         // Guardamos el usuario en BD.
         usersRepository.save(user);
         

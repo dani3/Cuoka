@@ -70,6 +70,7 @@ public class IntroUI extends AppCompatActivity
                                 final User user = new User();
 
                                 user.setId(id);
+                                user.setName(response.getString("name"));
                                 user.setAge(response.getInt("age"));
                                 user.setEmail(response.getString("email"));
                                 user.setPassword(response.getString("password"));
@@ -101,6 +102,7 @@ public class IntroUI extends AppCompatActivity
 
                                 Log.d(Properties.TAG, "Datos del usuario: ");
                                 Log.d(Properties.TAG, " - ID: " + id);
+                                Log.d(Properties.TAG, " - Nombre: " + user.getName());
                                 Log.d(Properties.TAG, " - Email: " + user.getEmail());
                                 Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
                                 Log.d(Properties.TAG, " - Hombre: " + user.getMan());

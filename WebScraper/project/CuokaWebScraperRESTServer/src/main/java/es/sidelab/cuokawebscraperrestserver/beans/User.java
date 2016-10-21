@@ -26,6 +26,9 @@ public class User
     @Column(name = "ID")
     private long id;
     
+    @Column(name = "NAME")
+    private String name;
+    
     @Column(name = "EMAIL")
     private String email;
     
@@ -86,13 +89,15 @@ public class User
     
     public User() {}
     
-    public User(String email
+    public User(String name
+            , String email
             , short age
             , boolean man
             , String password
             , int postalCode
             , Calendar registrationDate)
     {
+        this.name = name;
         this.email = email;
         this.age = age;
         this.man = man;
@@ -101,6 +106,7 @@ public class User
         this.registrationDate = registrationDate;
     }
     
+    public String getName()     { return this.name; }
     public String getEmail()    { return this.email; }
     public String getPassword() { return this.password; }
     public short getAge()       { return this.age; }
@@ -144,7 +150,8 @@ public class User
     @JsonIgnore
     public void setAddedToCartProducts(Set<Long> addedToCartProducts) { this.addedToCartProducts = addedToCartProducts; }    
     @JsonIgnore
-    public void setShops(Set<String> shops) { this.shops = shops; }    
+    public void setShops(Set<String> shops)   { this.shops = shops; } 
+    public void setName(String name)          { this.name = name; }   
     public void setEmail(String email)        { this.email = email; }
     public void setPassword(String password)  { this.password = password; }
     public void setAge(short age)             { this.age = age; }

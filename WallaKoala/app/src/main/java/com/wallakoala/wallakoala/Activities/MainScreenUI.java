@@ -178,14 +178,24 @@ public class MainScreenUI extends AppCompatActivity
     @SuppressWarnings("deprecation")
     protected void _initNavigationDrawer()
     {
+        // Obtenemos las vistas del navigation drawer
         mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
         mNavigationVew     = (NavigationView)findViewById(R.id.nav_view);
         mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
 
+        // Obtenemos el usuario para inicializar la cabecera
         User user = mSharedPreferencesManager.retreiveUser();
 
+        // Sacamos la cabecera del navigation drawer
         View navHeader = mNavigationVew.getHeaderView(0);
 
+        // Establecemos el nombre y el email de la cabecera
+        TextView name  = (TextView)navHeader.findViewById(R.id.username);
+        TextView email = (TextView)navHeader.findViewById(R.id.email);
+        name.setText(user.getName());
+        email.setText(user.getEmail());
+
+        // Establecemos la imagen del usuario en funcion del sexo
         final CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
@@ -216,9 +226,6 @@ public class MainScreenUI extends AppCompatActivity
                 activity.overridePendingTransition(0, 0);
             }
         });
-
-        TextView email = (TextView)navHeader.findViewById(R.id.email);
-        email.setText(user.getEmail());
 
         _initDrawerToggle();
 
