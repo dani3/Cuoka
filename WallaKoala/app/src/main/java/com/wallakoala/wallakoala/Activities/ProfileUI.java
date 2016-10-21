@@ -1,9 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -48,9 +45,6 @@ public class ProfileUI extends AppCompatActivity
 
     /* Floating Action Button */
     protected FloatingActionButton mProfileFAB;
-
-    /* Other */
-    protected ColorDrawable mBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -105,9 +99,6 @@ public class ProfileUI extends AppCompatActivity
         mThumbnailLeft      = bundle.getInt(Properties.PACKAGE + ".left");
         mThumbnailWidth     = bundle.getInt(Properties.PACKAGE + ".width");
         mThumbnailHeight    = bundle.getInt(Properties.PACKAGE + ".height");
-
-        // Background
-        mBackground = new ColorDrawable(Color.WHITE);
     }
 
     /**
@@ -135,8 +126,6 @@ public class ProfileUI extends AppCompatActivity
         mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_layout);
         mTopLevelLayout          = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
         mProfileFAB              = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
-
-        mTopLevelLayout.setBackground(mBackground);
     }
 
     @Override
@@ -156,6 +145,14 @@ public class ProfileUI extends AppCompatActivity
                 finish();
             }
         }
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -179,20 +176,14 @@ public class ProfileUI extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void finish()
-    {
-        super.finish();
-
-        overridePendingTransition(0, 0);
-    }
-
     /**
      * La animacion de entrada escala la imagen desde la pequeña hasta la posicion/tamaño de la grande.
      * En paralelo, el fondo se va oscureciendo.
      */
     private void _runEnterAnimation()
     {
+        mTopLevelLayout.setAlpha(0.0f);
+
         mProfileFAB.setPivotX(0);
         mProfileFAB.setPivotY(0);
         mProfileFAB.setScaleX(mWidthScaleImage);
@@ -208,9 +199,7 @@ public class ProfileUI extends AppCompatActivity
                    .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
 
         // Efecto fade para oscurecer la pantalla
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
-        bgAnim.setDuration(ANIM_DURATION);
-        bgAnim.start();
+        mTopLevelLayout.animate().alpha(1.0f).setDuration(ANIM_DURATION).start();
     }
 
     /**
@@ -234,8 +223,6 @@ public class ProfileUI extends AppCompatActivity
                    .withEndAction(endAction);
 
         // Aclarar el fondo
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mBackground, "alpha", 0);
-        bgAnim.setDuration(ANIM_DURATION);
-        bgAnim.start();
+        mTopLevelLayout.animate().alpha(0.0f).setDuration(ANIM_DURATION).start();
     }
 }

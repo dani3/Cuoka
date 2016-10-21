@@ -32,7 +32,8 @@
         </activity>
 
         <activity android:name=".Activities.ProfileUI"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentWithTitle">>
         </activity>
 
         <activity android:name=".Activities.ProductUI"
