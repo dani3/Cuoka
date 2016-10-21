@@ -7,14 +7,18 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.TextView;
 
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 /**
  * Pantalla del perfil del usuario.
@@ -36,12 +40,22 @@ public class ProfileUI extends AppCompatActivity
     protected int mLeftDeltaImage;
     protected int mTopDeltaImage;
 
+    /* User */
+    protected User mUser;
+
+    /* SharedPreferences */
+    protected SharedPreferencesManager mSharedPreferencesManager;
+
     protected float mWidthScaleImage;
     protected float mHeightScaleImage;
 
     /* Container Layouts */
     protected CoordinatorLayout mTopLevelLayout;
     protected CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    /* TextViews */
+    protected TextView mFavoriteTextView;
+    protected TextView mShopsTextView;
 
     /* Floating Action Button */
     protected FloatingActionButton mProfileFAB;
@@ -93,6 +107,10 @@ public class ProfileUI extends AppCompatActivity
     {
         EXITING = false;
 
+        mSharedPreferencesManager = new SharedPreferencesManager(this);
+
+        mUser = mSharedPreferencesManager.retreiveUser();
+
         Bundle bundle = getIntent().getExtras();
 
         mThumbnailTop       = bundle.getInt(Properties.PACKAGE + ".top");
@@ -126,6 +144,12 @@ public class ProfileUI extends AppCompatActivity
         mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_layout);
         mTopLevelLayout          = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
         mProfileFAB              = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
+
+        mFavoriteTextView = (TextView)findViewById(R.id.profile_favorites);
+        mShopsTextView    = (TextView)findViewById(R.id.profile_shops);
+
+        mFavoriteTextView.setText(Integer.toString(mUser.getFavoriteProducts().size()));
+        mShopsTextView.setText(Integer.toString(mUser.getShops().size()));
     }
 
     @Override

@@ -7,17 +7,17 @@
         <item
             android:id="@+id/nav_my_profile"
             android:icon="@drawable/ic_profile"
-            android:title="@string/profile_item" />
+            android:title="@string/profile_item"/>
 
         <item
             android:id="@+id/nav_my_shops"
-            android:icon="@drawable/ic_local_mall_black"
-            android:title="@string/shops_item" />
+            android:icon="@drawable/ic_shops"
+            android:title="@string/shops_item"/>
 
         <item
             android:id="@+id/nav_favorites"
             android:icon="@drawable/ic_favorite_grey"
-            android:title="@string/favorites_item" />
+            android:title="@string/favorites_item"/>
 
     </group>
 
@@ -26,13 +26,34 @@
         android:id="@+id/group2">
 
         <item
-            android:id="@+id/nav_preferences"
-            android:icon="@drawable/ic_settings_black"
-            android:title="@string/settings_item" />
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/feedback_item"/>
         <item
-            android:id="@+id/nav_help"
-            android:icon="@drawable/ic_help_outline_black"
-            android:title="@string/help_item" />
+            android:id="@+id/nav_more_shops"
+            android:icon="@drawable/ic_more_shops"
+            android:title="@string/more_shops_item"/>
+
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/ic_about_us"
+            android:title="@string/about_us_item"/>
+
+        <item
+            android:id="@+id/nav_terms"
+            android:icon="@drawable/ic_terms"
+            android:title="@string/terms_item"/>
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group3">
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout_item"/>
 
     </group>
 

@@ -100,13 +100,16 @@ public class MainScreenUI extends AppCompatActivity
         _initViewPager();
         _initNavigationDrawer();
         _initAnimations();
-
-        mBackPressed = 0;
     }
 
+    /**
+     * Metodo que inicializa ED's y distintos datos.
+     */
     protected void _initData()
     {
         mSharedPreferencesManager = new SharedPreferencesManager(this);
+
+        mBackPressed = 0;
     }
 
     /**

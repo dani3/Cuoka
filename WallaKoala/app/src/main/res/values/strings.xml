@@ -7,11 +7,14 @@
     <string name="left_drawer_title">Preferencias</string>
     <string name="right_drawer_title">Buscar</string>
 
-    <string name="profile_item">Mi Cuenta</string>
-    <string name="shops_item">Mis Tiendas</string>
-    <string name="favorites_item">Mis Favoritos</string>
-    <string name="settings_item">Preferencias</string>
-    <string name="help_item">Ayuda</string>
+    <string name="profile_item">Mi cuenta</string>
+    <string name="shops_item">Mis tiendas</string>
+    <string name="favorites_item">Mis favoritos</string>
+    <string name="feedback_item">Dános tu opinión</string>
+    <string name="more_shops_item">Más tiendas</string>
+    <string name="about_us_item">Sobre Cuoka</string>
+    <string name="terms_item">Términos y condiciones</string>
+    <string name="logout_item">Cerrar sesión</string>
 
     <string name="footer_shop">TIENDA</string>
     <string name="footer_section">SECCION</string>
