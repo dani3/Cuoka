@@ -3,10 +3,10 @@
     <item
         android:color="@color/colorItemChecked"
         android:drawable="@color/colorItemChecked"
-        android:state_checked="true" />
+        android:state_checked="true"/>
 
     <item
-        android:color="@color/colorBackgroundNavigationView"
-        android:drawable="@color/colorBackgroundNavigationView" />
+        android:color="@android:color/white"
+        android:drawable="@android:color/white"/>
 
 </selector>

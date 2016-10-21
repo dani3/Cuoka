@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -19,9 +20,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -34,6 +38,7 @@ import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
+import com.wallakoala.wallakoala.Utils.CustomTypeFaceSpan;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import java.util.ArrayList;
@@ -199,7 +204,6 @@ public class MainScreenUI extends AppCompatActivity
         final CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
-
         profilePic.setImageBitmap(profile);
 
         profilePic.setOnClickListener(new View.OnClickListener()
@@ -226,6 +230,24 @@ public class MainScreenUI extends AppCompatActivity
                 activity.overridePendingTransition(0, 0);
             }
         });
+
+        Menu m = mNavigationVew.getMenu();
+        for (int i = 0; i < m.size(); i++)
+        {
+            MenuItem mi = m.getItem(i);
+
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu != null && subMenu.size() > 0)
+            {
+                for (int j = 0; j < subMenu.size(); j++)
+                {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    _applyFontToMenuItem(subMenuItem);
+                }
+            }
+
+            _applyFontToMenuItem(mi);
+        }
 
         _initDrawerToggle();
 
@@ -327,6 +349,20 @@ public class MainScreenUI extends AppCompatActivity
             @Override
             public void onAnimationRepeat(Animation animation) {}
         });
+    }
+
+    /**
+     * Metodo que aplica la fuente a los items del menu del navigation drawer.
+     * @param mi: item del menu.
+     */
+    private void _applyFontToMenuItem(MenuItem mi)
+    {
+        Typeface font = TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf");
+
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypeFaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        mi.setTitle(mNewTitle);
     }
 
     @Override
