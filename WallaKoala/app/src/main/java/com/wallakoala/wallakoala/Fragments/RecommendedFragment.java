@@ -45,7 +45,7 @@ import static com.wallakoala.wallakoala.Fragments.ProductsFragment.NUM_PRODUCTS_
 public class RecommendedFragment extends Fragment
 {
     /* Constants */
-    protected static boolean ALREADY_SELECTED;
+    protected static boolean HAS_BEEN_SELECTED;
 
     /* Container Views */
     protected RecyclerView mProductsRecyclerView;
@@ -136,7 +136,7 @@ public class RecommendedFragment extends Fragment
 
         mProductList = new ArrayList<>();
 
-        ALREADY_SELECTED = false;
+        HAS_BEEN_SELECTED = false;
     }
 
     /**
@@ -448,14 +448,9 @@ public class RecommendedFragment extends Fragment
      */
     public void select()
     {
-        if (!ALREADY_SELECTED)
+        if ((!HAS_BEEN_SELECTED) && (mUser.getShops() != null) && (!mUser.getShops().isEmpty()))
         {
-            _initData();
-        }
-
-        if ((!ALREADY_SELECTED) && (mUser.getShops() != null) && (!mUser.getShops().isEmpty()))
-        {
-            ALREADY_SELECTED = true;
+            HAS_BEEN_SELECTED = true;
 
             mConnectToServer = new ConnectToServer().execute();
         }

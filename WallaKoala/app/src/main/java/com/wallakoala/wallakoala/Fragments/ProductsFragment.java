@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Fragments;
 
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -77,7 +76,6 @@ public class ProductsFragment extends Fragment
     protected static final int MAX_OFFSET = 20;
     protected static boolean MAN;
     protected static boolean FIRST_CONNECTION;
-    protected static boolean ON_CREATE_FLAG;
     protected static int NUMBER_OF_CORES;
     protected static int DAYS_OFFSET;
     protected static String SEARCH_QUERY;
@@ -182,6 +180,9 @@ public class ProductsFragment extends Fragment
         // FrameLayout
         mFrameLayout = (FrameLayout)getView().findViewById(R.id.frame);
 
+        // RecyclerView
+        mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.grid_recycler);
+
         // LoaderView
         mLoadingView       = getView().findViewById(R.id.avloadingIndicatorView);
         mLoadingServerView = getView().findViewById(R.id.loading);
@@ -190,14 +191,11 @@ public class ProductsFragment extends Fragment
         // TextView que muestran que no hay productos disponibles
         mNoDataTextView = (TextView)getView().findViewById(R.id.nodata_textview);
 
-        // RecyclerView
-        mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.grid_recycler);
-
         // No shops
         mNoShopsView    = getView().findViewById(R.id.no_shops);
         mAddShopsButton = (Button) getView().findViewById(R.id.add_shops_button);
 
-        mAddShopsButton.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));;
+        mAddShopsButton.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
 
         // Listener para abrir el dialogo para anadir tiendas.
         mAddShopsButton.setOnClickListener(new View.OnClickListener()
@@ -256,7 +254,6 @@ public class ProductsFragment extends Fragment
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
         FIRST_CONNECTION = true;
-        ON_CREATE_FLAG = true;
 
         mUser = mSharedPreferences.retreiveUser();
 
@@ -377,16 +374,11 @@ public class ProductsFragment extends Fragment
     {
         super.onResume();
 
-        // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
-        // la pantalla de un producto o de los filtros.
         // Si venimos de un producto, tenemos que restaurar el footer.
-        if ((!ON_CREATE_FLAG) && (mProductAdapter != null) && (mProductAdapter.productClicked()))
+        if ((mProductAdapter != null) && (mProductAdapter.productClicked()))
         {
             Log.d(Properties.TAG, "Volviendo de ProductUI");
             mProductAdapter.restore();
-
-        } else if (ON_CREATE_FLAG) {
-            ON_CREATE_FLAG = false;
         }
     }
 
