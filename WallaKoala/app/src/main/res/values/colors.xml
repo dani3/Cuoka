@@ -11,7 +11,7 @@
     <color name="colorMediumText">#939393</color>
     <color name="colorLightText">#CACACA</color>
 
-    <color name="colorItemChecked">#CACACA</color>
+    <color name="colorItemChecked">#F5F5F5</color>
 
     <color name="colorBackgroundNavigationView">#F5F5F5</color>
     <color name="colorDividerList">#FFA4A4A4</color>

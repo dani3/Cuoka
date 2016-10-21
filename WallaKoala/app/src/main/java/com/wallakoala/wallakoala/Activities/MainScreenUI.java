@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -231,6 +232,7 @@ public class MainScreenUI extends AppCompatActivity
             }
         });
 
+        // Cambiamos la fuente de los items del navigation drawer
         Menu m = mNavigationVew.getMenu();
         for (int i = 0; i < m.size(); i++)
         {
@@ -248,6 +250,23 @@ public class MainScreenUI extends AppCompatActivity
 
             _applyFontToMenuItem(mi);
         }
+
+        // Listener para cada item del navigation drawer
+        mNavigationVew.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item)
+            {
+                switch (item.getItemId())
+                {
+                    case (R.id.nav_my_profile):
+                        profilePic.performClick();
+                        break;
+                }
+
+                return true;
+            }
+        });
 
         _initDrawerToggle();
 
