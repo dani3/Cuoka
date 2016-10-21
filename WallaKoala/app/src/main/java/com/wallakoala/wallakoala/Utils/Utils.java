@@ -158,4 +158,14 @@ public class Utils
                 !(password.contains("=")) && !(password.contains("|")) && !(password.contains("&")) &&
                 !(password.contains("'")) && !(password.contains("!")) && !(password.contains(";")));
     }
+
+    /**
+     * Metodo que comprueba si el nombre es correcto.
+     * @param name: nombre a comprobar.
+     * @return true si el nombre es correcto.
+     */
+    public static boolean isValidName(final String name)
+    {
+        return isQueryOk(name);
+    }
 }

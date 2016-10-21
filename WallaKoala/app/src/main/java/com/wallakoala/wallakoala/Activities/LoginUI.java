@@ -64,12 +64,14 @@ public class LoginUI extends AppCompatActivity
     private TextInputLayout mPasswordInputLayout;
     private TextInputLayout mAgeInputLayout;
     private TextInputLayout mPostalCodeInputLayout;
+    private TextInputLayout mNameInputLayout;
 
     /* EditTexts */
     private EditText mEmailEdittext;
     private EditText mPasswordEdittext;
     private EditText mAgeEdittext;
     private EditText mPostalCodeEdittext;
+    private EditText mNameEdittext;
 
     /* Buttons */
     private CircularProgressButton mRegisterCircularButton;
@@ -217,7 +219,7 @@ public class LoginUI extends AppCompatActivity
             {
                 if (_validateEmail() && _validatePassword() && (mEnterButton.getProgress() == 0))
                 {
-                    // Guardamos el estado de la pantalla por si acaso el usuario lo cambia mientras se logea.
+                    // Guardamos el estado de la pantalla por si acaso el usuario lo cambia mientras se loguea.
                     final boolean rememberMe = mRememberMeCheckBox.isChecked();
                     final String email = mEmailEdittext.getText().toString();
                     final String password = mPasswordEdittext.getText().toString();
@@ -300,9 +302,6 @@ public class LoginUI extends AppCompatActivity
         mPasswordEdittext = (EditText)parent.findViewById(R.id.password_edittext);
         mEmailEdittext    = (EditText)parent.findViewById(R.id.email_edittext);
 
-        mPasswordEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mEmailEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
     }
@@ -339,26 +338,25 @@ public class LoginUI extends AppCompatActivity
         mPasswordInputLayout   = (TextInputLayout)parent.findViewById(R.id.password_input_layout);
         mAgeInputLayout        = (TextInputLayout)parent.findViewById(R.id.age_input_layout);
         mPostalCodeInputLayout = (TextInputLayout)parent.findViewById(R.id.postal_code_input_layout);
+        mNameInputLayout       = (TextInputLayout)parent.findViewById(R.id.name_input_layout);
 
         mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mAgeInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mPostalCodeInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mNameInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mPasswordEdittext      = (EditText)parent.findViewById(R.id.password_edittext);
         mEmailEdittext         = (EditText)parent.findViewById(R.id.email_edittext);
         mAgeEdittext           = (EditText)parent.findViewById(R.id.age_edittext);
         mPostalCodeEdittext    = (EditText)parent.findViewById(R.id.postal_code_edittext);
-
-        mPasswordEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mEmailEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mAgeEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mPostalCodeEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mNameEdittext          = (EditText)parent.findViewById(R.id.name_edittext);
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
         mAgeEdittext.addTextChangedListener(new MyTextWatcher(mAgeEdittext));
         mPostalCodeEdittext.addTextChangedListener(new MyTextWatcher(mPostalCodeEdittext));
+        mNameEdittext.addTextChangedListener(new MyTextWatcher(mNameEdittext));
     }
 
     /**
@@ -484,7 +482,7 @@ public class LoginUI extends AppCompatActivity
 
                 // Validamos los datos introducidos y comprobamos que no estemos ya cargando.
                 if (mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100 &&
-                    _validateEmail() && _validatePassword() && _validateAge() && _validatePostalCode() && _isGenderSelected())
+                    _validateEmail() && _validatePassword() && _validateAge() && _validatePostalCode() && _validateName() && _isGenderSelected())
                 {
                     try
                     {
@@ -499,6 +497,7 @@ public class LoginUI extends AppCompatActivity
                         // Creamos el JSON con los datos del usuario
                         final JSONObject jsonObject = new JSONObject();
 
+                        jsonObject.put("name", mNameEdittext.getText().toString());
                         jsonObject.put("age", Short.valueOf(mAgeEdittext.getText().toString()));
                         jsonObject.put("email", mEmailEdittext.getText().toString());
                         jsonObject.put("password", mPasswordEdittext.getText().toString());
@@ -525,7 +524,7 @@ public class LoginUI extends AppCompatActivity
 
                                         } else {
                                             // Si ha ido bien, actualizamos las preferencias.
-                                            final long id = Long.valueOf(response);
+                                            long id = Long.valueOf(response);
 
                                             Log.d(Properties.TAG, "Usuario registrado correctamente (ID: " + id + ")");
 
@@ -538,9 +537,11 @@ public class LoginUI extends AppCompatActivity
                                             int postalCode  = Integer.valueOf(mPostalCodeEdittext.getText().toString());
                                             String email    = mEmailEdittext.getText().toString();
                                             String password = mPasswordEdittext.getText().toString();
+                                            String name     = mNameEdittext.getText().toString();
 
-                                            final User user = new User();
+                                            User user = new User();
 
+                                            user.setName(name);
                                             user.setId(id);
                                             user.setPostalCode(postalCode);
                                             user.setMan(man);
@@ -626,9 +627,10 @@ public class LoginUI extends AppCompatActivity
                     {
                         try
                         {
-                            final User user = new User();
+                            User user = new User();
 
                             user.setId(id);
+                            user.setName(response.getString("name"));
                             user.setAge(response.getInt("age"));
                             user.setEmail(response.getString("email"));
                             user.setPassword(response.getString("password"));
@@ -657,6 +659,7 @@ public class LoginUI extends AppCompatActivity
 
                             Log.d(Properties.TAG, "Datos del usuario: ");
                             Log.d(Properties.TAG, " - ID: " + id);
+                            Log.d(Properties.TAG, " - Nombre: " + user.getName());
                             Log.d(Properties.TAG, " - Email: " + user.getAge());
                             Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
                             Log.d(Properties.TAG, " - Hombre: " + user.getMan());
@@ -837,6 +840,31 @@ public class LoginUI extends AppCompatActivity
     }
 
     /**
+     * Metodo que valida el nombre y muestra un error si es necesario.
+     * @return true si el nombre es correcto.
+     */
+    private boolean _validateName()
+    {
+        String name = mNameEdittext.getText().toString();
+
+        if (!Utils.isValidName(name))
+        {
+            mNameInputLayout.setErrorEnabled(true);
+            mNameInputLayout.setError("Nombre incorrecto");
+
+            _requestFocus(mNameEdittext);
+
+            return false;
+
+        } else {
+            mNameInputLayout.setError(null);
+            mNameInputLayout.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    /**
      * TextWatcher propio para validar todos los campos.
      */
     private class MyTextWatcher implements TextWatcher
@@ -870,6 +898,9 @@ public class LoginUI extends AppCompatActivity
 
                 case R.id.postal_code_edittext:
                     _validatePostalCode();
+                    break;
+                case R.id.name_edittext:
+                    _validateName();
                     break;
             }
         }
