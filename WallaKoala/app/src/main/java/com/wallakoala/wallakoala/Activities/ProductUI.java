@@ -36,19 +36,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ColorIconListAdapter;
 import com.wallakoala.wallakoala.Adapters.ProductAdapter;
-import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
-import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
-import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.LikeButtonLargeView;
@@ -203,6 +196,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         EXITING = false;
         COLLAPSING = false;
 
+        mSharedPreferencesManager = new SharedPreferencesManager(this);
+
         mContext = this;
 
         mGestureDetector = new GestureDetectorCompat(this, this);
@@ -265,47 +260,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             @Override
             public void onClick(View v)
             {
-                if (!mFavoriteImageButton.ANIMATING) {
-                    final User user = mSharedPreferencesManager.retreiveUser();
-                    final long id = user.getId();
-
-                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                            + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
-
-                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
-
-                    final StringRequest stringRequest = new StringRequest(Request.Method.GET
-                            , fixedURL
-                            , new Response.Listener<String>()
-                            {
-                                @Override
-                                public void onResponse(String response)
-                                {
-                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
-                                    {
-                                        // Si contiene el producto, es que se quiere quitar de favoritos.
-                                        if (user.getFavoriteProducts().contains(mProduct.getId()))
-                                        {
-                                            user.getFavoriteProducts().remove(mProduct.getId());
-
-                                        } else {
-                                            user.getFavoriteProducts().add(mProduct.getId());
-                                        }
-
-                                        mSharedPreferencesManager.insertUser(user);
-                                    }
-                                }
-                            }
-                            , new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error)
-                                {}
-                            });
-
-                    VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+                if (!mFavoriteImageButton.ANIMATING)
+                {
+                    RestClientSingleton.sendFavoriteProduct(mContext, mProduct);
 
                     mFavoriteImageButton.startAnimation();
                 }
@@ -455,30 +412,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     protected void _sendViewedProduct()
     {
-        mSharedPreferencesManager = new SharedPreferencesManager(this);
-
-        final User user = mSharedPreferencesManager.retreiveUser();
-        final long id = user.getId();
-
-        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_VIEWED);
-
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para marcar el producto como visto");
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET
-                , fixedURL
-                , new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {}
-                }
-                , new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {}
-                });
-
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        RestClientSingleton.sendViewedProduct(mContext, mProduct);
     }
 
     /**
@@ -486,45 +420,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     protected void _fetchImages()
     {
-        ColorVariant colorVariant = mProduct.getColors().get(mCurrentColor);
-        for (int i = 0; i < colorVariant.getNumberOfImages(); i++)
-        {
-            String imageFile = mProduct.getShop() + "_" + mProduct.getSection() + "_"
-                    + colorVariant.getReference() + "_"
-                    + colorVariant.getColorName() + "_" + i + "_Large.jpg";
-
-            String url = Utils.fixUrl(
-                    Properties.SERVER_URL + Properties.IMAGES_PATH + mProduct.getShop() + "/" + imageFile);
-
-            // Pre-Cargamos la imagen utilizando Picasso.
-            Picasso.with(mContext)
-                   .load(url)
-                   .fetch();
-        }
-
-        for (int i = 0; i < mProduct.getColors().size(); i++)
-        {
-            // Path != 0 -> Color predefinido
-            String url;
-            if (mProduct.getColors().get(i).getColorPath().equals("0"))
-            {
-                final String imageFile = mProduct.getShop() + "_" + mProduct.getSection() + "_"
-                        + mProduct.getColors().get(i).getReference() + "_"
-                        + mProduct.getColors().get(i).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
-
-                url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + mProduct.getShop() + "/" + imageFile);
-
-            } else {
-                final String imageFile = mProduct.getColors().get(i).getColorPath();
-
-                url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
-            }
-
-            // Pre-Cargamos el icono utilizando Picasso.
-            Picasso.with(mContext)
-                   .load(url)
-                   .fetch();
-        }
+        Utils.fetchImages(mContext, mProduct, mCurrentColor);
     }
 
     /**

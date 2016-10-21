@@ -110,7 +110,7 @@ public class RecommendedFragment extends Fragment
         mFrameLayout = (FrameLayout)getView().findViewById(R.id.recommended_frame);
 
         // LoaderView
-        mLoadingView       = getView().findViewById(R.id.recommended_avloadingIndicatorView);
+        mLoadingView = getView().findViewById(R.id.recommended_avloadingIndicatorView);
 
         // RecyclerView
         mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.recommended_grid_recycler);

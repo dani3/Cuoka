@@ -20,19 +20,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Activities.ProductUI;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
-import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
-import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.FlipLayout;
@@ -113,46 +108,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 {
                     if (!mProductFavoriteImageButton.ANIMATING)
                     {
-                        final User user = mSharedPreferencesManager.retreiveUser();
-                        final long id = user.getId();
-
-                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                + "/users/" + id + "/" + mProduct.getId() + "/" + Properties.ACTION_FAVORITE);
-
-                        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
-
-                        final StringRequest stringRequest = new StringRequest(Request.Method.GET
-                                , fixedURL
-                                , new Response.Listener<String>()
-                                {
-                                    @Override
-                                    public void onResponse(String response)
-                                    {
-                                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
-                                        {
-                                            // Si contiene el producto, es que se quiere quitar de favoritos.
-                                            if (user.getFavoriteProducts().contains(mProduct.getId()))
-                                            {
-                                                user.getFavoriteProducts().remove(mProduct.getId());
-
-                                            } else {
-                                                user.getFavoriteProducts().add(mProduct.getId());
-                                            }
-
-                                            mSharedPreferencesManager.insertUser(user);
-                                        }
-                                    }
-                                }
-                                , new Response.ErrorListener()
-                                {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error)
-                                    {}
-                                });
-
-                        VolleySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
+                        RestClientSingleton.sendFavoriteProduct(mContext, mProduct);
 
                         mProductFavoriteImageButton.startAnimation();
                     }

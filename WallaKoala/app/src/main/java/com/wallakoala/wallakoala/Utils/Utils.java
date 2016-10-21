@@ -9,11 +9,21 @@ import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 
+import com.squareup.picasso.Picasso;
+import com.wallakoala.wallakoala.Beans.ColorVariant;
+import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Clase con metodos varios.
@@ -22,6 +32,101 @@ import java.io.IOException;
 
 public class Utils
 {
+    public static User getUserFromJSON(long id, JSONObject jsonObject) throws JSONException
+    {
+        User user = new User();
+
+        user.setId(id);
+        user.setName(jsonObject.getString("name"));
+        user.setAge(jsonObject.getInt("age"));
+        user.setEmail(jsonObject.getString("email"));
+        user.setPassword(jsonObject.getString("password"));
+        user.setMan(jsonObject.getBoolean("man"));
+        user.setPostalCode(jsonObject.getInt("postalCode"));
+
+        // Sacamos los productos favoritos
+        JSONArray jsonArray = jsonObject.getJSONArray("favoriteProducts");
+        Set<Long> favorites = new HashSet<>();
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            favorites.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
+        }
+
+        user.setFavoriteProducts(favorites);
+
+        // Sacamos la lista de tiendas
+        jsonArray = jsonObject.getJSONArray("shops");
+        Set<String> shops = new HashSet<>();
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            shops.add((String.valueOf(jsonArray.get(i))));
+        }
+
+        user.setShops(shops);
+
+        Log.d(Properties.TAG, "Datos del usuario: ");
+        Log.d(Properties.TAG, " - ID: " + id);
+        Log.d(Properties.TAG, " - Nombre: " + user.getName());
+        Log.d(Properties.TAG, " - Email: " + user.getAge());
+        Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
+        Log.d(Properties.TAG, " - Hombre: " + user.getMan());
+        Log.d(Properties.TAG, " - Edad: " + user.getAge());
+        Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
+        Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
+        Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
+
+        return user;
+    }
+
+    /**
+     * Metodo que precarga las imagenes de un producto.
+     * @param context: contexto.
+     * @param product: producto a precargar.
+     * @param currentColor: posicion del color a precargar.
+     */
+    public static void fetchImages(Context context, Product product, int currentColor)
+    {
+        ColorVariant colorVariant = product.getColors().get(currentColor);
+        for (int i = 0; i < colorVariant.getNumberOfImages(); i++)
+        {
+            String imageFile = product.getShop() + "_" + product.getSection() + "_"
+                    + colorVariant.getReference() + "_"
+                    + colorVariant.getColorName() + "_" + i + "_Large.jpg";
+
+            String url = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.IMAGES_PATH + product.getShop() + "/" + imageFile);
+
+            // Pre-Cargamos la imagen utilizando Picasso.
+            Picasso.with(context)
+                    .load(url)
+                    .fetch();
+        }
+
+        for (int i = 0; i < product.getColors().size(); i++)
+        {
+            // Path != 0 -> Color predefinido
+            String url;
+            if (product.getColors().get(i).getColorPath().equals("0"))
+            {
+                final String imageFile = product.getShop() + "_" + product.getSection() + "_"
+                        + product.getColors().get(i).getReference() + "_"
+                        + product.getColors().get(i).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+                url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
+
+            } else {
+                final String imageFile = product.getColors().get(i).getColorPath();
+
+                url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+            }
+
+            // Pre-Cargamos el icono utilizando Picasso.
+            Picasso.with(context)
+                    .load(url)
+                    .fetch();
+        }
+    }
+
     /**
      * Metodo que codifica una URL.
      * @param url: URL a codificar.
