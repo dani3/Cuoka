@@ -234,14 +234,16 @@ public class Controller
     
     /**
      * Metodo que devuelve la lista de tiendas.
+     * @param gender: sexo de la tienda.
      * @return lista de tiendas.
      */
     @Cacheable(value = "products")
-    @RequestMapping(value = "/shops", method = RequestMethod.GET)
-    public List<Shop> getShops()
+    @RequestMapping(value = "/shops/{gender}", method = RequestMethod.GET)
+    public List<Shop> getShops(@PathVariable boolean gender)
     {
-        LOG.info("Peticion GET para obtener la lista de todas las tiendas");
-        return shopsRepository.findAll();
+        LOG.info("Peticion GET para obtener la lista de todas las tiendas");       
+        
+        return (gender) ? shopsRepository.findByMan() : shopsRepository.findByWoman();
     }
     
     /**
@@ -328,13 +330,7 @@ public class Controller
     {
         LOG.info("Peticion POST para anadir productos de " + shop + " recibida");
         
-        Runnable task = () -> {            
-            if (shopsRepository.findByName(shop) == null)
-            {            
-                LOG.info("Es una tienda nueva. La anadimos a la tabla 'shop'");
-                shopsRepository.save(new Shop(shop));
-            }
-            
+        Runnable task = () -> {                 
             // Obtenemos los productos que ya tenemos en base de datos.
             List<Product> productsInDB = productsRepository.findByShop(shop);
             
