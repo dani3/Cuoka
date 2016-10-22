@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +22,7 @@ import android.widget.TextView;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -236,11 +235,46 @@ public class ProfileUI extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item)
     {
-        if (item.getItemId() == android.R.id.home)
+        switch (item.getItemId())
         {
-            onBackPressed();
+            case (android.R.id.home):
+                onBackPressed();
+                return true;
 
-            return true;
+            case (-1):
+
+                if (_validateName() && _validateAge() && _validateEmail() && _validatePassword() && _validatePostalCode())
+                {
+                    final String name = mNameEdittext.getText().toString();
+                    final String email = mEmailEdittext.getText().toString();
+                    final String password = mPasswordEdittext.getText().toString();
+                    final short age = (mAgeEdittext.getText().toString().isEmpty()) ? -1 : Short.valueOf(mAgeEdittext.getText().toString());
+                    final int postalCode = (mPostalCodeEdittext.getText().toString().isEmpty()) ? -1 : Integer.valueOf(mPostalCodeEdittext.getText().toString());
+
+                    // Solo si ha modificado algo lo enviamos al servidor.
+                    if (!name.isEmpty() || !email.isEmpty() || !password.isEmpty() || (age != -1) || (postalCode != -1))
+                    {
+                        Thread thread = new Thread() {
+                            @Override
+                            public void run() {
+                                if (RestClientSingleton.sendUserModification(ProfileUI.this
+                                                                        , mTopLevelLayout
+                                                                        , name
+                                                                        , email
+                                                                        , password
+                                                                        , age
+                                                                        , postalCode))
+                                {
+                                    onBackPressed();
+                                }
+                            }
+                        };
+
+                        thread.start();
+                    }
+                }
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);

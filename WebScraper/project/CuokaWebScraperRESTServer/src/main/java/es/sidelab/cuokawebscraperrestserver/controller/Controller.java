@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
+import es.sidelab.cuokawebscraperrestserver.beans.UserModification;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
@@ -90,6 +91,66 @@ public class Controller
         LOG.info("Usuario guardado correctamente (ID: " + id + ")");
         
         return String.valueOf(id);
+    }
+    
+    /**
+     * Metodo que recibe las modificaciones de un usuario.
+     * @param userModification: objeto con las modificaciones.
+     * @param id: id del usuario.
+     * @return true si ha ido correctemante.
+     */
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.POST)
+    public String updateUser(@RequestBody UserModification userModification
+                    , @PathVariable long id)
+    {
+        LOG.info("Peticion POST para modificar un usuario (" + id + ")");
+        
+        User user = usersRepository.findOne(id);
+        if (user == null)
+        {
+            LOG.info("Usuario no encontrado");
+            return Properties.USER_NOT_FOUND;
+            
+        } else {
+            LOG.info("Usuario encontrado, se modifica");
+            
+            String name = userModification.getName();
+            String email = userModification.getEmail();
+            String password = userModification.getPassword();
+            short age = userModification.getAge();
+            int postalCode = userModification.getPostalCode();
+            
+            if ((name != null) && (!name.isEmpty()))
+            {
+                user.setName(name);
+            }
+            
+            if ((email != null) && (!email.isEmpty()))
+            {
+                user.setEmail(email);
+            }
+            
+            if ((password != null) && (!password.isEmpty()))
+            {
+                user.setPassword(password);
+            }
+            
+            if (age > 0)
+            {
+                user.setAge(age);
+            }
+            
+            if (postalCode > 0)
+            {
+                user.setPostalCode(postalCode);
+            }
+            
+            usersRepository.save(user);
+            
+            LOG.info("Usuario modificado correctamente");
+            
+            return Properties.ACCEPTED;
+        }        
     }
     
     /**
@@ -234,11 +295,6 @@ public class Controller
                 
                 break;
                 
-            case Properties.ACTION_SHARED:
-                LOG.info("Producto (" + productId + ") compartido");
-                user.addToSharedProducts(productId);
-                break;
-                
             case Properties.ACTION_VIEWED:
                 LOG.info("Producto (" + productId + ") visto");
                 user.addToViewedProducts(productId);
@@ -247,19 +303,6 @@ public class Controller
             case Properties.ACTION_VISITED:
                 LOG.info("Producto (" + productId + ") visitado en la web");
                 user.addToVisitedProducts(productId);
-                break;
-                
-            case Properties.ACTION_WISHLIST:
-                if (! user.getWishlistProducts().contains(productId))
-                {
-                    LOG.info("Producto (" + productId + ") anadido a la wishlist");
-                    user.addToWishlistProducts(productId);
-                    
-                } else {
-                    LOG.info("Producto (" + productId + ") quitado de la wishlist");
-                    user.getWishlistProducts().remove(productId);
-                }
-                
                 break;
                 
             default:

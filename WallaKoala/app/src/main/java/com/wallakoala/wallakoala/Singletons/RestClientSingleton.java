@@ -1,17 +1,31 @@
 package com.wallakoala.wallakoala.Singletons;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
+import com.wallakoala.wallakoala.Activities.ProfileUI;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Clase que realiza todas las peticiones al servidor.
@@ -20,6 +34,130 @@ import com.wallakoala.wallakoala.Utils.Utils;
 
 public class RestClientSingleton
 {
+    /**
+     * Metodo que envia las modificaciones del usuario.
+     * @param context: contexto.
+     * @param name: nombre del usuario.
+     * @param email: email del usuario.
+     * @param password: contraseña del usuario.
+     * @param age: edad del usuario.
+     * @param postalCode: codigo postal del usuario.
+     */
+    public static boolean sendUserModification(final Context context
+                                , final View coordinatorLayout
+                                , final String name
+                                , final String email
+                                , final String password
+                                , final short age
+                                , final int postalCode)
+    {
+        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final User user = mSharedPreferencesManager.retreiveUser();
+        final long id = user.getId();
+
+        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                + "/users/" + id);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para modificar el usuario");
+
+        final ProgressDialog progressDialog = ProgressDialog.show(context, "", "Modificando tus datos...", true);
+
+        try
+        {
+            RequestFuture<String> future = RequestFuture.newFuture();
+
+            // Creamos el JSON con los datos del usuario
+            final JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("name", (name.isEmpty()) ? null : name);
+            jsonObject.put("age", age);
+            jsonObject.put("email", (email.isEmpty()) ? null: email);
+            jsonObject.put("password", (password.isEmpty()) ? null : password);
+            jsonObject.put("postalCode", postalCode);
+
+            Log.d(Properties.TAG, "JSON con las modificaciones:\n    " + jsonObject.toString());
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST
+                    , fixedURL
+                    , future
+                    , future)
+                    {
+                        @Override
+                        public byte[] getBody() throws AuthFailureError
+                        {
+                            return jsonObject.toString().getBytes();
+                        }
+
+                        @Override
+                        public String getBodyContentType()
+                        {
+                            return "application/json";
+                        }
+                    };
+
+            // Enviamos la peticion.
+            VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+
+            try
+            {
+                String response = future.get(20, TimeUnit.SECONDS);
+
+                Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                if (response.equals(Properties.ACCEPTED))
+                {
+                    Log.d(Properties.TAG, "Usuario modificado correctamente (ID: " + id + ")");
+
+                    if (!name.isEmpty())
+                    {
+                        user.setName(name);
+                    }
+
+                    if (!email.isEmpty())
+                    {
+                        user.setEmail(email);
+                    }
+
+                    if (!password.isEmpty())
+                    {
+                        user.setPassword(password);
+                    }
+
+                    if (postalCode != -1)
+                    {
+                        user.setPostalCode(postalCode);
+                    }
+
+                    if (age != -1)
+                    {
+                        user.setAge(age);
+                    }
+
+                    mSharedPreferencesManager.insertUser(user);
+                    mSharedPreferencesManager.insertLoggedIn(true);
+
+                    progressDialog.dismiss();
+
+                    return true;
+                }
+
+            } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                progressDialog.dismiss();
+
+                Log.d(Properties.TAG, "Error modificando usuario: " + e.getMessage());
+
+                Snackbar.make(coordinatorLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+            progressDialog.dismiss();
+            Log.d(Properties.TAG, "Error creando JSON (" + e.getMessage() + ")");
+        }
+
+        return false;
+    }
+
     /**
      * Metodo que envia al servidor el producto favorito.
      * @param context: contexto
