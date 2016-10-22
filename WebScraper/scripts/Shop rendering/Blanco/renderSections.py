@@ -18,7 +18,9 @@ path = sys.argv[2]
 
 # Lista de secciones con sus URL's
 urls = [("Camisetas", "http://www.blanco.com/es/es_es/partes-de-arriba/camisetas.html"),
-        ("Vestidos", "http://www.blanco.com/es/es_es/vestidos.html")]
+        ("Vestidos", "http://www.blanco.com/es/es_es/vestidos.html"),
+        ("Faldas", "http://www.blanco.com/es/es_es/partes-de-abajo/faldas.html"),
+        ("Jeans", "http://www.blanco.com/es/es_es/jeans.html")]
 
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

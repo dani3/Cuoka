@@ -2,7 +2,6 @@ package com.wallakoala.wallakoala.Singletons;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
-import com.wallakoala.wallakoala.Activities.ProfileUI;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
