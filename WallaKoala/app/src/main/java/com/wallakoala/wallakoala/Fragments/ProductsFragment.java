@@ -1186,7 +1186,7 @@ public class ProductsFragment extends Fragment
             if ((shopsList != null) && (shopsList.get(0).equals(ALL)))
             {
                 final String fixedURL = Utils.fixUrl(
-                        Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
+                        Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops/" + mUser.getMan());
 
                 Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
 
@@ -1330,7 +1330,7 @@ public class ProductsFragment extends Fragment
         final View loadingIndicatorView = view.findViewById(R.id.add_shops_loading);
 
         final String fixedURL = Utils.fixUrl(
-                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops");
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops/" + mUser.getMan());
 
         Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
 
