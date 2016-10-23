@@ -1,10 +1,13 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.animation.TimeInterpolator;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -79,6 +82,9 @@ public class ProfileUI extends AppCompatActivity
 
     /* Floating Action Button */
     protected FloatingActionButton mProfileFAB;
+
+    /* AsyincTask */
+    protected AsyncTask mSendModificationToServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -190,6 +196,72 @@ public class ProfileUI extends AppCompatActivity
         mPostalCodeEdittext = (EditText)findViewById(R.id.profile_cp_edittext);
         mNameEdittext       = (EditText)findViewById(R.id.profile_name_edittext);
 
+        mEmailInputLayout.setHint(mUser.getEmail());
+        mAgeInputLayout.setHint(Integer.toString(mUser.getAge()));
+        mPostalCodeInputLayout.setHint(Integer.toString(mUser.getPostalCode()));
+        mNameInputLayout.setHint(mUser.getName());
+
+        // Ponemos como hint los datos del usuario, pero si coge foco, se pone el hint por defecto.
+        mEmailEdittext.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
+               @Override
+               public void onFocusChange(View v, boolean hasFocus)
+               {
+                   if (hasFocus)
+                   {
+                       mEmailInputLayout.setHint(getResources().getString(R.string.email_hint));
+
+                   } else if ((mEmailEdittext.getText().toString().isEmpty())) {
+                       mEmailInputLayout.setHint(mUser.getEmail());
+                   }
+               }
+           });
+
+        mAgeEdittext.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (hasFocus)
+                {
+                    mAgeInputLayout.setHint(getResources().getString(R.string.age_hint));
+
+                } else if ((mAgeEdittext.getText().toString().isEmpty())) {
+                    mAgeInputLayout.setHint(Integer.toString(mUser.getAge()));
+                }
+            }
+        });
+
+        mPostalCodeEdittext.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (hasFocus)
+                {
+                    mPostalCodeInputLayout.setHint(getResources().getString(R.string.postal_code_hint));
+
+                } else if ((mPostalCodeEdittext.getText().toString().isEmpty())) {
+                    mPostalCodeInputLayout.setHint(Integer.toString(mUser.getPostalCode()));
+                }
+            }
+        });
+
+        mNameEdittext.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (hasFocus)
+                {
+                    mNameInputLayout.setHint(getResources().getString(R.string.name_hint));
+
+                } else if ((mNameEdittext.getText().toString().isEmpty())) {
+                    mNameInputLayout.setHint(mUser.getName());
+                }
+            }
+        });
+
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
         mAgeEdittext.addTextChangedListener(new MyTextWatcher(mAgeEdittext));
@@ -241,43 +313,77 @@ public class ProfileUI extends AppCompatActivity
                 onBackPressed();
                 return true;
 
-            case (-1):
+            case (R.id.menu_item_accept):
 
                 if (_validateName() && _validateAge() && _validateEmail() && _validatePassword() && _validatePostalCode())
                 {
-                    final String name = mNameEdittext.getText().toString();
-                    final String email = mEmailEdittext.getText().toString();
-                    final String password = mPasswordEdittext.getText().toString();
-                    final short age = (mAgeEdittext.getText().toString().isEmpty()) ? -1 : Short.valueOf(mAgeEdittext.getText().toString());
-                    final int postalCode = (mPostalCodeEdittext.getText().toString().isEmpty()) ? -1 : Integer.valueOf(mPostalCodeEdittext.getText().toString());
-
-                    // Solo si ha modificado algo lo enviamos al servidor.
-                    if (!name.isEmpty() || !email.isEmpty() || !password.isEmpty() || (age != -1) || (postalCode != -1))
-                    {
-                        Thread thread = new Thread() {
-                            @Override
-                            public void run() {
-                                if (RestClientSingleton.sendUserModification(ProfileUI.this
-                                                                        , mTopLevelLayout
-                                                                        , name
-                                                                        , email
-                                                                        , password
-                                                                        , age
-                                                                        , postalCode))
-                                {
-                                    onBackPressed();
-                                }
-                            }
-                        };
-
-                        thread.start();
-                    }
+                    mSendModificationToServer = new SendModificationToServer().execute();
                 }
 
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Tarea en segundo plano para enviar las modificaciones al servidor.
+     */
+    private class SendModificationToServer extends AsyncTask<String, Void, Void>
+    {
+        String name;
+        String email;
+        String password;
+        short age;
+        int postalCode;
+
+        boolean correct;
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog = ProgressDialog.show(ProfileUI.this, "", "Modificando tus datos...", true);
+
+            name = mNameEdittext.getText().toString();
+            email = mEmailEdittext.getText().toString();
+            password = mPasswordEdittext.getText().toString();
+            age = (mAgeEdittext.getText().toString().isEmpty()) ? -1 : Short.valueOf(mAgeEdittext.getText().toString());
+            postalCode = (mPostalCodeEdittext.getText().toString().isEmpty()) ? -1 : Integer.valueOf(mPostalCodeEdittext.getText().toString());
+        }
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            // Se envian las modificaciones al servidor.
+            correct = RestClientSingleton.sendUserModification(ProfileUI.this, name, email, password, age, postalCode);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            // Cerramos el dialogo.
+            progressDialog.dismiss();
+
+            if (correct)
+            {
+                onBackPressed();
+
+            } else {
+                Snackbar.make(mTopLevelLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Reintentar", new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                findViewById(R.id.menu_item_accept).performClick();
+
+                            }}).show();
+            }
+        }
     }
 
     /**

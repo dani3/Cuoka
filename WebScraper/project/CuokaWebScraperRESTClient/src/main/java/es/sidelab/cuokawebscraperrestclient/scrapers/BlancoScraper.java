@@ -125,6 +125,7 @@ public class BlancoScraper implements Scraper
         br.readLine();       
         while (!doneColor)
         {
+            boolean correct = true;
             
             ColorVariant color = new ColorVariant();
             List<Image> images = new ArrayList<>();
@@ -134,42 +135,52 @@ public class BlancoScraper implements Scraper
             String reference = br.readLine();
             if(colorName.contains("null") || reference.contains("null"))
             {
-                return null;
-            }
-            
-            color.setName(colorName.replace("  Color: ", ""));
-            color.setColorURL(null);            
-            color.setReference(reference.replace("  Referencia: ", ""));
-            
-            // Leemos las imagenes
-            boolean doneImages = false;
-            while (!doneImages)
-            {
-                String url = br.readLine();
-                if (url == null){
-                    doneImages = true;
-                    doneColor = true;
-                    set(true);
-                }
-                else if (url.contains("***")){
-                    /*hemos acabado con las imágenes pero no con los colores*/
-                    doneImages = true; 
-                } 
-                else if (url.contains("------") || url.length() == 0) //producto final ==0
+                correct = false;
+                
+                String line = br.readLine();
+                if (!line.contains("******"))
                 {
-                    doneImages = true;
                     doneColor = true;
                 }
-                else {
-                    Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
-                    images.add(image);
-                }
- 
             }
-            color.setImages(images);
-            colors.add(color);
             
+            if (correct)
+            {
+                color.setName(colorName.replace("  Color: ", ""));
+                color.setColorURL(null);            
+                color.setReference(reference.replace("  Referencia: ", ""));
+
+                // Leemos las imagenes
+                boolean doneImages = false;
+                while (!doneImages)
+                {
+                    String url = br.readLine();
+                    if (url == null){
+                        doneImages = true;
+                        doneColor = true;
+                        set(true);
+                    }
+                    else if (url.contains("***")){
+                        /*hemos acabado con las imágenes pero no con los colores*/
+                        doneImages = true; 
+                    } 
+                    else if (url.contains("------") || url.length() == 0) //producto final ==0
+                    {
+                        doneImages = true;
+                        doneColor = true;
+                    }
+                    else {
+                        Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
+                        images.add(image);
+                    }
+
+                }
+
+                color.setImages(images);
+                colors.add(color);      
+            }
         }
+        
         product.setColors(colors);
         return product;
     }

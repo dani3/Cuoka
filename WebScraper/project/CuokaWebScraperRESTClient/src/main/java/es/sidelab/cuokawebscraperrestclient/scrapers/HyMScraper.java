@@ -6,19 +6,14 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import es.sidelab.cuokawebscraperrestclient.utils.ActivityStatsManager;
-import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
-import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * Scraper especifico para HyM.
@@ -29,137 +24,165 @@ public class HyMScraper implements Scraper
 {
     private static final Logger LOG = Logger.getLogger(HyMScraper.class);
     
-    // Lista preparada para la concurrencia donde escribiran todos los scrapers
-    private static List<Product> productList = new CopyOnWriteArrayList<>();
+    // Lista preparada para la concurrencia donde escribiran todos los scrapers.
+    private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
+    
+    // Atributo local para comprobar que se ha terminado.
+    private final ThreadLocal<Boolean> threadFinished = 
+            new ThreadLocal<Boolean>() 
+            {
+                @Override 
+                protected Boolean initialValue() 
+                {
+                    return false;
+                }
+            };
     
     @Override
-    public List<Product> scrap(Shop shop, Section section) throws IOException 
-    {    
-        int prodOK = 0;
-        int prodNOK = 0;
+    public List<Product> scrap(Shop shop, Section section) throws IOException
+    {        
+        threadFinished.set(false);
         
-        int cont = 0;
+        LOG.info("Se inicia el scraping de la seccion " + section.getName() + " de la tienda " + shop.getName());
         
-        // Lista con los links de cada producto
-        String htmlPath = section.getPath() + section.getName() + ".html";
-        List<String> productsLink = getListOfLinks(htmlPath, shop.getURL().toString());
+        // Ejecutamos el script que crea el fichero con todos los productos.
+        Process process = Runtime.getRuntime().exec(new String[] {"python"
+                                , section.getPath() + "renderProducts.py"
+                                , Properties.CHROME_DRIVER
+                                , section.getName()
+                                , section.getPath()});
         
-        // Escribimos en fichero todos los links de la seccion
-        FileManager.writeLinksToFile(productsLink, section);
-        // Ejecutamos el script que renderiza todos los productos
-        PythonManager.executeRenderProducts(section);
-          
-        // Recorremos todos los productos y sacamos sus atributos
-        for (String productLink : productsLink)
+        // Nos quedamos esperando hasta que termine.
+        File file = new File(section.getPath() + section.getName() + "_done.dat");
+        while (!file.exists()) 
         {
-            String pathProduct = section.getPath() + section.getName() + "_" + cont + ".html";
-            
-            try 
+            file = new File(section.getPath() + section.getName() + "_done.dat");
+        }
+
+        file.delete();
+        
+        // Una vez ha terminado de generar el fichero de productos, lo leemos.
+        BufferedReader br = new BufferedReader(
+            new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
+               
+        br.readLine();
+        while(!get())
+        {   
+            // Empezamos nuevo producto
+            Product product = _readProductGeneralInfo(br);
+            if (product != null) //todo ha ido bien, seguimos leyendo los colores
             {
-                File file = new File(pathProduct);
-            
-                // Esperamos a que python cree el fichero
-                while (! file.exists()) {}
-
-                // Se realiza una espera de medio segundo para que no pillemos el fichero nada mas ser creado (estara vacio)
-                Thread.sleep(1000);
-                file = new File(pathProduct);
+                product = _readProductColors(product, br);
                 
-                LOG.info("Scraping: " + pathProduct);
-            
-                Document document = Jsoup.parse(file, "ISO-8859-1");
-
-                // Obtener los atributos propios del producto
-                String link = productLink;
-                // El nombre se pasa a mayusculas
-                String name = document.select("h1.product-item-headline").first().ownText()
-                                                                                   .toUpperCase(); 
-                // Del precio eliminamos lo que no sea numerico 
-                String price = document.select("div.product-item-price span").first().ownText()
-                                                                                       .replaceAll("[^,.0-9]", "")
-                                                                                       .replaceAll(",", ".")
-                                                                                       .trim();
-                // La referencia la sacamos de la URL
-                String reference = productLink.substring(productLink.indexOf(".") + 1 , productLink.lastIndexOf("."));
-                // De la descripcion sustituimos los saltos de linea por espacios
-                String description = document.select("p.product-detail-description-text").first().ownText()
-                                                                                               .replaceAll("\n", " ");
-            
-                // En BD no podemos guardar un string de mas de 255 caracteres, si es mas grande lo acortamos
-                if (description.length() > 255)
-                    description = description.substring(0, 255);
-                
-                if (! containsProduct(productList, reference))
+                // Si todo ha ido bien, añadimos a la lista
+                if ((product != null) && (!containsProduct(productList, product.getColors().get(0).getReference()))) 
                 {
-                    // Obtener los colores
-                    List<ColorVariant> variants = new ArrayList<>();
-                    Elements colors = document.select("div.product-colors ul.inputlist li > label");
-                    for (Element color : colors)
-                    {
-                        // Nos conectamos al producto de cada color
-                        String colorLink = shop.getURL().toString() + "es_es/productpage." + color.select("input").attr("data-articlecode") + ".html";
-                        document = Jsoup.connect(colorLink).timeout(Properties.TIMEOUT)
-                                                             .ignoreHttpErrors(true).get();
-
-                        String colorReference = color.select("input").attr("data-articlecode");
-                        String colorName = color.attr("title").toUpperCase().replaceAll("/" , " ");
-                        // Esto no produce excepcion, se puede enviar la URL como null
-                        String colorURL = fixURL(color.select("div img").attr("src"));
-
-                        // Sacamos las imagenes, solo se puede sacar la URL de las miniaturas, asi que tenemos
-                        // que cambiar en la URL thumb por main para sacar la imagen grande
-                        List<Image> imagesURL = new ArrayList<>();
-                        Elements images = document.select("div.product-detail-thumbnails li img");
-                        for (Element img : images)
-                            imagesURL.add(new Image(fixURL(img.attr("src").replaceAll("/product/thumb" , "/product/main"))));
-
-                        variants.add(new ColorVariant(colorReference, colorName, colorURL, imagesURL));
+                    product.setShop(shop.getName());
+                    product.setSection(section.getName());
+                    product.setMan(section.isMan());
                     
-                    }
-                    
-                    if (! colors.isEmpty())
-                    {    
-                        prodOK++;
-                        productList.add(new Product(Double.parseDouble(price)
-                                            , name
-                                            , shop.getName()
-                                            , section.getName()
-                                            , link 
-                                            , description
-                                            , section.isMan()
-                                            , variants));
-                    }
-                    else
-                        prodNOK++;
-                    
-                } 
-                
-            } catch (Exception e) { 
-                LOG.error("Excepcion en producto: " + pathProduct + " (" + e.toString() + ")");
-                
-                prodNOK++; 
-                
-            } finally {                
-                cont++;
-                
+                    productList.add(product);
+                }
             }
-            
-        } // for products
-        
-        System.gc();
-        
-        // Borramos todos los htmls de la seccion
-        for (int i = 0; i < productsLink.size(); i++)
-        {
-            FileManager.deleteFile(section.getPath() + section.getName() + "_" + i + ".html");
         }
         
-        // Borramos el fichero de links
-        FileManager.deleteFile(section.getPath() + section.getName() + "_LINKS.txt");
-        
-        ActivityStatsManager.updateProducts(shop.getName(), section, prodOK, prodNOK); 
+        LOG.info("El scraping de la seccion " + section.getName() + " de la tienda " + shop.getName() + " ha terminado");
+        LOG.info("Ha sacado " + productList.size() + " productos");
         
         return productList;
+    }
+    
+    private Product _readProductGeneralInfo(BufferedReader br) throws IOException
+    {
+        String name = br.readLine();
+        String description = br.readLine();
+        String price = br.readLine();
+        String link = br.readLine();
+        
+        // Podemos haber leido ya todos los productos, por lo que name puede ser null
+        if (name == null || name.contains("null") || price.contains("null"))
+        {
+            return null;
+        }
+        
+        Product product = new Product();
+        
+        product.setName(name.replace("Nombre: ", ""));
+        product.setDescription(description.replace("Descripcion: ", ""));
+        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));
+        product.setLink(fixURL(link.replace("Link: ", "")));
+        
+        return product;        
+    }
+    
+    private Product _readProductColors(Product product, BufferedReader br) throws IOException
+    {
+        
+        List<ColorVariant> colors = new ArrayList<>();
+        boolean doneColor = false;
+        
+        // Leemos los asteriscos
+        br.readLine();       
+        while (!doneColor)
+        {
+            boolean correct = true;
+            
+            ColorVariant color = new ColorVariant();
+            List<Image> images = new ArrayList<>();
+            
+            String colorName = br.readLine();
+            String colorIcon = br.readLine();
+            String reference = br.readLine();
+            if(colorName.contains("null") || reference.contains("null"))
+            {
+                correct = false;
+                
+                String line = br.readLine();
+                if (!line.contains("******"))
+                {
+                    doneColor = true;
+                }
+            }
+            
+            if (correct)
+            {
+                color.setName(colorName.replace("  Color: ", ""));
+                color.setColorURL(null);            
+                color.setReference(reference.replace("  Referencia: ", ""));
+
+                // Leemos las imagenes
+                boolean doneImages = false;
+                while (!doneImages)
+                {
+                    String url = br.readLine();
+                    if (url == null){
+                        doneImages = true;
+                        doneColor = true;
+                        set(true);
+                    }
+                    else if (url.contains("***")){
+                        /*hemos acabado con las imágenes pero no con los colores*/
+                        doneImages = true; 
+                    } 
+                    else if (url.contains("------") || url.length() == 0) //producto final ==0
+                    {
+                        doneImages = true;
+                        doneColor = true;
+                    }
+                    else {
+                        Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
+                        images.add(image);
+                    }
+
+                }
+
+                color.setImages(images);
+                colors.add(color);      
+            }
+        }
+        
+        product.setColors(colors);
+        return product;
     }
     
     @Override
@@ -169,33 +192,28 @@ public class HyMScraper implements Scraper
             return "http:".concat(url).replace(" " , "%20");
         
         return url.replace(" " , "%20");
-    }    
-    
-    @Override
-    public List<String> getListOfLinks(String htmlPath, String shopUrl) throws IOException
-    {
-        List<String> links = new ArrayList<>();        
-        
-        File html = new File(htmlPath);
-        Document document = Jsoup.parse(html, "UTF-8");
-                  
-        Elements products = document.select("h3.product-item-headline a");
-        
-        for(Element element : products)
-        {
-            links.add(fixURL(shopUrl + element.attr("href")));
-        }
-        
-        return links;
     }
     
-    private boolean containsProduct(List<Product> productList, String reference)
+    private boolean get() 
     {
-        for (Product p : productList)
-            for (ColorVariant cv : p.getColors())
-                if (cv.getReference().equals(reference))
-                    return true;
-        
+        return threadFinished.get();
+    }
+
+    private void set(Boolean value) 
+    {
+        threadFinished.set(value);
+    }
+    
+    private static boolean containsProduct(List<Product> productList, String reference)
+    {
+        synchronized (productList)
+        {
+            for (Product p : productList)
+                for (ColorVariant cv : p.getColors())
+                    if (cv.getReference().equals(reference))
+                        return true;
+        }
+            
         return false;
     }
 }

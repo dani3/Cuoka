@@ -1,10 +1,7 @@
 package com.wallakoala.wallakoala.Singletons;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.View;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -42,7 +39,6 @@ public class RestClientSingleton
      * @param postalCode: codigo postal del usuario.
      */
     public static boolean sendUserModification(final Context context
-                                , final View coordinatorLayout
                                 , final String name
                                 , final String email
                                 , final String password
@@ -58,8 +54,6 @@ public class RestClientSingleton
                 + "/users/" + id);
 
         Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para modificar el usuario");
-
-        final ProgressDialog progressDialog = ProgressDialog.show(context, "", "Modificando tus datos...", true);
 
         try
         {
@@ -133,24 +127,20 @@ public class RestClientSingleton
                     }
 
                     mSharedPreferencesManager.insertUser(user);
-                    mSharedPreferencesManager.insertLoggedIn(true);
-
-                    progressDialog.dismiss();
 
                     return true;
                 }
 
             } catch (ExecutionException | InterruptedException | TimeoutException e) {
-                progressDialog.dismiss();
-
                 Log.d(Properties.TAG, "Error modificando usuario: " + e.getMessage());
 
-                Snackbar.make(coordinatorLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_LONG).show();
+                return false;
             }
 
         } catch (JSONException e) {
-            progressDialog.dismiss();
             Log.d(Properties.TAG, "Error creando JSON (" + e.getMessage() + ")");
+
+            return false;
         }
 
         return false;
