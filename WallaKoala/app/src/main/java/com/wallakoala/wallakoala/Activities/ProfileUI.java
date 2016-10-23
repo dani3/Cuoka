@@ -274,6 +274,8 @@ public class ProfileUI extends AppCompatActivity
     {
         if (!EXITING)
         {
+            setResult(RESULT_OK);
+
             if (mProfileFAB.getVisibility() == View.VISIBLE)
             {
                 _runExitAnimation(new Runnable() {
@@ -349,8 +351,10 @@ public class ProfileUI extends AppCompatActivity
             name = mNameEdittext.getText().toString();
             email = mEmailEdittext.getText().toString();
             password = mPasswordEdittext.getText().toString();
-            age = (mAgeEdittext.getText().toString().isEmpty()) ? -1 : Short.valueOf(mAgeEdittext.getText().toString());
-            postalCode = (mPostalCodeEdittext.getText().toString().isEmpty()) ? -1 : Integer.valueOf(mPostalCodeEdittext.getText().toString());
+            age = (mAgeEdittext.getText().toString().isEmpty())
+                    ? -1 : Short.valueOf(mAgeEdittext.getText().toString());
+            postalCode = (mPostalCodeEdittext.getText().toString().isEmpty())
+                    ? -1 : Integer.valueOf(mPostalCodeEdittext.getText().toString());
         }
 
         @Override

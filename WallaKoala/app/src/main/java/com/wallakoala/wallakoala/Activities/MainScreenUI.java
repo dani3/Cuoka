@@ -58,6 +58,7 @@ public class MainScreenUI extends AppCompatActivity
 {
     /* Constants */
     protected static final int FILTER_REQUEST = 0;
+    protected static final int MODIFICATION_REQUEST = 1;
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static String SEARCH_QUERY;
 
@@ -228,7 +229,7 @@ public class MainScreenUI extends AppCompatActivity
                       .putExtra(Properties.PACKAGE + ".width", profilePic.getWidth())
                       .putExtra(Properties.PACKAGE + ".height", profilePic.getHeight());
 
-                startActivity(intent);
+                startActivityForResult(intent, MODIFICATION_REQUEST);
 
                 // Desactivamos las transiciones por defecto
                 activity.overridePendingTransition(0, 0);
@@ -492,31 +493,48 @@ public class MainScreenUI extends AppCompatActivity
         // Si ha ido bien
         if (resultCode == RESULT_OK)
         {
-            mViewPager.setCurrentItem(1);
-
-            // Sacamos la cadena de busqueda.
-            SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
-
-            // Si es null significa que se quiere filtrar.
-            if (SEARCH_QUERY == null)
+            // Si venimos de los filtros
+            if (requestCode == FILTER_REQUEST)
             {
-                Log.d(Properties.TAG, "Filtro establecido:");
+                mViewPager.setCurrentItem(1);
 
-                Map<String, Object> filterMap = new HashMap<>();
+                // Sacamos la cadena de busqueda.
+                SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
 
-                filterMap.put("newness", data.getBooleanExtra(Properties.PACKAGE + ".newness", false));
-                filterMap.put("sections", data.getSerializableExtra(Properties.PACKAGE + ".sections"));
-                filterMap.put("colors", data.getSerializableExtra(Properties.PACKAGE + ".colors"));
-                filterMap.put("shops", data.getSerializableExtra(Properties.PACKAGE + ".shops"));
-                filterMap.put("minPrice", data.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
-                filterMap.put("maxPrice", data.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
+                // Si es null significa que se quiere filtrar.
+                if (SEARCH_QUERY == null)
+                {
+                    Log.d(Properties.TAG, "Filtro establecido:");
 
-                mProductsFragment.processFilter(filterMap);
+                    Map<String, Object> filterMap = new HashMap<>();
 
-            } else {
-                Log.d(Properties.TAG, "Busqueda: " + SEARCH_QUERY);
+                    filterMap.put("newness", data.getBooleanExtra(Properties.PACKAGE + ".newness", false));
+                    filterMap.put("sections", data.getSerializableExtra(Properties.PACKAGE + ".sections"));
+                    filterMap.put("colors", data.getSerializableExtra(Properties.PACKAGE + ".colors"));
+                    filterMap.put("shops", data.getSerializableExtra(Properties.PACKAGE + ".shops"));
+                    filterMap.put("minPrice", data.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
+                    filterMap.put("maxPrice", data.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
 
-                mProductsFragment.processSearch(SEARCH_QUERY);
+                    mProductsFragment.processFilter(filterMap);
+
+                } else {
+                    Log.d(Properties.TAG, "Busqueda: " + SEARCH_QUERY);
+
+                    mProductsFragment.processSearch(SEARCH_QUERY);
+                }
+
+            } else if (requestCode == MODIFICATION_REQUEST) {
+                // Obtenemos el usuario para actualizar la cabecera
+                User user = mSharedPreferencesManager.retreiveUser();
+
+                // Sacamos la cabecera del navigation drawer
+                View navHeader = mNavigationVew.getHeaderView(0);
+
+                // Establecemos el nombre y el email de la cabecera
+                TextView name  = (TextView)navHeader.findViewById(R.id.username);
+                TextView email = (TextView)navHeader.findViewById(R.id.email);
+                name.setText(user.getName());
+                email.setText(user.getEmail());
             }
         }
     }
