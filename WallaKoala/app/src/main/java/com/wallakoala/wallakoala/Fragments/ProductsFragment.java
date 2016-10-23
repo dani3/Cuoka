@@ -828,6 +828,8 @@ public class ProductsFragment extends Fragment
                     } else {
                         Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
 
+                        mState = STATE.NORMAL;
+
                         mLoadingServerView.setVisibility(View.GONE);
                     }
 
@@ -841,6 +843,8 @@ public class ProductsFragment extends Fragment
 
                     } else {
                         Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
+
+                        mState = STATE.NORMAL;
 
                         mLoadingServerView.setVisibility(View.GONE);
                     }
