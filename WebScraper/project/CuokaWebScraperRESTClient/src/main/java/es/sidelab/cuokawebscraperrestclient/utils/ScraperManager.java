@@ -108,7 +108,7 @@ public class ScraperManager
 
                             for (File section : sections)
                             {      
-                                if (section.getName().contains(".txt"))
+                                if (section.getName().contains(".txt") && !section.getName().contains("links_error"))
                                 {                             
                                     Section s = new Section();
                                     String sectionName = section.getName().replace(".txt", "");

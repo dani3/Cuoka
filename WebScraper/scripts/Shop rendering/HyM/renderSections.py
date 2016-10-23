@@ -1,44 +1,72 @@
-import sys
+import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
 path_to_chromedriver = sys.argv[1]
+#path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
+
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Jerseys", "http://www2.hm.com/es_es/mujer/compra-por-producto/cardigans-y-jerseis/_jcr_content/main/productlisting.display.html?product-type=ladies_cardigansjumpers&sort=stock&offset=0&page-size=1000"),
-        ("Chaquetas", "http://www2.hm.com/es_es/mujer/compra-por-producto/chaquetas-y-abrigos/_jcr_content/main/productlisting.display.html?product-type=ladies_jacketscoats&sort=stock&offset=0&page-size=1000"),
-        ("Americanas", "http://www2.hm.com/es_es/mujer/compra-por-producto/americanas-y-chalecos/_jcr_content/main/productlisting.display.html?product-type=ladies_blazerswaistcoats&sort=stock&offset=0&page-size=1000"),
-        ("Camisas", "http://www2.hm.com/es_es/mujer/compra-por-producto/camisas-y-blusas/_jcr_content/main/productlisting.display.html?product-type=ladies_shirtsblouses&sort=stock&offset=0&page-size=1000"),
-        ("Tops", "http://www2.hm.com/es_es/mujer/compra-por-producto/tops/_jcr_content/main/productlisting.display.html?product-type=ladies_tops&sort=stock&offset=0&page-size=1000"),
-        ("Pantalones", "http://www2.hm.com/es_es/mujer/compra-por-producto/pantalones/_jcr_content/main/productlisting.display.html?product-type=ladies_trousers&sort=stock&offset=0&page-size=1000"),
-        ("Faldas", "http://www2.hm.com/es_es/mujer/compra-por-producto/faldas/_jcr_content/main/productlisting.display.html?product-type=ladies_skirts&sort=stock&offset=0&page-size=1000"),
-        ("Shorts", "http://www2.hm.com/es_es/mujer/compra-por-producto/pantalones-cortos/_jcr_content/main/productlisting.display.html?product-type=ladies_shorts&sort=stock&offset=0&page-size=1000"),
-        ("Vestidos", "http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos/_jcr_content/main/productlisting.display.html?product-type=ladies_dresses&sort=stock&offset=0&page-size=1000"),
-        ("Sport", "http://www2.hm.com/es_es/mujer/compra-por-producto/h-m-sport/_jcr_content/main/productlisting.display.html?product-type=ladies_sport&sort=stock&offset=0&page-size=1000"),
-        ("Monos", "http://www2.hm.com/es_es/mujer/compra-por-producto/monos/_jcr_content/main/productlisting_ef86.display.html?product-type=ladies_jumpsuits&sort=stock&offset=0&page-size=1000"),
-        ("Zapatos", "http://www2.hm.com/es_es/mujer/compra-por-producto/calzado/_jcr_content/main/productlisting.display.html?product-type=ladies_shoes&sort=stock&offset=0&page-size=1000")]
+urls = [("Camisas", "http://www2.hm.com/es_es/mujer/compra-por-producto/camisas-y-blusas.html"),
+        ("Zapatos", "http://www2.hm.com/es_es/mujer/compra-por-producto/calzado.html"),
+        ("Vestidos","http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html")]
 
-# Driver de Chrome
-dr = webdriver.Chrome(executable_path = path_to_chromedriver)
+chrome_options = Options()
+chrome_options.add_argument("--lang=es")
+chrome_options.add_argument("--start-maximized")
+
+dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k,v in urls:    
-    dr.get(v)
+for k,v in urls:
+    
+    file_error = open(path + k + "_links_error.txt", 'w')
+    
+    try:
+        dr.get(v)
 
-    # Esperamos a que aparezcan los productos un maximo de 60 segundos.
-    element = WebDriverWait(dr, 60).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "product-item-headline"))
-    )
+        # Esperamos a que aparezcan los productos un maximo de 60 segundos.
+        element = WebDriverWait(dr, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "product-item-image"))
+        )
 
-    # Los escribimos en fichero.
-    file = open(path + k + ".html", 'w')
-    file.write(dr.page_source)
-    file.close()
+        # Sacamos el tamano del html.
+        lastHeight = dr.execute_script("return document.body.scrollHeight")
+
+        # Hacemos scroll hasta abajo hasta que el tamano del html no cambie.
+        while True:
+            dr.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
+            newHeight = dr.execute_script("return document.body.scrollHeight")
+            if newHeight == lastHeight:
+                break
+            lastHeight = newHeight
+
+        links = []
+        products = dr.find_elements_by_class_name("product-item-headline")
+        for product in products:
+            links.append(product.find_element_by_xpath(".//a").get_attribute("href"))
+
+        # Escribimos los links de cada producto en fichero.
+        file = open(path + k + ".txt", 'w')
+
+        for link in links:
+            file.write(link + "\n")
+
+        file.close()
+        file_error.close()
+    except:
+        #Escribimos el link de la seccion que falla
+        file_error.write(v)
+    finally:
+        file_error.close()
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + 'done.dat', 'w')

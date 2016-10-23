@@ -140,10 +140,10 @@ public class ProfileUI extends AppCompatActivity
 
         Bundle bundle = getIntent().getExtras();
 
-        mThumbnailTop       = bundle.getInt(Properties.PACKAGE + ".top");
-        mThumbnailLeft      = bundle.getInt(Properties.PACKAGE + ".left");
-        mThumbnailWidth     = bundle.getInt(Properties.PACKAGE + ".width");
-        mThumbnailHeight    = bundle.getInt(Properties.PACKAGE + ".height");
+        mThumbnailTop    = bundle.getInt(Properties.PACKAGE + ".top");
+        mThumbnailLeft   = bundle.getInt(Properties.PACKAGE + ".left");
+        mThumbnailWidth  = bundle.getInt(Properties.PACKAGE + ".width");
+        mThumbnailHeight = bundle.getInt(Properties.PACKAGE + ".height");
     }
 
     /**
@@ -316,7 +316,6 @@ public class ProfileUI extends AppCompatActivity
                 return true;
 
             case (R.id.menu_item_accept):
-
                 if (_validateName() && _validateAge() && _validateEmail() && _validatePassword() && _validatePostalCode())
                 {
                     mSendModificationToServer = new SendModificationToServer().execute();
