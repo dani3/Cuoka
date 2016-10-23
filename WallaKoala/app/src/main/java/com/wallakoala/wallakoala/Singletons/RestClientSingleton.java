@@ -29,6 +29,52 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    public static boolean deleteUser(Context context)
+    {
+        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final User user = mSharedPreferencesManager.retreiveUser();
+        final long id = user.getId();
+
+        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                + "/users/" + id);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para borrar un usuario");
+
+        RequestFuture<String> future = RequestFuture.newFuture();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE
+                , fixedURL
+                , future
+                , future);
+
+        // Enviamos la peticion.
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+
+        try
+        {
+            String response = future.get(20, TimeUnit.SECONDS);
+
+            Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+            if (response.equals(Properties.ACCEPTED))
+            {
+                Log.d(Properties.TAG, "Usuario borrado correctamente (ID: " + id + ")");
+
+                mSharedPreferencesManager.clear();
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            Log.d(Properties.TAG, "Error borrando usuario: " + e.getMessage());
+
+            return false;
+        }
+
+        return false;
+    }
+
     /**
      * Metodo que envia las modificaciones del usuario.
      * @param context: contexto.
@@ -38,12 +84,12 @@ public class RestClientSingleton
      * @param age: edad del usuario.
      * @param postalCode: codigo postal del usuario.
      */
-    public static boolean sendUserModification(final Context context
-                                , final String name
-                                , final String email
-                                , final String password
-                                , final short age
-                                , final int postalCode)
+    public static boolean sendUserModification(Context context
+                                , String name
+                                , String email
+                                , String password
+                                , short age
+                                , int postalCode)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 

@@ -25,6 +25,15 @@ public class SharedPreferencesManager
     }
 
     /**
+     * Metodo que elimina las preferencias.
+     * @return true si se han borrado correctamentes
+     */
+    public boolean clear()
+    {
+        return mEditor.clear().commit();
+    }
+
+    /**
      * Metodo que inserta si el usuario esta logeado.
      * @param loggedIn: true si el usuario esta logeado
      * @return true si se ha insertado correctamente.

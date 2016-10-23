@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Activities;
 import android.animation.TimeInterpolator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -91,6 +92,7 @@ public class ProfileUI extends AppCompatActivity
 
     /* AsyincTask */
     protected AsyncTask mSendModificationToServer;
+    protected AsyncTask mDeleteUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -224,7 +226,7 @@ public class ProfileUI extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-
+                mDeleteUser = new DeleteUser().execute();
             }
         });
 
@@ -232,9 +234,7 @@ public class ProfileUI extends AppCompatActivity
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
-            {
-
-            }
+            {}
         });
 
         return builder.create();
@@ -386,6 +386,53 @@ public class ProfileUI extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DeleteUser extends AsyncTask<String, Void, Void>
+    {
+        ProgressDialog progressDialog;
+
+        boolean correct;
+
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog = ProgressDialog.show(ProfileUI.this, "", "Borrando cuenta...", true);
+        }
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            correct = RestClientSingleton.deleteUser(ProfileUI.this);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            progressDialog.dismiss();
+
+            if (correct)
+            {
+                Intent intent = new Intent(ProfileUI.this, LoginUI.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                startActivity(intent);
+
+            } else {
+                Snackbar.make(mTopLevelLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Reintentar", new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mDeleteFAB.performClick();
+
+                            }}).show();
+            }
+        }
     }
 
     /**
