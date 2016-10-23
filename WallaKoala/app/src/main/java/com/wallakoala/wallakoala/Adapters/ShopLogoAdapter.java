@@ -45,7 +45,7 @@ public class ShopLogoAdapter extends RecyclerView.Adapter<ShopLogoAdapter.ShopHo
         {
             super(itemView);
 
-            mShopLogoSelectedImageView = (CircleImageView) itemView.findViewById(R.id.shop_logo_selected);
+            mShopLogoSelectedImageView = (CircleImageView)itemView.findViewById(R.id.shop_logo_selected);
             mShopLogoSelectedImageView.setAlpha(0.0f);
 
             mShopLogoImageView = (CircleImageView) itemView.findViewById(R.id.shop_logo);

@@ -31,6 +31,10 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".Activities.ShopsUI"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity android:name=".Activities.ProfileUI"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentWithTitle">>

@@ -19,7 +19,7 @@
             android:paddingLeft="48dp"
             android:paddingBottom="20dp"
             android:gravity="center"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorDarkerText"
             android:text="@string/sign_in_info"
             app:customFont="Existence-StencilLight.otf"/>
 
@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="24dp"
             android:layout_marginLeft="24dp"
+            android:textColorHint="@color/colorMediumText"
             android:theme="@style/TextLabel">
 
             <com.wallakoala.wallakoala.Views.ExistenceEditText
@@ -60,7 +61,7 @@
                 android:maxLines="1"
                 android:maxLength="64"
                 android:textColor="@color/colorText"
-                android:textColorHint="@color/colorMediumText"
+                android:textColorHint="@color/colorDarkerText"
                 android:hint="@string/email_hint"
                 android:nextFocusUp="@id/email_edittext"
                 android:nextFocusLeft="@id/email_edittext"
@@ -76,6 +77,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="12dp"
+            android:textColorHint="@color/colorMediumText"
             android:theme="@style/TextLabel">
 
             <com.wallakoala.wallakoala.Views.ExistenceEditText
@@ -86,7 +88,7 @@
                 android:maxLines="1"
                 android:maxLength="64"
                 android:textColor="@color/colorText"
-                android:textColorHint="@color/colorMediumText"
+                android:textColorHint="@color/colorDarkerText"
                 android:hint="@string/password_hint"
                 app:customFontEd="Existence-StencilLight.otf"/>
 
@@ -98,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remember_me"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorDarkerText"
             android:layout_margin="24dp"
             app:buttonTint="@color/colorAccent"/>
 
@@ -126,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/forget_password"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorDarkerText"
             android:layout_margin="24dp"
             android:gravity="right"
             app:customFont="Existence-StencilLight.otf"/>

@@ -36,8 +36,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:minHeight="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="pin">
 
@@ -160,7 +160,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_name"
                     android:textSize="16dp"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorDarkerText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -169,6 +169,7 @@
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColorHint="@color/colorMediumText"
                     android:theme="@style/TextLabel">
 
                     <com.wallakoala.wallakoala.Views.ExistenceEditText
@@ -203,7 +204,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_email"
                     android:textSize="16dp"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorDarkerText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -212,6 +213,7 @@
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColorHint="@color/colorMediumText"
                     android:theme="@style/TextLabel">
 
                     <com.wallakoala.wallakoala.Views.ExistenceEditText
@@ -246,7 +248,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_password"
                     android:textSize="16dp"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorDarkerText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -255,6 +257,7 @@
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColorHint="@color/colorMediumText"
                     android:theme="@style/TextLabel">
 
                     <com.wallakoala.wallakoala.Views.ExistenceEditText
@@ -289,7 +292,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_age"
                     android:textSize="16dp"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorDarkerText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -298,6 +301,7 @@
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColorHint="@color/colorMediumText"
                     android:theme="@style/TextLabel">
 
                     <com.wallakoala.wallakoala.Views.ExistenceEditText
@@ -332,7 +336,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_cp"
                     android:textSize="16dp"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/colorDarkerText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -341,6 +345,7 @@
                     android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColorHint="@color/colorMediumText"
                     android:theme="@style/TextLabel">
 
                     <com.wallakoala.wallakoala.Views.ExistenceEditText

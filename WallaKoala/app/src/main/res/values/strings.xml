@@ -119,4 +119,7 @@
     <string name="profile_password">Contraseña:</string>
     <string name="profile_age">Edad:</string>
     <string name="profile_cp">Codigo postal:</string>
+
+    <string name="shop_my_shops">Mis tiendas</string>
+    <string name="shop_available_shops">Tiendas disponibles</string>
 </resources>

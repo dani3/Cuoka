@@ -388,6 +388,9 @@ public class ProfileUI extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Tarea en segundo plano que borra la cuenta del usuario.
+     */
     private class DeleteUser extends AsyncTask<String, Void, Void>
     {
         ProgressDialog progressDialog;
