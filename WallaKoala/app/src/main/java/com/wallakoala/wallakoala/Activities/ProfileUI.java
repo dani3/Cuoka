@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.animation.TimeInterpolator;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -82,6 +84,10 @@ public class ProfileUI extends AppCompatActivity
 
     /* Floating Action Button */
     protected FloatingActionButton mProfileFAB;
+    protected FloatingActionButton mDeleteFAB;
+
+    /* AlertDialog */
+    protected AlertDialog mDeleteAlertDialog;
 
     /* AsyincTask */
     protected AsyncTask mSendModificationToServer;
@@ -166,17 +172,72 @@ public class ProfileUI extends AppCompatActivity
     /**
      * Metodo que inicializa las vistas.
      */
+    @SuppressWarnings("deprecation")
     private void _initViews()
     {
         mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_layout);
         mTopLevelLayout          = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
         mProfileFAB              = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
+        mDeleteFAB               = (FloatingActionButton)findViewById(R.id.profile_delete);
 
         mFavoriteTextView = (TextView)findViewById(R.id.profile_favorites);
         mShopsTextView    = (TextView)findViewById(R.id.profile_shops);
 
         mFavoriteTextView.setText(Integer.toString(mUser.getFavoriteProducts().size()));
         mShopsTextView.setText(Integer.toString(mUser.getShops().size()));
+
+        mDeleteFAB.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mDeleteAlertDialog = _createDeleteDialog();
+
+                mDeleteAlertDialog.setOnShowListener(new DialogInterface.OnShowListener()
+                {
+                    @Override
+                    public void onShow(DialogInterface dialog)
+                    {
+                        mDeleteAlertDialog.getButton(
+                                AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorText));
+                        mDeleteAlertDialog.getButton(
+                                AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+                    }
+                });
+
+                mDeleteAlertDialog.show();
+            }
+        });
+    }
+
+    /**
+     * Metodo que crea un dialogo para confirmar el borrado de la cuenta.
+     */
+    private AlertDialog _createDeleteDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileUI.this, R.style.MyDialogTheme);
+
+        builder.setTitle("");
+        builder.setMessage("¿Seguro que quieres eliminar tu cuenta");
+        builder.setPositiveButton("Sí", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+            }
+        });
+
+        builder.setNegativeButton("Mejor no", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+            }
+        });
+
+        return builder.create();
     }
 
     /**

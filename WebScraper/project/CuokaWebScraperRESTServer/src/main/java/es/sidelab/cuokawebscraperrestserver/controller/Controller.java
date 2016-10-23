@@ -94,6 +94,21 @@ public class Controller
     }
     
     /**
+     * Metodo que elimina un usuario.
+     * @param id: id del usuario.
+     * @return true si ha ido correctamente.
+     */
+    @RequestMapping(value = "/users/{id}" , method = RequestMethod.DELETE)
+    public String deleteUser(@PathVariable long id)
+    {
+        LOG.info("Peticion DELETE para borrar un usuario (" + id + ")");
+        usersRepository.delete(id);
+        
+        LOG.info("Usuario (" + id + ") borrado correctamente");
+        return Properties.ACCEPTED;
+    }
+    
+    /**
      * Metodo que recibe las modificaciones de un usuario.
      * @param userModification: objeto con las modificaciones.
      * @param id: id del usuario.
