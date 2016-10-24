@@ -354,6 +354,10 @@ public class Controller
             
             if (!productsInDB.isEmpty())
             {
+                Shop s = shopsRepository.findByName(shop);                
+                s.setProducts(productsScraped.size());                
+                shopsRepository.save(s);
+                
                 // Si hay productos de esta tienda en BD, miramos que productos necesitan actualizarse o añadirse.
                 for (Product productScraped : productsScraped)
                 {
@@ -435,7 +439,7 @@ public class Controller
                 }
                 
                 // Se añade la tienda.
-                shopsRepository.save(new Shop(shop, man, woman, Calendar.getInstance(), productsScraped.size()));
+                shopsRepository.save(new Shop(shop, man, woman, productsScraped.size()));
                 
                 LOG.info("No hay ningun producto de la tienda " + shop);
                 LOG.info("Los productos se insertan directamente");

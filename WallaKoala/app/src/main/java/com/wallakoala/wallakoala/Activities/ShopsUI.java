@@ -171,7 +171,7 @@ public class ShopsUI extends AppCompatActivity
                         String name = jsonObject.getString("name");
                         int numberOfProducts = jsonObject.getInt("products");
 
-                        Shop shop = new Shop(name, false, false, Calendar.getInstance(), numberOfProducts);
+                        Shop shop = new Shop(name, false, false, numberOfProducts);
 
                         mAllShopsList.add(shop);
                     }
