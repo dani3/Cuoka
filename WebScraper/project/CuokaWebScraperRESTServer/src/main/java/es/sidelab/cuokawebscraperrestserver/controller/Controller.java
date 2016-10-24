@@ -248,6 +248,19 @@ public class Controller
     }
     
     /**
+     * Metodo que añade una tienda.
+     * @param shop: tienda a añadir.
+     * @return true si ha ido correctamente.
+     */
+    @RequestMapping(value = "/shops", method = RequestMethod.POST)
+    public String addShop(@RequestBody Shop shop)
+    {
+        shopsRepository.save(shop);
+        
+        return Properties.ACCEPTED;
+    }
+    
+    /**
      * Metodo que devuelve la lista de tiendas.
      * @param gender: sexo de la tienda.
      * @return lista de tiendas.
@@ -453,7 +466,7 @@ public class Controller
             }
             
             LOG.info(productsScraped.size() + " productos de " + shop + " insertados correctamente");        
-            LOG.info("Saliendo del metodo addShop");
+            LOG.info("Saliendo del metodo addProducts");
         };
         
         EXECUTOR.execute(task);       

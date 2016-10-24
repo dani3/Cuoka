@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Cuoka</string>
     <string name="toolbar_filter">Filtros</string>
+    <string name="toolbar_shops">Mis tiendas</string>
 
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>

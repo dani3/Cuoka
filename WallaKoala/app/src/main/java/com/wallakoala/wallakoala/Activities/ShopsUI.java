@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -66,6 +71,7 @@ public class ShopsUI extends AppCompatActivity
         setContentView(R.layout.activity_shops);
 
         _initData();
+        _initToolbar();
         _retrieveShops();
     }
 
@@ -78,7 +84,30 @@ public class ShopsUI extends AppCompatActivity
 
         mUser = mSharedPreferencesManager.retreiveUser();
 
+        mMyShopsList = new ArrayList<>();
+        mAllShopsList = new ArrayList<>();
+
         mMyShopsList.addAll(mUser.getShops());
+    }
+
+    /**
+     * Inicializacion de la Toolbar.
+     */
+    protected void _initToolbar()
+    {
+        Toolbar mToolbar = (Toolbar)findViewById(R.id.shops_toolbar);
+        TextView mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
+
+        mToolbarTextView.setText(getResources().getString(R.string.toolbar_shops));
+
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        }
     }
 
     /**
@@ -108,7 +137,6 @@ public class ShopsUI extends AppCompatActivity
         @Override
         protected Void doInBackground(String... unused)
         {
-
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
@@ -189,7 +217,7 @@ public class ShopsUI extends AppCompatActivity
         {
             findViewById(R.id.shops_loading).setVisibility(View.GONE);
 
-            if (error != null)
+            if (error == null)
             {
                 _initRecyclerView();
 
@@ -202,7 +230,7 @@ public class ShopsUI extends AppCompatActivity
                             {
                                 new RetrieveShopsFromServer().execute();
                             }
-                        });
+                        }).show();
             }
         }
     }
@@ -214,9 +242,48 @@ public class ShopsUI extends AppCompatActivity
     {
         mShopsRecyclerView = (RecyclerView)findViewById(R.id.shops_recyclerview);
 
+        mShopsRecyclerView.setVisibility(View.VISIBLE);
+
         mShopListAdapter = new ShopsListAdapter(this, mAllShopsList, mMyShopsList);
-        mShopsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mShopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mShopsRecyclerView.setAdapter(mShopListAdapter);
         mShopsRecyclerView.setHasFixedSize(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.toolbar_menu_shops, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home)
+        {
+            onBackPressed();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(RESULT_CANCELED);
+
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.left_in_animation, R.anim.left_out_animation);
     }
 }
