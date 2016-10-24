@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.75"
+        app:cardPreventCornerOverlap="false"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@android:color/white">
+
+            <com.wallakoala.wallakoala.Views.CircleView
+                android:id="@+id/shops_logo"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="16dp"
+                android:src="@color/colorAccent"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <com.wallakoala.wallakoala.Views.ExistenceTextView
+                    android:id="@+id/shops_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/footer_shop"
+                    android:textColor="@color/colorDarkerText"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:customFont="Existence-StencilLight.otf"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/shops_icon"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:tint="@color/colorText"
+                        android:src="@drawable/ic_favorite_grey"/>
+
+                    <com.wallakoala.wallakoala.Views.ExistenceTextView
+                        android:id="@+id/shops_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:text="12"
+                        android:textColor="@color/colorText"
+                        app:customFont="Existence-StencilLight.otf"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.25"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/shops_action_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/ic_add_grey"
+            android:scaleType="centerCrop"/>
+
+    </LinearLayout>
+
+</LinearLayout>

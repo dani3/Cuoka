@@ -331,7 +331,7 @@ public class RecommendedFragment extends Fragment
             jsonList.add(js);
         }
 
-        for(JSONObject jsonObject : jsonList)
+        for (JSONObject jsonObject : jsonList)
         {
             double price       = jsonObject.getDouble("1");
             String name        = jsonObject.getString("2");
@@ -344,7 +344,7 @@ public class RecommendedFragment extends Fragment
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
-            for(int i = 0; i < jsColors.length(); i++)
+            for (int i = 0; i < jsColors.length(); i++)
             {
                 JSONObject jsColor = jsColors.getJSONObject(i);
 

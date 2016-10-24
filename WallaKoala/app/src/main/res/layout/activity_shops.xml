@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shops_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <!-- Toolbar -->
     <include android:id="@+id/shops_toolbar"
         layout="@layout/aux_toolbar_filter"/>
 
+    <!-- Loading View -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/shops_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_shops_recyclerview"
+        android:id="@+id/shops_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="58dp"

@@ -413,7 +413,30 @@ public class Controller
                     }
                 } 
                 
-            } else {
+            } else {         
+                boolean woman = false;
+                boolean man = false;
+                
+                // Buscamos si tiene seccion de hombre y/o mujer.
+                for (Product productScraped : productsScraped)
+                {
+                    if (productScraped.isMan())
+                    {
+                        man = true;
+                        
+                    } else {
+                        woman = true;
+                    }
+                    
+                    if (man && woman)
+                    {
+                        break;
+                    }
+                }
+                
+                // Se añade la tienda.
+                shopsRepository.save(new Shop(shop, man, woman, Calendar.getInstance(), productsScraped.size()));
+                
                 LOG.info("No hay ningun producto de la tienda " + shop);
                 LOG.info("Los productos se insertan directamente");
                 for (Product productScraped : productsScraped)
