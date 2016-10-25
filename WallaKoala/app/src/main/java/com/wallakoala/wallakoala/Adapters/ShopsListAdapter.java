@@ -6,9 +6,13 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +35,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.ShopHolder>
 {
+    /* Constants */
+    private static final int ACTION_SHOP_ADDED   = 1;
+    private static final int ACTION_SHOP_DELETED = 2;
+
     /* Context */
     private static Context mContext;
 
@@ -55,6 +63,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         private TextView mNumberTextView;
 
         private Target mTarget;
+        private boolean mFavorite;
 
         @SuppressWarnings("deprecation")
         public ShopHolder(View itemView)
@@ -74,35 +83,47 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
          * @param shop: objeto de la tienda.
          */
         @SuppressWarnings("deprecation")
-        public void bindShop(Shop shop)
+        public void bindShop(final Shop shop)
         {
             String logoFile = shop.getName() + "-logo.jpg";
             String fixedUrl = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
 
-            boolean isFavorite = false;
+            // Comprobamos si la tienda es favorita.
+            mFavorite = false;
             for (String name : mMyShopsList)
             {
                 if (shop.getName().equals(name))
                 {
-                    isFavorite = true;
+                    mFavorite = true;
                     break;
                 }
             }
 
-            mShopLogoSelectedImageView.setVisibility((isFavorite) ? View.VISIBLE : View.INVISIBLE);
+            mActionImageButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    _actionPerformed((mFavorite) ? ACTION_SHOP_DELETED : ACTION_SHOP_ADDED, shop);
+                }
+            });
 
-            mActionImageButton.setImageDrawable((isFavorite) ? mTrashDrawable : mAddDrawable);
-            mFavOrNumberImageView.setImageDrawable((isFavorite) ? mFavoriteDrawable : mClotheDrawable);
-
-            mNumberTextView.setText((isFavorite) ? "12" : Integer.toString(shop.getProducts()));
+            // Mostramos/ocultamos el aro de seleccionamos
+            mShopLogoSelectedImageView.setVisibility((mFavorite) ? View.VISIBLE : View.INVISIBLE);
+            // Mostramos el icono de añadir/eliminar
+            mActionImageButton.setImageDrawable((mFavorite) ? mTrashDrawable : mAddDrawable);
+            // Mostramos el icono de la seccion/corazon
+            mFavOrNumberImageView.setImageDrawable((mFavorite) ? mFavoriteDrawable : mClotheDrawable);
+            // Mostramos el numero de favoritos/total de productos de la tienda
+            mNumberTextView.setText((mFavorite) ? "12" : Integer.toString(shop.getProducts()));
 
             // Aplicamos un tinte al icono
             Drawable drawable = mActionImageButton.getDrawable();
             drawable = DrawableCompat.wrap(drawable);
             DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.colorMediumText));
-
             DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
 
+            // Establecemos el nombre de la tienda
             mNameTextView.setText(shop.getName().toUpperCase());
 
             mTarget = new Target()
@@ -132,6 +153,25 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             Picasso.with(mContext)
                    .load(fixedUrl)
                    .into(mTarget);
+        }
+
+        /**
+         * Metodo que borra/añade una tienda y realiza las animaciones.
+         * @param action: accion realizada por el usuario.
+         */
+        private void _actionPerformed(int action, final Shop shop)
+        {
+            final boolean actionDeleted = (action == ACTION_SHOP_DELETED);
+
+            if (actionDeleted)
+            {
+                mMyShopsList.remove(shop.getName());
+                mFavorite = false;
+
+            } else {
+                mMyShopsList.add(shop.getName());
+                mFavorite = true;
+            }
         }
 
     } /* [END ViewHolder] */

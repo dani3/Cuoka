@@ -26,6 +26,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="58dp"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:paddingBottom="128dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="24dp"
+        app:borderWidth="0dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

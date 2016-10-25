@@ -206,7 +206,7 @@ public class MainScreenUI extends AppCompatActivity
         name.setText(user.getName());
         email.setText(user.getEmail());
 
-        // Establecemos la imagen del usuario en funcion del sexo
+        // Establecemos la imagen del usuario en funcion del genero.
         final CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
