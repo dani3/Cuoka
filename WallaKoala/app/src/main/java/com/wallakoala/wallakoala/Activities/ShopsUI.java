@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ShopsListAdapter;
 import com.wallakoala.wallakoala.Beans.Shop;
 import com.wallakoala.wallakoala.Beans.User;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -107,6 +109,22 @@ public class ShopsUI extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        }
+    }
+
+    /**
+     * Metodo que precarga los logos de las tiendas.
+     */
+    private void _fetchImages()
+    {
+        for (Shop shop : mAllShopsList)
+        {
+            String logoFile = shop.getName() + "-logo.jpg";
+            String fixedUrl = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
+
+            Picasso.with(this)
+                   .load(fixedUrl)
+                   .fetch();
         }
     }
 
@@ -203,6 +221,10 @@ public class ShopsUI extends AppCompatActivity
 
                         mAllShopsList.add(shop);
                     }
+
+                    Collections.sort(mAllShopsList);
+
+                    _fetchImages();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

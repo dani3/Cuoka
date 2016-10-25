@@ -2,7 +2,9 @@ package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,10 +38,16 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     private static List<Shop> mAllShopsList;
     private static List<String> mMyShopsList;
 
+    private static Drawable mTrashDrawable;
+    private static Drawable mAddDrawable;
+    private static Drawable mFavoriteDrawable;
+    private static Drawable mClotheDrawable;
+
     /* [BEGIN ViewHolder] */
     public static class ShopHolder extends RecyclerView.ViewHolder
     {
         private CircleImageView mShopLogoImageView;
+        private CircleImageView mShopLogoSelectedImageView;
         private ImageButton mActionImageButton;
         private ImageView mFavOrNumberImageView;
 
@@ -48,25 +56,52 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
 
         private Target mTarget;
 
+        @SuppressWarnings("deprecation")
         public ShopHolder(View itemView)
         {
             super(itemView);
 
-            mShopLogoImageView    = (CircleImageView)itemView.findViewById(R.id.shops_logo);
-            mActionImageButton    = (ImageButton)itemView.findViewById(R.id.shops_action_button);
-            mFavOrNumberImageView = (ImageView)itemView.findViewById(R.id.shops_icon);
-            mNameTextView         = (TextView)itemView.findViewById(R.id.shops_name);
-            mNumberTextView       = (TextView)itemView.findViewById(R.id.shops_number);
+            mShopLogoImageView         = (CircleImageView)itemView.findViewById(R.id.shops_logo);
+            mShopLogoSelectedImageView = (CircleImageView)itemView.findViewById(R.id.shops_logo_selected);
+            mActionImageButton         = (ImageButton)itemView.findViewById(R.id.shops_action_button);
+            mFavOrNumberImageView      = (ImageView)itemView.findViewById(R.id.shops_icon);
+            mNameTextView              = (TextView)itemView.findViewById(R.id.shops_name);
+            mNumberTextView            = (TextView)itemView.findViewById(R.id.shops_number);
         }
 
         /**
          * Metodo llamado cuando se va a mostrar el item.
          * @param shop: objeto de la tienda.
          */
+        @SuppressWarnings("deprecation")
         public void bindShop(Shop shop)
         {
             String logoFile = shop.getName() + "-logo.jpg";
             String fixedUrl = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
+
+            boolean isFavorite = false;
+            for (String name : mMyShopsList)
+            {
+                if (shop.getName().equals(name))
+                {
+                    isFavorite = true;
+                    break;
+                }
+            }
+
+            mShopLogoSelectedImageView.setVisibility((isFavorite) ? View.VISIBLE : View.INVISIBLE);
+
+            mActionImageButton.setImageDrawable((isFavorite) ? mTrashDrawable : mAddDrawable);
+            mFavOrNumberImageView.setImageDrawable((isFavorite) ? mFavoriteDrawable : mClotheDrawable);
+
+            mNumberTextView.setText((isFavorite) ? "12" : Integer.toString(shop.getProducts()));
+
+            // Aplicamos un tinte al icono
+            Drawable drawable = mActionImageButton.getDrawable();
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.colorMediumText));
+
+            DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
 
             mNameTextView.setText(shop.getName().toUpperCase());
 
@@ -107,11 +142,17 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
      * @param allShopsList: lista con todas las tiendas.
      * @param myShopsList: lista de tiendas del usuario.
      */
+    @SuppressWarnings("deprecation")
     public ShopsListAdapter(Context context, List<Shop> allShopsList, List<String> myShopsList)
     {
         mContext = context;
         mAllShopsList = allShopsList;
         mMyShopsList = myShopsList;
+
+        mTrashDrawable    = mContext.getResources().getDrawable(R.drawable.ic_trash);
+        mAddDrawable      = mContext.getResources().getDrawable(R.drawable.ic_add_grey);
+        mFavoriteDrawable = mContext.getResources().getDrawable(R.drawable.ic_favorite_grey);
+        mClotheDrawable   = mContext.getResources().getDrawable(R.drawable.ic_shirt);
     }
 
     @Override

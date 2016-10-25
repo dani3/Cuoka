@@ -1,13 +1,11 @@
 package com.wallakoala.wallakoala.Beans;
 
-import java.util.Calendar;
-
 /**
  * Clase que representa una tienda.
  * Created by Daniel Mancebo Aldea on 24/10/2016.
  */
 
-public class Shop
+public class Shop implements Comparable<Shop>
 {
     private String name;
     private boolean man;
@@ -46,6 +44,12 @@ public class Shop
     }
     public void setProducts(int products) {
         this.products = products;
+    }
+
+    @Override
+    public int compareTo(Shop o)
+    {
+        return this.name.compareTo(o.name);
     }
 }
 
