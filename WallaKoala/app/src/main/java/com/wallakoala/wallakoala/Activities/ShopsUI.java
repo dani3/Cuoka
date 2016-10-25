@@ -6,7 +6,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,8 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -205,6 +202,7 @@ public class ShopsUI extends AppCompatActivity
                 {
                     List<JSONObject> jsonList = new ArrayList<>();
 
+                    // Sacamos cada JSON (tienda).
                     for (int j = 0; j < content.length(); j++)
                     {
                         JSONObject js = content.getJSONObject(j);
@@ -212,6 +210,7 @@ public class ShopsUI extends AppCompatActivity
                         jsonList.add(js);
                     }
 
+                    // Parseamos el JSON manualmente.
                     for (JSONObject jsonObject : jsonList)
                     {
                         String name = jsonObject.getString("name");
@@ -222,8 +221,9 @@ public class ShopsUI extends AppCompatActivity
                         mAllShopsList.add(shop);
                     }
 
+                    // Ordenamos alfabeticamente.
                     Collections.sort(mAllShopsList);
-
+                    // Precargamos los logos.
                     _fetchImages();
 
                 } catch (JSONException e) {

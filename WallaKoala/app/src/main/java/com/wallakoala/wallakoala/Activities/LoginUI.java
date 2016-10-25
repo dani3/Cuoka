@@ -483,6 +483,9 @@ public class LoginUI extends AppCompatActivity
                     startActivity(intent);
 
                     finish();
+
+                    // Animacion de transicion para pasar de una activity a otra.
+                    overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
                 }
 
                 // Validamos los datos introducidos y comprobamos que no estemos ya cargando.
@@ -643,6 +646,9 @@ public class LoginUI extends AppCompatActivity
                             startActivity(intent);
 
                             finish();
+
+                            // Animacion de transicion para pasar de una activity a otra.
+                            overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
