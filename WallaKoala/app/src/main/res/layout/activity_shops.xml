@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="58dp"
         android:scrollbars="none"
-        android:paddingBottom="128dp"/>
+        android:paddingBottom="108dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

@@ -163,6 +163,39 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         {
             final boolean actionDeleted = (action == ACTION_SHOP_DELETED);
 
+            Animation implode = AnimationUtils.loadAnimation(mContext, R.anim.implode_animation);
+            final Animation explode = AnimationUtils.loadAnimation(mContext, R.anim.explode_animation);
+
+            implode.setAnimationListener(new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    mShopLogoSelectedImageView.setVisibility((!actionDeleted) ? View.VISIBLE : View.INVISIBLE);
+
+                    // Mostramos el icono de añadir/eliminar
+                    mActionImageButton.setImageDrawable((!actionDeleted) ? mTrashDrawable : mAddDrawable);
+                    // Mostramos el icono de la seccion/corazon
+                    mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
+                    // Mostramos el numero de favoritos/total de productos de la tienda
+                    mNumberTextView.setText((!actionDeleted) ? "12" : Integer.toString(shop.getProducts()));
+
+                    mActionImageButton.startAnimation(explode);
+                    mFavOrNumberImageView.startAnimation(explode);
+                    mNumberTextView.startAnimation(explode);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            mActionImageButton.startAnimation(implode);
+            mNumberTextView.startAnimation(implode);
+            mFavOrNumberImageView.startAnimation(implode);
+
             if (actionDeleted)
             {
                 mMyShopsList.remove(shop.getName());

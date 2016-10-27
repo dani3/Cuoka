@@ -220,7 +220,7 @@ public class ProfileUI extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileUI.this, R.style.MyDialogTheme);
 
         builder.setTitle("");
-        builder.setMessage("¿Seguro que quieres eliminar tu cuenta");
+        builder.setMessage("¿Seguro que quieres eliminar tu cuenta?");
         builder.setPositiveButton("Sí", new DialogInterface.OnClickListener()
         {
             @Override
