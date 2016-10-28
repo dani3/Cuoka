@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -206,7 +207,7 @@ public class MainScreenUI extends AppCompatActivity
         name.setText(user.getName());
         email.setText(user.getEmail());
 
-        // Establecemos la imagen del usuario en funcion del genero.
+        // Establecemos la imagen del usuario en funcion del sexo.
         final CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
@@ -407,6 +408,14 @@ public class MainScreenUI extends AppCompatActivity
         mi.setTitle(mNewTitle);
     }
 
+    /**
+     * Metodo llamado desde un fragmento para abrir la pantalla de las tiendas.
+     */
+    public void createIntent()
+    {
+        _openActivityShops();
+    }
+
     @Override
     public void onBackPressed()
     {
@@ -554,6 +563,12 @@ public class MainScreenUI extends AppCompatActivity
                 TextView email = (TextView)navHeader.findViewById(R.id.email);
                 name.setText(user.getName());
                 email.setText(user.getEmail());
+
+            } else if (requestCode == MANAGE_SHOPS_REQUEST) {
+                mViewPager.setCurrentItem(1);
+
+                mProductsFragment.restart();
+                mRecommendedFragment.restart();
             }
         }
     }

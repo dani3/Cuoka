@@ -15,9 +15,13 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -29,6 +33,88 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    public static boolean sendShops(Context context, List<String> listOfShops)
+    {
+        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final User user = mSharedPreferencesManager.retreiveUser();
+        final long id = user.getId();
+
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops/" + id);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para añadir las tiendas");
+
+        // Creamos el JSON con la lista de las tiendas.
+        final JSONArray jsonArray = new JSONArray();
+        for (String shop : listOfShops)
+        {
+            jsonArray.put(shop);
+        }
+
+        Log.d(Properties.TAG, "JSON con las tiendas:\n    " + jsonArray.toString());
+
+        RequestFuture<String> future = RequestFuture.newFuture();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST
+                , fixedURL
+                , future
+                , future)
+                {
+                    @Override
+                    public byte[] getBody() throws AuthFailureError
+                    {
+                        return jsonArray.toString().getBytes();
+                    }
+
+                    @Override
+                    public String getBodyContentType()
+                    {
+                        return "application/json";
+                    }
+                };
+
+        // Enviamos la peticion.
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+
+        try
+        {
+            String response = future.get(20, TimeUnit.SECONDS);
+
+            Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+            if (response.equals(Properties.ACCEPTED))
+            {
+                Log.d(Properties.TAG, "Tiendas actualizadas correctamente");
+
+                // Metemos las tiendas en un Set
+                Set<String> shopSet = new HashSet<>();
+                for (String shop : listOfShops)
+                {
+                    shopSet.add(shop);
+                }
+
+                // Guardamos el conjunto de tiendas en las preferencias.
+                user.setShops(shopSet);
+                mSharedPreferencesManager.insertUser(user);
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            Log.d(Properties.TAG, "Error borrando usuario: " + e.getMessage());
+
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Metodo que borra la cuenta del usuario.
+     * @param context: contexto
+     * @return true si se ha borrado correctamente.
+     */
     public static boolean deleteUser(Context context)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);

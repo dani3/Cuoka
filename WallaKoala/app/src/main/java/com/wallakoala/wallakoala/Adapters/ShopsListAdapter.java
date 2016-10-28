@@ -2,9 +2,7 @@ package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -233,6 +231,15 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         mRoundedGrey      = mContext.getResources().getDrawable(R.drawable.rounded_button_grey);
         mFavoriteDrawable = mContext.getResources().getDrawable(R.drawable.ic_favorite_grey);
         mClotheDrawable   = mContext.getResources().getDrawable(R.drawable.ic_shirt);
+    }
+
+    /**
+     * Metodo que devuelve la lista tiendas marcadas por el usuario.
+     * @return lista de tiendas.
+     */
+    public List<String> getListOfShops()
+    {
+        return mMyShopsList;
     }
 
     @Override

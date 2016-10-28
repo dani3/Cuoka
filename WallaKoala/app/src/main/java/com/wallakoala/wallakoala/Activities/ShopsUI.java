@@ -1,8 +1,11 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,6 +26,7 @@ import com.wallakoala.wallakoala.Beans.Shop;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -55,6 +59,9 @@ public class ShopsUI extends AppCompatActivity
     /* SharedPreferences */
     protected SharedPreferencesManager mSharedPreferencesManager;
 
+    /* FAB */
+    protected FloatingActionButton mAcceptFAB;
+
     /* Data */
     protected List<Shop> mAllShopsList;
     protected List<String> mMyShopsList;
@@ -72,6 +79,7 @@ public class ShopsUI extends AppCompatActivity
         _initData();
         _initToolbar();
         _retrieveShops();
+        _initFloatingButton();
     }
 
     /**
@@ -270,6 +278,73 @@ public class ShopsUI extends AppCompatActivity
         mShopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mShopsRecyclerView.setAdapter(mShopListAdapter);
         mShopsRecyclerView.setHasFixedSize(true);
+    }
+
+    /**
+     * Metodo que inicializa el FAB para aceptar la seleccion.
+     */
+    private void _initFloatingButton()
+    {
+        mAcceptFAB = (FloatingActionButton)findViewById(R.id.shops_accept);
+
+        mAcceptFAB.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                new SendShopsToServer().execute();
+            }
+        });
+    }
+
+    /**
+     * Tarea en segundo plano que envia la seleccion de tiendas al servidor.
+     */
+    private class SendShopsToServer extends AsyncTask<String, Void, Void>
+    {
+        ProgressDialog progressDialog;
+
+        boolean correct;
+
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog = ProgressDialog.show(ShopsUI.this, "", "Realizando cambios...", true);
+        }
+
+        @Override
+        protected Void doInBackground(String... unused)
+        {
+            correct = RestClientSingleton.sendShops(ShopsUI.this, mShopListAdapter.getListOfShops());
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            progressDialog.dismiss();
+
+            if (correct)
+            {
+                Intent intent = new Intent();
+
+                setResult(RESULT_OK, intent);
+
+                finish();
+
+            } else {
+                Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Reintentar", new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mAcceptFAB.performClick();
+                            }
+                        }).show();
+            }
+        }
     }
 
     @Override

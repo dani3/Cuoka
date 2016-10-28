@@ -242,7 +242,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     mProductImageView.getLayoutParams().height =
                             (int) (mProductImageView.getWidth() * mProduct.getAspectRatio());
 
-                    // Establecemos un color de fondo aleatorio y un 25% de opacidad.
+                    // Establecemos un color de fondo y un 25% de opacidad.
                     mProductImageView.setBackgroundColor(
                             mContext.getResources().getColor(R.color.colorAccent));
                     mProductImageView.setAlpha(0.25f);

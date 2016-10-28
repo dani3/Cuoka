@@ -187,6 +187,9 @@ public class RecommendedFragment extends Fragment
         }
     }
 
+    /**
+     * Tarea en segundo plano que se conecta al servidor para traer las recomendaciones
+     */
     private class ConnectToServer extends AsyncTask<String, Void, Void>
     {
         private JSONArray content = null;
@@ -468,6 +471,26 @@ public class RecommendedFragment extends Fragment
                     .setDuration(0)
                     .scaleX(reduction)
                     .scaleY(reduction);
+        }
+    }
+
+    /**
+     * Metodo que reinicia la pantalla ya que se han realizado cambios.
+     */
+    public void restart()
+    {
+        _initData();
+
+        // Ocultamos el RecyclerView
+        if (mProductsRecyclerView != null)
+        {
+            mProductsRecyclerView.setVisibility(View.GONE);
+        }
+
+        // Si el usuario no tiene ninguna tienda,
+        if (mUser.getShops().isEmpty())
+        {
+            mLoadingView.setVisibility(View.GONE);
         }
     }
 }
