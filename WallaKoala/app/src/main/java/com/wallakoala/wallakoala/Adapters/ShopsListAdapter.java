@@ -6,14 +6,15 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.Shop;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.util.List;
@@ -46,8 +48,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     private static List<Shop> mAllShopsList;
     private static List<String> mMyShopsList;
 
-    private static Drawable mTrashDrawable;
-    private static Drawable mAddDrawable;
+    private static Drawable mRoundedAccent;
+    private static Drawable mRoundedGrey;
     private static Drawable mFavoriteDrawable;
     private static Drawable mClotheDrawable;
 
@@ -55,8 +57,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     public static class ShopHolder extends RecyclerView.ViewHolder
     {
         private CircleImageView mShopLogoImageView;
-        private CircleImageView mShopLogoSelectedImageView;
-        private ImageButton mActionImageButton;
+        private Button mActionButton;
         private ImageView mFavOrNumberImageView;
 
         private TextView mNameTextView;
@@ -70,12 +71,13 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         {
             super(itemView);
 
-            mShopLogoImageView         = (CircleImageView)itemView.findViewById(R.id.shops_logo);
-            mShopLogoSelectedImageView = (CircleImageView)itemView.findViewById(R.id.shops_logo_selected);
-            mActionImageButton         = (ImageButton)itemView.findViewById(R.id.shops_action_button);
-            mFavOrNumberImageView      = (ImageView)itemView.findViewById(R.id.shops_icon);
-            mNameTextView              = (TextView)itemView.findViewById(R.id.shops_name);
-            mNumberTextView            = (TextView)itemView.findViewById(R.id.shops_number);
+            mShopLogoImageView    = (CircleImageView)itemView.findViewById(R.id.shops_logo);
+            mActionButton         = (Button)itemView.findViewById(R.id.shops_action_button);
+            mFavOrNumberImageView = (ImageView)itemView.findViewById(R.id.shops_icon);
+            mNameTextView         = (TextView)itemView.findViewById(R.id.shops_name);
+            mNumberTextView       = (TextView)itemView.findViewById(R.id.shops_number);
+
+            mActionButton.setTypeface(TypeFaceSingleton.getTypeFace(mContext, "Existence-StencilLight.otf"));
         }
 
         /**
@@ -99,7 +101,13 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 }
             }
 
-            mActionImageButton.setOnClickListener(new View.OnClickListener()
+            // Cambiamos el color y el texto del boton para seguir las tiendas.
+            mActionButton.setBackgroundDrawable((mFavorite) ? mRoundedAccent : mRoundedGrey);
+            mActionButton.setText((mFavorite) ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
+            mActionButton.setTextColor((mFavorite)
+                    ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
+
+            mActionButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -108,22 +116,12 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 }
             });
 
-            // Mostramos/ocultamos el aro de seleccionamos
-            mShopLogoSelectedImageView.setVisibility((mFavorite) ? View.VISIBLE : View.INVISIBLE);
-            // Mostramos el icono de añadir/eliminar
-            mActionImageButton.setImageDrawable((mFavorite) ? mTrashDrawable : mAddDrawable);
-            // Mostramos el icono de la seccion/corazon
+            // Mostramos el icono de la seccion/corazon.
             mFavOrNumberImageView.setImageDrawable((mFavorite) ? mFavoriteDrawable : mClotheDrawable);
             // Mostramos el numero de favoritos/total de productos de la tienda
             mNumberTextView.setText((mFavorite) ? "12" : Integer.toString(shop.getProducts()));
 
-            // Aplicamos un tinte al icono
-            Drawable drawable = mActionImageButton.getDrawable();
-            drawable = DrawableCompat.wrap(drawable);
-            DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.colorMediumText));
-            DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
-
-            // Establecemos el nombre de la tienda
+            // Establecemos el nombre de la tienda.
             mNameTextView.setText(shop.getName().toUpperCase());
 
             mTarget = new Target()
@@ -132,6 +130,11 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
                     mShopLogoImageView.setImageBitmap(bitmap);
+
+                    Animation fadeOut = new AlphaAnimation(0, 1);
+                    fadeOut.setInterpolator(new AccelerateInterpolator());
+                    fadeOut.setDuration(250);
+                    mShopLogoImageView.startAnimation(fadeOut);
                 }
 
                 @Override
@@ -152,6 +155,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
 
             Picasso.with(mContext)
                    .load(fixedUrl)
+                   .noFade()
                    .into(mTarget);
         }
 
@@ -159,6 +163,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
          * Metodo que borra/añade una tienda y realiza las animaciones.
          * @param action: accion realizada por el usuario.
          */
+        @SuppressWarnings("deprecation")
         private void _actionPerformed(int action, final Shop shop)
         {
             final boolean actionDeleted = (action == ACTION_SHOP_DELETED);
@@ -174,16 +179,18 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 @Override
                 public void onAnimationEnd(Animation animation)
                 {
-                    mShopLogoSelectedImageView.setVisibility((!actionDeleted) ? View.VISIBLE : View.INVISIBLE);
+                    // Cambiamos el color y el texto del boton para seguir las tiendas.
+                    mActionButton.setBackgroundDrawable((mFavorite) ? mRoundedAccent : mRoundedGrey);
+                    mActionButton.setText((mFavorite) ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
+                    mActionButton.setTextColor((mFavorite)
+                            ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
 
-                    // Mostramos el icono de añadir/eliminar
-                    mActionImageButton.setImageDrawable((!actionDeleted) ? mTrashDrawable : mAddDrawable);
                     // Mostramos el icono de la seccion/corazon
                     mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
                     // Mostramos el numero de favoritos/total de productos de la tienda
                     mNumberTextView.setText((!actionDeleted) ? "12" : Integer.toString(shop.getProducts()));
 
-                    mActionImageButton.startAnimation(explode);
+                    mActionButton.startAnimation(explode);
                     mFavOrNumberImageView.startAnimation(explode);
                     mNumberTextView.startAnimation(explode);
                 }
@@ -192,7 +199,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 public void onAnimationRepeat(Animation animation) {}
             });
 
-            mActionImageButton.startAnimation(implode);
+            mActionButton.startAnimation(implode);
             mNumberTextView.startAnimation(implode);
             mFavOrNumberImageView.startAnimation(implode);
 
@@ -222,8 +229,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         mAllShopsList = allShopsList;
         mMyShopsList = myShopsList;
 
-        mTrashDrawable    = mContext.getResources().getDrawable(R.drawable.ic_trash);
-        mAddDrawable      = mContext.getResources().getDrawable(R.drawable.ic_add_grey);
+        mRoundedAccent    = mContext.getResources().getDrawable(R.drawable.rounded_button);
+        mRoundedGrey      = mContext.getResources().getDrawable(R.drawable.rounded_button_grey);
         mFavoriteDrawable = mContext.getResources().getDrawable(R.drawable.ic_favorite_grey);
         mClotheDrawable   = mContext.getResources().getDrawable(R.drawable.ic_shirt);
     }
