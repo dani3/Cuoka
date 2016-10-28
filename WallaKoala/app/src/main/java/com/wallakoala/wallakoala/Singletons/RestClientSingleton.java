@@ -7,11 +7,13 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
+import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -33,6 +35,54 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    public static List<Product> getFavoriteProducts(Context context)
+    {
+        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final User user = mSharedPreferencesManager.retreiveUser();
+        final long id = user.getId();
+
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/favorites/" + id);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para otener los productos favoritos");
+
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+
+        // Creamos una peticion
+        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                    , fixedURL
+                                                    , null
+                                                    , future
+                                                    , future);
+
+        // La mandamos a la cola de peticiones
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+        try
+        {
+            JSONArray response = future.get(20, TimeUnit.SECONDS);
+
+            return JSONParser.convertJSONtoProduct(response);
+
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            Log.d(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
+
+            return null;
+
+        } catch (JSONException e) {
+            Log.d(Properties.TAG, "Error parseando los productos: " + e.getMessage());
+
+            return null;
+        }
+    }
+
+    /**
+     * Metodo que envia la lista de tiendas del usuario.
+     * @param context: contexto.
+     * @param listOfShops: lista de tiendas a enviar.
+     * @return true si se han enviado correctamente.
+     */
     public static boolean sendShops(Context context, List<String> listOfShops)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);

@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ShopsListAdapter;
+import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.Shop;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -65,6 +66,7 @@ public class ShopsUI extends AppCompatActivity
     /* Data */
     protected List<Shop> mAllShopsList;
     protected List<String> mMyShopsList;
+    protected List<Product> mFavoriteList;
 
     /* User */
     protected User mUser;
@@ -78,7 +80,7 @@ public class ShopsUI extends AppCompatActivity
 
         _initData();
         _initToolbar();
-        _retrieveShops();
+        _getDataFromServer();
         _initFloatingButton();
     }
 
@@ -134,17 +136,17 @@ public class ShopsUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que llama al servidor para traer la lista de tiendas.
+     * Metodo que llama al servidor para traer la lista de tiendas y de favoritos.
      */
-    private void _retrieveShops()
+    private void _getDataFromServer()
     {
-        new RetrieveShopsFromServer().execute();
+        new RetrieveDataFromServer().execute();
     }
 
     /**
-     * Tarea en segundo plano que trae la lista de tiendas del servidor.
+     * Tarea en segundo plano que trae la lista de tiendas y de favoritos del servidor.
      */
-    private class RetrieveShopsFromServer extends AsyncTask<String, Void, Void>
+    private class RetrieveDataFromServer extends AsyncTask<String, Void, Void>
     {
         private JSONArray content = null;
         private String error = null;
@@ -229,6 +231,13 @@ public class ShopsUI extends AppCompatActivity
                         mAllShopsList.add(shop);
                     }
 
+                    mFavoriteList = RestClientSingleton.getFavoriteProducts(ShopsUI.this);
+
+                    if (mFavoriteList == null)
+                    {
+                        error = "Error al obtener los productos favoritos";
+                    }
+
                     // Ordenamos alfabeticamente.
                     Collections.sort(mAllShopsList);
                     // Precargamos los logos.
@@ -258,7 +267,7 @@ public class ShopsUI extends AppCompatActivity
                             @Override
                             public void onClick(View v)
                             {
-                                new RetrieveShopsFromServer().execute();
+                                new RetrieveDataFromServer().execute();
                             }
                         }).show();
             }
@@ -274,7 +283,7 @@ public class ShopsUI extends AppCompatActivity
 
         mShopsRecyclerView.setVisibility(View.VISIBLE);
 
-        mShopListAdapter = new ShopsListAdapter(this, mAllShopsList, mMyShopsList);
+        mShopListAdapter = new ShopsListAdapter(this, mAllShopsList, mMyShopsList, mFavoriteList);
         mShopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mShopsRecyclerView.setAdapter(mShopListAdapter);
         mShopsRecyclerView.setHasFixedSize(true);

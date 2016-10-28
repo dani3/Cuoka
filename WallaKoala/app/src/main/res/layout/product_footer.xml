@@ -49,7 +49,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="5dp"
             android:text="@string/product_info_price"
-            android:textSize="11dp"
+            android:textSize="14dp"
             android:background="@drawable/button_relief"
             android:textColor="@android:color/white"
             android:layout_alignParentBottom="true"

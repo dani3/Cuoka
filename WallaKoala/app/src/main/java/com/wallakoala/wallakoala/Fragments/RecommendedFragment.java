@@ -24,6 +24,7 @@ import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -293,7 +294,7 @@ public class RecommendedFragment extends Fragment
             {
                 Log.d(Properties.TAG, "Tamano en bytes: " + (content.toString().getBytes().length / 1000) + "kB");
 
-                _convertJSONtoProduct(content);
+                mProductList = JSONParser.convertJSONtoProduct(content);
 
             } catch (Exception e) {
                 error = e.getMessage();
@@ -314,64 +315,6 @@ public class RecommendedFragment extends Fragment
             } else {
                 // Se han cargado los productos correctamente
                 _loading(false, true);
-            }
-        }
-    }
-
-    /**
-     * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's.
-     * @param jsonArray: lista de JSON a convertir.
-     * @throws JSONException
-     */
-    private void _convertJSONtoProduct(final JSONArray jsonArray) throws JSONException
-    {
-        List<JSONObject> jsonList = new ArrayList<>();
-
-        for (int j = 0; j < jsonArray.length(); j++)
-        {
-            JSONObject js = jsonArray.getJSONObject(j);
-
-            jsonList.add(js);
-        }
-
-        for (JSONObject jsonObject : jsonList)
-        {
-            double price       = jsonObject.getDouble("1");
-            String name        = jsonObject.getString("2");
-            String shop        = jsonObject.getString("3");
-            String section     = jsonObject.getString("4");
-            String link        = jsonObject.getString("5");
-            String description = jsonObject.getString("7");
-            long id            = jsonObject.getLong("8");
-            float aspectRation = (float) jsonObject.getDouble("9");
-
-            JSONArray jsColors = jsonObject.getJSONArray("6");
-            List<ColorVariant> colors = new ArrayList<>();
-            for (int i = 0; i < jsColors.length(); i++)
-            {
-                JSONObject jsColor = jsColors.getJSONObject(i);
-
-                String reference = jsColor.getString("1");
-                String colorName = jsColor.getString("2");
-                String colorPath = jsColor.getString("4");
-                short numerOfImages = (short)jsColor.getInt("3");
-
-                colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
-            }
-
-            Product product = new Product(id
-                                    , name
-                                    , shop
-                                    , section
-                                    , price
-                                    , aspectRation
-                                    , link
-                                    , description
-                                    , colors);
-
-            if (product.isOkay())
-            {
-                mProductList.add(product);
             }
         }
     }

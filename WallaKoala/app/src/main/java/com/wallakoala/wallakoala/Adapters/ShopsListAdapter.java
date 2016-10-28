@@ -18,13 +18,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.Shop;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Utils.Utils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,6 +48,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     /* Data */
     private static List<Shop> mAllShopsList;
     private static List<String> mMyShopsList;
+    private static Map<String, Integer> mFavoriteMap;
 
     private static Drawable mRoundedAccent;
     private static Drawable mRoundedGrey;
@@ -117,7 +121,9 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             // Mostramos el icono de la seccion/corazon.
             mFavOrNumberImageView.setImageDrawable((mFavorite) ? mFavoriteDrawable : mClotheDrawable);
             // Mostramos el numero de favoritos/total de productos de la tienda
-            mNumberTextView.setText((mFavorite) ? "12" : Integer.toString(shop.getProducts()));
+            int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
+            mNumberTextView.setText(
+                    (mFavorite) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
             // Establecemos el nombre de la tienda.
             mNameTextView.setText(shop.getName().toUpperCase());
@@ -186,7 +192,9 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                     // Mostramos el icono de la seccion/corazon
                     mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
                     // Mostramos el numero de favoritos/total de productos de la tienda
-                    mNumberTextView.setText((!actionDeleted) ? "12" : Integer.toString(shop.getProducts()));
+                    int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
+                    mNumberTextView.setText(
+                            (!actionDeleted) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
                     mActionButton.startAnimation(explode);
                     mFavOrNumberImageView.startAnimation(explode);
@@ -221,11 +229,27 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
      * @param myShopsList: lista de tiendas del usuario.
      */
     @SuppressWarnings("deprecation")
-    public ShopsListAdapter(Context context, List<Shop> allShopsList, List<String> myShopsList)
+    public ShopsListAdapter(Context context
+                    , List<Shop> allShopsList
+                    , List<String> myShopsList
+                    , List<Product> favoriteList)
     {
         mContext = context;
         mAllShopsList = allShopsList;
         mMyShopsList = myShopsList;
+
+        mFavoriteMap = new HashMap<>();
+
+        // Metemos en un mapa el numero de favoritos que tiene el usuario por tienda.
+        for (Product product : favoriteList)
+        {
+            if (mFavoriteMap.containsKey(product.getShop()))
+            {
+                mFavoriteMap.put(product.getShop(), mFavoriteMap.get(product.getShop()) + 1);
+            } else {
+                mFavoriteMap.put(product.getShop(), 1);
+            }
+        }
 
         mRoundedAccent    = mContext.getResources().getDrawable(R.drawable.rounded_button);
         mRoundedGrey      = mContext.getResources().getDrawable(R.drawable.rounded_button_grey);

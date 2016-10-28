@@ -222,6 +222,34 @@ public class Controller
     }
     
     /**
+     * Metodo que devuelve los productos favoritos de un usuario.
+     * @param id: id del usuario.
+     * @return lista de productos favoritos.
+     */
+    @RequestMapping(value = "/favorites/{id}", method = RequestMethod.GET)
+    public List<Product> getFavoriteProducts(@PathVariable long id)
+    {
+        LOG.info("Peticion GET para obtener los productos favoritos del usuario con ID: " + id);
+        
+        User user = usersRepository.findOne(id);
+        
+        if (user == null)
+        {
+            LOG.info("No se encuentra el usuario");
+            
+            return new ArrayList<>();
+        }
+        
+        List<Product> productList = new ArrayList<>();
+        for (long productId : user.getFavoriteProducts())
+        {
+            productList.add(productsRepository.findOne(productId));
+        }
+        
+        return productList;
+    }
+    
+    /**
      * Metodo que añade las tiendas favoritas de un usuario.
      * @param id: id del usuario.
      * @param shops: lista de tiendas favoritas.
@@ -313,7 +341,7 @@ public class Controller
                 break;
                 
             case Properties.ACTION_FAVORITE:
-                if (! user.getFavoriteProducts().contains(productId))
+                if (!user.getFavoriteProducts().contains(productId))
                 {
                     LOG.info("Producto (" + productId + ") anadido a favoritos");
                     user.addToFavoriteProducts(productId);

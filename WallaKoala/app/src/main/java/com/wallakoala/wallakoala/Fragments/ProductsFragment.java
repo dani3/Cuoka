@@ -1295,7 +1295,6 @@ public class ProductsFragment extends Fragment
      */
     public void restart()
     {
-        _noData(false);
         _initData();
 
         // Ocultamos el RecyclerView
