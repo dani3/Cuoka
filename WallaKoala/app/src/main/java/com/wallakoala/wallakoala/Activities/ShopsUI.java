@@ -323,7 +323,12 @@ public class ShopsUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            progressDialog = ProgressDialog.show(ShopsUI.this, "", "Realizando cambios...", true);
+            progressDialog = new ProgressDialog(ShopsUI.this, R.style.MyDialogTheme);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Realizando cambios...");
+            progressDialog.setIndeterminate(true);
+
+            progressDialog.show();
         }
 
         @Override

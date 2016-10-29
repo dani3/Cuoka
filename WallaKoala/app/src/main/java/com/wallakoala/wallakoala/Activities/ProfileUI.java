@@ -400,7 +400,12 @@ public class ProfileUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            progressDialog = ProgressDialog.show(ProfileUI.this, "", "Borrando cuenta...", true);
+            progressDialog = new ProgressDialog(ProfileUI.this, R.style.MyDialogTheme);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Borrando cuenta...");
+            progressDialog.setIndeterminate(true);
+
+            progressDialog.show();
         }
 
         @Override
@@ -456,7 +461,12 @@ public class ProfileUI extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
-            progressDialog = ProgressDialog.show(ProfileUI.this, "", "Modificando tus datos...", true);
+            progressDialog = new ProgressDialog(ProfileUI.this, R.style.MyDialogTheme);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Modificando tus datos...");
+            progressDialog.setIndeterminate(true);
+
+            progressDialog.show();
 
             name = mNameEdittext.getText().toString();
             email = mEmailEdittext.getText().toString();
