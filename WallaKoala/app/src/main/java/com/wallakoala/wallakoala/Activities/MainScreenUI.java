@@ -271,6 +271,10 @@ public class MainScreenUI extends AppCompatActivity
                     case (R.id.nav_my_shops):
                         _openActivityShops();
                         break;
+
+                    case (R.id.nav_logout):
+                        _logout();
+                        break;
                 }
 
                 return true;
@@ -405,6 +409,22 @@ public class MainScreenUI extends AppCompatActivity
         mNewTitle.setSpan(new CustomTypeFaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         mi.setTitle(mNewTitle);
+    }
+
+    /**
+     * Metodo que desloguea al usuario.
+     */
+    private void _logout()
+    {
+        mSharedPreferencesManager.insertLoggedIn(false);
+
+        Intent intent = new Intent(this, LoginUI.class);
+
+        startActivity(intent);
+
+        finish();
+
+        overridePendingTransition(R.anim.left_in_animation, R.anim.left_out_animation);
     }
 
     /**
