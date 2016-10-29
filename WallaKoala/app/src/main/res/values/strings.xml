@@ -81,7 +81,8 @@
 
     <string name="accesibility_favorite">Favorito</string>
 
-    <string name="search_hint">Secciones, colores, etc.</string>
+    <string name="search_hint">Tiendas, prendas, etc.</string>
+    <string name="search_hint_shops">Tienda</string>
 
     <string name="sign_up">Registro</string>
     <string name="gender_election">Elige tu sexo</string>

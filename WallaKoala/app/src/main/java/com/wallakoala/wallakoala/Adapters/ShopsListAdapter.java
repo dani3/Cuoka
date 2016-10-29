@@ -122,8 +122,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             mFavOrNumberImageView.setImageDrawable((mFavorite) ? mFavoriteDrawable : mClotheDrawable);
             // Mostramos el numero de favoritos/total de productos de la tienda
             int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
-            mNumberTextView.setText(
-                    (mFavorite) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
+            mNumberTextView.setText((mFavorite) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
             // Establecemos el nombre de la tienda.
             mNameTextView.setText(shop.getName().toUpperCase());
@@ -193,8 +192,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                     mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
                     // Mostramos el numero de favoritos/total de productos de la tienda
                     int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
-                    mNumberTextView.setText(
-                            (!actionDeleted) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
+                    mNumberTextView.setText((!actionDeleted) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
                     mActionButton.startAnimation(explode);
                     mFavOrNumberImageView.startAnimation(explode);
@@ -205,10 +203,12 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 public void onAnimationRepeat(Animation animation) {}
             });
 
+            // Iniciamos todas las animaciones
             mActionButton.startAnimation(implode);
             mNumberTextView.startAnimation(implode);
             mFavOrNumberImageView.startAnimation(implode);
 
+            // Borramos/añadimos el producto a la lista
             if (actionDeleted)
             {
                 mMyShopsList.remove(shop.getName());
@@ -243,18 +243,23 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         // Metemos en un mapa el numero de favoritos que tiene el usuario por tienda.
         for (Product product : favoriteList)
         {
-            if (mFavoriteMap.containsKey(product.getShop()))
-            {
-                mFavoriteMap.put(product.getShop(), mFavoriteMap.get(product.getShop()) + 1);
-            } else {
-                mFavoriteMap.put(product.getShop(), 1);
-            }
+            mFavoriteMap.put(product.getShop()
+                    , (mFavoriteMap.containsKey(product.getShop())) ? mFavoriteMap.get(product.getShop()) + 1: 1);
         }
 
         mRoundedAccent    = mContext.getResources().getDrawable(R.drawable.rounded_button);
         mRoundedGrey      = mContext.getResources().getDrawable(R.drawable.rounded_button_grey);
         mFavoriteDrawable = mContext.getResources().getDrawable(R.drawable.ic_favorite_grey);
         mClotheDrawable   = mContext.getResources().getDrawable(R.drawable.ic_shirt);
+    }
+
+    /**
+     * Metodo que actualiza la lista de todas las tiendas.
+     * @param allShopList: lista con las nuevas tiendas.
+     */
+    public void updateShopList(List<Shop> allShopList)
+    {
+        mAllShopsList = allShopList;
     }
 
     /**

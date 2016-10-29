@@ -1,6 +1,8 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,11 +12,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -28,6 +32,7 @@ import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
+import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -357,9 +362,76 @@ public class ShopsUI extends AppCompatActivity
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.toolbar_menu_shops, menu);
+
+        // Associate searchable configuration with the SearchView
+        final SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView =
+                (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setQueryHint(getResources().getString(R.string.search_hint_shops));
+
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                .setTextColor(getResources().getColor(R.color.colorText));
+
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                .setHintTextColor(getResources().getColor(R.color.colorText));
+
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTypeface(
+                TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query) { return true; }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                if (!newText.isEmpty())
+                {
+                    List<Shop> potentialShopsList = new ArrayList<>();
+
+                    // Buscamos primero por las tiendas que empiezan por el texto introducido.
+                    for (Shop shop : mAllShopsList)
+                    {
+                        if (shop.getName().toUpperCase().startsWith(newText.toUpperCase()))
+                        {
+                            potentialShopsList.add(shop);
+                        }
+                    }
+
+                    // Si no se ha encontrado nada, se busca si la tienda contiene el texto introducido.
+                    if (potentialShopsList.isEmpty())
+                    {
+                        for (Shop shop : mAllShopsList)
+                        {
+                            if (shop.getName().toUpperCase().contains(newText.toUpperCase()))
+                            {
+                                potentialShopsList.add(shop);
+                            }
+                        }
+                    }
+
+                    // Actualizamos la lista del adpter y notificamos el cambio.
+                    mShopListAdapter.updateShopList(potentialShopsList);
+                    mShopListAdapter.notifyDataSetChanged();
+
+                } else {
+                    mShopListAdapter.updateShopList(mAllShopsList);
+                    mShopListAdapter.notifyDataSetChanged();
+
+                }
+
+                return true;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }
