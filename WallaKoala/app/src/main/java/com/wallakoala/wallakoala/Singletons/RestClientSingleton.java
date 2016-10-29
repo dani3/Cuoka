@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Singletons;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -91,6 +92,7 @@ public class RestClientSingleton
      * @param context: contexto.
      * @return lista de productos favoritos.
      */
+    @Nullable
     public static List<Product> getFavoriteProducts(Context context)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);

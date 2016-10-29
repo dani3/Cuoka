@@ -60,6 +60,7 @@ public class MainScreenUI extends AppCompatActivity
     protected static final int FILTER_REQUEST = 0;
     protected static final int MODIFICATION_REQUEST = 1;
     protected static final int MANAGE_SHOPS_REQUEST = 2;
+    protected static final int MANAGE_FAVORITES_REQUEST = 3;
     protected static final int EXIT_TIME_INTERVAL = 2000;
     protected static String SEARCH_QUERY;
 
@@ -275,6 +276,10 @@ public class MainScreenUI extends AppCompatActivity
                     case (R.id.nav_logout):
                         _logout();
                         break;
+
+                    case (R.id.nav_favorites):
+                        _openActivityFavorites();
+                        break;
                 }
 
                 return true;
@@ -392,6 +397,20 @@ public class MainScreenUI extends AppCompatActivity
 
         // Iniciamos la activity ShopsUI
         startActivityForResult(intent, MANAGE_SHOPS_REQUEST);
+
+        // Animacion de transicion para pasar de una activity a otra.
+        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+    }
+
+    /**
+     * Metodo que abre la pantalla de Mis favoritos
+     */
+    protected void _openActivityFavorites()
+    {
+        Intent intent = new Intent(MainScreenUI.this, FavoritesUI.class);
+
+        // Iniciamos la activity FavoritesUI
+        startActivityForResult(intent, MANAGE_FAVORITES_REQUEST);
 
         // Animacion de transicion para pasar de una activity a otra.
         overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
@@ -588,6 +607,10 @@ public class MainScreenUI extends AppCompatActivity
 
                 mProductsFragment.restart();
                 mRecommendedFragment.restart();
+
+            } else if (requestCode == MANAGE_FAVORITES_REQUEST) {
+
+
             }
         }
     }

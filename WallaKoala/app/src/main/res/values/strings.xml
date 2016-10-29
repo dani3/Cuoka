@@ -3,6 +3,7 @@
 
     <string name="toolbar_filter">Filtros</string>
     <string name="toolbar_shops">Mis tiendas</string>
+    <string name="toolbar_favorites">Mis favoritos</string>
 
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>
@@ -28,6 +29,7 @@
 
     <string name="error_message">Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado…</string>
+    <string name="nofav_message">Todavía no tienes ningún favorito</string>
     <string name="exit_message">Pulsa otra vez para SALIR</string>
     <string name="product_deleted_message">Producto eliminado</string>
 

@@ -64,7 +64,7 @@
         style="@style/SpinKitView.Large.ChasingDots"
         app:SpinKit_Color="@color/colorAccent"/>
 
-    <!-- Texto de no prductos -->
+    <!-- Texto de no productos -->
     <com.wallakoala.wallakoala.Views.ExistenceTextView
         android:id="@+id/nodata_textview"
         android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
         android:visibility="gone"
         android:paddingTop="@dimen/action_bar_height"
         android:text="@string/nodata_message"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:textColor="@color/colorText"
         app:customFont="Existence-StencilLight.otf"/>
 

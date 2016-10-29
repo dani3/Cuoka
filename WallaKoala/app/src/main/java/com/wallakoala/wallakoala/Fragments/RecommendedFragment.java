@@ -18,7 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.wallakoala.wallakoala.Adapters.RecommendedListAdapter;
-import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -29,8 +28,6 @@ import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,9 +175,7 @@ public class RecommendedFragment extends Fragment
     {
         super.onResume();
 
-        // Si no venimos del onCreate (ON_CREATE_FLAG = FALSE) significa que venimos de
-        // la pantalla de un producto o de los filtros.
-        // Si venimos de un producto, tenemos que restaurar el footer.
+        // Si venimos de un producto, tenemos que actualizar los cambios (si los hay)
         if ((mProductAdapter != null) && (mProductAdapter.productClicked()))
         {
             Log.d(Properties.TAG, "Volviendo de ProductUI");
