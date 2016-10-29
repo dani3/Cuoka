@@ -622,7 +622,7 @@ public class Controller
         List<Product> newList = new ArrayList<>();
         
         // Buscamos primero si tiene el filtro de color y de secciones
-        if (! filter.getSections().isEmpty() && ! filter.getColors().isEmpty())
+        if (!filter.getSections().isEmpty() && ! filter.getColors().isEmpty())
         {
             LOG.info(" - De las siguientes secciones:");            
             for (String section : filter.getSections())
@@ -651,7 +651,7 @@ public class Controller
         }
         
         // Buscamos la seccion si no tiene el filtro de color
-        if (! filter.getSections().isEmpty() && filter.getColors().isEmpty())
+        if (!filter.getSections().isEmpty() && filter.getColors().isEmpty())
         {         
             LOG.info(" - De las siguientes secciones:");            
             for (String section : filter.getSections())

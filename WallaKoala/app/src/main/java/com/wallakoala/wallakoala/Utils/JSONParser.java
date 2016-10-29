@@ -1,14 +1,20 @@
 package com.wallakoala.wallakoala.Utils;
 
+import android.util.Log;
+
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.User;
+import com.wallakoala.wallakoala.Properties.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Clase que se encarga de parsear los JSON.
@@ -17,6 +23,64 @@ import java.util.List;
 
 public class JSONParser
 {
+    /**
+     * Metodo que convierte un JSON en un objeto User.
+     * @param jsonObject: objeto JSON
+     * @param id: id del usuario.
+     * @return objeto User.
+     * @throws JSONException
+     */
+    public static User convertJSONtoUser(JSONObject jsonObject, long id) throws JSONException
+    {
+        final User user = new User();
+
+        user.setId(id);
+        user.setName(jsonObject.getString("name"));
+        user.setAge(jsonObject.getInt("age"));
+        user.setEmail(jsonObject.getString("email"));
+        user.setPassword(jsonObject.getString("password"));
+        user.setMan(jsonObject.getBoolean("man"));
+        user.setPostalCode(jsonObject.getInt("postalCode"));
+
+        // Sacamos los productos favoritos
+        JSONArray jsonArray = jsonObject.getJSONArray("favoriteProducts");
+        Set<Long> favorites = new HashSet<>();
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            favorites.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
+        }
+
+        user.setFavoriteProducts(favorites);
+
+        // Sacamos la lista de tiendas
+        jsonArray = jsonObject.getJSONArray("shops");
+        Set<String> shops = new HashSet<>();
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            shops.add((String.valueOf(jsonArray.get(i))));
+        }
+
+        if (!shops.isEmpty())
+        {
+            user.setShops(shops);
+        } else {
+            user.setShops(new HashSet<String>());
+        }
+
+        Log.d(Properties.TAG, "Datos del usuario: ");
+        Log.d(Properties.TAG, " - ID: " + id);
+        Log.d(Properties.TAG, " - Nombre: " + user.getName());
+        Log.d(Properties.TAG, " - Email: " + user.getEmail());
+        Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
+        Log.d(Properties.TAG, " - Hombre: " + user.getMan());
+        Log.d(Properties.TAG, " - Edad: " + user.getAge());
+        Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
+        Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
+        Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
+
+        return user;
+    }
+
     /**
      * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's.
      * @param jsonArray: lista de JSON a convertir.

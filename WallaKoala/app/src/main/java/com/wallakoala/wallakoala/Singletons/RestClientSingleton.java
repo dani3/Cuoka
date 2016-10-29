@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Beans.Product;
@@ -35,6 +36,61 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    /**
+     * Metodo que obtiene del servidor los datos del usuario.
+     * @param context: contexto.
+     * @return true si se ha obtenido correctamente.
+     */
+    public static boolean retrieveUser(Context context)
+    {
+        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final long id = mSharedPreferencesManager.retreiveUser().getId();
+
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para obtener los datos del usuario");
+
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+
+        // Creamos una peticion
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET
+                                                    , fixedURL
+                                                    , null
+                                                    , future
+                                                    , future);
+
+        // La mandamos a la cola de peticiones
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+        try
+        {
+            JSONObject response = future.get(20, TimeUnit.SECONDS);
+
+            User user = JSONParser.convertJSONtoUser(response, id);
+
+            mSharedPreferencesManager.insertUser(user);
+
+            return true;
+
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            Log.d(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
+
+            return false;
+
+        } catch (JSONException e) {
+            Log.d(Properties.TAG, "Error parseando el usuario: " + e.getMessage());
+
+            return false;
+        }
+    }
+
+    /**
+     * Metodo que recibe la lista de productos favoritos del usuario.
+     * @param context: contexto.
+     * @return lista de productos favoritos.
+     */
     public static List<Product> getFavoriteProducts(Context context)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);

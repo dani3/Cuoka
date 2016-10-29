@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/intro_frame_layout"
     xmlns:tools="http://schemas.android.com/tools"
-    android:gravity="bottom"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".Activities.IntroUI">
 
-    <Button
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:layout_width="178dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:layout_gravity="center"
-        android:text="Desloguear"
-        android:layout_margin="48dp"/>
+        android:src="@drawable/logo"/>
 
-    <Button
-        android:id="@+id/enter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Entrar"
-        android:layout_margin="48dp"/>
-
-</LinearLayout>
+</FrameLayout>
