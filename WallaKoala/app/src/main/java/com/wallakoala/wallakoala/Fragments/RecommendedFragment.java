@@ -431,4 +431,15 @@ public class RecommendedFragment extends Fragment
             mLoadingView.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * Metodo que para notificar que algo ha cambiado.
+     */
+    public void notifyDataSetChanged()
+    {
+        if (mProductAdapter != null)
+        {
+            mProductAdapter.notifyDataSetChanged();
+        }
+    }
 }

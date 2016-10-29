@@ -609,7 +609,8 @@ public class MainScreenUI extends AppCompatActivity
                 mRecommendedFragment.restart();
 
             } else if (requestCode == MANAGE_FAVORITES_REQUEST) {
-
+                mProductsFragment.notifyDataSetChanged();
+                mRecommendedFragment.notifyDataSetChanged();
 
             }
         }

@@ -1317,4 +1317,15 @@ public class ProductsFragment extends Fragment
             mConnectToServer = new ConnectToServer().execute();
         }
     }
+
+    /**
+     * Metodo que para notificar que algo ha cambiado.
+     */
+    public void notifyDataSetChanged()
+    {
+        if (mProductAdapter != null)
+        {
+            mProductAdapter.notifyDataSetChanged();
+        }
+    }
 }
