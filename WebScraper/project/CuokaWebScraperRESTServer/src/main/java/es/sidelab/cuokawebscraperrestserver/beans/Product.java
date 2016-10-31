@@ -66,6 +66,10 @@ public class Product implements Comparator
     @Column(name = "INSERT_DATE")
     private Calendar insertDate;
     
+    @JsonIgnore
+    @Column(name = "OBSOLETE")
+    private boolean obsolete;
+    
     public Product() {}
     
     @JsonProperty("price")
@@ -88,6 +92,8 @@ public class Product implements Comparator
     public void setInsertDate(Calendar insertDate) { this.insertDate = insertDate; }
     @JsonIgnore
     public void setAspectRatio(float aspectRatio) { this.aspectRatio = aspectRatio; }
+    @JsonIgnore
+    public void setObsolete(boolean obsolete) { this.obsolete = obsolete; }
         
     @JsonProperty("1")
     public double getPrice() { return this.price; }
@@ -111,6 +117,8 @@ public class Product implements Comparator
     public float getAspectRatio() { return this.aspectRatio; } 
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
+    @JsonIgnore
+    public boolean isObsolete() { return this.obsolete; }
     
     public void update(Product product, boolean equal)
     {
