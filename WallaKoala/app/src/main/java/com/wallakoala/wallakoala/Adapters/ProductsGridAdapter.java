@@ -88,8 +88,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.setOnClickListener(this);
             mProductImageView.setOnClickListener(this);
 
-            scaleUp              = AnimationUtils.loadAnimation(mContext, R.anim.scale_up_animation);
-            scaleDownFooter      = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
+            scaleUp         = AnimationUtils.loadAnimation(mContext, R.anim.scale_up_animation);
+            scaleDownFooter = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
 
             mProductFavoriteImageButton.setOnClickListener(new View.OnClickListener()
             {
@@ -192,16 +192,16 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductFooterMainView.setVisibility(View.VISIBLE);
                     mProductFavoriteImageButton.setVisibility(View.VISIBLE);
 
-                    // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
-                    mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    mProductImageView.setBackgroundColor(-1);
-                    mProductImageView.setAlpha(1.0f);
-
                     // Guardamos el bitmap, para asi pasarlo a ProductUI.
                     mBitmap = bitmap;
 
                     // Por ultimo, cargamos el Bitmap en la ImageView
                     mProductImageView.setImageBitmap(bitmap);
+
+                    // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
+                    mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mProductImageView.setBackgroundColor(-1);
+                    mProductImageView.setAlpha(1.0f);
 
                     Animation fadeOut = new AlphaAnimation(0, 1);
                     fadeOut.setInterpolator(new AccelerateInterpolator());

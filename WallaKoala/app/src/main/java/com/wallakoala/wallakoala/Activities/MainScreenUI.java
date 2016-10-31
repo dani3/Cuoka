@@ -29,8 +29,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Beans.User;
@@ -78,9 +76,6 @@ public class MainScreenUI extends AppCompatActivity
     /* Menu */
     protected Menu mMenu;
 
-    /* Animations */
-    protected Animation mExplodeAnimation, mImplodeAnimation;
-
     /* Fragments */
     protected RecommendedFragment mRecommendedFragment;
     protected ProductsFragment mProductsFragment;
@@ -102,7 +97,6 @@ public class MainScreenUI extends AppCompatActivity
         _initToolbar();
         _initViewPager();
         _initNavigationDrawer();
-        _initAnimations();
     }
 
     /**
@@ -350,41 +344,6 @@ public class MainScreenUI extends AppCompatActivity
                 else
                     mDrawerLayout.openDrawer(GravityCompat.START);
             }
-        });
-    }
-
-    /**
-     * Metodo para inicializar las animaciones.
-     */
-    protected void _initAnimations()
-    {
-        mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
-        mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode_animation);
-
-        mImplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                findViewById(R.id.menu_item_filter).setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-
-        mExplodeAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                findViewById(R.id.menu_item_filter).setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {}
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
         });
     }
 

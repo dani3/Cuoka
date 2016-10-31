@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.wallakoala.wallakoala.Adapters.FavoritesSectionedAdapter;
 import com.wallakoala.wallakoala.Adapters.RecommendedListAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
@@ -24,7 +25,11 @@ import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 /**
  * Activity que muestra los productos favoritos.
@@ -46,7 +51,7 @@ public class FavoritesUI extends AppCompatActivity
     protected GridLayoutManager mGridLayoutManager;
 
     /* Adapters */
-    protected RecommendedListAdapter mProductAdapter;
+    protected SectionedRecyclerViewAdapter mProductAdapter;
 
     /* SharedPreferenceManager */
     protected SharedPreferencesManager mSharedPreferences;
@@ -57,6 +62,7 @@ public class FavoritesUI extends AppCompatActivity
     /* Data */
     protected User mUser;
     protected List<Product> mFavoriteList;
+    protected Map<String, List<Product>> mProductMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -92,6 +98,7 @@ public class FavoritesUI extends AppCompatActivity
         mUser = mSharedPreferences.retreiveUser();
 
         mFavoriteList = new ArrayList<>();
+        mProductMap   = new HashMap<>();
     }
 
     /**
@@ -130,11 +137,14 @@ public class FavoritesUI extends AppCompatActivity
     {
         mProductsRecyclerView.setVisibility(View.VISIBLE);
 
-        mGridLayoutManager = new GridLayoutManager(this, 1);
-        mProductAdapter = new RecommendedListAdapter(this
-                , mFavoriteList
-                , mFrameLayout);
+        mProductAdapter = new SectionedRecyclerViewAdapter();
 
+        for (Map.Entry<String, List<Product>> entry : mProductMap.entrySet())
+        {
+            mProductAdapter.addSection(new FavoritesSectionedAdapter(this, mProductAdapter, entry.getValue(), mFrameLayout, entry.getKey()));
+        }
+
+        mGridLayoutManager = new GridLayoutManager(this, 1);
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
     }
@@ -168,19 +178,6 @@ public class FavoritesUI extends AppCompatActivity
         overridePendingTransition(R.anim.left_in_animation, R.anim.left_out_animation);
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        // Si venimos de un producto, tenemos que actualizar los cambios (si los hay)
-        if ((mProductAdapter != null) && (mProductAdapter.productClicked()))
-        {
-            Log.d(Properties.TAG, "Volviendo de ProductUI");
-            mProductAdapter.restore();
-        }
-    }
-
     /**
      * Tarea en segundo plano que trae los productos favoritos del usuario.
      */
@@ -204,6 +201,20 @@ public class FavoritesUI extends AppCompatActivity
             if (mFavoriteList == null)
             {
                 error = "Error al obtener los productos favoritos";
+
+            } else {
+                for (Product product : mFavoriteList)
+                {
+                    List<Product> list = mProductMap.get(product.getShop());
+                    if (list == null)
+                    {
+                        list = new ArrayList<>();
+                    }
+
+                    list.add(product);
+
+                    mProductMap.put(product.getShop(), list);
+                }
             }
 
             return null;

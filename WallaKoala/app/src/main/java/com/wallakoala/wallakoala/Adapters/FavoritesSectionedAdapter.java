@@ -36,16 +36,20 @@ import com.wallakoala.wallakoala.Views.LikeButtonView;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 /**
- * Adapter para el grid de productos recomendados.
- * Created by Daniel Mancebo on 25/06/2016.
+ *
+ * Created by Daniel Mancebo Aldea on 31/10/2016.
  */
 
-public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedListAdapter.ProductHolder>
+public class FavoritesSectionedAdapter extends StatelessSection
 {
+    private static SectionedRecyclerViewAdapter mSectionAdapter;
+
     /* Context */
     private static Context mContext;
 
@@ -56,14 +60,29 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
     private static SharedPreferencesManager mSharedPreferencesManager;
 
     /* Data */
+    private static String mShop;
     private static List<Product> mProductList;
-    private static ProductHolder mProductClicked;
+    private static ProductViewHolder mProductClicked;
     private static boolean[] mItemsFlipped;
 
-    /**
-     * ViewHolder del producto con todos los componentes graficos necesarios
-     */
-    public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class HeaderViewHolder extends RecyclerView.ViewHolder
+    {
+        private TextView mShopTextView;
+
+        public HeaderViewHolder(View view)
+        {
+            super(view);
+
+            mShopTextView = (TextView) view.findViewById(R.id.favorite_header);
+        }
+
+        public void bindHeader(String text)
+        {
+            mShopTextView.setText(text);
+        }
+    }
+
+    public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private boolean ERROR;
         private boolean LOADED;
@@ -72,6 +91,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private Target mTarget;
         private Bitmap mBitmap;
         private String mBitmapFileName;
+        private ProductViewHolder mHolder;
 
         private ViewGroup mIconList;
         private CircleImageView[] mIconViews;
@@ -84,9 +104,9 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
 
         private LikeButtonView mProductFavoriteImageButton;
 
-        public ProductHolder(View itemView)
+        public ProductViewHolder(View view)
         {
-            super(itemView);
+            super(view);
 
             mProductImageView     = (ImageView)itemView.findViewById(R.id.recommended_image);
             mShopTextView         = (TextView)itemView.findViewById(R.id.recommended_shop);
@@ -96,10 +116,10 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mIconList             = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
             mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
+            mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.recommended_item_favorite);
+
             mProductImageView.setOnClickListener(this);
             mFlippableView.setOnClickListener(this);
-
-            mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.recommended_item_favorite);
 
             mProductFavoriteImageButton.setOnClickListener(new View.OnClickListener()
             {
@@ -116,14 +136,11 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             });
         }
 
-        /**
-         * Metodo que inicializa las vistas con los datos del producto recibido, se llama cada vez que se visualiza el item.
-         * @param product: producto con el que se inicializa un item.
-         */
         @SuppressWarnings("deprecation")
-        public void bindProduct(Product product)
+        public void bindProduct(Product product, ProductViewHolder holder)
         {
             mProduct = product;
+            mHolder = holder;
 
             // Eliminamos todos los iconos anteriores.
             mIconList.removeAllViews();
@@ -193,7 +210,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mProductFavoriteImageButton.changeIcon(
                     mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
-            mFlippableView.setFlipped(mItemsFlipped[this.getAdapterPosition()]);
+            mFlippableView.setFlipped(mItemsFlipped[mSectionAdapter.getSectionPosition(holder.getAdapterPosition())]);
 
             // Cargamos la imagen usando Picasso
             mTarget = new Target()
@@ -227,7 +244,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     ERROR = true;
 
                     mProductImageView.setBackgroundColor(mContext.getResources()
-                                                            .getColor(android.R.color.holo_red_dark));
+                            .getColor(android.R.color.holo_red_dark));
                     mProductImageView.setAlpha(0.2f);
                 }
 
@@ -265,23 +282,6 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mProduct = product;
         }
 
-        /**
-         * Metodo que da visibilidad al icono de favoritos.
-         */
-        public void restore()
-        {
-            mProductFavoriteImageButton.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Metodo que cambia el icono de favoritos si es necesario.
-         */
-        private void notifyFavoriteChanged()
-        {
-            mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
-        }
-
         @Override
         public void onClick(View v)
         {
@@ -289,7 +289,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             {
                 mFlippableView.flip();
 
-                mItemsFlipped[this.getAdapterPosition()] = !mItemsFlipped[this.getAdapterPosition()];
+                mItemsFlipped[mSectionAdapter.getSectionPosition(mHolder.getAdapterPosition())] =
+                        !mItemsFlipped[mSectionAdapter.getSectionPosition(mHolder.getAdapterPosition())];
 
             } else if (v.getId() == mProductImageView.getId()) {
 
@@ -321,8 +322,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                               .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
                               .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
                               .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
-                              .putExtra(Properties.PACKAGE + ".widthFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getWidth())
-                              .putExtra(Properties.PACKAGE + ".heightFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getHeight())
+                              .putExtra(Properties.PACKAGE + ".widthFav", 0)
+                              .putExtra(Properties.PACKAGE + ".heightFav", 0)
                               .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
                               .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
                               .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
@@ -336,27 +337,24 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                         // Desactivamos las transiciones por defecto
                         activity.overridePendingTransition(0, 0);
 
-                        mProductFavoriteImageButton.setVisibility(View.INVISIBLE);
-
                     } else {
                         Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
         }
+    }
 
-    }/* [END] ViewHolder */
-
-    /**
-     * Constructor del Adapter
-     * @param context: contexto (ProductsUI)
-     * @param productList: lista de productos
-     * @param frameLayout: layout necesario para animar la SnackBar
-     */
-    public RecommendedListAdapter(Context context, List<Product> productList, FrameLayout frameLayout)
+    public FavoritesSectionedAdapter(Context context, SectionedRecyclerViewAdapter sectionAdapter, List<Product> productList, FrameLayout frameLayout, String shop)
     {
+        super(R.layout.aux_header_section, R.layout.product_recommended);
+
+        mSectionAdapter = sectionAdapter;
+        mShop = shop;
         mContext = context;
         mProductList = productList;
+
+        Log.d(Properties.TAG, ""+ productList.size());
 
         mItemsFlipped = new boolean[mProductList.size()];
         for (int i = 0; i < mItemsFlipped.length; i++)
@@ -369,50 +367,33 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
     }
 
-    /**
-     * Metodo para restaurar el icono de favoritos, comprobando que se haya clickado en algun producto.
-     * Tambien comprueba si hay que cambiar el icono de favoritos (por si se cambia desde ProductUI)
-     */
-    public void restore()
-    {
-        if (mProductClicked != null)
-        {
-            mProductClicked.restore();
-            mProductClicked.notifyFavoriteChanged();
-
-            mProductClicked = null;
-        }
-    }
-
-    /**
-     * Metodo que indica si se ha clickado en algun producto
-     * @return true si se ha clickado en algun producto
-     */
-    public boolean productClicked()
-    {
-        return (mProductClicked != null);
-    }
-
     @Override
-    public ProductHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
-    {
-        View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.product_recommended
-                        , viewGroup
-                        , false);
-
-        return new ProductHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(final ProductHolder productHolder, int pos)
-    {
-        productHolder.bindProduct(mProductList.get(pos));
-    }
-
-    @Override
-    public int getItemCount()
+    public int getContentItemsTotal()
     {
         return mProductList.size();
+    }
+
+    @Override
+    public RecyclerView.ViewHolder getItemViewHolder(View view)
+    {
+        return new ProductViewHolder(view);
+    }
+
+    @Override
+    public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        ((ProductViewHolder) holder).bindProduct(mProductList.get(position), (ProductViewHolder) holder);
+    }
+
+    @Override
+    public RecyclerView.ViewHolder getHeaderViewHolder(View view)
+    {
+        return new HeaderViewHolder(view);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder)
+    {
+        ((HeaderViewHolder) holder).bindHeader(mShop);
     }
 }

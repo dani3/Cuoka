@@ -52,11 +52,6 @@ public class User
     @ElementCollection
     @Column(name = "FAVORITE_PRODUCTS")
     private Set<Long> favoriteProducts;
-    
-    @JsonIgnore
-    @ElementCollection
-    @Column(name = "WISHLIST_PRODUCTS")
-    private Set<Long> wishlistProducts;
  
     @JsonIgnore
     @ElementCollection
@@ -118,8 +113,6 @@ public class User
     public Calendar getRegistrationDate() { return this.registrationDate; }    
     @JsonProperty
     public Set<Long> getFavoriteProducts() { return favoriteProducts; }
-    @JsonProperty
-    public Set<Long> getWishlistProducts() { return wishlistProducts; }
     @JsonIgnore
     public Set<Long> getViewedProducts() { return viewedProducts; }
     @JsonIgnore
@@ -139,8 +132,6 @@ public class User
     public void setRegistrationDate(Calendar registrationDate) { this.registrationDate = registrationDate; }     
     @JsonIgnore
     public void setFavoriteProducts(Set<Long> favoriteProducts) { this.favoriteProducts = favoriteProducts; }
-    @JsonIgnore
-    public void setWishlistProducts(Set<Long> wishlistProducts) { this.wishlistProducts = wishlistProducts; }
     @JsonIgnore
     public void setViewedProducts(Set<Long> viewedProducts) { this.viewedProducts = viewedProducts; }
     @JsonIgnore
@@ -163,5 +154,4 @@ public class User
     public void addToSharedProducts(Long idProduct)      { this.sharedProducts.add(idProduct); }
     public void addToVisitedProducts(Long idProduct)     { this.visitedProducts.add(idProduct); }
     public void addToAddedToCartProducts(Long idProduct) { this.addedToCartProducts.add(idProduct); }
-    public void addToWishlistProducts(Long idProduct)    { this.wishlistProducts.add(idProduct); }
 }

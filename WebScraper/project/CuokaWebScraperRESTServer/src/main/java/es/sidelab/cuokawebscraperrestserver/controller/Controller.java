@@ -721,7 +721,7 @@ public class Controller
         List<String> keywords = new ArrayList<>();
         for (String keyword : aux)
         {
-            if ((keyword.length() > 2) && (! keyword.equalsIgnoreCase("Con")))
+            if ((keyword.length() > 2) && (!keyword.equalsIgnoreCase("con")))
             {
                 keywords.add(keyword);
             }
@@ -742,11 +742,11 @@ public class Controller
                 if (saux != null)
                     section.add(saux);
                     
-                if (! section.isEmpty())
+                if (!section.isEmpty())
                 {
                     candidate = _searchForSection(product, section);
                     
-                    if (! candidate)
+                    if (!candidate)
                         break;
                 }
                 
@@ -756,12 +756,12 @@ public class Controller
                 if (caux != null)
                     color.add(caux);
                 
-                if (! color.isEmpty())
+                if (!color.isEmpty())
                 {
                     paux = _searchForColor(product, color);
                     
                     candidate = (paux != null);
-                    if (! candidate)
+                    if (!candidate)
                         break;
                 }
                 
@@ -770,7 +770,7 @@ public class Controller
                 {
                     candidate = _searchForKeyword(product, keyword);
                     
-                    if (! candidate)
+                    if (!candidate)
                         break;
                 }
                 
