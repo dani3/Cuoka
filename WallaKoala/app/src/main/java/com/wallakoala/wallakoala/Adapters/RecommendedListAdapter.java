@@ -266,14 +266,6 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         }
 
         /**
-         * Metodo que da visibilidad al icono de favoritos.
-         */
-        public void restore()
-        {
-            mProductFavoriteImageButton.setVisibility(View.VISIBLE);
-        }
-
-        /**
          * Metodo que cambia el icono de favoritos si es necesario.
          */
         private void notifyFavoriteChanged()
@@ -321,8 +313,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                               .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
                               .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
                               .putExtra(Properties.PACKAGE + ".topFav", favoriteScreenLocation[1])
-                              .putExtra(Properties.PACKAGE + ".widthFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getWidth())
-                              .putExtra(Properties.PACKAGE + ".heightFav", !mFlippableView.isFlipped() ? 0 : mProductFavoriteImageButton.getHeight())
+                              .putExtra(Properties.PACKAGE + ".widthFav", 0)
+                              .putExtra(Properties.PACKAGE + ".heightFav", 0)
                               .putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
                               .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
                               .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
@@ -335,8 +327,6 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
 
                         // Desactivamos las transiciones por defecto
                         activity.overridePendingTransition(0, 0);
-
-                        mProductFavoriteImageButton.setVisibility(View.INVISIBLE);
 
                     } else {
                         Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
@@ -377,7 +367,6 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
     {
         if (mProductClicked != null)
         {
-            mProductClicked.restore();
             mProductClicked.notifyFavoriteChanged();
 
             mProductClicked = null;

@@ -29,7 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 /**
  * Activity que muestra los productos favoritos.
@@ -141,7 +143,11 @@ public class FavoritesUI extends AppCompatActivity
 
         for (Map.Entry<String, List<Product>> entry : mProductMap.entrySet())
         {
-            mProductAdapter.addSection(new FavoritesSectionedAdapter(this, mProductAdapter, entry.getValue(), mFrameLayout, entry.getKey()));
+            mProductAdapter.addSection(new FavoritesSectionedAdapter(this
+                                , mProductAdapter
+                                , entry.getValue()
+                                , mFrameLayout
+                                , entry.getKey()));
         }
 
         mGridLayoutManager = new GridLayoutManager(this, 1);
@@ -176,6 +182,23 @@ public class FavoritesUI extends AppCompatActivity
         super.finish();
 
         overridePendingTransition(R.anim.left_in_animation, R.anim.left_out_animation);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        // Si venimos de un producto, tenemos que actualizar los cambios (si los hay)
+        if (mProductAdapter != null)
+        {
+            Log.d(Properties.TAG, "Volviendo de ProductUI");
+
+            for (Map.Entry<String, Section> entry : mProductAdapter.getSectionsMap().entrySet())
+            {
+                ((FavoritesSectionedAdapter)entry.getValue()).restore();
+            }
+        }
     }
 
     /**

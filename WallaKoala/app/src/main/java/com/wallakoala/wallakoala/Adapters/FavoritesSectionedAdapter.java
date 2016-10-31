@@ -48,11 +48,11 @@ import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 public class FavoritesSectionedAdapter extends StatelessSection
 {
-    /* SectionAdapter */
-    private static SectionedRecyclerViewAdapter mSectionAdapter;
-
     /* Context */
     private static Context mContext;
+
+    /* SectionAdapter */
+    private static SectionedRecyclerViewAdapter mSectionAdapter;
 
     /* Container Views */
     private static FrameLayout mFrameLayout;
@@ -66,6 +66,9 @@ public class FavoritesSectionedAdapter extends StatelessSection
     private static ProductViewHolder mProductClicked;
     private static boolean[] mItemsFlipped;
 
+    /**
+     * Holder de la cabecera de cada seccion.
+     */
     public class HeaderViewHolder extends RecyclerView.ViewHolder
     {
         private TextView mShopTextView;
@@ -83,6 +86,9 @@ public class FavoritesSectionedAdapter extends StatelessSection
         }
     }
 
+    /**
+     * Holder de cada producto de la seccion.
+     */
     public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private boolean ERROR;
@@ -105,6 +111,10 @@ public class FavoritesSectionedAdapter extends StatelessSection
 
         private LikeButtonView mProductFavoriteImageButton;
 
+        /**
+         * Constructor del holder
+         * @param view: vista del producto.
+         */
         public ProductViewHolder(View view)
         {
             super(view);
@@ -137,6 +147,11 @@ public class FavoritesSectionedAdapter extends StatelessSection
             });
         }
 
+        /**
+         * Metodo para configurar cada elemento del producto.
+         * @param product: producto a mostrar.
+         * @param holder: holder necesario para obtener la posicion en el adapter.
+         */
         @SuppressWarnings("deprecation")
         public void bindProduct(Product product, ProductViewHolder holder)
         {
@@ -286,10 +301,12 @@ public class FavoritesSectionedAdapter extends StatelessSection
         @Override
         public void onClick(View v)
         {
+            // Si se pincha en la descripcion
             if (v.getId() == mFlippableView.getId())
             {
                 mFlippableView.flip();
 
+                // Cambiamos el estado de la vista en el array.
                 mItemsFlipped[mSectionAdapter.getSectionPosition(mHolder.getAdapterPosition())] =
                         !mItemsFlipped[mSectionAdapter.getSectionPosition(mHolder.getAdapterPosition())];
 
@@ -344,6 +361,15 @@ public class FavoritesSectionedAdapter extends StatelessSection
                 }
             }
         }
+
+        /**
+         * Metodo que cambia el icono de favoritos si es necesario.
+         */
+        private void notifyFavoriteChanged()
+        {
+            mProductFavoriteImageButton.changeIcon(
+                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+        }
     }
 
     public FavoritesSectionedAdapter(Context context, SectionedRecyclerViewAdapter sectionAdapter, List<Product> productList, FrameLayout frameLayout, String shop)
@@ -355,8 +381,6 @@ public class FavoritesSectionedAdapter extends StatelessSection
         mContext = context;
         mProductList = productList;
 
-        Log.d(Properties.TAG, ""+ productList.size());
-
         mItemsFlipped = new boolean[mProductList.size()];
         for (int i = 0; i < mItemsFlipped.length; i++)
         {
@@ -366,6 +390,16 @@ public class FavoritesSectionedAdapter extends StatelessSection
         mFrameLayout = frameLayout;
 
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
+    }
+
+    public void restore()
+    {
+        if (mProductClicked != null)
+        {
+            mProductClicked.notifyFavoriteChanged();
+
+            mProductClicked = null;
+        }
     }
 
     @Override
