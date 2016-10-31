@@ -48,6 +48,7 @@ import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 public class FavoritesSectionedAdapter extends StatelessSection
 {
+    /* SectionAdapter */
     private static SectionedRecyclerViewAdapter mSectionAdapter;
 
     /* Context */
