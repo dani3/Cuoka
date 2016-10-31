@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 
 public class FlipLayout extends FrameLayout
 {
-    public static final int ANIM_DURATION_MILLIS = 400;
+    public static final int ANIM_DURATION_MILLIS = 500;
     private static final Interpolator fDefaultInterpolator = new OvershootInterpolator();
     private FlipAnimator animator;
     private boolean isFlipped;

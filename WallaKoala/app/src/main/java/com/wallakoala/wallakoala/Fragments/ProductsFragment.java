@@ -28,6 +28,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
@@ -497,65 +498,11 @@ public class ProductsFragment extends Fragment
         @Override
         protected Void doInBackground(String... unused)
         {
-            try
+            content = RestClientSingleton.retrieveProducts(getActivity(), DAYS_OFFSET, mShopsList);
+
+            if (content == null)
             {
-                final List<RequestFuture<JSONArray>> futures = new ArrayList<>();
-
-                // Metemos en content el resultado de cada uno
-                for (int i = 0; i < mShopsList.size(); i++)
-                {
-                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                                + "/products/" + mShopsList.get(i) + "/" + MAN + "/" + DAYS_OFFSET);
-
-                    Log.d(Properties.TAG, "Conectando con: " + fixedURL
-                            + " para traer los productos de hace " + Integer.toString(DAYS_OFFSET) + " dias");
-
-                    futures.add(RequestFuture.<JSONArray>newFuture());
-
-                    // Creamos una peticion
-                    final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                        , fixedURL
-                                                                        , null
-                                                                        , futures.get(i)
-                                                                        , futures.get(i));
-
-                    // La mandamos a la cola de peticiones
-                    VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-                    if (isCancelled())
-                    {
-                        return null;
-                    }
-                }
-
-                for (int i = 0; i < mShopsList.size(); i++)
-                {
-                    try
-                    {
-                        final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
-
-                        content.add(response);
-
-                    } catch (InterruptedException e) {
-                        error = "Thread interrumpido";
-                        Log.d(Properties.TAG, error);
-                    }
-
-                    if (isCancelled())
-                    {
-                        return null;
-                    }
-                }
-
-                // Si content es vacio, es que han fallado todas las conexiones.
-                if (content.isEmpty())
-                {
-                    error = "Imposible conectar con el servidor";
-                    Log.d(Properties.TAG, error);
-                }
-
-            } catch(Exception ex)  {
-                error = ex.getMessage();
+                error = "Error obteniendo productos";
             }
 
             return null;

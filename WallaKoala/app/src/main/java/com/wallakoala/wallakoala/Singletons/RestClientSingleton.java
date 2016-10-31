@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,75 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    /**
+     * Metodo que devuelve una lista de JSONs con los productos de cada tienda.
+     * @param context: contexto.
+     * @param offset: dia del que hay que traer productos.
+     * @param shopList: lista de tiendas.
+     * @return: Array de JSONs con los productos del dia.
+     */
+    public static List<JSONArray> retrieveProducts(Context context, int offset, List<String> shopList)
+    {
+        List<JSONArray> content = new ArrayList<>();
+
+        try
+        {
+            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+            final boolean man = mSharedPreferencesManager.retreiveUser().getMan();
+
+            final List<RequestFuture<JSONArray>> futures = new ArrayList<>();
+
+            // Metemos en content el resultado de cada uno
+            for (int i = 0; i < shopList.size(); i++)
+            {
+                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                        + "/products/" + shopList.get(i) + "/" + man + "/" + offset);
+
+                Log.d(Properties.TAG, "Conectando con: " + fixedURL
+                        + " para traer los productos de hace " + Integer.toString(offset) + " dias");
+
+                futures.add(RequestFuture.<JSONArray>newFuture());
+
+                // Creamos una peticion
+                final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                        , fixedURL
+                        , null
+                        , futures.get(i)
+                        , futures.get(i));
+
+                // La mandamos a la cola de peticiones
+                VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+            }
+
+            for (int i = 0; i < shopList.size(); i++)
+            {
+                try
+                {
+                    final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+
+                    content.add(response);
+
+                } catch (InterruptedException e) {
+                    Log.d(Properties.TAG, e.getMessage());
+
+                    return null;
+                }
+            }
+
+            // Si content es vacio, es que han fallado todas las conexiones.
+            if (content.isEmpty())
+            {
+                return null;
+            }
+
+        } catch(Exception ex)  {
+            return null;
+        }
+
+        return content;
+    }
+
     /**
      * Metodo que obtiene del servidor los datos del usuario.
      * @param context: contexto.

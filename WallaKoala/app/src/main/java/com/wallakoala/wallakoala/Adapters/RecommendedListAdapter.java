@@ -125,57 +125,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             mProduct = product;
 
-            // Eliminamos todos los iconos anteriores.
-            mIconList.removeAllViews();
-
-            // Creamos un array con todos los iconos.
-            mIconViews = new CircleImageView[mProduct.getColors().size()];
-
-            // Metemos cada icono en la lista.
-            int max = (mProduct.getColors().size() > 3) ? 4 : mProduct.getColors().size();
-            for (int i = 0; i < max; i++)
-            {
-                ColorVariant colorVariant = mProduct.getColors().get(i);
-
-                // Inflamos la vista con el icono.
-                LayoutInflater mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                mIconViews[i] = (CircleImageView) mInflater.inflate(
-                        R.layout.aux_recommended_color_icon, null).findViewById(R.id.recommended_color_icon);
-
-                // Seteamos los margenes laterales para que no queden pegados unos con otros.
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mIconViews[i].getLayoutParams();
-                params.setMargins(8, params.topMargin, 8, params.bottomMargin);
-                mIconViews[i].setLayoutParams(params);
-
-                // Path != 0 -> Color predefinido
-                String url;
-                if (colorVariant.getColorPath().equals("0"))
-                {
-                    final String imageFile = product.getShop() + "_" + product.getSection() + "_"
-                            + colorVariant.getReference() + "_"
-                            + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
-
-                    url = Utils.fixUrl(
-                            Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
-
-                } else {
-                    final String imageFile = colorVariant.getColorPath();
-
-                    url = Utils.fixUrl(
-                            Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
-                }
-
-                Log.d(Properties.TAG, url);
-
-                Picasso.with(mContext)
-                        .load(url)
-                        .into(mIconViews[i]);
-
-                // Eliminamos el padre de la vista del icono.
-                ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
-                // Lo añadimos a la lista de iconos.
-                mIconList.addView(mIconViews[i]);
-            }
+            loadColors(product);
 
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
@@ -263,6 +213,65 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                    .into(mTarget);
 
             mProduct = product;
+        }
+
+        /**
+         * Metodo que inicializa la lista de colores.
+         * @param product: producto.
+         */
+        private void loadColors(Product product)
+        {
+            // Eliminamos todos los iconos anteriores.
+            mIconList.removeAllViews();
+
+            // Creamos un array con todos los iconos.
+            mIconViews = new CircleImageView[mProduct.getColors().size()];
+
+            // Metemos cada icono en la lista.
+            int max = (mProduct.getColors().size() > 3) ? 4 : mProduct.getColors().size();
+            for (int i = 0; i < max; i++)
+            {
+                ColorVariant colorVariant = mProduct.getColors().get(i);
+
+                // Inflamos la vista con el icono.
+                LayoutInflater mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                mIconViews[i] = (CircleImageView) mInflater.inflate(
+                        R.layout.aux_recommended_color_icon, null).findViewById(R.id.recommended_color_icon);
+
+                // Seteamos los margenes laterales para que no queden pegados unos con otros.
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mIconViews[i].getLayoutParams();
+                params.setMargins(8, params.topMargin, 8, params.bottomMargin);
+                mIconViews[i].setLayoutParams(params);
+
+                // Path != 0 -> Color predefinido
+                String url;
+                if (colorVariant.getColorPath().equals("0"))
+                {
+                    final String imageFile = product.getShop() + "_" + product.getSection() + "_"
+                            + colorVariant.getReference() + "_"
+                            + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+                    url = Utils.fixUrl(
+                            Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
+
+                } else {
+                    final String imageFile = colorVariant.getColorPath();
+
+                    url = Utils.fixUrl(
+                            Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+                }
+
+                Log.d(Properties.TAG, url);
+
+                Picasso.with(mContext)
+                        .load(url)
+                        .into(mIconViews[i]);
+
+                // Eliminamos el padre de la vista del icono.
+                ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
+                // Lo añadimos a la lista de iconos.
+                mIconList.addView(mIconViews[i]);
+            }
         }
 
         /**
