@@ -55,36 +55,31 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainScreenUI extends AppCompatActivity
 {
     /* Constants */
-    protected static final int FILTER_REQUEST = 0;
-    protected static final int MODIFICATION_REQUEST = 1;
-    protected static final int MANAGE_SHOPS_REQUEST = 2;
-    protected static final int MANAGE_FAVORITES_REQUEST = 3;
-    protected static final int EXIT_TIME_INTERVAL = 2000;
-    protected static String SEARCH_QUERY;
+    private static final int FILTER_REQUEST           = 0;
+    private static final int MODIFICATION_REQUEST     = 1;
+    private static final int MANAGE_SHOPS_REQUEST     = 2;
+    private static final int MANAGE_FAVORITES_REQUEST = 3;
+    private static final int EXIT_TIME_INTERVAL       = 2000;
 
     /* Container Views */
-    protected NavigationView mNavigationVew;
-    protected DrawerLayout mDrawerLayout;
-    protected CoordinatorLayout mCoordinatorLayout;
-    protected ViewPager mViewPager;
-    protected TabLayout mTabLayout;
+    private NavigationView mNavigationVew;
+    private DrawerLayout mDrawerLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+    private ViewPager mViewPager;
 
     /* Toolbar */
-    protected Toolbar mToolbar;
-    protected ActionBarDrawerToggle mLeftDrawerToggle;
-
-    /* Menu */
-    protected Menu mMenu;
+    private Toolbar mToolbar;
+    private ActionBarDrawerToggle mLeftDrawerToggle;
 
     /* Fragments */
-    protected RecommendedFragment mRecommendedFragment;
-    protected ProductsFragment mProductsFragment;
+    private RecommendedFragment mRecommendedFragment;
+    private ProductsFragment mProductsFragment;
 
     /* SharedPreference */
-    protected SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     /* Other */
-    protected long mBackPressed;
+    private long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -130,7 +125,7 @@ public class MainScreenUI extends AppCompatActivity
     private void _initViewPager()
     {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -144,9 +139,9 @@ public class MainScreenUI extends AppCompatActivity
 
         // Marcamos como activo la segunda pestaña (NOVEDADES)
         mViewPager.setCurrentItem(1);
-        mTabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
         {
             @Override
             public void onTabSelected(TabLayout.Tab tab)
@@ -161,7 +156,7 @@ public class MainScreenUI extends AppCompatActivity
             public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        ViewGroup vg = (ViewGroup)mTabLayout.getChildAt(0);
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++)
         {
@@ -466,9 +461,6 @@ public class MainScreenUI extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Guardamos el menu para poder acceder a los expandableItems mas adelante.
-        this.mMenu = menu;
-
         // Inflamos el menu.
         getMenuInflater().inflate(R.menu.toolbar_menu_grid, menu);
 
@@ -524,10 +516,10 @@ public class MainScreenUI extends AppCompatActivity
                 mViewPager.setCurrentItem(1);
 
                 // Sacamos la cadena de busqueda.
-                SEARCH_QUERY = data.getStringExtra(Properties.PACKAGE + ".search");
+                String searchQuery = data.getStringExtra(Properties.PACKAGE + ".search");
 
                 // Si es null significa que se quiere filtrar.
-                if (SEARCH_QUERY == null)
+                if (searchQuery == null)
                 {
                     Log.d(Properties.TAG, "Filtro establecido:");
 
@@ -543,9 +535,9 @@ public class MainScreenUI extends AppCompatActivity
                     mProductsFragment.processFilter(filterMap);
 
                 } else {
-                    Log.d(Properties.TAG, "Busqueda: " + SEARCH_QUERY);
+                    Log.d(Properties.TAG, "Busqueda: " + searchQuery);
 
-                    mProductsFragment.processSearch(SEARCH_QUERY);
+                    mProductsFragment.processSearch(searchQuery);
                 }
 
             } else if (requestCode == MODIFICATION_REQUEST) {

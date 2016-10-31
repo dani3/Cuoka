@@ -47,23 +47,23 @@ import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedListAdapter.ProductHolder>
 {
     /* Context */
-    private static Context mContext;
+    private Context mContext;
 
     /* Container Views */
-    private static FrameLayout mFrameLayout;
+    private FrameLayout mFrameLayout;
 
     /* SharedPreferences */
-    private static SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     /* Data */
-    private static List<Product> mProductList;
-    private static ProductHolder mProductClicked;
-    private static boolean[] mItemsFlipped;
+    private List<Product> mProductList;
+    private ProductHolder mProductClicked;
+    private boolean[] mItemsFlipped;
 
     /**
      * ViewHolder del producto con todos los componentes graficos necesarios
      */
-    public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private boolean ERROR;
         private boolean LOADED;
@@ -88,13 +88,13 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             super(itemView);
 
-            mProductImageView     = (ImageView)itemView.findViewById(R.id.recommended_image);
-            mShopTextView         = (TextView)itemView.findViewById(R.id.recommended_shop);
-            mNameTextView         = (TextView)itemView.findViewById(R.id.recommended_name);
-            mPriceTextView        = (TextView)itemView.findViewById(R.id.recommended_price);
-            mDescriptionTextView  = (TextView)itemView.findViewById(R.id.recommended_description);
-            mIconList             = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
-            mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
+            mProductImageView    = (ImageView)itemView.findViewById(R.id.recommended_image);
+            mShopTextView        = (TextView)itemView.findViewById(R.id.recommended_shop);
+            mNameTextView        = (TextView)itemView.findViewById(R.id.recommended_name);
+            mPriceTextView       = (TextView)itemView.findViewById(R.id.recommended_price);
+            mDescriptionTextView = (TextView)itemView.findViewById(R.id.recommended_description);
+            mIconList            = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
+            mFlippableView       = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
             mProductImageView.setOnClickListener(this);
             mFlippableView.setOnClickListener(this);
@@ -243,24 +243,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 params.setMargins(8, params.topMargin, 8, params.bottomMargin);
                 mIconViews[i].setLayoutParams(params);
 
-                // Path != 0 -> Color predefinido
-                String url;
-                if (colorVariant.getColorPath().equals("0"))
-                {
-                    final String imageFile = product.getShop() + "_" + product.getSection() + "_"
-                            + colorVariant.getReference() + "_"
-                            + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
-
-                    url = Utils.fixUrl(
-                            Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
-
-                } else {
-                    final String imageFile = colorVariant.getColorPath();
-
-                    url = Utils.fixUrl(
-                            Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
-                }
-
+                // Obtenemos la url del icono del color.
+                String url = Utils.getColorUrl(colorVariant, product.getShop(), product.getSection());
                 Log.d(Properties.TAG, url);
 
                 Picasso.with(mContext)

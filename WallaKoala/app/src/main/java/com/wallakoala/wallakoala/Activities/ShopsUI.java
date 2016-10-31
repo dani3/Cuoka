@@ -55,26 +55,22 @@ import java.util.concurrent.TimeoutException;
 
 public class ShopsUI extends AppCompatActivity
 {
-    /* Container Views */
-    protected RecyclerView mShopsRecyclerView;
-    protected CoordinatorLayout mCoordinatorLayout;
+    /* ContainerViews */
+    private CoordinatorLayout mCoordinatorLayout;
 
     /* Adapter */
-    protected ShopsListAdapter mShopListAdapter;
-
-    /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferencesManager;
+    private ShopsListAdapter mShopListAdapter;
 
     /* FAB */
-    protected FloatingActionButton mAcceptFAB;
+    private FloatingActionButton mAcceptFAB;
 
     /* Data */
-    protected List<Shop> mAllShopsList;
-    protected List<String> mMyShopsList;
-    protected List<Product> mFavoriteList;
+    private List<Shop> mAllShopsList;
+    private List<String> mMyShopsList;
+    private List<Product> mFavoriteList;
 
     /* User */
-    protected User mUser;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -94,9 +90,9 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _initData()
     {
-        mSharedPreferencesManager = new SharedPreferencesManager(ShopsUI.this);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(ShopsUI.this);
 
-        mUser = mSharedPreferencesManager.retreiveUser();
+        mUser = sharedPreferencesManager.retreiveUser();
 
         mMyShopsList = new ArrayList<>();
         mAllShopsList = new ArrayList<>();
@@ -284,7 +280,7 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _initRecyclerView()
     {
-        mShopsRecyclerView = (RecyclerView)findViewById(R.id.shops_recyclerview);
+        RecyclerView mShopsRecyclerView = (RecyclerView) findViewById(R.id.shops_recyclerview);
 
         mShopsRecyclerView.setVisibility(View.VISIBLE);
 

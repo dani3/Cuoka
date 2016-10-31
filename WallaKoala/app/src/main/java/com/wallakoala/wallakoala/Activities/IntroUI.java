@@ -22,7 +22,7 @@ import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 public class IntroUI extends AppCompatActivity
 {
     /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

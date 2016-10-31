@@ -25,21 +25,21 @@ import com.wallakoala.wallakoala.Utils.Utils;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder>
 {
     /* Context */
-    private static Context mContext;
+    private Context mContext;
 
     /* Views */
-    private static ImageView mImageView;
+    private ImageView mImageView;
 
     /* Data */
-    private static ColorVariant mColor;
-    private static double mAspectRatio;
-    private static String mShop;
-    private static String mSection;
+    private ColorVariant mColor;
+    private double mAspectRatio;
+    private String mShop;
+    private String mSection;
 
     /**
      * ViewHolder de la imagen con todos los componentes graficos necesarios
      */
-    public static class ProductHolder extends RecyclerView.ViewHolder
+    public class ProductHolder extends RecyclerView.ViewHolder
     {
         private ImageView mProductImageView;
         private Target mTarget;
@@ -70,7 +70,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
                     if (getAdapterPosition() == 0)
+                    {
                         mImageView.setVisibility(View.GONE);
+                    }
 
                     mProductImageView.setImageBitmap(bitmap);
                     mProductImageView.setBackgroundColor(-1);
@@ -108,12 +110,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
      * @param section: seccion a la que pertenece el producto.
      * @param image: imagen de baja calidad que se coloca debajo del RecyclerView.
      */
-    public ProductAdapter(final Context context
-                , final ColorVariant color
-                , final double ratio
-                , final String shop
-                , final String section
-                , final ImageView image)
+    public ProductAdapter(Context context
+                , ColorVariant color
+                , double ratio
+                , String shop
+                , String section
+                , ImageView image)
     {
         mContext = context;
         mColor = color;

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,34 +39,26 @@ import com.wallakoala.wallakoala.Utils.Utils;
 public class ProfileUI extends AppCompatActivity
 {
     /* Constants */
-    protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
-    protected static final int ANIM_DURATION = 250;
-    protected static boolean EXITING;
+    private static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
+    private static final int ANIM_DURATION = 250;
+    private static boolean EXITING;
 
     /* Data */
-    protected int mThumbnailTop;
-    protected int mThumbnailLeft;
-    protected int mThumbnailWidth;
-    protected int mThumbnailHeight;
-    protected int mLeftDeltaImage;
-    protected int mTopDeltaImage;
+    private int mThumbnailTop;
+    private int mThumbnailLeft;
+    private int mThumbnailWidth;
+    private int mThumbnailHeight;
+    private int mLeftDeltaImage;
+    private int mTopDeltaImage;
 
     /* User */
-    protected User mUser;
+    private User mUser;
 
-    /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferencesManager;
-
-    protected float mWidthScaleImage;
-    protected float mHeightScaleImage;
+    private float mWidthScaleImage;
+    private float mHeightScaleImage;
 
     /* Container Layouts */
-    protected CoordinatorLayout mTopLevelLayout;
-    protected CollapsingToolbarLayout mCollapsingToolbarLayout;
-
-    /* TextViews */
-    protected TextView mFavoriteTextView;
-    protected TextView mShopsTextView;
+    private CoordinatorLayout mTopLevelLayout;
 
     /* TextInputLayouts */
     private TextInputLayout mEmailInputLayout;
@@ -84,15 +75,11 @@ public class ProfileUI extends AppCompatActivity
     private EditText mNameEdittext;
 
     /* Floating Action Button */
-    protected FloatingActionButton mProfileFAB;
-    protected FloatingActionButton mDeleteFAB;
+    private FloatingActionButton mProfileFAB;
+    private FloatingActionButton mDeleteFAB;
 
     /* AlertDialog */
-    protected AlertDialog mDeleteAlertDialog;
-
-    /* AsyincTask */
-    protected AsyncTask mSendModificationToServer;
-    protected AsyncTask mDeleteUser;
+    private AlertDialog mDeleteAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -142,9 +129,9 @@ public class ProfileUI extends AppCompatActivity
     {
         EXITING = false;
 
-        mSharedPreferencesManager = new SharedPreferencesManager(this);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
 
-        mUser = mSharedPreferencesManager.retreiveUser();
+        mUser = sharedPreferencesManager.retreiveUser();
 
         Bundle bundle = getIntent().getExtras();
 
@@ -177,13 +164,12 @@ public class ProfileUI extends AppCompatActivity
     @SuppressWarnings("deprecation")
     private void _initViews()
     {
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_layout);
         mTopLevelLayout          = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
         mProfileFAB              = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
         mDeleteFAB               = (FloatingActionButton)findViewById(R.id.profile_delete);
 
-        mFavoriteTextView = (TextView)findViewById(R.id.profile_favorites);
-        mShopsTextView    = (TextView)findViewById(R.id.profile_shops);
+        TextView mFavoriteTextView = (TextView) findViewById(R.id.profile_favorites);
+        TextView mShopsTextView    = (TextView) findViewById(R.id.profile_shops);
 
         mFavoriteTextView.setText(Integer.toString(mUser.getFavoriteProducts().size()));
         mShopsTextView.setText(Integer.toString(mUser.getShops().size()));
@@ -226,7 +212,7 @@ public class ProfileUI extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                mDeleteUser = new DeleteUser().execute();
+                new DeleteUser().execute();
             }
         });
 
@@ -379,7 +365,7 @@ public class ProfileUI extends AppCompatActivity
             case (R.id.menu_item_accept):
                 if (_validateName() && _validateAge() && _validateEmail() && _validatePassword() && _validatePostalCode())
                 {
-                    mSendModificationToServer = new SendModificationToServer().execute();
+                    new SendModificationToServer().execute();
                 }
 
                 break;
@@ -525,7 +511,7 @@ public class ProfileUI extends AppCompatActivity
         mProfileFAB.setTranslationX(mLeftDeltaImage);
         mProfileFAB.setTranslationY(mTopDeltaImage);
 
-        // Animacion de escalado y desplazamiento hasta el tamaño grande
+        // Animacion de escalado y desplazamiento hasta el tamaño grande (HARDWARE_LAYER)
         mProfileFAB.animate()
                    .withLayer()
                    .setDuration(ANIM_DURATION)
@@ -550,6 +536,7 @@ public class ProfileUI extends AppCompatActivity
         mProfileFAB.getLocationOnScreen(currentLocation);
         mTopDeltaImage = mThumbnailTop - currentLocation[1];
 
+        // Animacion de escalado y desplazamiento hasta el tamaño original (HARDWARE_LAYER)
         mProfileFAB.animate()
                    .withLayer()
                    .setDuration(ANIM_DURATION)

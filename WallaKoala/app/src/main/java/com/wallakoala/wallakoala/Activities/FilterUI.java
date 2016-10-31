@@ -50,9 +50,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Activity con la pantalla de filtros.
@@ -62,145 +60,97 @@ import java.util.Map;
 public class FilterUI extends AppCompatActivity implements View.OnClickListener
 {
     /* Constants */
-    protected static final float ALPHA_ACTIVE_FILTER = 1.0f;
-    protected static final float ALPHA_INACTIVE_FILTER = 0.2f;
-    protected static final String ALL = "All";
-    protected static String SECTION_FILTER_MAN_1;
-    protected static String SECTION_FILTER_MAN_2;
-    protected static String SECTION_FILTER_MAN_3;
-    protected static String SECTION_FILTER_MAN_4;
-    protected static String SECTION_FILTER_MAN_5;
-    protected static String SECTION_FILTER_MAN_6;
-    protected static String SECTION_FILTER_MAN_7;
-    protected static String SECTION_FILTER_MAN_8;
-    protected static String SECTION_FILTER_MAN_9;
-    protected static String SECTION_FILTER_MAN_10;
-    protected static String SECTION_FILTER_MAN_11;
-    protected static String SECTION_FILTER_MAN_12;
-    protected static String SECTION_FILTER_WOMAN_1;
-    protected static String SECTION_FILTER_WOMAN_2;
-    protected static String SECTION_FILTER_WOMAN_3;
-    protected static String SECTION_FILTER_WOMAN_4;
-    protected static String SECTION_FILTER_WOMAN_5;
-    protected static String SECTION_FILTER_WOMAN_6;
-    protected static String SECTION_FILTER_WOMAN_7;
-    protected static String SECTION_FILTER_WOMAN_8;
-    protected static String SECTION_FILTER_WOMAN_9;
-    protected static String SECTION_FILTER_WOMAN_10;
-    protected static String SECTION_FILTER_WOMAN_11;
-    protected static String SECTION_FILTER_WOMAN_12;
-    protected static boolean MAN;
-
-    /* Floating Button */
-    protected FloatingActionButton mFloatingActionButton;
-
-    /* Toolbar */
-    protected Toolbar mToolbar;
-
-    /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferences;
+    private static final float ALPHA_ACTIVE_FILTER = 1.0f;
+    private static final float ALPHA_INACTIVE_FILTER = 0.2f;
+    private static final String ALL = "All";
+    private static String SECTION_FILTER_MAN_1;
+    private static String SECTION_FILTER_MAN_2;
+    private static String SECTION_FILTER_MAN_3;
+    private static String SECTION_FILTER_MAN_4;
+    private static String SECTION_FILTER_MAN_5;
+    private static String SECTION_FILTER_MAN_6;
+    private static String SECTION_FILTER_MAN_7;
+    private static String SECTION_FILTER_MAN_8;
+    private static String SECTION_FILTER_MAN_9;
+    private static String SECTION_FILTER_MAN_10;
+    private static String SECTION_FILTER_MAN_11;
+    private static String SECTION_FILTER_MAN_12;
+    private static String SECTION_FILTER_WOMAN_1;
+    private static String SECTION_FILTER_WOMAN_2;
+    private static String SECTION_FILTER_WOMAN_3;
+    private static String SECTION_FILTER_WOMAN_4;
+    private static String SECTION_FILTER_WOMAN_5;
+    private static String SECTION_FILTER_WOMAN_6;
+    private static String SECTION_FILTER_WOMAN_7;
+    private static String SECTION_FILTER_WOMAN_8;
+    private static String SECTION_FILTER_WOMAN_9;
+    private static String SECTION_FILTER_WOMAN_10;
+    private static String SECTION_FILTER_WOMAN_11;
+    private static String SECTION_FILTER_WOMAN_12;
+    private static boolean MAN;
 
     /* Snackbar */
-    protected Snackbar mSnackbar;
+    private Snackbar mSnackbar;
 
     /* Animations */
-    protected Animation mExplode;
+    private Animation mExplode;
 
     /* Menu */
-    protected Menu mMenu;
+    private Menu mMenu;
 
     /* Container Views */
-    protected ViewGroup mItemsMenuViewGroup;
-    protected LinearLayout mLeftShopList;
-    protected LinearLayout mRightShopList;
-    protected CoordinatorLayout mCoordinatorLayout;
-    protected RelativeLayout mFilterShopItemLayout;
-    protected RelativeLayout mFilterSectionItemLayout;
-    protected RelativeLayout mFilterPriceItemLayout;
-    protected RelativeLayout mFilterColorItemLayout;
-    protected View mFilterShopMenuLayout;
-    protected View mFilterSectionMenuLayout;
-    protected View mFilterPriceMenuLayout;
-    protected View mFilterColorMenuLayout;
-    protected View mFilterNewnessMenuLayout;
-
-    /* ImageButtons */
-    protected ImageButton mFilterShopRemove;
-    protected ImageButton mFilterSectionRemove;
-    protected ImageButton mFilterPriceRemove;
-    protected ImageButton mFilterColorRemove;
+    private ViewGroup mItemsMenuViewGroup;
+    private CoordinatorLayout mCoordinatorLayout;
+    private View mFilterShopMenuLayout;
+    private View mFilterSectionMenuLayout;
+    private View mFilterPriceMenuLayout;
+    private View mFilterColorMenuLayout;
+    private View mFilterNewnessMenuLayout;
 
     /* ImageViews */
-    protected ImageView mFilterShopImageView;
-    protected ImageView mFilterSectionImageView;
-    protected ImageView mFilterPriceImageView;
-    protected ImageView mFilterColorImageView;
-    protected ImageView mFilterNewnessImageView;
+    private ImageView mFilterShopImageView;
+    private ImageView mFilterSectionImageView;
+    private ImageView mFilterPriceImageView;
+    private ImageView mFilterColorImageView;
+    private ImageView mFilterNewnessImageView;
 
     /* TextViews */
-    protected TextView mToolbarTextView;
-    protected TextView mFilterShopTextView;
-    protected TextView mFilterSectionTextView;
-    protected TextView mFilterColorTextView;
-    protected TextView mFilterPriceTextView;
-    protected TextView mFilterNewnessTextView;
+    private TextView mFilterShopTextView;
+    private TextView mFilterSectionTextView;
+    private TextView mFilterColorTextView;
+    private TextView mFilterPriceTextView;
 
     /* RadioButtons */
-    protected AppCompatRadioButton mNewnessAllRadioButton;
-    protected AppCompatRadioButton mNewnessNewRadioButton;
+    private AppCompatRadioButton mNewnessAllRadioButton;
+    private AppCompatRadioButton mNewnessNewRadioButton;
 
     /* CheckBoxes */
-    protected List<AppCompatCheckBox> mShopsCheckBoxesList;
-    protected List<AppCompatCheckBox> mColorCheckBoxesList;
-    protected AppCompatCheckBox mColorYellowCheckBox;
-    protected AppCompatCheckBox mColorBlueCheckBox;
-    protected AppCompatCheckBox mColorBeigeCheckBox;
-    protected AppCompatCheckBox mColorWhiteCheckBox;
-    protected AppCompatCheckBox mColorGreyCheckBox;
-    protected AppCompatCheckBox mColorBrownCheckBox;
-    protected AppCompatCheckBox mColorPurpleCheckBox;
-    protected AppCompatCheckBox mColorBlackCheckBox;
-    protected AppCompatCheckBox mColorRedCheckBox;
-    protected AppCompatCheckBox mColorPinkCheckBox;
-    protected AppCompatCheckBox mColorGreenCheckBox;
+    private List<AppCompatCheckBox> mShopsCheckBoxesList;
+    private List<AppCompatCheckBox> mColorCheckBoxesList;
+    private AppCompatCheckBox mAllShopsCheckBox;
 
-    protected AppCompatCheckBox mAllShopsCheckBox;
-
-    protected List<AppCompatCheckBox> mSectionCheckBoxesList;
-    protected AppCompatCheckBox mSection1CheckBox;
-    protected AppCompatCheckBox mSection2CheckBox;
-    protected AppCompatCheckBox mSection3CheckBox;
-    protected AppCompatCheckBox mSection4CheckBox;
-    protected AppCompatCheckBox mSection5CheckBox;
-    protected AppCompatCheckBox mSection6CheckBox;
-    protected AppCompatCheckBox mSection7CheckBox;
-    protected AppCompatCheckBox mSection8CheckBox;
-    protected AppCompatCheckBox mSection9CheckBox;
-    protected AppCompatCheckBox mSection10CheckBox;
-    protected AppCompatCheckBox mSection11CheckBox;
-    protected AppCompatCheckBox mSection12CheckBox;
+    private List<AppCompatCheckBox> mSectionCheckBoxesList;
 
     /* RangeSeekBar */
-    protected RangeSeekBar mRangeSeekBar;
+    private RangeSeekBar mRangeSeekBar;
 
     /* EditTexts */
-    protected EditText mPriceFromEditText;
-    protected EditText mPriceToEditText;
+    private EditText mPriceFromEditText;
+    private EditText mPriceToEditText;
 
     /* Data */
-    protected List<String> mShopsList;
-    protected List<String> mFilterShops;
-    protected List<String> mFilterColors;
-    protected List<String> mFilterSections;
-    protected Map<String, Object> mFilterMap;
-    protected int mFilterMinPrice;
-    protected int mFilterMaxPrice;
-    protected boolean mFilterNewness;
-    protected boolean SHOP_FILTER_ACTIVE;
-    protected boolean SECTION_FILTER_ACTIVE;
-    protected boolean PRICE_FILTER_ACTIVE;
-    protected boolean COLOR_FILTER_ACTIVE;
-    protected boolean NEWNESS_FILTER_ACTIVE;
+    private List<String> mShopsList;
+    private List<String> mFilterShops;
+    private List<String> mFilterColors;
+    private List<String> mFilterSections;
+    private int mFilterMinPrice;
+    private int mFilterMaxPrice;
+    private boolean mFilterNewness;
+    private boolean SHOP_FILTER_ACTIVE;
+    private boolean SECTION_FILTER_ACTIVE;
+    private boolean PRICE_FILTER_ACTIVE;
+    private boolean COLOR_FILTER_ACTIVE;
+    private boolean NEWNESS_FILTER_ACTIVE;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -212,22 +162,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (savedInstanceState == null)
         {
-            mFilterMap = new HashMap<>();
-
             Intent intent = getIntent();
-
-            // Filtro de novedades (false si no esta activado)
-            mFilterMap.put("newness", intent.getBooleanExtra(Properties.PACKAGE + ".newness", false));
-            // Filtro de secciones (null si no esta activado)
-            mFilterMap.put("sections", intent.getSerializableExtra(Properties.PACKAGE + ".sections"));
-            // Filtro de colores (null si no esta activado)
-            mFilterMap.put("colors", intent.getSerializableExtra(Properties.PACKAGE + ".colors"));
-            // Filtro de tiendas (null si no esta activado)
-            mFilterMap.put("shops", intent.getSerializableExtra(Properties.PACKAGE + ".shops"));
-            // Filtro de precio (minimo) (-1 si no esta activado)
-            mFilterMap.put("minPrice", intent.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
-            // Filtro de precio (maximo) (-1 si no esta activado)
-            mFilterMap.put("maxPrice", intent.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
 
             MAN = intent.getBooleanExtra(Properties.PACKAGE + ".man", false);
 
@@ -262,8 +197,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mSectionCheckBoxesList = new ArrayList<>();
 
         mShopsList = new ArrayList<>();
-        mSharedPreferences = new SharedPreferencesManager(this);
-        for (String shop : mSharedPreferences.retreiveUser().getShops())
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
+        for (String shop : sharedPreferencesManager.retreiveUser().getShops())
         {
             mShopsList.add(shop);
         }
@@ -300,12 +235,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initToolbar()
     {
-        mToolbar = (Toolbar)findViewById(R.id.filter_appbar);
-        mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
+        Toolbar toolbar  = (Toolbar) findViewById(R.id.filter_appbar);
+        TextView mToolbarTextView = (TextView) findViewById(R.id.toolbar_textview);
 
         mToolbarTextView.setText(getResources().getString(R.string.toolbar_filter));
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -331,14 +266,15 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.filter_coordinator_layout);
         mItemsMenuViewGroup   = (ViewGroup)findViewById(R.id.menu_items);
-        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.floatingButton);
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton);
 
         // Hacemos aparecer el FloatingButton
-        mFloatingActionButton.setVisibility(View.VISIBLE);
-        mFloatingActionButton.startAnimation(mExplode);
+        floatingActionButton.setVisibility(View.VISIBLE);
+        floatingActionButton.startAnimation(mExplode);
 
         // [BEGIN] Listener FAB OK
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean OK = true;
@@ -488,10 +424,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterItemViews()
     {
-        mFilterShopItemLayout    = (RelativeLayout)findViewById(R.id.filter_shop);
-        mFilterSectionItemLayout = (RelativeLayout)findViewById(R.id.filter_section);
-        mFilterPriceItemLayout   = (RelativeLayout)findViewById(R.id.filter_price);
-        mFilterColorItemLayout   = (RelativeLayout)findViewById(R.id.filter_color);
+        RelativeLayout mFilterShopItemLayout    = (RelativeLayout) findViewById(R.id.filter_shop);
+        RelativeLayout mFilterSectionItemLayout = (RelativeLayout) findViewById(R.id.filter_section);
+        RelativeLayout mFilterPriceItemLayout   = (RelativeLayout) findViewById(R.id.filter_price);
+        RelativeLayout mFilterColorItemLayout   = (RelativeLayout) findViewById(R.id.filter_color);
 
         mFilterShopImageView    = (ImageView)findViewById(R.id.filter_image_shop);
         mFilterSectionImageView = (ImageView)findViewById(R.id.filter_image_section);
@@ -522,10 +458,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorMenuLayout   = findViewById(R.id.filter_item_color_menu);
         mFilterNewnessMenuLayout = findViewById(R.id.filter_item_newness_menu);
 
-        mFilterShopRemove    = (ImageButton)findViewById(R.id.filter_item_shop_clear);
-        mFilterSectionRemove = (ImageButton)findViewById(R.id.filter_item_section_clear);
-        mFilterPriceRemove   = (ImageButton)findViewById(R.id.filter_item_price_clear);
-        mFilterColorRemove   = (ImageButton)findViewById(R.id.filter_item_color_clear);
+        ImageButton mFilterShopRemove    = (ImageButton) findViewById(R.id.filter_item_shop_clear);
+        ImageButton mFilterSectionRemove = (ImageButton) findViewById(R.id.filter_item_section_clear);
+        ImageButton mFilterPriceRemove   = (ImageButton) findViewById(R.id.filter_item_price_clear);
+        ImageButton mFilterColorRemove   = (ImageButton) findViewById(R.id.filter_item_color_clear);
 
         mFilterShopRemove.setOnClickListener(this);
         mFilterSectionRemove.setOnClickListener(this);
@@ -545,17 +481,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     @SuppressWarnings("deprecation")
     protected void _initFilterColor()
     {
-        mColorYellowCheckBox = (AppCompatCheckBox)findViewById(R.id.filter_color_yellow);
-        mColorBlueCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_blue);
-        mColorBeigeCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_beige);
-        mColorWhiteCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_white);
-        mColorGreyCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_grey);
-        mColorBrownCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_brown);
-        mColorPurpleCheckBox = (AppCompatCheckBox)findViewById(R.id.filter_color_purple);
-        mColorBlackCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_black);
-        mColorRedCheckBox    = (AppCompatCheckBox)findViewById(R.id.filter_color_red);
-        mColorPinkCheckBox   = (AppCompatCheckBox)findViewById(R.id.filter_color_pink);
-        mColorGreenCheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_color_green);
+        AppCompatCheckBox mColorYellowCheckBox = (AppCompatCheckBox) findViewById(R.id.filter_color_yellow);
+        AppCompatCheckBox mColorBlueCheckBox   = (AppCompatCheckBox) findViewById(R.id.filter_color_blue);
+        AppCompatCheckBox mColorBeigeCheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_color_beige);
+        AppCompatCheckBox mColorWhiteCheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_color_white);
+        AppCompatCheckBox mColorGreyCheckBox   = (AppCompatCheckBox) findViewById(R.id.filter_color_grey);
+        AppCompatCheckBox mColorBrownCheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_color_brown);
+        AppCompatCheckBox mColorPurpleCheckBox = (AppCompatCheckBox) findViewById(R.id.filter_color_purple);
+        AppCompatCheckBox mColorBlackCheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_color_black);
+        AppCompatCheckBox mColorRedCheckBox    = (AppCompatCheckBox) findViewById(R.id.filter_color_red);
+        AppCompatCheckBox mColorPinkCheckBox   = (AppCompatCheckBox) findViewById(R.id.filter_color_pink);
+        AppCompatCheckBox mColorGreenCheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_color_green);
 
         mColorCheckBoxesList.add(mColorYellowCheckBox); mColorCheckBoxesList.add(mColorBlueCheckBox);
         mColorCheckBoxesList.add(mColorBeigeCheckBox); mColorCheckBoxesList.add(mColorWhiteCheckBox);
@@ -597,18 +533,18 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     @SuppressWarnings("deprecation")
     protected void _initFilterSection()
     {
-        mSection1CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_1);
-        mSection2CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_2);
-        mSection3CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_3);
-        mSection4CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_4);
-        mSection5CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_5);
-        mSection6CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_6);
-        mSection7CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_7);
-        mSection8CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_8);
-        mSection9CheckBox  = (AppCompatCheckBox)findViewById(R.id.filter_section_9);
-        mSection10CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_10);
-        mSection11CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_11);
-        mSection12CheckBox = (AppCompatCheckBox)findViewById(R.id.filter_section_12);
+        AppCompatCheckBox mSection1CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_1);
+        AppCompatCheckBox mSection2CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_2);
+        AppCompatCheckBox mSection3CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_3);
+        AppCompatCheckBox mSection4CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_4);
+        AppCompatCheckBox mSection5CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_5);
+        AppCompatCheckBox mSection6CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_6);
+        AppCompatCheckBox mSection7CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_7);
+        AppCompatCheckBox mSection8CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_8);
+        AppCompatCheckBox mSection9CheckBox  = (AppCompatCheckBox) findViewById(R.id.filter_section_9);
+        AppCompatCheckBox mSection10CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_10);
+        AppCompatCheckBox mSection11CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_11);
+        AppCompatCheckBox mSection12CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_12);
 
         mSectionCheckBoxesList.add(mSection1CheckBox); mSectionCheckBoxesList.add(mSection2CheckBox);
         mSectionCheckBoxesList.add(mSection3CheckBox); mSectionCheckBoxesList.add(mSection4CheckBox);
@@ -680,7 +616,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     @SuppressWarnings("deprecation")
     protected void _initFilterNewness()
     {
-        mFilterNewnessTextView = (TextView)findViewById(R.id.filter_text_newness);
+        TextView mFilterNewnessTextView = (TextView) findViewById(R.id.filter_text_newness);
 
         mFilterNewnessTextView.setTextColor(getResources().getColor(R.color.colorText));
 
@@ -847,8 +783,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        mRightShopList = (LinearLayout) findViewById(R.id.rightShopList);
-        mLeftShopList  = (LinearLayout) findViewById(R.id.leftShopList);
+        LinearLayout mRightShopList = (LinearLayout) findViewById(R.id.rightShopList);
+        LinearLayout mLeftShopList  = (LinearLayout) findViewById(R.id.leftShopList);
 
         // Ordenamos las tiendas por orden alfabetico.
         Collections.sort(mShopsList);

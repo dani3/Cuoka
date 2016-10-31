@@ -40,10 +40,10 @@ public class ColorIconListAdapter extends BaseAdapter
     /**
      * ViewHolder del icono.
      */
-    protected static class ColorIconHolder
+    private static class ColorIconHolder
     {
-        CircleImageView mIconView;
-        CircleImageView mSelectedView;
+        private CircleImageView mIconView;
+        private CircleImageView mSelectedView;
     }
 
     /**
@@ -56,7 +56,7 @@ public class ColorIconListAdapter extends BaseAdapter
                     , final String shop
                     , final String section)
     {
-        this.mContext = context;
+        mContext = context;
         mColorList = colorVariants;
         mSection = section;
         mShop = shop;
@@ -108,21 +108,8 @@ public class ColorIconListAdapter extends BaseAdapter
             colorIconHolder = (ColorIconHolder)convertView.getTag();
         }
 
-        // Path != 0 -> Color predefinido
-        String url;
-        if (mColorList.get(position).getColorPath().equals("0"))
-        {
-            final String imageFile = mShop + "_" + mSection + "_"
-                            + mColorList.get(position).getReference() + "_"
-                            + mColorList.get(position).getColorName().replaceAll(" ", "_") + "_ICON.jpg";
-
-            url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + mShop + "/" + imageFile);
-
-        } else {
-            final String imageFile = mColorList.get(position).getColorPath();
-
-            url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
-        }
+        // Obtenemos la url del icono
+        String url = Utils.getColorUrl(mColorList.get(position), mShop, mSection);
 
         if (position == mIconSelected)
         {

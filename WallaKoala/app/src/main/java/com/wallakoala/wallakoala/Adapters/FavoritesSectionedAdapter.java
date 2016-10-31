@@ -49,22 +49,25 @@ import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 public class FavoritesSectionedAdapter extends StatelessSection
 {
     /* Context */
-    private static Context mContext;
+    private Context mContext;
+
+    /* LayoutInflater */
+    LayoutInflater mInflater;
 
     /* SectionAdapter */
-    private static SectionedRecyclerViewAdapter mSectionAdapter;
+    private SectionedRecyclerViewAdapter mSectionAdapter;
 
     /* Container Views */
-    private static FrameLayout mFrameLayout;
+    private FrameLayout mFrameLayout;
 
     /* SharedPreferences */
-    private static SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     /* Data */
-    private static String mShop;
-    private static List<Product> mProductList;
-    private static ProductViewHolder mProductClicked;
-    private static boolean[] mItemsFlipped;
+    private String mShop;
+    private List<Product> mProductList;
+    private ProductViewHolder mProductClicked;
+    private boolean[] mItemsFlipped;
 
     /**
      * Holder de la cabecera de cada seccion.
@@ -156,9 +159,9 @@ public class FavoritesSectionedAdapter extends StatelessSection
         public void bindProduct(Product product, ProductViewHolder holder)
         {
             mProduct = product;
-            mHolder = holder;
+            mHolder  = holder;
 
-            loadColors(product);
+            _loadColors(product);
 
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
@@ -316,7 +319,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
          * Metodo que inicializa la lista de colores.
          * @param product: producto.
          */
-        private void loadColors(Product product)
+        private void _loadColors(Product product)
         {
             // Eliminamos todos los iconos anteriores.
             mIconList.removeAllViews();
@@ -331,7 +334,6 @@ public class FavoritesSectionedAdapter extends StatelessSection
                 ColorVariant colorVariant = mProduct.getColors().get(i);
 
                 // Inflamos la vista con el icono.
-                LayoutInflater mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 mIconViews[i] = (CircleImageView) mInflater.inflate(
                         R.layout.aux_recommended_color_icon, null).findViewById(R.id.recommended_color_icon);
 
@@ -340,29 +342,13 @@ public class FavoritesSectionedAdapter extends StatelessSection
                 params.setMargins(8, params.topMargin, 8, params.bottomMargin);
                 mIconViews[i].setLayoutParams(params);
 
-                // Path != 0 -> Color predefinido
-                String url;
-                if (colorVariant.getColorPath().equals("0"))
-                {
-                    final String imageFile = product.getShop() + "_" + product.getSection() + "_"
-                            + colorVariant.getReference() + "_"
-                            + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
-
-                    url = Utils.fixUrl(
-                            Properties.SERVER_URL + Properties.ICONS_PATH + product.getShop() + "/" + imageFile);
-
-                } else {
-                    final String imageFile = colorVariant.getColorPath();
-
-                    url = Utils.fixUrl(
-                            Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
-                }
-
+                // Obtenemos la url del icono del color.
+                String url = Utils.getColorUrl(colorVariant, product.getShop(), product.getSection());
                 Log.d(Properties.TAG, url);
 
                 Picasso.with(mContext)
-                        .load(url)
-                        .into(mIconViews[i]);
+                       .load(url)
+                       .into(mIconViews[i]);
 
                 // Eliminamos el padre de la vista del icono.
                 ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
@@ -381,9 +367,23 @@ public class FavoritesSectionedAdapter extends StatelessSection
         }
     }
 
-    public FavoritesSectionedAdapter(Context context, SectionedRecyclerViewAdapter sectionAdapter, List<Product> productList, FrameLayout frameLayout, String shop)
+    /**
+     * Constructor del adapter de una seccion.
+     * @param context: contexto.
+     * @param sectionAdapter: adapter padre.
+     * @param productList: lista de productos de esta seccion.
+     * @param frameLayout: frame layout contenedor.
+     * @param shop: nombre de la tienda.
+     */
+    public FavoritesSectionedAdapter(Context context
+                                , SectionedRecyclerViewAdapter sectionAdapter
+                                , List<Product> productList
+                                , FrameLayout frameLayout
+                                , String shop)
     {
         super(R.layout.aux_header_section, R.layout.product_recommended);
+
+        mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mSectionAdapter = sectionAdapter;
         mShop = shop;
@@ -401,6 +401,9 @@ public class FavoritesSectionedAdapter extends StatelessSection
         mSharedPreferencesManager = new SharedPreferencesManager(mContext);
     }
 
+    /**
+     * Metodo que restaura si es necesario el producto clickado.
+     */
     public void restore()
     {
         if (mProductClicked != null)

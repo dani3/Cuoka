@@ -98,7 +98,7 @@ public class RestClientSingleton
      * @param context: contexto.
      * @param offset: dia del que hay que traer productos.
      * @param shopList: lista de tiendas.
-     * @return: Lista de arrays de JSONs con los productos del dia.
+     * @return Lista de arrays de JSONs con los productos del dia.
      */
     public static List<JSONArray> retrieveProducts(Context context, int offset, List<String> shopList)
     {

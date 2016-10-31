@@ -43,20 +43,22 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     private static final int ACTION_SHOP_DELETED = 2;
 
     /* Context */
-    private static Context mContext;
+    private Context mContext;
 
     /* Data */
-    private static List<Shop> mAllShopsList;
-    private static List<String> mMyShopsList;
-    private static Map<String, Integer> mFavoriteMap;
+    private List<Shop> mAllShopsList;
+    private List<String> mMyShopsList;
+    private Map<String, Integer> mFavoriteMap;
 
-    private static Drawable mRoundedAccent;
-    private static Drawable mRoundedGrey;
-    private static Drawable mFavoriteDrawable;
-    private static Drawable mClotheDrawable;
+    private Drawable mRoundedAccent;
+    private Drawable mRoundedGrey;
+    private Drawable mFavoriteDrawable;
+    private Drawable mClotheDrawable;
 
-    /* [BEGIN ViewHolder] */
-    public static class ShopHolder extends RecyclerView.ViewHolder
+    /**
+     * ViewHolder de la tienda.
+     */
+    public class ShopHolder extends RecyclerView.ViewHolder
     {
         private CircleImageView mShopLogoImageView;
         private Button mActionButton;

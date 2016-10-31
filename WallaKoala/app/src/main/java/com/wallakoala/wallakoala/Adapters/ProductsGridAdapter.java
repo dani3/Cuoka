@@ -39,22 +39,22 @@ import java.util.List;
 public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapter.ProductHolder>
 {
     /* Context */
-    private static Context mContext;
+    private Context mContext;
 
     /* Container Views */
-    private static FrameLayout mFrameLayout;
+    private FrameLayout mFrameLayout;
 
     /* Data */
-    private static List<Product> mProductList;
-    private static ProductHolder mProductClicked;
+    private List<Product> mProductList;
+    private ProductHolder mProductClicked;
 
     /* SharedPreferences */
-    private static SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     /**
      * ViewHolder del producto con todos los componentes graficos necesarios
      */
-    public static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private boolean ERROR;
         private boolean LOADED;
@@ -117,18 +117,17 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     Activity activity = (Activity)mContext;
 
-                    /* Sacamos las coordenadas de la imagen y del corazon */
+                    // Sacamos las coordenadas de la imagen y del corazon
                     int[] imageScreenLocation = new int[2];
                     mProductImageView.getLocationInWindow(imageScreenLocation);
 
                     int[] favoriteScreenLocation = new int[2];
                     mProductFavoriteImageButton.getLocationOnScreen(favoriteScreenLocation);
 
-                    /* Creamos el intent */
+                    // Creamos el intent
                     Intent intent = new Intent(mContext, ProductUI.class);
 
-                    /* Enviamos toda la informacion necesaria para que la siguiente activity
-                     * realice la animacion */
+                    // Enviamos toda la informacion necesaria para que la siguiente activity realice la animacion
                     intent.putExtra(Properties.PACKAGE + ".Beans.Product", mProduct)
                           .putExtra(Properties.PACKAGE + ".bitmap", mBitmapFileName)
                           .putExtra(Properties.PACKAGE + ".leftFav", favoriteScreenLocation[0])
@@ -140,12 +139,12 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                           .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
                           .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
 
-                    /* Reseteamos el nombre del fichero */
+                    // Reseteamos el nombre del fichero
                     mBitmapFileName = null;
 
                     mContext.startActivity(intent);
 
-                    /* Desactivamos las transiciones por defecto */
+                    // Desactivamos las transiciones por defecto
                     activity.overridePendingTransition(0, 0);
                 }
 
@@ -299,9 +298,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      * @param productList: lista de productos
      * @param frameLayout: layout necesario para animar la SnackBar
      */
-    public ProductsGridAdapter(final Context context
-            , final List<Product> productList
-            , final FrameLayout frameLayout)
+    public ProductsGridAdapter(Context context
+                        , List<Product> productList
+                        , FrameLayout frameLayout)
     {
         mContext = context;
         mProductList = productList;

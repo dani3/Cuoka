@@ -10,19 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.FavoritesSectionedAdapter;
-import com.wallakoala.wallakoala.Adapters.RecommendedListAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
-import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
-import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +26,6 @@ import java.util.Map;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
-import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 /**
  * Activity que muestra los productos favoritos.
@@ -41,30 +35,16 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 public class FavoritesUI extends AppCompatActivity
 {
     /* Container Views */
-    protected RecyclerView mProductsRecyclerView;
-
-    /* Toolbar */
-    protected Toolbar mToolbar;
+    private RecyclerView mProductsRecyclerView;
 
     /* Layouts */
-    protected FrameLayout mFrameLayout;
-
-    /* LayoutManagers */
-    protected GridLayoutManager mGridLayoutManager;
+    private FrameLayout mFrameLayout;
 
     /* Adapters */
-    protected SectionedRecyclerViewAdapter mProductAdapter;
+    private SectionedRecyclerViewAdapter mProductAdapter;
 
-    /* SharedPreferenceManager */
-    protected SharedPreferencesManager mSharedPreferences;
-
-    /* Animations */
-    protected Animation mMoveAndFadeAnimation;
-
-    /* Data */
-    protected User mUser;
-    protected List<Product> mFavoriteList;
-    protected Map<String, List<Product>> mProductMap;
+    private List<Product> mFavoriteList;
+    private Map<String, List<Product>> mProductMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,7 +53,6 @@ public class FavoritesUI extends AppCompatActivity
 
         setContentView(R.layout.activity_favorites);
 
-        _initAnimations();
         _initData();
         _initViews();
         _initToolbar();
@@ -82,23 +61,10 @@ public class FavoritesUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que inicializa las animaciones.
-     */
-    private void _initAnimations()
-    {
-        mMoveAndFadeAnimation = AnimationUtils.loadAnimation(this
-                , R.anim.translate_and_fade_animation);
-    }
-
-    /**
      * Inicializacion de las distintias estructuras de datos.
      */
     protected void _initData()
     {
-        mSharedPreferences = new SharedPreferencesManager(this);
-
-        mUser = mSharedPreferences.retreiveUser();
-
         mFavoriteList = new ArrayList<>();
         mProductMap   = new HashMap<>();
     }
@@ -117,11 +83,11 @@ public class FavoritesUI extends AppCompatActivity
      */
     protected void _initToolbar()
     {
-        mToolbar = (Toolbar)findViewById(R.id.favorites_appbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.favorites_appbar);
 
         ((TextView)findViewById(R.id.toolbar_textview)).setText(getResources().getString(R.string.toolbar_favorites));
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -141,6 +107,7 @@ public class FavoritesUI extends AppCompatActivity
 
         mProductAdapter = new SectionedRecyclerViewAdapter();
 
+        // Creamos una seccion por cada tienda en la que tenga un favorito.
         for (Map.Entry<String, List<Product>> entry : mProductMap.entrySet())
         {
             mProductAdapter.addSection(new FavoritesSectionedAdapter(this
@@ -150,8 +117,8 @@ public class FavoritesUI extends AppCompatActivity
                                 , entry.getKey()));
         }
 
-        mGridLayoutManager = new GridLayoutManager(this, 1);
-        mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        mProductsRecyclerView.setLayoutManager(gridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
     }
 
@@ -189,7 +156,7 @@ public class FavoritesUI extends AppCompatActivity
     {
         super.onResume();
 
-        // Si venimos de un producto, tenemos que actualizar los cambios (si los hay)
+        // Si venimos de un producto, tenemos que ver si ha quitado/añadido a favorito.
         if (mProductAdapter != null)
         {
             Log.d(Properties.TAG, "Volviendo de ProductUI");
@@ -206,13 +173,12 @@ public class FavoritesUI extends AppCompatActivity
      */
     private class RetrieveFavoriteProducts extends AsyncTask<String, Void, Void>
     {
-        String error = null;
+        private String error = null;
 
         @Override
         protected void onPreExecute()
         {
             findViewById(R.id.favorites_avloadingIndicatorView).setVisibility(View.VISIBLE);
-
             findViewById(R.id.favorites_nodata).setVisibility(View.GONE);
         }
 
@@ -225,7 +191,10 @@ public class FavoritesUI extends AppCompatActivity
             {
                 error = "Error al obtener los productos favoritos";
 
+                Log.d(Properties.TAG, error);
+
             } else {
+                // Metemos los productos en un mapa <Tienda, Productos>
                 for (Product product : mFavoriteList)
                 {
                     List<Product> list = mProductMap.get(product.getShop());

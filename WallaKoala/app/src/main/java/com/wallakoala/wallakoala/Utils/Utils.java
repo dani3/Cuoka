@@ -32,6 +32,13 @@ import java.util.Set;
 
 public class Utils
 {
+    /**
+     * Metodo que parsea un JSON en usuario.
+     * @param id: id del usuario.
+     * @param jsonObject: objeto JSON a parsear.
+     * @return objeto usuario.
+     * @throws JSONException
+     */
     public static User getUserFromJSON(long id, JSONObject jsonObject) throws JSONException
     {
         User user = new User();
@@ -76,6 +83,34 @@ public class Utils
         Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
 
         return user;
+    }
+
+    /**
+     * Metodo que devuelve la url de un icono.
+     * @param colorVariant: color variant del icono.
+     * @param shop: tienda del producto.
+     * @param section: seccion del producto.
+     * @return url del icono del color.
+     */
+    public static String getColorUrl(ColorVariant colorVariant, String shop, String section)
+    {
+        String url;
+
+        if (colorVariant.getColorPath().equals("0"))
+        {
+            final String imageFile = shop + "_" + section + "_"
+                    + colorVariant.getReference() + "_"
+                    + colorVariant.getColorName().replaceAll(" ", "_") + "_ICON.jpg";
+
+            url = Utils.fixUrl(Properties.SERVER_URL + Properties.ICONS_PATH + shop + "/" + imageFile);
+
+        } else {
+            final String imageFile = colorVariant.getColorPath();
+
+            url = Utils.fixUrl(Properties.SERVER_URL + Properties.PREDEFINED_ICONS_PATH + imageFile + "_ICON.jpg");
+        }
+
+        return url;
     }
 
     /**

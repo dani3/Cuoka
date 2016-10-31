@@ -14,25 +14,19 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.wallakoala.wallakoala.Adapters.RecommendedListAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
-import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
-import com.wallakoala.wallakoala.Utils.Utils;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.wallakoala.wallakoala.Fragments.ProductsFragment.NUM_PRODUCTS_CACHED;
 
@@ -210,6 +204,8 @@ public class RecommendedFragment extends Fragment
             if (content == null)
             {
                 error = "Error obteniendo productos recomendados";
+
+                Log.d(Properties.TAG, error);
             }
 
             return null;
@@ -252,6 +248,8 @@ public class RecommendedFragment extends Fragment
 
             } catch (Exception e) {
                 error = e.getMessage();
+
+                Log.d(Properties.TAG, error);
             }
 
             return null;
@@ -365,9 +363,9 @@ public class RecommendedFragment extends Fragment
         if (mProductsRecyclerView != null)
         {
             mProductsRecyclerView.animate()
-                    .setDuration(0)
-                    .scaleX(reduction)
-                    .scaleY(reduction);
+                                 .setDuration(0)
+                                 .scaleX(reduction)
+                                 .scaleY(reduction);
         }
     }
 

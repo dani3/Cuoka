@@ -11,7 +11,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +29,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -60,75 +58,61 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                                     , GestureDetector.OnDoubleTapListener
 {
     /* Constants */
-    protected static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
-    protected static final int ANIM_DURATION = 250;
-    protected static boolean EXITING;
-    protected static boolean COLLAPSING;
+    private static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
+    private static final int ANIM_DURATION = 250;
+    private static boolean EXITING;
+    private static boolean COLLAPSING;
 
     /* Context */
-    protected static Context mContext;
+    private Context mContext;
 
-    /* Container Views */
-    protected FrameLayout mTopLevelLayout;
-    protected RecyclerView mImagesRecylcerView;
-    protected CoordinatorLayout mCoordinatorLayout;
-    protected LinearLayout mProductInfoLayout;
-    protected ListView mColorIconListView;
+    private RecyclerView mImagesRecylcerView;
+    private LinearLayout mProductInfoLayout;
 
     /* Adapter */
-    protected ProductAdapter mImagesAdapter;
-    protected ColorIconListAdapter mColorIconAdapter;
+    private ProductAdapter mImagesAdapter;
+    private ColorIconListAdapter mColorIconAdapter;
 
     /* GestureDetector */
-    protected GestureDetectorCompat mGestureDetector;
-
-    /* LayoutManager */
-    protected LinearLayoutManager mLinearLayoutManager;
+    private GestureDetectorCompat mGestureDetector;
 
     /* Views */
-    protected ImageView mImageView;
-    protected LikeButtonLargeView mFavoriteImageButton;
-    protected ImageButton mShareImageButton;
+    private ImageView mImageView;
+    private LikeButtonLargeView mFavoriteImageButton;
 
     /* TextViews */
-    protected TextView mProductNameTextView;
-    protected TextView mProductPriceTextView;
-    protected TextView mProductReferenceTextView;
-    protected TextView mProductDescriptionTextView;
-    protected TextView mProductShopTextView;
+    private TextView mProductReferenceTextView;
 
     /* Floating Button */
-    protected FloatingActionButton mFloatingActionButtonPlus;
+    private FloatingActionButton mFloatingActionButtonPlus;
 
     /* Animations */
-    protected Animation mExplodeAnimation, mImplodeAnimation;
-    protected Animation mScaleUp, mScaleDown;
+    private Animation mExplodeAnimation, mImplodeAnimation;
 
     /* Data */
-    protected Product mProduct;
-    protected String mBitmapUri;
-    protected BitmapDrawable mBitmapDrawable;
-    protected ColorDrawable mBackground;
-    protected int mCurrentColor;
+    private Product mProduct;
+    private String mBitmapUri;
+    private ColorDrawable mBackground;
+    private int mCurrentColor;
 
     /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferencesManager;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
     /* Others */
-    protected int mLeftDeltaImage, mLeftDeltaFav;
-    protected int mTopDeltaImage, mTopDeltaFav;
-    protected float mWidthScaleImage, mWidthScaleFav;
-    protected float mHeightScaleImage, mHeightScaleFav;
-    protected int mThumbnailLeft, mThumbnailLeftFav;
-    protected int mThumbnailTop, mThumbnailTopFav;
-    protected float mThumbnailWidth, mThumbnailWidthFav;
-    protected float mThumbnailHeight, mThumbnailHeightFav;
-    protected float mTopOffset;
-    protected int mFloatingButtonX;
-    protected int mFloatingButtonY;
-    protected int mFloatingButtonTop;
-    protected int mRadiusReveal;
-    protected double mRatio;
+    private int mLeftDeltaImage, mLeftDeltaFav;
+    private int mTopDeltaImage, mTopDeltaFav;
+    private float mWidthScaleImage, mWidthScaleFav;
+    private float mHeightScaleImage, mHeightScaleFav;
+    private int mThumbnailLeft, mThumbnailLeftFav;
+    private int mThumbnailTop, mThumbnailTopFav;
+    private float mThumbnailWidth, mThumbnailWidthFav;
+    private float mThumbnailHeight, mThumbnailHeightFav;
+    private float mTopOffset;
+    private int mFloatingButtonX;
+    private int mFloatingButtonY;
+    private int mFloatingButtonTop;
+    private int mRadiusReveal;
+    private double mRatio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -227,18 +211,16 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @SuppressWarnings("deprecation")
     protected void _initViews()
     {
-        mImageView                  = (ImageView)findViewById(R.id.imageView);
-        mTopLevelLayout             = (FrameLayout)findViewById(R.id.topLevelLayout);
-        mFloatingActionButtonPlus   = (FloatingActionButton)findViewById(R.id.floatingButton);
-        mCoordinatorLayout          = (CoordinatorLayout)findViewById(R.id.product_coordinator_layout);
-        mProductInfoLayout          = (LinearLayout)findViewById(R.id.product_info);
-        mProductNameTextView        = (TextView)findViewById(R.id.product_info_name);
-        mProductPriceTextView       = (TextView)findViewById(R.id.product_info_price);
-        mProductReferenceTextView   = (TextView)findViewById(R.id.product_info_reference);
-        mProductDescriptionTextView = (TextView)findViewById(R.id.product_info_description);
-        mProductShopTextView        = (TextView)findViewById(R.id.product_info_shop);
-        mFavoriteImageButton        = (LikeButtonLargeView) findViewById(R.id.product_favorite);
-        mShareImageButton           = (ImageButton)findViewById(R.id.product_info_share);
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.topLevelLayout);
+        mImageView = (ImageView)findViewById(R.id.imageView);
+        mFloatingActionButtonPlus = (FloatingActionButton)findViewById(R.id.floatingButton);
+        mProductInfoLayout = (LinearLayout)findViewById(R.id.product_info);
+        TextView mProductNameTextView = (TextView) findViewById(R.id.product_info_name);
+        TextView mProductPriceTextView = (TextView) findViewById(R.id.product_info_price);
+        TextView mProductDescriptionTextView = (TextView) findViewById(R.id.product_info_description);
+        TextView mProductShopTextView = (TextView) findViewById(R.id.product_info_shop);
+        mProductReferenceTextView = (TextView)findViewById(R.id.product_info_reference);
+        mFavoriteImageButton = (LikeButtonLargeView) findViewById(R.id.product_favorite);
 
         /* Inicializamos la info del producto */
         String name = "<b>" + mProduct.getName() + "</b>";
@@ -288,15 +270,15 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         /* Cargamos el bitmap de la imagen en baja calidad */
         File filePath = getFileStreamPath(mBitmapUri);
-        mBitmapDrawable = (BitmapDrawable)Drawable.createFromPath(filePath.toString());
-        mImageView.setImageDrawable(mBitmapDrawable);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromPath(filePath.toString());
+        mImageView.setImageDrawable(bitmapDrawable);
 
         /* Calculamos el aspect ratio de la imagen */
-        mRatio = (double)mBitmapDrawable.getIntrinsicHeight() / (double)mBitmapDrawable.getIntrinsicWidth();
+        mRatio = (double) bitmapDrawable.getIntrinsicHeight() / (double) bitmapDrawable.getIntrinsicWidth();
 
         /* Background */
         mBackground = new ColorDrawable(Color.WHITE);
-        mTopLevelLayout.setBackground(mBackground);
+        frameLayout.setBackground(mBackground);
     }
 
     /**
@@ -305,7 +287,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @SuppressWarnings("deprecation")
     protected void _initIconListView()
     {
-        mColorIconListView = (ListView)findViewById(R.id.product_info_list_colors);
+        ListView mColorIconListView = (ListView) findViewById(R.id.product_info_list_colors);
 
         mColorIconAdapter = new ColorIconListAdapter(this
                                     , mProduct.getColors()
@@ -352,7 +334,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     {
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mImagesAdapter = new ProductAdapter(this
                                 , mProduct.getColors().get(mCurrentColor)
                                 , mRatio
@@ -360,8 +342,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                 , mProduct.getSection()
                                 , mImageView);
 
-        mImagesRecylcerView.setLayoutManager(mLinearLayoutManager);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mImagesRecylcerView.setLayoutManager(linearLayoutManager);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mImagesRecylcerView.setAdapter(mImagesAdapter);
 
         mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener()
@@ -381,8 +363,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     protected void _initAnimations()
     {
-        mScaleUp          = AnimationUtils.loadAnimation(this, R.anim.scale_up_animation);
-        mScaleDown        = AnimationUtils.loadAnimation(this, R.anim.scale_down_animation);
         mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
         mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode_animation);
 
@@ -457,7 +437,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             mFavoriteImageButton.setVisibility(View.GONE);
         }
 
-        // Animacion de escalado y desplazamiento hasta el tamaño grande
+        // Animacion de escalado y desplazamiento hasta el tamaño grande (HARDWARE_LAYERED)
         mImageView.animate().setDuration(ANIM_DURATION)
                             .withLayer()
                             .scaleX(1).scaleY(1)
@@ -531,6 +511,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         // Si se ha producido un scroll en el recyclerView, desplazamos la imagen
         mImageView.setTranslationY(-mTopOffset);
 
+        // Animacion de escalado y desplazamiento hasta la imagen original (HARDWARE_LAYERED)
         mImageView.animate().setDuration(ANIM_DURATION)
                             .withLayer()
                             .setStartDelay(0)
@@ -540,11 +521,12 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         if (mThumbnailWidthFav != 0)
         {
-            mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
-                    .setStartDelay(75)
-                    .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
-                    .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
-                    .withEndAction(endAction);
+            mFavoriteImageButton.animate()
+                                .setDuration(ANIM_DURATION)
+                                .setStartDelay(75)
+                                .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
+                                .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
+                                .withEndAction(endAction);
         }
 
         mFavoriteImageButton.changeIcon(
@@ -602,12 +584,14 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         int offset = mProductInfoLayout.getHeight() - bottomHalf;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
             mFloatingActionButtonPlus.setImageDrawable(
                     getResources().getDrawable(R.drawable.ic_remove_white
                             , mContext.getTheme()));
-        else
+        } else {
             mFloatingActionButtonPlus.setImageDrawable(
                     getResources().getDrawable(R.drawable.ic_remove_white));
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
         {
@@ -624,10 +608,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
             mFloatingActionButtonPlus.animate()
-                    .translationYBy(-offset)
-                    .setDuration(400)
-                    .setStartDelay(75)
-                    .setInterpolator(new OvershootInterpolator()).start();
+                                     .translationYBy(-offset)
+                                     .setDuration(400)
+                                     .setStartDelay(75)
+                                     .setInterpolator(new OvershootInterpolator()).start();
 
             animator.start();
 
@@ -645,10 +629,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
             mFloatingActionButtonPlus.animate()
-                    .translationYBy(-offset)
-                    .setDuration(400)
-                    .setStartDelay(75)
-                    .setInterpolator(new OvershootInterpolator()).start();
+                                     .translationYBy(-offset)
+                                     .setDuration(400)
+                                     .setStartDelay(75)
+                                     .setInterpolator(new OvershootInterpolator()).start();
 
             animator.start();
         }
@@ -668,12 +652,14 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         int offset = mProductInfoLayout.getHeight() - bottomHalf;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
             mFloatingActionButtonPlus.setImageDrawable(
                     getResources().getDrawable(R.drawable.ic_add_white
                             , mContext.getTheme()));
-        else
+        } else {
             mFloatingActionButtonPlus.setImageDrawable(
                     getResources().getDrawable(R.drawable.ic_add_white));
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
         {
@@ -688,10 +674,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             animator_reverse.setDuration(200);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+            animator_reverse.addListener(new SupportAnimator.AnimatorListener()
+            {
                 @Override
-                public void onAnimationStart() {
-                }
+                public void onAnimationStart() {}
 
                 @Override
                 public void onAnimationEnd()
@@ -702,19 +688,17 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 }
 
                 @Override
-                public void onAnimationCancel() {
-                }
+                public void onAnimationCancel() {}
 
                 @Override
-                public void onAnimationRepeat() {
-                }
+                public void onAnimationRepeat() {}
             });
 
             mFloatingActionButtonPlus.animate()
-                    .translationYBy(offset)
-                    .setDuration(400)
-                    .setStartDelay(75)
-                    .setInterpolator(new OvershootInterpolator()).start();
+                                     .translationYBy(offset)
+                                     .setDuration(400)
+                                     .setStartDelay(75)
+                                     .setInterpolator(new OvershootInterpolator()).start();
 
             animator_reverse.start();
 
@@ -728,31 +712,30 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             animator.setDuration(200);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.addListener(new Animator.AnimatorListener() {
+            animator.addListener(new Animator.AnimatorListener()
+            {
                 @Override
-                public void onAnimationStart(Animator animation) {
-                }
+                public void onAnimationStart(Animator animation) {}
 
                 @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onAnimationEnd(Animator animation)
+                {
                     COLLAPSING = false;
                     mProductInfoLayout.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
-                public void onAnimationCancel(Animator animation) {
-                }
+                public void onAnimationCancel(Animator animation) {}
 
                 @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
+                public void onAnimationRepeat(Animator animation) {}
             });
 
             mFloatingActionButtonPlus.animate()
-                    .translationYBy(offset)
-                    .setDuration(400)
-                    .setStartDelay(75)
-                    .setInterpolator(new OvershootInterpolator()).start();
+                                     .translationYBy(offset)
+                                     .setDuration(400)
+                                     .setStartDelay(75)
+                                     .setInterpolator(new OvershootInterpolator()).start();
 
             animator.start();
         }
