@@ -22,6 +22,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -204,53 +205,11 @@ public class RecommendedFragment extends Fragment
         @Override
         protected Void doInBackground(String... unused)
         {
-            try
+            content = RestClientSingleton.retrieveRecommendedProducts(getActivity());
+
+            if (content == null)
             {
-                RequestFuture<JSONArray> future = RequestFuture.newFuture();
-
-                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                        + "/recommended/" + mUser.getId());
-
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer los productos recomendados");
-
-                // Creamos una peticion
-                final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                    , fixedURL
-                                                                    , null
-                                                                    , future
-                                                                    , future);
-
-                // La mandamos a la cola de peticiones
-                VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-                if (isCancelled())
-                {
-                    return null;
-                }
-
-                try
-                {
-                    content = future.get(20, TimeUnit.SECONDS);
-
-                } catch (InterruptedException e) {
-                    error = "Thread interrumpido";
-                    Log.d(Properties.TAG, error);
-                }
-
-                if (isCancelled())
-                {
-                    return null;
-                }
-
-                // Si content es vacio, es que han fallado todas las conexiones.
-                if (content == null)
-                {
-                    error = "Imposible conectar con el servidor";
-                    Log.d(Properties.TAG, error);
-                }
-
-            } catch (Exception e) {
-                error = e.getMessage();
+                error = "Error obteniendo productos recomendados";
             }
 
             return null;

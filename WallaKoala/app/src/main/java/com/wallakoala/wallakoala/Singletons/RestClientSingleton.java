@@ -39,11 +39,66 @@ import java.util.concurrent.TimeoutException;
 public class RestClientSingleton
 {
     /**
+     * Metodo que obtiene los productos recomendados de un usuario.
+     * @param context: contexto.
+     * @return Array de JSONs con las recomendaciones del usuario.
+     */
+    public static JSONArray retrieveRecommendedProducts(Context context)
+    {
+        JSONArray content;
+
+        try
+        {
+            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+            final long id = mSharedPreferencesManager.retreiveUser().getId();
+
+            RequestFuture<JSONArray> future = RequestFuture.newFuture();
+
+            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                    + "/recommended/" + id);
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer los productos recomendados");
+
+            // Creamos una peticion
+            final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                    , fixedURL
+                    , null
+                    , future
+                    , future);
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+            try
+            {
+                content = future.get(20, TimeUnit.SECONDS);
+
+            } catch (InterruptedException e) {
+                Log.d(Properties.TAG, e.getMessage());
+
+                return null;
+            }
+
+            // Si content es vacio, es que han fallado todas las conexiones.
+            if (content == null)
+            {
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return content;
+    }
+
+    /**
      * Metodo que devuelve una lista de JSONs con los productos de cada tienda.
      * @param context: contexto.
      * @param offset: dia del que hay que traer productos.
      * @param shopList: lista de tiendas.
-     * @return: Array de JSONs con los productos del dia.
+     * @return: Lista de arrays de JSONs con los productos del dia.
      */
     public static List<JSONArray> retrieveProducts(Context context, int offset, List<String> shopList)
     {
