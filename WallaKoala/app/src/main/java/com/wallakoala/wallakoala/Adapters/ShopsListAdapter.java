@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -173,42 +175,88 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         {
             final boolean actionDeleted = (action == ACTION_SHOP_DELETED);
 
-            Animation implode = AnimationUtils.loadAnimation(mContext, R.anim.implode_animation);
-            final Animation explode = AnimationUtils.loadAnimation(mContext, R.anim.explode_animation);
+            mActionButton.animate()
+                    .setDuration(200)
+                    .scaleX(0.0f)
+                    .scaleY(0.0f)
+                    .setListener(new Animator.AnimatorListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
 
-            implode.setAnimationListener(new Animation.AnimationListener()
-            {
-                @Override
-                public void onAnimationStart(Animation animation) {}
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            // Cambiamos el color y el texto del boton para seguir las tiendas.
+                            mActionButton.setBackgroundDrawable((mFavorite) ? mRoundedAccent : mRoundedGrey);
+                            mActionButton.setText((mFavorite) ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
+                            mActionButton.setTextColor((mFavorite)
+                                    ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
 
-                @Override
-                public void onAnimationEnd(Animation animation)
-                {
-                    // Cambiamos el color y el texto del boton para seguir las tiendas.
-                    mActionButton.setBackgroundDrawable((mFavorite) ? mRoundedAccent : mRoundedGrey);
-                    mActionButton.setText((mFavorite) ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
-                    mActionButton.setTextColor((mFavorite)
-                            ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
+                            // Mostramos el icono de la seccion/corazon
+                            mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
+                            // Mostramos el numero de favoritos/total de productos de la tienda
+                            int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
+                            mNumberTextView.setText((!actionDeleted) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
-                    // Mostramos el icono de la seccion/corazon
-                    mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
-                    // Mostramos el numero de favoritos/total de productos de la tienda
-                    int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
-                    mNumberTextView.setText((!actionDeleted) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
+                            mActionButton.clearAnimation();
 
-                    mActionButton.startAnimation(explode);
-                    mFavOrNumberImageView.startAnimation(explode);
-                    mNumberTextView.startAnimation(explode);
-                }
+                            mActionButton.animate()
+                                    .setDuration(200)
+                                    .scaleX(1.0f)
+                                    .scaleY(1.0f)
+                                    .setInterpolator(new OvershootInterpolator())
+                                    .setListener(new Animator.AnimatorListener()
+                                    {
+                                        @Override
+                                        public void onAnimationStart(Animator animation) {}
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {}
-            });
+                                        @Override
+                                        public void onAnimationEnd(Animator animation)
+                                        {
+                                            mActionButton.clearAnimation();
+                                        }
 
-            // Iniciamos todas las animaciones
-            mActionButton.startAnimation(implode);
-            mNumberTextView.startAnimation(implode);
-            mFavOrNumberImageView.startAnimation(implode);
+                                        @Override
+                                        public void onAnimationCancel(Animator animation) {}
+
+                                        @Override
+                                        public void onAnimationRepeat(Animator animation) {}
+                                    }).start();
+
+                            mNumberTextView.animate()
+                                    .setDuration(200)
+                                    .scaleX(1.0f)
+                                    .scaleY(1.0f)
+                                    .setInterpolator(new OvershootInterpolator())
+                                    .start();
+
+                            mFavOrNumberImageView.animate()
+                                    .setDuration(200)
+                                    .scaleX(1.0f)
+                                    .scaleY(1.0f)
+                                    .setInterpolator(new OvershootInterpolator())
+                                    .start();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    }).start();
+
+            mNumberTextView.animate()
+                           .setDuration(200)
+                           .scaleX(0.0f)
+                           .scaleY(0.0f)
+                           .start();
+
+            mFavOrNumberImageView.animate()
+                                 .setDuration(200)
+                                 .scaleX(0.0f)
+                                 .scaleY(0.0f)
+                                 .start();
 
             // Borramos/añadimos el producto a la lista
             if (actionDeleted)
