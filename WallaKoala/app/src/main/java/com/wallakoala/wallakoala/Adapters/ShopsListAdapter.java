@@ -176,7 +176,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             final boolean actionDeleted = (action == ACTION_SHOP_DELETED);
 
             mActionButton.animate()
-                    .setDuration(200)
+                    .setDuration(150)
                     .scaleX(0.0f)
                     .scaleY(0.0f)
                     .setListener(new Animator.AnimatorListener()
@@ -188,55 +188,61 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                         public void onAnimationEnd(Animator animation)
                         {
                             // Cambiamos el color y el texto del boton para seguir las tiendas.
-                            mActionButton.setBackgroundDrawable((mFavorite) ? mRoundedAccent : mRoundedGrey);
-                            mActionButton.setText((mFavorite) ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
-                            mActionButton.setTextColor((mFavorite)
+                            mActionButton.setBackgroundDrawable((!actionDeleted)
+                                    ? mRoundedAccent : mRoundedGrey);
+
+                            mActionButton.setText((!actionDeleted)
+                                    ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
+
+                            mActionButton.setTextColor((!actionDeleted)
                                     ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
 
                             // Mostramos el icono de la seccion/corazon
-                            mFavOrNumberImageView.setImageDrawable((!actionDeleted) ? mFavoriteDrawable : mClotheDrawable);
+                            mFavOrNumberImageView.setImageDrawable((!actionDeleted)
+                                    ? mFavoriteDrawable : mClotheDrawable);
+
                             // Mostramos el numero de favoritos/total de productos de la tienda
-                            int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
-                            mNumberTextView.setText((!actionDeleted) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
+                            int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null)
+                                    ? 0 : mFavoriteMap.get(shop.getName());
+
+                            mNumberTextView.setText((!actionDeleted)
+                                    ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
                             mActionButton.clearAnimation();
 
                             mActionButton.animate()
-                                    .setDuration(200)
-                                    .scaleX(1.0f)
-                                    .scaleY(1.0f)
-                                    .setInterpolator(new OvershootInterpolator())
-                                    .setListener(new Animator.AnimatorListener()
-                                    {
-                                        @Override
-                                        public void onAnimationStart(Animator animation) {}
+                                         .setDuration(150)
+                                         .scaleX(1.0f)
+                                         .scaleY(1.0f)
+                                         .setListener(new Animator.AnimatorListener()
+                                         {
+                                             @Override
+                                             public void onAnimationStart(Animator animation) {}
 
-                                        @Override
-                                        public void onAnimationEnd(Animator animation)
-                                        {
-                                            mActionButton.clearAnimation();
-                                        }
+                                             @Override
+                                             public void onAnimationEnd(Animator animation)
+                                             {
+                                                 mActionButton.clearAnimation();
+                                             }
 
-                                        @Override
-                                        public void onAnimationCancel(Animator animation) {}
+                                             @Override
+                                             public void onAnimationCancel(Animator animation) {}
 
-                                        @Override
-                                        public void onAnimationRepeat(Animator animation) {}
-                                    }).start();
+                                             @Override
+                                             public void onAnimationRepeat(Animator animation) {}
+                                         }).start();
 
                             mNumberTextView.animate()
-                                    .setDuration(200)
-                                    .scaleX(1.0f)
-                                    .scaleY(1.0f)
-                                    .setInterpolator(new OvershootInterpolator())
-                                    .start();
+                                           .setDuration(150)
+                                           .scaleX(1.0f)
+                                           .scaleY(1.0f)
+                                           .start();
 
                             mFavOrNumberImageView.animate()
-                                    .setDuration(200)
-                                    .scaleX(1.0f)
-                                    .scaleY(1.0f)
-                                    .setInterpolator(new OvershootInterpolator())
-                                    .start();
+                                                 .setDuration(150)
+                                                 .scaleX(1.0f)
+                                                 .scaleY(1.0f)
+                                                 .start();
                         }
 
                         @Override
@@ -247,13 +253,13 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                     }).start();
 
             mNumberTextView.animate()
-                           .setDuration(200)
+                           .setDuration(150)
                            .scaleX(0.0f)
                            .scaleY(0.0f)
                            .start();
 
             mFavOrNumberImageView.animate()
-                                 .setDuration(200)
+                                 .setDuration(150)
                                  .scaleX(0.0f)
                                  .scaleY(0.0f)
                                  .start();
