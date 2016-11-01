@@ -109,6 +109,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
         private FlipLayout mFlippableView;
 
         private ImageView mProductImageView;
+        private View mImageContainer;
 
         private TextView mNameTextView, mShopTextView, mPriceTextView, mDescriptionTextView;
 
@@ -129,6 +130,8 @@ public class FavoritesSectionedAdapter extends StatelessSection
             mDescriptionTextView  = (TextView)itemView.findViewById(R.id.recommended_description);
             mIconList             = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
             mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
+
+            mImageContainer = itemView.findViewById(R.id.image_container);
 
             mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.recommended_item_favorite);
 
@@ -196,7 +199,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
                     mProductImageView.setImageBitmap(bitmap);
 
                     // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
-                    mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mImageContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     mProductImageView.setBackgroundColor(-1);
                     mProductImageView.setAlpha(1.0f);
 
@@ -225,7 +228,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
                     mProductImageView.setImageBitmap(null);
 
                     // Establecemos la altura usando el AspectRatio del producto.
-                    mProductImageView.getLayoutParams().height =
+                    mImageContainer.getLayoutParams().height =
                             (int) (mProductImageView.getWidth() * mProduct.getAspectRatio());
 
                     // Establecemos un color de fondo y un 25% de opacidad.

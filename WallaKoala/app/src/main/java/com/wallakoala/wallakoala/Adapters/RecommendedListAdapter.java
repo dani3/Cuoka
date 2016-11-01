@@ -79,6 +79,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private FlipLayout mFlippableView;
 
         private ImageView mProductImageView;
+        private View mImageContainer;
 
         private TextView mNameTextView, mShopTextView, mPriceTextView, mDescriptionTextView;
 
@@ -95,6 +96,8 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             mDescriptionTextView = (TextView)itemView.findViewById(R.id.recommended_description);
             mIconList            = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
             mFlippableView       = (FlipLayout)itemView.findViewById(R.id.flippable_view);
+
+            mImageContainer = itemView.findViewById(R.id.image_container);
 
             mProductImageView.setOnClickListener(this);
             mFlippableView.setOnClickListener(this);
@@ -160,7 +163,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     mProductImageView.setImageBitmap(bitmap);
 
                     // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
-                    mProductImageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    mImageContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     mProductImageView.setBackgroundColor(-1);
                     mProductImageView.setAlpha(1.0f);
 
@@ -189,7 +192,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                     mProductImageView.setImageBitmap(null);
 
                     // Establecemos la altura usando el AspectRatio del producto.
-                    mProductImageView.getLayoutParams().height =
+                    mImageContainer.getLayoutParams().height =
                             (int) (mProductImageView.getWidth() * mProduct.getAspectRatio());
 
                     // Establecemos un color de fondo y un 25% de opacidad.
