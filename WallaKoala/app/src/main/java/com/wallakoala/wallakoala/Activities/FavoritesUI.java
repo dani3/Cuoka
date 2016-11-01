@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -117,7 +118,7 @@ public class FavoritesUI extends AppCompatActivity
                                 , entry.getKey()));
         }
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mProductsRecyclerView.setLayoutManager(gridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
     }

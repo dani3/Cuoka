@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class RecommendedFragment extends Fragment
     protected FrameLayout mFrameLayout;
 
     /* LayoutManagers */
-    protected GridLayoutManager mGridLayoutManager;
+    protected StaggeredGridLayoutManager mGridLayoutManager;
 
     /* Adapters */
     protected RecommendedListAdapter mProductAdapter;
@@ -155,7 +156,7 @@ public class RecommendedFragment extends Fragment
     {
         mProductsRecyclerView.setVisibility(View.VISIBLE);
 
-        mGridLayoutManager = new GridLayoutManager(getActivity(), 1);
+        mGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new RecommendedListAdapter(getActivity()
                 , mProductList
                 , mFrameLayout);

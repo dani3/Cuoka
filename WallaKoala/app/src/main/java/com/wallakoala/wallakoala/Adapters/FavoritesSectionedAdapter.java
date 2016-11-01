@@ -383,7 +383,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
     {
         super(R.layout.aux_header_section, R.layout.product_recommended);
 
-        mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mSectionAdapter = sectionAdapter;
         mShop = shop;
