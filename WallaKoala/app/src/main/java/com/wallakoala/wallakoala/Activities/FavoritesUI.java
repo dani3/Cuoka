@@ -20,6 +20,7 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -194,6 +195,8 @@ public class FavoritesUI extends AppCompatActivity
                 Log.d(Properties.TAG, error);
 
             } else {
+                Collections.sort(mFavoriteList);
+
                 // Metemos los productos en un mapa <Tienda, Productos>
                 for (Product product : mFavoriteList)
                 {

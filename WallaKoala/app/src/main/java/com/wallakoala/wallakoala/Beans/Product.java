@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Daniel Mancebo on 11/12/2015.
  */
 
-public class Product implements Serializable
+public class Product implements Serializable, Comparable<Product>
 {
     private long id;
 	private String name;
@@ -80,4 +80,10 @@ public class Product implements Serializable
 
 		return true;
 	}
+
+    @Override
+    public int compareTo(Product o)
+    {
+        return this.shop.compareTo(o.shop);
+    }
 }

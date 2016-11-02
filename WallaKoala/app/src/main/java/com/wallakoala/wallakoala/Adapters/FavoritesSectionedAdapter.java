@@ -88,7 +88,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
         public void bindHeader(String text)
         {
             mShopTextView.setText(text);
-            mShopInitialTextView.setText(text.charAt(0));
+            mShopInitialTextView.setText(Character.toString(text.charAt(0)));
         }
     }
 
