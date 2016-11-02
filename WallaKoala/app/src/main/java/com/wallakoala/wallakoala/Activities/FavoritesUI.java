@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.FavoritesSectionedAdapter;
@@ -39,7 +39,7 @@ public class FavoritesUI extends AppCompatActivity
     private RecyclerView mProductsRecyclerView;
 
     /* Layouts */
-    private FrameLayout mFrameLayout;
+    private CoordinatorLayout mFrameLayout;
 
     /* Adapters */
     private SectionedRecyclerViewAdapter mProductAdapter;
@@ -75,7 +75,7 @@ public class FavoritesUI extends AppCompatActivity
      */
     protected void _initViews()
     {
-        mFrameLayout          = (FrameLayout)findViewById(R.id.favorites_frame);
+        mFrameLayout          = (CoordinatorLayout) findViewById(R.id.favorites_frame);
         mProductsRecyclerView = (RecyclerView)findViewById(R.id.favorites_grid_recycler);
     }
 

@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/favorites_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include android:id="@+id/favorites_appbar"
-        layout="@layout/aux_toolbar_favorites"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include android:id="@+id/favorites_appbar"
+            layout="@layout/aux_toolbar_favorites"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/favorites_grid_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/action_bar_height"
         android:scrollbars="none"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <!-- Loading View -->
     <com.github.ybq.android.spinkit.SpinKitView
@@ -41,4 +47,4 @@
         android:textColor="@color/colorText"
         app:customFont="Existence-StencilLight.otf"/>
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

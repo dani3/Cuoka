@@ -3,10 +3,9 @@
     android:id="@+id/shops_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Toolbar -->
     <include android:id="@+id/shops_toolbar"
         layout="@layout/aux_toolbar_filter"/>
 
@@ -23,12 +22,12 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/shops_recyclerview"
-        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="58dp"
         android:scrollbars="none"
-        android:paddingBottom="108dp"/>
+        android:paddingBottom="108dp"
+        android:paddingTop="@dimen/action_bar_height"
+        android:clipToPadding="false"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/shops_accept"

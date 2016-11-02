@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,13 +52,13 @@ public class FavoritesSectionedAdapter extends StatelessSection
     private Context mContext;
 
     /* LayoutInflater */
-    LayoutInflater mInflater;
+    private LayoutInflater mInflater;
 
     /* SectionAdapter */
     private SectionedRecyclerViewAdapter mSectionAdapter;
 
     /* Container Views */
-    private FrameLayout mFrameLayout;
+    private CoordinatorLayout mFrameLayout;
 
     /* SharedPreferences */
     private SharedPreferencesManager mSharedPreferencesManager;
@@ -384,7 +384,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
     public FavoritesSectionedAdapter(Context context
                                 , SectionedRecyclerViewAdapter sectionAdapter
                                 , List<Product> productList
-                                , FrameLayout frameLayout
+                                , CoordinatorLayout frameLayout
                                 , String shop)
     {
         super(R.layout.aux_header_section, R.layout.product_recommended);
