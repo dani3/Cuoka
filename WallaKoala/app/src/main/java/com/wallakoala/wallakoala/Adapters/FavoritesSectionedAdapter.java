@@ -75,17 +75,20 @@ public class FavoritesSectionedAdapter extends StatelessSection
     public class HeaderViewHolder extends RecyclerView.ViewHolder
     {
         private TextView mShopTextView;
+        private TextView mShopInitialTextView;
 
         public HeaderViewHolder(View view)
         {
             super(view);
 
-            mShopTextView = (TextView) view.findViewById(R.id.favorite_header);
+            mShopTextView        = (TextView) view.findViewById(R.id.favorite_header);
+            mShopInitialTextView = (TextView) view.findViewById(R.id.favorite_header_initial);
         }
 
         public void bindHeader(String text)
         {
             mShopTextView.setText(text);
+            mShopInitialTextView.setText(text.charAt(0));
         }
     }
 

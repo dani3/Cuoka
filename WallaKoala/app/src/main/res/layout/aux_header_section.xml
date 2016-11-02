@@ -11,25 +11,46 @@
         android:layout_centerHorizontal="true"
         app:cardPreventCornerOverlap="false"
         app:cardElevation="2dp"
-        app:cardCornerRadius="14dp"
+        app:cardCornerRadius="15dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent">
+            android:orientation="horizontal"
+            android:background="@android:color/white">
+
+            <FrameLayout
+                android:layout_width="34dp"
+                android:layout_height="34dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/colorAccent"/>
+
+                <com.wallakoala.wallakoala.Views.ExistenceTextView
+                    android:id="@+id/favorite_header_initial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="B"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp"
+                    app:customFont="Existence-StencilLight.otf"/>
+
+            </FrameLayout>
 
             <com.wallakoala.wallakoala.Views.ExistenceTextView
                 android:id="@+id/favorite_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:paddingBottom="1dp"
+                android:layout_gravity="center_vertical"
                 android:text="Cabecera"
+                android:textColor="@color/colorText"
                 android:textSize="14dp"
-                android:textColor="@android:color/white"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="16dp"
                 app:customFont="Existence-StencilLight.otf"/>
 
         </LinearLayout>
