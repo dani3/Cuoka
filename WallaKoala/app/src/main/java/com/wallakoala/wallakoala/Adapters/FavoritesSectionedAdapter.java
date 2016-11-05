@@ -42,7 +42,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 /**
- *
+ * Adapter con seccion para mostrar los productos favoritos.
  * Created by Daniel Mancebo Aldea on 31/10/2016.
  */
 
@@ -126,13 +126,13 @@ public class FavoritesSectionedAdapter extends StatelessSection
         {
             super(view);
 
-            mProductImageView     = (ImageView)itemView.findViewById(R.id.recommended_image);
-            mShopTextView         = (TextView)itemView.findViewById(R.id.recommended_shop);
-            mNameTextView         = (TextView)itemView.findViewById(R.id.recommended_name);
-            mPriceTextView        = (TextView)itemView.findViewById(R.id.recommended_price);
-            mDescriptionTextView  = (TextView)itemView.findViewById(R.id.recommended_description);
-            mIconList             = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
-            mFlippableView        = (FlipLayout)itemView.findViewById(R.id.flippable_view);
+            mProductImageView    = (ImageView)itemView.findViewById(R.id.recommended_image);
+            mShopTextView        = (TextView)itemView.findViewById(R.id.recommended_shop);
+            mNameTextView        = (TextView)itemView.findViewById(R.id.recommended_name);
+            mPriceTextView       = (TextView)itemView.findViewById(R.id.recommended_price);
+            mDescriptionTextView = (TextView)itemView.findViewById(R.id.recommended_description);
+            mIconList            = (ViewGroup)itemView.findViewById(R.id.recommended_icons_list);
+            mFlippableView       = (FlipLayout)itemView.findViewById(R.id.flippable_view);
 
             mImageContainer = itemView.findViewById(R.id.image_container);
 

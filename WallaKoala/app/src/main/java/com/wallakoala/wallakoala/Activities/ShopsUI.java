@@ -312,9 +312,8 @@ public class ShopsUI extends AppCompatActivity
      */
     private class SendShopsToServer extends AsyncTask<String, Void, Void>
     {
-        ProgressDialog progressDialog;
-
-        boolean correct;
+        private ProgressDialog progressDialog;
+        private boolean correct;
 
         @Override
         protected void onPreExecute()
@@ -427,7 +426,6 @@ public class ShopsUI extends AppCompatActivity
                 } else {
                     mShopListAdapter.updateShopList(mAllShopsList);
                     mShopListAdapter.notifyDataSetChanged();
-
                 }
 
                 return true;

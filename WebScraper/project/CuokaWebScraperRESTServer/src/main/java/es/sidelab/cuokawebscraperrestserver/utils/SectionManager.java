@@ -18,15 +18,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SectionManager 
 {
-    private Map<String, String[]> sectionsMap;
-    private List<String> suggestedSections;
-    private List<String> maleSections;
+    private final Map<String, String[]> sectionsMap;
+    private final List<String> suggestedSections;
+    private final List<String> maleSections;
     
     public SectionManager()
     {
-        sectionsMap       = new HashMap<>();
-        suggestedSections = new ArrayList<>();
-        maleSections      = new ArrayList<>();
+        sectionsMap = new HashMap<>();
         
         sectionsMap.put("Abrigos", new String[]{ "Cazadora", "Cazadoras", "Capa", "Capas", "Bomber", "Bombers", "Parka", "Parkas"
                                             , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cardigans" });

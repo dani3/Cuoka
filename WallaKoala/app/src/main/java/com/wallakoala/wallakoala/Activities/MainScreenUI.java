@@ -541,6 +541,8 @@ public class MainScreenUI extends AppCompatActivity
                 }
 
             } else if (requestCode == MODIFICATION_REQUEST) {
+                // Si venimos de la pantalla del perfil
+
                 // Obtenemos el usuario para actualizar la cabecera
                 User user = mSharedPreferencesManager.retreiveUser();
 
@@ -554,12 +556,16 @@ public class MainScreenUI extends AppCompatActivity
                 email.setText(user.getEmail());
 
             } else if (requestCode == MANAGE_SHOPS_REQUEST) {
+                // Si venimos de la pantalla de Mis tiendas
+
                 mViewPager.setCurrentItem(1);
 
                 mProductsFragment.restart();
                 mRecommendedFragment.restart();
 
             } else if (requestCode == MANAGE_FAVORITES_REQUEST) {
+                // Si venimos de la pantalla de Mis favoritos
+
                 mProductsFragment.notifyDataSetChanged();
                 mRecommendedFragment.notifyDataSetChanged();
 

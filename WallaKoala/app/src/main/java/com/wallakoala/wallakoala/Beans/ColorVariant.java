@@ -14,8 +14,6 @@ public class ColorVariant implements Serializable
     private String colorPath;    
     private short numberOfImages;
     
-    public ColorVariant() {}
-    
     public ColorVariant(String reference
     		, String colorName
     		, String colorPath

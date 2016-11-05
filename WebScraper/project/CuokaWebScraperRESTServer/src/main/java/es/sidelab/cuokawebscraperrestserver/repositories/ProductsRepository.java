@@ -20,18 +20,22 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     @Query("DELETE FROM Product WHERE shop = ?1")
     void deleteByShop(String shop);
     
+    @Query("FROM Product WHERE shop = ?1 AND obsolete = false")
     List<Product> findByShop(String shop);
+    
+    @Query("FROM Product WHERE shop = ?2 AND man = ?1 AND obsolete = false")
     List<Product> findByManAndShop(boolean man, String shop);
+    
+    @Query("FROM Product WHERE shop = ?2 AND section = ?1 AND obsolete = false")
     List<Product> findBySectionAndShop(String section, String shop);
     
-    @Query("FROM Product WHERE shop = ?1 AND man = ?2 AND DATEDIFF(CURDATE(), insert_date) = ?3")
+    @Query("FROM Product WHERE shop = ?1 AND man = ?2 AND obolete = false AND DATEDIFF(CURDATE(), insert_date) = ?3")
     List<Product> findByShopAndDate(String shop, boolean man, int offset);
-    
-    List<Product> findByShopInAndMan(List<String> shops, boolean man);
     
     @Query("FROM Product "
           + "WHERE shop = :shop AND "
           + "man = :man AND "
+          + "obsolete = false AND "
           + "price >= :from AND price <= :to")
     List<Product> findByShopAndManAndPrice(@Param("shop") String shop
                             , @Param("man") boolean man
@@ -41,6 +45,7 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     @Query("FROM Product "
           + "WHERE shop = :shop AND "
           + "man = :man AND "
+          + "obsolete = false AND "
           + "DATEDIFF(CURDATE(), insert_date) = :offset AND "
           + "price >= :from AND price <= :to")
     List<Product> findByShopAndManAndNewnessAndPrice(@Param("shop") String shop

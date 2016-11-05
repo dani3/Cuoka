@@ -453,8 +453,9 @@ public class Controller
 
                     if (!found)
                     {
-                        LOG.info("Producto NO encontrado, se borra");
-                        productsRepository.delete(productInDB.getId());
+                        LOG.info("Producto NO encontrado, se marca como OBSOLETO");
+                        productInDB.setObsolete(true);
+                        productsRepository.save(productInDB);
                     }
                 } 
                 
@@ -717,7 +718,7 @@ public class Controller
         // Sacamos los productos de la tienda
         List<Product> productList = productsRepository.findByManAndShop(Boolean.valueOf(man), shop);
         
-        // Eliminamos palabras irrelevantes ('a', 'de', etc)
+        // Eliminamos palabras irrelevantes ('a', 'de', 'con', etc.)
         List<String> keywords = new ArrayList<>();
         for (String keyword : aux)
         {
@@ -740,21 +741,27 @@ public class Controller
                 List<String> section = new ArrayList<>();
                 String saux = sectionManager.getSection(keyword);
                 if (saux != null)
+                {
                     section.add(saux);
+                }
                     
                 if (!section.isEmpty())
                 {
                     candidate = _searchForSection(product, section);
                     
                     if (!candidate)
+                    {
                         break;
+                    }
                 }
                 
                 // Comprobamos si es un color
                 List<String> color = new ArrayList<>();
                 String caux = colorManager.getColor(keyword);
                 if (caux != null)
+                {
                     color.add(caux);
+                }
                 
                 if (!color.isEmpty())
                 {
@@ -762,7 +769,9 @@ public class Controller
                     
                     candidate = (paux != null);
                     if (!candidate)
+                    {
                         break;
+                    }
                 }
                 
                 // Si no es ni seccion ni color
@@ -771,13 +780,17 @@ public class Controller
                     candidate = _searchForKeyword(product, keyword);
                     
                     if (!candidate)
+                    {
                         break;
+                    }
                 }
                 
             }
             
             if (candidate)
+            {
                 newList.add((paux == null) ? product : paux);
+            }
         }
         
         return newList;

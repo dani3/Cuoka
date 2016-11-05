@@ -32,13 +32,13 @@ public class IntroUI extends AppCompatActivity
         // Especificamos el layout 'activity_intro.xml'
         setContentView(R.layout.activity_intro);
 
-        new RetreiveUser().execute();
+        new RetrieveUser().execute();
     }
 
     /**
      * Tarea en segundo plano que trae los datos del usuario.
      */
-    private class RetreiveUser extends AsyncTask<String, Void, Void>
+    private class RetrieveUser extends AsyncTask<String, Void, Void>
     {
         boolean isNetworkAvailable;
 
@@ -55,7 +55,7 @@ public class IntroUI extends AppCompatActivity
                             @Override
                             public void onClick(View v)
                             {
-                                new RetreiveUser().execute();
+                                new RetrieveUser().execute();
                             }
                         }).show();
             }
@@ -102,7 +102,7 @@ public class IntroUI extends AppCompatActivity
                                 // Si ocurre algun error (raro), forzamos a que se loguee
                                 mSharedPreferencesManager.insertLoggedIn(false);
 
-                                new RetreiveUser().execute();
+                                new RetrieveUser().execute();
                             }
                         }).show();
             }

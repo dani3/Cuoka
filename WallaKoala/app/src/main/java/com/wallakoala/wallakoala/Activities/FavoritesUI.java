@@ -121,6 +121,7 @@ public class FavoritesUI extends AppCompatActivity
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mProductsRecyclerView.setLayoutManager(gridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
+        mProductsRecyclerView.setHasFixedSize(true);
     }
 
     @Override

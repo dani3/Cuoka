@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.animation.TimeInterpolator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,7 +38,6 @@ import com.wallakoala.wallakoala.Utils.Utils;
 public class ProfileUI extends AppCompatActivity
 {
     /* Constants */
-    private static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     private static final int ANIM_DURATION = 250;
     private static boolean EXITING;
 
@@ -110,7 +108,7 @@ public class ProfileUI extends AppCompatActivity
                     mLeftDeltaImage = mThumbnailLeft - imageScreenLocation[0];
                     mTopDeltaImage  = mThumbnailTop - imageScreenLocation[1];
 
-                    // Factores de escala para saber cuanto hay que encojer o agrandar la imagen
+                    // Factores de escala para saber cuanto hay que encoger o agrandar la imagen
                     mWidthScaleImage = (float)mThumbnailWidth / (float)mProfileFAB.getWidth();
                     mHeightScaleImage = (float)mThumbnailHeight / (float)mProfileFAB.getHeight();
 
@@ -517,7 +515,7 @@ public class ProfileUI extends AppCompatActivity
                    .setDuration(ANIM_DURATION)
                    .scaleX(1).scaleY(1)
                    .translationX(0).translationY(0)
-                   .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
+                   .setInterpolator(new AccelerateDecelerateInterpolator());
 
         // Efecto fade para oscurecer la pantalla
         mTopLevelLayout.animate().alpha(1.0f).setDuration(ANIM_DURATION).start();
