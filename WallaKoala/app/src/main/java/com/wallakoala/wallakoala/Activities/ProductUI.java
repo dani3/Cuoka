@@ -4,11 +4,13 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -233,7 +235,32 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mRedirectImageButton      = (ImageButton) findViewById(R.id.product_redirect);
 
         // Inicializamos los listeners a todos los botones.
+        mRedirectImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                _redirectToShop();
+            }
+        });
 
+        mShareImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
+        mCartImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
 
         // Inicializamos la info del producto
         String name = "<b>" + mProduct.getName() + "</b>";
@@ -298,7 +325,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      * Metodo que inicializa la ListView de iconos.
      */
     @SuppressWarnings("deprecation")
-    protected void _initIconListView()
+    private void _initIconListView()
     {
         ListView mColorIconListView = (ListView) findViewById(R.id.product_info_list_colors);
 
@@ -343,7 +370,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      * Metodo que inicializa el RecyclerView.
      */
     @SuppressWarnings("deprecation")
-    protected void _initRecyclerView()
+    private void _initRecyclerView()
     {
         mImagesRecylcerView = (RecyclerView)findViewById(R.id.product_recycler_view);
 
@@ -374,7 +401,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que inicializa todas las animaciones.
      */
-    protected void _initAnimations()
+    private void _initAnimations()
     {
         mExplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.explode_animation);
         mImplodeAnimation = AnimationUtils.loadAnimation(this, R.anim.implode_animation);
@@ -403,7 +430,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que llama al servidor para indicar que se ha visto este producto.
      */
-    protected void _sendViewedProduct()
+    private void _sendViewedProduct()
     {
         RestClientSingleton.sendViewedProduct(mContext, mProduct);
     }
@@ -411,9 +438,24 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /**
      * Metodo que precarga las imagenes antes de que aparezcan por pantalla.
      */
-    protected void _fetchImages()
+    private void _fetchImages()
     {
         Utils.fetchImages(mContext, mProduct, mCurrentColor);
+    }
+
+    /**
+     * Metodo que redirecciona a la web de la tienda.
+     */
+    private void _redirectToShop()
+    {
+        if (mProduct.getLink().startsWith("http") || mProduct.getLink().startsWith("https"))
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            intent.setData(Uri.parse(mProduct.getLink()));
+
+            startActivity(intent);
+        }
     }
 
     /**

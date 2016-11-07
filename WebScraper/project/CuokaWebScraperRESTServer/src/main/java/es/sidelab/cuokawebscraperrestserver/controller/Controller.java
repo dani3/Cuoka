@@ -27,6 +27,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,22 +46,37 @@ public class Controller
     private static final Log LOG = LogFactory.getLog(Controller.class);
     
     @Autowired
+    private JavaMailSender javaMailSender;
+    
+    @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
     
     @Autowired
-    ColorManager colorManager;
+    private ColorManager colorManager;
     
     @Autowired
-    SectionManager sectionManager;
+    private SectionManager sectionManager;
     
     @Autowired
-    ProductsRepository productsRepository;
+    private ProductsRepository productsRepository;
     
     @Autowired
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
     
     @Autowired
-    ShopsRepository shopsRepository;
+    private ShopsRepository shopsRepository;
+    
+    @RequestMapping(value = "/send" , method = RequestMethod.GET)
+    public void send()
+    {
+        SimpleMailMessage message = new SimpleMailMessage();
+        
+        message.setFrom("dani.mancebo.aldea@gmail.com");
+        message.setTo("dani.mancebo_3@hotmail.com");
+        message.setSubject("hello");
+        
+        javaMailSender.send(message);
+    }
     
     /**
      * Metodo que anade un usuario a la BD.
@@ -554,7 +571,7 @@ public class Controller
                             , @PathVariable String offset)
     {
         LOG.info("Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
-        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0) ;
+        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 15) ;
     }
     
     /**
@@ -587,16 +604,22 @@ public class Controller
         List<Product> productList;
         
         if (filter.isMan())
+        {
             LOG.info(" - Solo hombre");
-        else
+        } else {
             LOG.info(" - Solo mujer"); 
+        }
             
         if (filter.getPriceFrom() > 0)
+        {
             LOG.info(" - Precio minimo = " + filter.getPriceFrom());
-
+        }
+            
         if (filter.getPriceTo() > 0)
+        {
             LOG.info(" - Precio maximo = " + filter.getPriceTo()); 
-
+        }
+            
         // Ponemos un valor minimo y maximo si no se reciben en el JSON.
         double from = (filter.getPriceFrom() > 0) ? filter.getPriceFrom() : -1;
         double to = (filter.getPriceTo() > 0) ? filter.getPriceTo() : 999; 
@@ -627,19 +650,25 @@ public class Controller
         {
             LOG.info(" - De las siguientes secciones:");            
             for (String section : filter.getSections())
+            {
                 LOG.info("   " + section);   
-            
+            }                
+                
             LOG.info(" - De los siguientes colores:");            
             for (String color : filter.getColors())
+            {
                 LOG.info("   " + color);  
-            
+            }
+                
             for (Product product : productList)
             {
                 if (_searchForSection(product, filter.getSections()))
                 {
                     Product aux = _searchForColor(product, filter.getColors());
                     if (aux != null)
-                        newList.add(aux);                     
+                    {
+                        newList.add(aux);    
+                    }
                 }
             }
             
@@ -656,11 +685,17 @@ public class Controller
         {         
             LOG.info(" - De las siguientes secciones:");            
             for (String section : filter.getSections())
+            {
                 LOG.info("   " + section);   
-            
+            }
+                
             for (Product product : productList)
+            {
                 if (_searchForSection(product, filter.getSections()))
+                {
                     newList.add(product);  
+                }
+            }
             
             if (newList.size() > Properties.MAX_FILTERED_PRODUCTS)
             {
@@ -675,13 +710,17 @@ public class Controller
         {   
             LOG.info(" - De los siguientes colores:");            
             for (String color : filter.getColors())
+            {
                 LOG.info("   " + color);         
-            
+            }
+                
             for (Product product : productList)
             {
                 Product aux =_searchForColor(product, filter.getColors());
                 if (aux != null)
+                {
                     newList.add(product);
+                }
             }
             
             if (newList.size() > Properties.MAX_FILTERED_PRODUCTS)
