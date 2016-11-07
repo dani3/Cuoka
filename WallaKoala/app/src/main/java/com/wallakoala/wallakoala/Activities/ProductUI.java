@@ -29,6 +29,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -66,6 +67,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     /* Context */
     private Context mContext;
 
+    /* Container Views */
     private RecyclerView mImagesRecylcerView;
     private LinearLayout mProductInfoLayout;
 
@@ -78,6 +80,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     /* Views */
     private ImageView mImageView;
+    private ImageButton mCartImageButton;
+    private ImageButton mShareImageButton;
+    private ImageButton mRedirectImageButton;
     private LikeButtonLargeView mFavoriteImageButton;
 
     /* TextViews */
@@ -211,18 +216,26 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     @SuppressWarnings("deprecation")
     protected void _initViews()
     {
-        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.topLevelLayout);
-        mImageView = (ImageView)findViewById(R.id.imageView);
-        mFloatingActionButtonPlus = (FloatingActionButton)findViewById(R.id.floatingButton);
-        mProductInfoLayout = (LinearLayout)findViewById(R.id.product_info);
-        TextView mProductNameTextView = (TextView) findViewById(R.id.product_info_name);
-        TextView mProductPriceTextView = (TextView) findViewById(R.id.product_info_price);
+        FrameLayout frameLayout              = (FrameLayout) findViewById(R.id.topLevelLayout);
+        TextView mProductNameTextView        = (TextView) findViewById(R.id.product_info_name);
+        TextView mProductPriceTextView       = (TextView) findViewById(R.id.product_info_price);
         TextView mProductDescriptionTextView = (TextView) findViewById(R.id.product_info_description);
-        TextView mProductShopTextView = (TextView) findViewById(R.id.product_info_shop);
-        mProductReferenceTextView = (TextView)findViewById(R.id.product_info_reference);
-        mFavoriteImageButton = (LikeButtonLargeView) findViewById(R.id.product_favorite);
+        TextView mProductShopTextView        = (TextView) findViewById(R.id.product_info_shop);
 
-        /* Inicializamos la info del producto */
+        mImageView                = (ImageView) findViewById(R.id.imageView);
+        mFloatingActionButtonPlus = (FloatingActionButton) findViewById(R.id.floatingButton);
+        mProductInfoLayout        = (LinearLayout) findViewById(R.id.product_info);
+        mProductReferenceTextView = (TextView) findViewById(R.id.product_info_reference);
+        mFavoriteImageButton      = (LikeButtonLargeView) findViewById(R.id.product_favorite);
+
+        mCartImageButton          = (ImageButton) findViewById(R.id.product_cart);
+        mShareImageButton         = (ImageButton) findViewById(R.id.product_share);
+        mRedirectImageButton      = (ImageButton) findViewById(R.id.product_redirect);
+
+        // Inicializamos los listeners a todos los botones.
+
+
+        // Inicializamos la info del producto
         String name = "<b>" + mProduct.getName() + "</b>";
         boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
@@ -251,7 +264,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             }
         });
 
-        /* Floating Button */
+        // Floating Button para expandir la info.
         mFloatingActionButtonPlus.setVisibility(View.GONE);
         mFloatingActionButtonPlus.setOnClickListener(new View.OnClickListener()
         {
@@ -268,15 +281,15 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             }
         });
 
-        /* Cargamos el bitmap de la imagen en baja calidad */
+        // Cargamos el bitmap de la imagen en baja calidad
         File filePath = getFileStreamPath(mBitmapUri);
         BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromPath(filePath.toString());
         mImageView.setImageDrawable(bitmapDrawable);
 
-        /* Calculamos el aspect ratio de la imagen */
+        // Calculamos el aspect ratio de la imagen
         mRatio = (double) bitmapDrawable.getIntrinsicHeight() / (double) bitmapDrawable.getIntrinsicWidth();
 
-        /* Background */
+        // Background
         mBackground = new ColorDrawable(Color.WHITE);
         frameLayout.setBackground(mBackground);
     }

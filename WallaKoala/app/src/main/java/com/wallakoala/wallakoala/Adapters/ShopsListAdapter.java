@@ -50,6 +50,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     private List<String> mMyShopsList;
     private Map<String, Integer> mFavoriteMap;
 
+    /* Drawables */
     private Drawable mRoundedAccent;
     private Drawable mRoundedGrey;
     private Drawable mFavoriteDrawable;
@@ -91,8 +92,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
         @SuppressWarnings("deprecation")
         public void bindShop(final Shop shop)
         {
-            String logoFile = shop.getName() + "-logo.jpg";
-            String fixedUrl = Utils.fixUrl(Properties.SERVER_URL + Properties.LOGOS_PATH + logoFile);
+            String fixedUrl = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.LOGOS_PATH + shop.getName() + "-logo.jpg");
 
             // Comprobamos si la tienda es favorita.
             mFavorite = false;
@@ -121,10 +122,14 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             });
 
             // Mostramos el icono de la seccion/corazon.
-            mFavOrNumberImageView.setImageDrawable((mFavorite) ? mFavoriteDrawable : mClotheDrawable);
+            mFavOrNumberImageView.setImageDrawable((mFavorite)
+                    ? mFavoriteDrawable : mClotheDrawable);
+
             // Mostramos el numero de favoritos/total de productos de la tienda
-            int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null) ? 0 : mFavoriteMap.get(shop.getName());
-            mNumberTextView.setText((mFavorite) ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
+            int numberOfFavorites = (mFavoriteMap.get(shop.getName()) == null)
+                    ? 0 : mFavoriteMap.get(shop.getName());
+            mNumberTextView.setText((mFavorite)
+                    ? String.valueOf(numberOfFavorites) : Integer.toString(shop.getProducts()));
 
             // Establecemos el nombre de la tienda.
             mNameTextView.setText(shop.getName().toUpperCase());
@@ -330,8 +335,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.shop_item
-                        , parent
-                        , false );
+                    , parent
+                    , false );
 
         return new ShopHolder(itemView);
     }

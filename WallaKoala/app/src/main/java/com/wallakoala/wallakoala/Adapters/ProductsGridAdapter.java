@@ -165,21 +165,21 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             ERROR = false;
             LOADED = false;
 
-            /* Inicializamos los TextViews */
+            // Inicializamos los TextViews
             String name = product.getName().substring(0, 1) + product.getName().split(" ")[0].substring(1).toLowerCase();
             mTitleTextView.setText(name);
             mSubtitleTextView.setText(product.getShop());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
 
-            /* Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone */
+            // Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone
             mProductFooterMainView.setVisibility(View.GONE);
             mProductFavoriteImageButton.setVisibility(View.GONE);
 
-            /* Inicializamos el boton de favorito */
+            // Inicializamos el boton de favorito
             mProductFavoriteImageButton.changeIcon(
                     mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
-            /* Cargamos la imagen usando Picasso */
+            // Cargamos la imagen usando Picasso
             mTarget = new Target()
             {
                 @Override

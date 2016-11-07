@@ -24,21 +24,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:visibility="gone">
-
-        </android.support.v7.widget.RecyclerView>
+            android:visibility="gone"/>
 
         <com.wallakoala.wallakoala.Views.LikeButtonLargeView
             android:id="@+id/product_favorite"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:scaleType="centerCrop"
-            android:layout_gravity="top|right|end"/>
+            android:layout_gravity="top|end"/>
 
         <include android:id="@+id/product_info_layout"
-            layout="@layout/product_info">
-
-        </include>
+            layout="@layout/product_info"/>
 
     </FrameLayout>
 

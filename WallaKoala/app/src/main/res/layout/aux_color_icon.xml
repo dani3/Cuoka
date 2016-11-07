@@ -9,20 +9,13 @@
         android:layout_width="58dp"
         android:layout_height="58dp"
         android:layout_gravity="center"
-        android:src="@color/colorAccent"/>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:src="@color/colorMediumText"/>
+        android:background="@drawable/circle_border"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/color_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
-        android:layout_gravity="center"
-        android:src="@color/mb_white"/>
+        android:layout_gravity="center"/>
 
 </FrameLayout>

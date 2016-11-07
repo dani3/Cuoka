@@ -44,6 +44,7 @@ public class FavoritesUI extends AppCompatActivity
     /* Adapters */
     private SectionedRecyclerViewAdapter mProductAdapter;
 
+    /* Data */
     private List<Product> mFavoriteList;
     private Map<String, List<Product>> mProductMap;
 

@@ -24,6 +24,7 @@
         android:id="@+id/shops_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:scrollbars="none"
         android:paddingBottom="108dp"
         android:paddingTop="@dimen/action_bar_height"

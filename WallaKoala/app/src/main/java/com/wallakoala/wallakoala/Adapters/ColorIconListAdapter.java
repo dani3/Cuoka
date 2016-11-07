@@ -118,7 +118,7 @@ public class ColorIconListAdapter extends BaseAdapter
                     AnimationUtils.loadAnimation(mContext, R.anim.explode_animation));
 
         } else {
-            colorIconHolder.mSelectedView.setVisibility(View.GONE);
+            colorIconHolder.mSelectedView.setVisibility(View.INVISIBLE);
         }
 
         Log.d(Properties.TAG, url);

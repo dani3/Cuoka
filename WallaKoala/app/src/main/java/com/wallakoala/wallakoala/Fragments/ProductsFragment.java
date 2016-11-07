@@ -759,7 +759,7 @@ public class ProductsFragment extends Fragment
                     DAYS_WITH_NOTHING++;
                     DAYS_OFFSET++;
 
-                    if (DAYS_OFFSET < MAX_OFFSET)
+                    if (DAYS_WITH_NOTHING < MAX_OFFSET)
                     {
                         mConnectToServer = new ConnectToServer().execute();
 
@@ -776,7 +776,7 @@ public class ProductsFragment extends Fragment
                     DAYS_WITH_NOTHING++;
                     DAYS_OFFSET++;
 
-                    if (DAYS_OFFSET < MAX_OFFSET)
+                    if (DAYS_WITH_NOTHING < MAX_OFFSET)
                     {
                         mConnectToServer = new ConnectToServer().execute();
 
@@ -800,7 +800,6 @@ public class ProductsFragment extends Fragment
 
                         // Se han cargado los productos correctamente
                         _loading(false, true);
-
                     }
                 }
             }
