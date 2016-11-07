@@ -71,6 +71,7 @@ public class ProductsFragment extends Fragment
     protected static boolean MAN;
     protected static boolean FIRST_CONNECTION;
     protected static int NUMBER_OF_CORES;
+    protected static int DAYS_WITH_NOTHING;
     protected static int DAYS_OFFSET;
     protected static String SEARCH_QUERY;
     protected enum STATE
@@ -238,6 +239,7 @@ public class ProductsFragment extends Fragment
         SEARCH_QUERY = null;
 
         DAYS_OFFSET = 0;
+        DAYS_WITH_NOTHING = 0;
         MAN = mSharedPreferences.retreiveUser().getMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
@@ -262,6 +264,7 @@ public class ProductsFragment extends Fragment
         mBackPressed = 0;
 
         DAYS_OFFSET = 0;
+        DAYS_WITH_NOTHING = 0;
 
         FIRST_CONNECTION = true;
     }
@@ -342,7 +345,7 @@ public class ProductsFragment extends Fragment
                             {
                                 DAYS_OFFSET++;
 
-                                if (DAYS_OFFSET < MAX_OFFSET)
+                                if (DAYS_WITH_NOTHING < MAX_OFFSET)
                                 {
                                     mConnectToServer = new ConnectToServer().execute();
 
@@ -753,6 +756,7 @@ public class ProductsFragment extends Fragment
                 // Si lo ultimo que hemos traido esta vacio, o no se llega al minimo y NO estamos en los filtros
                 if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) && (DAYS_OFFSET >= 0))
                 {
+                    DAYS_WITH_NOTHING++;
                     DAYS_OFFSET++;
 
                     if (DAYS_OFFSET < MAX_OFFSET)
@@ -769,6 +773,7 @@ public class ProductsFragment extends Fragment
 
                 } else if (mProductsCandidatesDeque.isEmpty() && mProductsDisplayedList.size() < MIN_PRODUCTS && (DAYS_OFFSET >= 0)) {
 
+                    DAYS_WITH_NOTHING++;
                     DAYS_OFFSET++;
 
                     if (DAYS_OFFSET < MAX_OFFSET)
@@ -791,6 +796,8 @@ public class ProductsFragment extends Fragment
                         _noData(true);
 
                     } else {
+                        DAYS_WITH_NOTHING = 0;
+
                         // Se han cargado los productos correctamente
                         _loading(false, true);
 

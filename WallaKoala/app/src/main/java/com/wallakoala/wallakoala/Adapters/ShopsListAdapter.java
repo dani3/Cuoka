@@ -109,7 +109,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             mActionButton.setBackgroundDrawable((mFavorite) ? mRoundedAccent : mRoundedGrey);
             mActionButton.setText((mFavorite) ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
             mActionButton.setTextColor((mFavorite)
-                    ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
+                    ? mContext.getResources().getColor(android.R.color.white) : mContext.getResources().getColor(R.color.colorText));
 
             mActionButton.setOnClickListener(new View.OnClickListener()
             {
@@ -145,8 +145,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable)
                 {
-                    mShopLogoImageView.setBackgroundColor(mContext.getResources()
-                            .getColor(android.R.color.holo_red_dark));
+                    mShopLogoImageView.setBackgroundColor(
+                            mContext.getResources().getColor(android.R.color.holo_red_dark));
 
                     mShopLogoImageView.setAlpha(0.2f);
                 }
@@ -193,7 +193,7 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                                     ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
 
                             mActionButton.setTextColor((!actionDeleted)
-                                    ? mContext.getResources().getColor(R.color.colorAccent) : mContext.getResources().getColor(R.color.colorText));
+                                    ? mContext.getResources().getColor(android.R.color.white) : mContext.getResources().getColor(R.color.colorText));
 
                             // Mostramos el icono de la seccion/corazon
                             mFavOrNumberImageView.setImageDrawable((!actionDeleted)

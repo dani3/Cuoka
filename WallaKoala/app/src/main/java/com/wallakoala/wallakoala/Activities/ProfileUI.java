@@ -3,6 +3,8 @@ package com.wallakoala.wallakoala.Activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -162,15 +164,22 @@ public class ProfileUI extends AppCompatActivity
     @SuppressWarnings("deprecation")
     private void _initViews()
     {
-        mTopLevelLayout          = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
-        mProfileFAB              = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
-        mDeleteFAB               = (FloatingActionButton)findViewById(R.id.profile_delete);
+        mTopLevelLayout = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
+        mProfileFAB     = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
+        mDeleteFAB      = (FloatingActionButton)findViewById(R.id.profile_delete);
 
         TextView mFavoriteTextView = (TextView) findViewById(R.id.profile_favorites);
         TextView mShopsTextView    = (TextView) findViewById(R.id.profile_shops);
 
         mFavoriteTextView.setText(Integer.toString(mUser.getFavoriteProducts().size()));
         mShopsTextView.setText(Integer.toString(mUser.getShops().size()));
+
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
+        User user = sharedPreferencesManager.retreiveUser();
+
+        Bitmap profile = (user.getMan() ?
+                BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
+        mProfileFAB.setImageBitmap(profile);
 
         mDeleteFAB.setOnClickListener(new View.OnClickListener()
         {
