@@ -235,13 +235,13 @@ public class Controller
     @RequestMapping(value = "/favorites/{id}", method = RequestMethod.GET)
     public List<Product> getFavoriteProducts(@PathVariable long id)
     {
-        LOG.info("[FAVORITES] Peticion GET para obtener los productos favoritos del usuario (ID: " + id + ")");
+        LOG.info("[PRODUCTS] Peticion GET para obtener los productos favoritos del usuario (ID: " + id + ")");
         
         User user = usersRepository.findOne(id);
         
         if (user == null)
         {
-            LOG.warn("[FAVORITES] No se encuentra el usuario (ID: " + id + ")");
+            LOG.warn("[PRODUCTS] No se encuentra el usuario (ID: " + id + ")");
             
             return new ArrayList<>();
         }
@@ -252,7 +252,7 @@ public class Controller
             productList.add(productsRepository.findOne(productId));
         }
         
-        LOG.info("[FAVORITES] Usuario encontrado, tiene " + productList.size() + " favoritos");
+        LOG.info("[PRODUCTS] Usuario encontrado, tiene " + productList.size() + " favoritos");
         return productList;
     }
     
@@ -397,13 +397,13 @@ public class Controller
     public ResponseEntity<Boolean> addProducts(@RequestBody List<Product> products
                                         , @PathVariable String shop)
     {
-        LOG.info("Peticion POST para anadir productos de " + shop + " recibida");
+        LOG.info("[SCRAPER] Peticion POST para anadir productos de " + shop + " recibida");
         
         Runnable task = () -> {                 
             // Obtenemos los productos que ya tenemos en base de datos.
             List<Product> productsInDB = productsRepository.findByShop(shop);
             
-            LOG.info("Llamando a ImageManager para descargar las imagenes que no existan");
+            LOG.info("[SCRAPER] Llamando a ImageManager para descargar las imagenes que no existan");
             List<Product> productsScraped = ImageManager.downloadImages(products, shop);
             
             if (!productsInDB.isEmpty())
@@ -432,7 +432,7 @@ public class Controller
                         if (comparison >= 0)
                         {
                             // Actualizamos el producto.
-                            LOG.info("Producto encontrado, se actualiza " + ((comparison == 0) ? "" : " y se anade como novedad"));
+                            LOG.info("[SCRAPER] Producto encontrado, se actualiza" + ((comparison == 0) ? "" : " y se anade como novedad"));
                             productInDB.update(productScraped, (comparison == 0));
 
                             // Y lo guardamos.
@@ -444,14 +444,14 @@ public class Controller
                     
                     if (!found)
                     {
-                        LOG.info("Producto NO encontrado, lo insertamos como novedad");
+                        LOG.info("[SCRAPER] Producto NO encontrado, lo insertamos como novedad");
                         productScraped.setInsertDate(Calendar.getInstance());
 
                         productsRepository.save(productScraped);  
                     }                        
                 }
                 
-                LOG.info("Productos actualizados, se borran los productos antiguos");
+                LOG.info("[SCRAPER] Productos actualizados, se borran los productos antiguos");
                 productsInDB = productsRepository.findByShop(shop);
                 for (Product productInDB : productsInDB)
                 {
@@ -466,7 +466,7 @@ public class Controller
 
                     if (!found)
                     {
-                        LOG.info("Producto NO encontrado, se marca como OBSOLETO");
+                        LOG.info("[SCRAPER] Producto NO encontrado, se marca como OBSOLETO");
                         productInDB.setObsolete(true);
                         productsRepository.save(productInDB);
                     }
@@ -496,8 +496,8 @@ public class Controller
                 // Se añade la tienda.
                 shopsRepository.save(new Shop(shop, man, woman, productsScraped.size()));
                 
-                LOG.info("No hay ningun producto de la tienda " + shop);
-                LOG.info("Los productos se insertan directamente");
+                LOG.info("[SCRAPER] No hay ningun producto de la tienda " + shop);
+                LOG.info("[SCRAPER] Los productos se insertan directamente");
                 for (Product productScraped : productsScraped)
                 {
                     productScraped.setAspectRatio(ImageManager.getAspectRatio(shop));
@@ -507,8 +507,8 @@ public class Controller
                 }                
             }
             
-            LOG.info(productsScraped.size() + " productos de " + shop + " insertados correctamente");        
-            LOG.info("Saliendo del metodo addProducts");
+            LOG.info("[SCRAPER] " + productsScraped.size() + " productos de " + shop + " insertados correctamente");        
+            LOG.info("[SCRAPER] Saliendo del metodo addProducts");
         };
         
         EXECUTOR.execute(task);       
@@ -922,7 +922,7 @@ public class Controller
                                 .getJaroWinklerDistance(color
                                         , single) >= Properties.MAX_SIMILARITY_THRESHOLD)
                     {
-                        LOG.info("Color '" + color + "' encontrado: " + single);
+                        LOG.info("[SEARCH] Color '" + color + "' encontrado: " + single);
                         
                         return _reorderColorVariants(product, pos);
                     }
@@ -945,7 +945,7 @@ public class Controller
                                 .getJaroWinklerDistance(color
                                         , single) >= Properties.MAX_SIMILARITY_THRESHOLD)
                 {
-                    LOG.info("Color '" + color + "' encontrado: " + single);
+                    LOG.info("[SEARCH] Color '" + color + "' encontrado: " + single);
                     
                     return product;
                 }
@@ -972,7 +972,7 @@ public class Controller
                                 .getJaroWinklerDistance(section
                                         , product.getSection()) >= Properties.MAX_SIMILARITY_THRESHOLD)
             {
-                LOG.info("Seccion '" + section + "' encontrada: " + product.getSection());
+                LOG.info("[SEARCH] Seccion '" + section + "' encontrada: " + product.getSection());
                 
                 return true;
             }
@@ -991,7 +991,7 @@ public class Controller
                                 .getJaroWinklerDistance(section
                                         , single) >= Properties.MAX_SIMILARITY_THRESHOLD)
                 {
-                    LOG.info("Seccion '" + section + "' encontrada: " + single);
+                    LOG.info("[SEARCH] Seccion '" + section + "' encontrada: " + single);
                     
                     return true;
                 }
@@ -1040,7 +1040,7 @@ public class Controller
                             .getJaroWinklerDistance(keyword
                                     , single) >= Properties.MAX_SIMILARITY_THRESHOLD)
             {
-                LOG.info("Keyword '" + keyword + "' encontrado: " + single);
+                LOG.info("[SEARCH] Keyword '" + keyword + "' encontrado: " + single);
 
                 return true;
             }
@@ -1056,7 +1056,7 @@ public class Controller
                             .getJaroWinklerDistance(keyword
                                     , single) >= Properties.MAX_SIMILARITY_THRESHOLD)
             {
-                LOG.info("Keyword '" + keyword + "' encontrado: " + single);
+                LOG.info("[SEARCH] Keyword '" + keyword + "' encontrado: " + single);
 
                 return true;
             }

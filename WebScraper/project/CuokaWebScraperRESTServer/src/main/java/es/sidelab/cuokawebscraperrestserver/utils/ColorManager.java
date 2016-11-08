@@ -18,15 +18,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ColorManager 
 {
-    private Map<String, String[]> colorMap;
-    private List<String> suggestedMaleColors;
-    private List<String> suggestedFemaleColors;
+    private final Map<String, String[]> colorMap;
+    private final List<String> suggestedMaleColors;
+    private final List<String> suggestedFemaleColors;
     
     public ColorManager()
     {
-        colorMap              = new HashMap<>();
-        suggestedMaleColors   = new ArrayList<>();
-        suggestedFemaleColors = new ArrayList<>();
+        colorMap = new HashMap<>();
         
         colorMap.put("Amarillos", new String[]{ "Amarillo", "Amarillos", "Amarilla", "Amarillas", "Dorado", "Dorados", "Dorada", "Doradas"
                                         , "Oro", "Oros", "Arena", "Arenas", "Beige", "Beiges", "Beis", "Camel", "Nude", "Maquillaje"
@@ -99,11 +97,11 @@ public class ColorManager
             for (String color : colors)
             {
                 if (color.contains("-"))
-                    colors_compound.add(color.replaceAll("-", " "));
-                
-                else if ((! color.contains("-")) && (! color.contains("ICON")))
+                {
+                    colors_compound.add(color.replaceAll("-", " "));                
+                } else if ((! color.contains("-")) && (! color.contains("ICON"))) {
                     colors_simple.add(color);
-                
+                }
             }
         }
         

@@ -56,16 +56,16 @@ public class ImageManager
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + ".jpg";
                         String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + "_" + "Small.jpg";
-                        LOG.info("Comprobando la imagen: " + path);
+                        LOG.info("[SCRAPER] Comprobando la imagen: " + path);
 
                         if (!FileManager.existsFile(pathSmall))
                         {
-                            LOG.info("La imagen no existe, descargando");
+                            LOG.info("[SCRAPER] La imagen no existe, descargando");
                             boolean ok = downloadImage(cv.getImages().get(k).getUrl(), pathSmall.replaceAll("_Small" , ""));
 
                             if (ok)
                             {
-                                LOG.info("Imagen descargada correctamente");
+                                LOG.info("[SCRAPER] Imagen descargada correctamente");
                                 product.getColors().get(j)
                                         .getImages().get(k).setPath(path);
                                 
@@ -75,7 +75,7 @@ public class ImageManager
                             }                            
                             
                         } else {
-                            LOG.info("La imagen ya existe");
+                            LOG.info("[SCRAPER] La imagen ya existe");
                             product.getColors().get(j)
                                         .getImages().get(k).setPath(path);                        
                         }   
@@ -101,17 +101,17 @@ public class ImageManager
                             product.getColors().get(j).setPath("0");
                             
                         } else {
-                            LOG.info("URL del icono incorrecta. Se intenta averiguar el color...");
+                            LOG.warn("[SCRAPER] URL del icono incorrecta. Se intenta averiguar el color...");
                     
                             String color_found = ColorManager.findOutColor(cv.getName());
 
                             if (color_found != null)
                             {
-                                LOG.info("Color (" + cv.getName() +") encontrado!");
+                                LOG.info("[SCRAPER] Color (" + cv.getName() +") encontrado!");
                                 product.getColors().get(j).setPath(color_found);
 
                             } else {
-                                LOG.info("Color (" + cv.getName() +") no encontrado");
+                                LOG.info("[SCRAPER] Color (" + cv.getName() +") no encontrado");
                             }
                         }
                         
@@ -120,17 +120,17 @@ public class ImageManager
                     }
                     
                 } else {
-                    LOG.info("URL del icono vacio. Se intenta averiguar el color...");
+                    LOG.warn("[SCRAPER] URL del icono vacio. Se intenta averiguar el color...");
                     
                     String color_path = ColorManager.findOutColor(cv.getName());
                     
                     if (color_path != null)
                     {
-                        LOG.info("Color (" + cv.getName() +") encontrado!");
+                        LOG.info("[SCRAPER] Color (" + cv.getName() +") encontrado!");
                         product.getColors().get(j).setPath(color_path);
                         
                     } else {
-                        LOG.info("Color (" + cv.getName() +") no encontrado");                        
+                        LOG.info("[SCRAPER] Color (" + cv.getName() +") no encontrado");                        
                     }     
                 }
             } // for colors      
@@ -139,10 +139,10 @@ public class ImageManager
             
         } // for products
         
-        LOG.info("Todas las imagenes se han descargado correctamente, se reescalan");
+        LOG.info("[SCRAPER] Todas las imagenes se han descargado correctamente, se reescalan");
         resizeImages(shop);    
         
-        LOG.info("Se reescalan los iconos de los colores");
+        LOG.info("[SCRAPER] Se reescalan los iconos de los colores");
         resizeColors(shop);        
         
         return productsUpdated;
