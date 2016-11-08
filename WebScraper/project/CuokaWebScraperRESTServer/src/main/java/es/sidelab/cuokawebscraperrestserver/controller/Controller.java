@@ -609,7 +609,7 @@ public class Controller
         } else {
             LOG.info("[FILTER] Usuario encontrado, se procede a la busqueda de los productos que cumplan los siguientes filtros:");
             
-            Set<String> filters = user.getSearches();
+            Set<String> filters = user.getFilters();
             
             filters.add(filter.toString());
             user.setFilters(filters);
