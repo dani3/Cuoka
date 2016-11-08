@@ -39,6 +39,58 @@ import java.util.concurrent.TimeoutException;
 public class RestClientSingleton
 {
     /**
+     * Metodo que devuelve la lista de sugerencias del servidor.
+     * @param context: contexto.
+     * @param word: palabra para encontrar las sugerencias.
+     * @return Array de JSONs con las sugerencias.
+     */
+    public static JSONArray retrieveSuggestions(Context context, String word)
+    {
+        JSONArray content;
+
+        try
+        {
+            RequestFuture<JSONArray> future = RequestFuture.newFuture();
+
+            final String fixedURL = Utils.fixUrl(
+                    Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggest/" + word);
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las sugerencias");
+
+            // Creamos una peticion
+            final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                            , fixedURL
+                                                            , null
+                                                            , future
+                                                            , future);
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+            try
+            {
+                content = future.get(20, TimeUnit.SECONDS);
+
+            } catch (InterruptedException e) {
+                Log.d(Properties.TAG, e.getMessage());
+
+                return null;
+            }
+
+            // Si content es vacio, es que han fallado todas las conexiones.
+            if (content == null)
+            {
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return content;
+    }
+
+    /**
      * Metodo que obtiene los productos recomendados de un usuario.
      * @param context: contexto.
      * @return Array de JSONs con las recomendaciones del usuario.

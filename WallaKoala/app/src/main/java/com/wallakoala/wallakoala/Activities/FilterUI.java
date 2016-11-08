@@ -36,12 +36,14 @@ import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.RangeSeekBar;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -143,8 +145,10 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private List<String> mFilterShops;
     private List<String> mFilterColors;
     private List<String> mFilterSections;
+
     private int mFilterMinPrice;
     private int mFilterMaxPrice;
+
     private boolean mFilterNewness;
     private boolean SHOP_FILTER_ACTIVE;
     private boolean SECTION_FILTER_ACTIVE;
@@ -1296,58 +1300,25 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     private class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
     {
-        List<String> suggestions;
+        private List<String> suggestions = new ArrayList<>();
 
         @Override
         protected Void doInBackground(String... params)
         {
-            BufferedReader reader = null;
-            URL url;
+            JSONArray jsonArray = RestClientSingleton.retrieveSuggestions(FilterUI.this, params[0]);
 
-            try
+            if (jsonArray != null)
             {
-                final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                        + "/suggest/" + params[0]);
-
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL
-                        + " para buscar '" + params[0] + "'");
-
-                url = new URL(fixedURL);
-
-                URLConnection conn = url.openConnection();
-
-                // Obtenemos la respuesta del servidor
-                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                // Leemos la respuesta
-                while ((line = reader.readLine()) != null)
-                    sb.append(line + "");
-
-                // Devolvemos la respuesta
-                String content =  sb.toString();
-
-                Log.d(Properties.TAG, content);
-
-                JSONArray jsonArray = new JSONArray(content);
-                suggestions = new ArrayList<>();
-                for (int i = 0; i < jsonArray.length(); i++)
+                try
                 {
-                    suggestions.add(jsonArray.getString(i));
-                }
+                    for (int i = 0; i < jsonArray.length(); i++)
+                    {
+                        suggestions.add(jsonArray.getString(i));
+                    }
 
-            } catch (Exception e) {
-                Log.d(Properties.TAG, "Error conectando realizando busqueda");
-
-            } finally {
-                try {
-                    if (reader != null)
-                        reader.close();
-
-                } catch (IOException e) {
-                    Log.d(Properties.TAG, "Error cerrando conexion con el servidor");
-
+                } catch (JSONException e) {
+                    Log.d(Properties.TAG, "Error parseando las sugerencias");
+                    e.printStackTrace();
                 }
             }
 
@@ -1370,7 +1341,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 cursor.addRow(temp);
             }
 
-            final SearchView search = (SearchView)mMenu.findItem(R.id.menu_item_search).getActionView();
+            final SearchView search = (SearchView) mMenu.findItem(R.id.menu_item_search).getActionView();
 
             search.setSuggestionsAdapter(new SuggestionAdapter(FilterUI.this, cursor, suggestions));
             search.getSuggestionsAdapter().notifyDataSetChanged();
@@ -1382,9 +1353,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      * Metodo llamado cuando se hace click en el texto de la sugerencia.
      * @param view: texto en el que se hace click.
      */
-    public void onClickText(final View view)
+    public void onClickText(View view)
     {
-        final TextView textView = (TextView)view;
+        TextView textView = (TextView) view;
 
         if (Utils.isQueryOk(textView.getText().toString()))
         {
@@ -1408,7 +1379,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      * Metodo llamado cuando se hace click en el boton de la sugerencia.
      * @param view: sugerencia clickada.
      */
-    public void onClickButton(final View view)
+    public void onClickButton(View view)
     {
         final ImageButton imageButton = (ImageButton)view.findViewById(R.id.suggestion_include);
 
@@ -1434,14 +1405,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         }
 
         @Override
-        public void bindView(final View view, final Context context, final Cursor cursor)
+        public void bindView(View view, Context context, Cursor cursor)
         {
             text.setText(items.get(cursor.getPosition()));
             imageButton.setContentDescription(text.getText());
         }
 
         @Override
-        public View newView(final Context context, final Cursor cursor, final ViewGroup parent)
+        public View newView(Context context, Cursor cursor, ViewGroup parent)
         {
             final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

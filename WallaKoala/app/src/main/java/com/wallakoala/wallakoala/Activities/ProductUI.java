@@ -249,7 +249,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             @Override
             public void onClick(View v)
             {
-
+                _shareProduct();
             }
         });
 
@@ -258,7 +258,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             @Override
             public void onClick(View v)
             {
-
+                _addProductToCart();
             }
         });
 
@@ -456,6 +456,29 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             startActivity(intent);
         }
+    }
+
+    /**
+     * Metodo que comparte el producto.
+     */
+    private void _shareProduct()
+    {
+        Intent shareIntent = new Intent();
+
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mBitmapUri));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Mira lo que he encontrado en Cuoka!");
+        shareIntent.setType("*/*");
+
+        startActivity(Intent.createChooser(shareIntent, "Compartir con..."));
+    }
+
+    /**
+     * Metodo que añade el producto al carrito.
+     */
+    private void _addProductToCart()
+    {
+
     }
 
     /**

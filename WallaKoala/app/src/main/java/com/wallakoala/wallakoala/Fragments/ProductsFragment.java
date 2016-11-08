@@ -621,7 +621,8 @@ public class ProductsFragment extends Fragment
                 // Metemos en content el resultado de cada uno
                 for (int i = 0; i < shopsList.size(); i++)
                 {
-                    try {
+                    try
+                    {
                         final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
                         content.add(response);
@@ -1068,7 +1069,7 @@ public class ProductsFragment extends Fragment
      * @param filterMap nuevo estado de los filtros.
      */
     @SuppressWarnings("unchecked")
-    public void processFilter(final Map<String, Object> filterMap)
+    public void processFilter(Map<String, Object> filterMap)
     {
         SEARCH_QUERY = null;
 
@@ -1098,9 +1099,9 @@ public class ProductsFragment extends Fragment
                 if (shopsList.containsAll(mShopsList))
                     shopsList = null;
 
-        final boolean newness = (boolean) mFilterMap.get("newness");
-        final int from = (int) mFilterMap.get("minPrice");
-        final int to = (int) mFilterMap.get("maxPrice");
+        boolean newness = (boolean) mFilterMap.get("newness");
+        int from = (int) mFilterMap.get("minPrice");
+        int to = (int) mFilterMap.get("maxPrice");
 
         _reinitializeData();
 
@@ -1196,7 +1197,7 @@ public class ProductsFragment extends Fragment
      * Metodo que realiza el proceso de busqueda.
      * @param query cadena con la busqueda.
      */
-    public void processSearch(final String query)
+    public void processSearch(String query)
     {
         // Reiniciamos ciertos parametros.
         _reinitializeData();
