@@ -33,51 +33,99 @@ public class Filter
         this.sections = sections;
     }
     
-    public void setMan(boolean man) {
+    public void setMan(boolean man) 
+    {
         this.man = man;
     }
 
-    public void setNewness(boolean newness) {
+    public void setNewness(boolean newness)
+    {
         this.newness = newness;
     }
 
-    public void setPriceFrom(int priceFrom) {
+    public void setPriceFrom(int priceFrom) 
+    {
         this.priceFrom = priceFrom;
     }
 
-    public void setPriceTo(int priceTo) {
+    public void setPriceTo(int priceTo) 
+    {
         this.priceTo = priceTo;
     }
 
-    public void setColors(List<String> colors) {
+    public void setColors(List<String> colors) 
+    {
         this.colors = colors;
     }
 
-    public void setSections(List<String> sections) {
+    public void setSections(List<String> sections) 
+    {
         this.sections = sections;
     }
 
-    public boolean isMan() {
+    public boolean isMan() 
+    {
         return man;
     }
 
-    public boolean isNewness() {
+    public boolean isNewness() 
+    {
         return newness;
     }
 
-    public int getPriceFrom() {
+    public int getPriceFrom() 
+    {
         return priceFrom;
     }
 
-    public int getPriceTo() {
+    public int getPriceTo() 
+    {
         return priceTo;
     }
 
-    public List<String> getColors() {
+    public List<String> getColors()
+    {
         return colors;
     }
 
-    public List<String> getSections() {
+    public List<String> getSections() 
+    {
         return sections;
+    }
+    
+    @Override
+    public String toString()
+    {
+        String _sections = "";
+        String _colors = "";
+        
+        for (String section : this.sections)
+        {
+            _sections += section + ","; 
+        }
+        
+        if (!_sections.isEmpty())
+        {
+            _sections = _sections.substring(0, _sections.length() - 2);
+        }
+        
+        for (String color : this.colors)
+        {
+            _colors += color + ","; 
+        }
+        
+        if (!_colors.isEmpty())
+        {
+            _colors = _colors.substring(0, _colors.length() - 2);
+        }
+        
+        String line = "{man:" + this.man 
+            + ";newness:" + this.newness 
+            + ";priceFrom:" + this.priceFrom 
+            + ";priceTo:" + this.priceTo 
+            + ";colors:" + _colors
+            + ";sections:" + _sections + "}";
+        
+        return line;
     }
 }

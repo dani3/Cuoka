@@ -566,8 +566,8 @@ public class ProductsFragment extends Fragment
                 {
                     for (int i = 0; i < shopsList.size(); i++)
                     {
-                        final String fixedURL = Utils.fixUrl(
-                                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
+                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                                        + "/filter/" + mUser.getId() + "/" + shopsList.get(i));
 
                         Log.d(Properties.TAG, "Conectando con: " + fixedURL);
 

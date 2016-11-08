@@ -587,14 +587,35 @@ public class Controller
     /**
      * Metodo que devuelve una lista de productos que cumplen una serie de condiciones.
      * @param filter: Filtro por el que tienen que pasar los productos.
+     * @param id: id del usuario.
      * @param shop: Tienda de la que se quiere filtrar los productos.
      * @return Lista de productos.
      */
-    @RequestMapping(value = "/filter/{shop}", method = RequestMethod.POST)
+    @RequestMapping(value = "/filter/{id}/{shop}", method = RequestMethod.POST)
     public List<Product> getProductsByFilter(@RequestBody Filter filter
+                                    , @PathVariable long id
                                     , @PathVariable String shop)
     {
-        LOG.info("[FILTER] Peticion GET para obtener los productos de " + shop + " que cumplan los siguientes filtros:");
+        LOG.info("[FILTER] Peticion GET para obtener los productos de " + shop + " por el usuario (ID: " + id + ")");
+        
+        User user = usersRepository.findOne(id);
+        
+        if (user == null)
+        {
+            LOG.warn("[FILTER] Usuario no encontrado (ID: " + id + ")");
+            
+            return new ArrayList<>();
+            
+        } else {
+            LOG.info("[FILTER] Usuario encontrado, se procede a la busqueda de los productos que cumplan los siguientes filtros:");
+            
+            Set<String> filters = user.getSearches();
+            
+            filters.add(filter.toString());
+            user.setFilters(filters);
+            
+            usersRepository.save(user);
+        }
         
         List<Product> productList;
         
@@ -641,7 +662,7 @@ public class Controller
         List<Product> newList = new ArrayList<>();
         
         // Buscamos primero si tiene el filtro de color y de secciones
-        if (!filter.getSections().isEmpty() && ! filter.getColors().isEmpty())
+        if (!filter.getSections().isEmpty() && !filter.getColors().isEmpty())
         {
             LOG.info("[FILTER]  -  De las siguientes secciones:");            
             for (String section : filter.getSections())
@@ -701,7 +722,7 @@ public class Controller
         }  
 
         // Buscamos el color si no tiene el filtro de secciones
-        if (filter.getSections().isEmpty() && ! filter.getColors().isEmpty())
+        if (filter.getSections().isEmpty() && !filter.getColors().isEmpty())
         {   
             LOG.info("[FILTER]  -  De los siguientes colores:");            
             for (String color : filter.getColors())
