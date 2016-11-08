@@ -27,8 +27,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,9 +42,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller 
 {
     private static final Log LOG = LogFactory.getLog(Controller.class);
-    
-    @Autowired
-    private JavaMailSender javaMailSender;
     
     @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
@@ -66,38 +61,27 @@ public class Controller
     @Autowired
     private ShopsRepository shopsRepository;
     
-    @RequestMapping(value = "/send" , method = RequestMethod.GET)
-    public void send()
-    {
-        SimpleMailMessage message = new SimpleMailMessage();
-        
-        message.setFrom("dani.mancebo.aldea@gmail.com");
-        message.setTo("dani.mancebo_3@hotmail.com");
-        message.setSubject("hello");
-        
-        javaMailSender.send(message);
-    }
-    
     /**
      * Metodo que anade un usuario a la BD.
      * @param user: usuario a anadir.
      * @return String con el resultado de la operacion.
      */
     @RequestMapping(value = "/users", method = RequestMethod.POST)
-    public String addUser(@RequestBody User user)
+    public String registerUser(@RequestBody User user)
     {     
-        LOG.info("Peticion POST para anadir un nuevo usuario");
-        LOG.info("Comprobando que no exista...");
+        LOG.info("[LOGIN] Peticion POST para anadir un nuevo usuario");
+        LOG.info("[LOGIN] Comprobando que no exista...");
         
         // Comprobamos que no existe el usuario. Si existe, se devuelve 'USER_ALREADY_EXISTS'
         if (usersRepository.findByEmail(user.getEmail()) != null)
         {
-            LOG.info("El usuario con email (" + user.getEmail() + ") ya existe");
+            LOG.warn("[LOGIN] El usuario con email (" + user.getEmail() + ") ya existe");
         
             return Properties.ALREADY_EXISTS;
         }
         
         // Asignamos la fecha de registro.
+        LOG.info("[LOGIN] El usuario no existe, se registra con fecha de: " + Calendar.getInstance());
         user.setRegistrationDate(Calendar.getInstance());
         
         // Guardamos el usuario en BD.
@@ -105,7 +89,7 @@ public class Controller
         
         // Sacamos el ID que se le ha asignado al guardarlo, y se devuelve.
         long id = usersRepository.findByEmail(user.getEmail()).getId();        
-        LOG.info("Usuario guardado correctamente (ID: " + id + ")");
+        LOG.info("[LOGIN] Usuario guardado correctamente (ID: " + id + ")");
         
         return String.valueOf(id);
     }
@@ -118,10 +102,10 @@ public class Controller
     @RequestMapping(value = "/users/{id}" , method = RequestMethod.DELETE)
     public String deleteUser(@PathVariable long id)
     {
-        LOG.info("Peticion DELETE para borrar un usuario (" + id + ")");
+        LOG.info("[DELETE] Peticion DELETE para borrar un usuario (ID: " + id + ")");
         usersRepository.delete(id);
         
-        LOG.info("Usuario (" + id + ") borrado correctamente");
+        LOG.info("[DELETE] Usuario borrado correctamente");
         return Properties.ACCEPTED;
     }
     
@@ -135,16 +119,16 @@ public class Controller
     public String updateUser(@RequestBody UserModification userModification
                     , @PathVariable long id)
     {
-        LOG.info("Peticion POST para modificar un usuario (" + id + ")");
+        LOG.info("[UPDATE] Peticion POST para modificar un usuario (ID: " + id + ")");
         
         User user = usersRepository.findOne(id);
         if (user == null)
         {
-            LOG.info("Usuario no encontrado");
+            LOG.warn("[UPDATE] Usuario con ID (" + id + ") no encontrado");
             return Properties.USER_NOT_FOUND;
             
         } else {
-            LOG.info("Usuario encontrado, se modifica");
+            LOG.info("[UPDATE] Usuario con ID (" + id + ") encontrado, se realizan los siguientes cambios.");
             
             String name = userModification.getName();
             String email = userModification.getEmail();
@@ -154,32 +138,37 @@ public class Controller
             
             if ((name != null) && (!name.isEmpty()))
             {
+                LOG.info("[UPDATE]  -  Nombre: " + name);
                 user.setName(name);
             }
             
             if ((email != null) && (!email.isEmpty()))
             {
+                LOG.info("[UPDATE]  -  Email: " + email);
                 user.setEmail(email);
             }
             
             if ((password != null) && (!password.isEmpty()))
             {
+                LOG.info("[UPDATE]  -  Contrasena: " + password);
                 user.setPassword(password);
             }
             
             if (age > 0)
             {
+                LOG.info("[UPDATE]  -  Edad: " + age);
                 user.setAge(age);
             }
             
             if (postalCode > 0)
             {
+                LOG.info("[UPDATE]  -  Codigo postal: " + postalCode);
                 user.setPostalCode(postalCode);
             }
             
             usersRepository.save(user);
             
-            LOG.info("Usuario modificado correctamente");
+            LOG.info("[UPDATE] Usuario con ID (" + id + ") modificado correctamente");
             
             return Properties.ACCEPTED;
         }        
@@ -193,16 +182,16 @@ public class Controller
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     public User getUserInfo(@PathVariable long id)
     {
-        LOG.info("Peticion GET para obtener los datos del usuario (" + id + ")");
+        LOG.info("[LOGIN] Peticion GET para obtener los datos del usuario (ID: " + id + ")");
         
         // Buscamos el usuario con el ID.
-        final User user = usersRepository.findOne(id);
+        User user = usersRepository.findOne(id);
         
         if (user == null)
         {
-            LOG.info("Usuario no encontrado");
+            LOG.warn("[LOGIN] Usuario con ID (" + id + ") no encontrado");
         } else {
-            LOG.info("Usuario encontrado, se devuelven sus datos");
+            LOG.info("[LOGIN] Usuario con ID (" + id + ") encontrado");
         }
         
         // Si no se encuentra el usuario, se devuelve null.
@@ -218,9 +207,9 @@ public class Controller
     @RequestMapping(value = "/users/{email}/{password}", method = RequestMethod.GET)
     public String loginUser(@PathVariable String email, @PathVariable String password)
     {
-        LOG.info("Peticion GET para logear un usuario");
-        LOG.info(" - Email: " + email);
-        LOG.info(" - Contrasena: " + password);
+        LOG.info("[LOGIN] Peticion GET para loguear un usuario");
+        LOG.info("[LOGIN]  -  Email: " + email);
+        LOG.info("[LOGIN]  -  Contrasena: " + password);
         
         // Buscamos el usuario con el email y la contraseña.
         User user = usersRepository.findByEmailAndPassword(email, password);
@@ -228,13 +217,13 @@ public class Controller
         // Si lo encontramos, se devuelve el ID.
         if (user != null)
         {
-            LOG.info("Usuario logeado correctamente (ID: " + user.getId() + ")");
+            LOG.info("[LOGIN] Usuario logeado correctamente (ID: " + user.getId() + ")");
             
             return String.valueOf(user.getId());
         }
         
         // Si no, se devuelve 'INCORRECT_LOGIN'
-        LOG.info("Usuario no encontrado");        
+        LOG.info("[LOGIN] Usuario no encontrado, email y/o contrasena incorrectos");        
         return Properties.INCORRECT_LOGIN;
     }
     
@@ -246,13 +235,13 @@ public class Controller
     @RequestMapping(value = "/favorites/{id}", method = RequestMethod.GET)
     public List<Product> getFavoriteProducts(@PathVariable long id)
     {
-        LOG.info("Peticion GET para obtener los productos favoritos del usuario con ID: " + id);
+        LOG.info("[FAVORITES] Peticion GET para obtener los productos favoritos del usuario (ID: " + id + ")");
         
         User user = usersRepository.findOne(id);
         
         if (user == null)
         {
-            LOG.info("No se encuentra el usuario");
+            LOG.warn("[FAVORITES] No se encuentra el usuario (ID: " + id + ")");
             
             return new ArrayList<>();
         }
@@ -263,6 +252,7 @@ public class Controller
             productList.add(productsRepository.findOne(productId));
         }
         
+        LOG.info("[FAVORITES] Usuario encontrado, tiene " + productList.size() + " favoritos");
         return productList;
     }
     
@@ -275,16 +265,16 @@ public class Controller
     @RequestMapping(value = "/shops/{id}", method = RequestMethod.POST)
     public String addShopsToUser(@PathVariable long id, @RequestBody Set<String> shops)
     {
-        LOG.info("Peticion POST para anadir las tiendas del usuario (" + id + ")");
+        LOG.info("[UPDATE] Peticion POST para anadir las tiendas del usuario (ID: " + id + ")");
         User user = usersRepository.findOne(id);
         
         if (user == null)
         {
-            LOG.info("Usuario no encontrado");
+            LOG.warn("[UPDATE] No se encuentra al usuario (ID: " + id + ")");
             return Properties.USER_NOT_FOUND;
         }
         
-        LOG.info("Usuario encontrado, se anaden sus tiendas");
+        LOG.info("[UPDATE] Usuario encontrado, se actualizan sus tiendas");
         user.setShops(shops);
         
         usersRepository.save(user);
@@ -308,13 +298,13 @@ public class Controller
     /**
      * Metodo que devuelve la lista de tiendas.
      * @param gender: sexo de la tienda.
-     * @return lista de tiendas.
+     * @return lista de tiendas de hombre o de mujer.
      */
     @Cacheable(value = "products")
     @RequestMapping(value = "/shops/{gender}", method = RequestMethod.GET)
     public List<Shop> getShops(@PathVariable boolean gender)
     {
-        LOG.info("Peticion GET para obtener la lista de todas las tiendas");       
+        LOG.info("[SHOPS] Peticion GET para obtener la lista de todas las tiendas");       
         
         return (gender) ? shopsRepository.findByMan() : shopsRepository.findByWoman();
     }
@@ -331,60 +321,66 @@ public class Controller
                                 , @PathVariable long productId
                                 , @PathVariable short action)
     {
-        LOG.info("Peticion GET para anadir un producto al UserActivity del usuario con ID: " + userId);
+        LOG.info("[UPDATE] Peticion GET para anadir un producto al UserActivity del usuario (ID: " + userId + ")");
         
         User user = usersRepository.findOne(userId);
         Product product = productsRepository.findOne(productId);
         
         if (user == null)
         {
-            LOG.info("No se encuentra el usuario");
-            
+            LOG.warn("[UPDATE] No se encuentra el usuario (ID :" + userId + ")");            
             return Properties.USER_NOT_FOUND;
         }
         
         if (product == null)
         {
-            LOG.info("No se encuentra el producto");
-            
+            LOG.warn("[UPDATE] No se encuentra el producto (ID: " + productId + ")");            
             return Properties.PRODUCT_NOT_FOUND;
         }
         
         switch(action)
         {
             case Properties.ACTION_ADDED_TO_CART:
-                LOG.info("Producto (" + productId + ") anadido al carrito");
+                
+                LOG.info("[UPDATE] Producto (" + productId + ") anadido al carrito del usuario (ID: " + userId + ")");
                 user.addToAddedToCartProducts(productId);
+                
                 break;
                 
             case Properties.ACTION_FAVORITE:
+                
                 if (!user.getFavoriteProducts().contains(productId))
                 {
-                    LOG.info("Producto (" + productId + ") anadido a favoritos");
+                    LOG.info("[UPDATE] Producto (" + productId + ") anadido a favoritos del usuario (ID: " + userId + ")");
                     user.addToFavoriteProducts(productId);
                     
                 } else {
-                    LOG.info("Producto (" + productId + ") quitado de favoritos");
+                    LOG.info("[UPDATE] Producto (" + productId + ") quitado de favoritos del usuario (ID: " + userId + ")");
                     user.getFavoriteProducts().remove(productId);
                 }
                 
                 break;
                 
             case Properties.ACTION_VIEWED:
-                LOG.info("Producto (" + productId + ") visto");
+                
+                LOG.info("[UPDATE] Producto (" + productId + ") visto por el usuario (ID: " + userId + ")");
                 user.addToViewedProducts(productId);
+                
                 break;
                 
             case Properties.ACTION_VISITED:
-                LOG.info("Producto (" + productId + ") visitado en la web");
+                
+                LOG.info("[UPDATE] Producto (" + productId + ") visitado en la web por el usuario (ID: " + userId + ")");
                 user.addToVisitedProducts(productId);
+                
                 break;
                 
             default:
+                
+                LOG.warn("[UPDATE] Accion (" + action + ") incorrecta");
                 return Properties.INCORRECT_ACTION;
         }
         
-        // Al haber sacado el usuario con el findOne, al guardarlo se actualiza automaticamente
         usersRepository.save(user);
         
         return Properties.ACCEPTED;
@@ -528,7 +524,7 @@ public class Controller
     @RequestMapping(value = "/products/{shop}", method = RequestMethod.GET)
     public List<Product> getProducts(@PathVariable String shop)
     {
-        LOG.info("Peticion GET para obtener todos los productos de " + shop);
+        LOG.info("[PRODUCTS] Peticion GET para obtener todos los productos de " + shop);
         return productsRepository.findByShop(shop);
     }
     
@@ -540,7 +536,7 @@ public class Controller
     @RequestMapping(value = "/recommended/{id}", method = RequestMethod.GET)
     public List<Product> getRecommendedProducts(@PathVariable long id)
     {
-        LOG.info("Peticion GET para obtener todos los productos recomendados del usuario " + id);
+        LOG.info("[PRODUCTS] Peticion GET para obtener todos los productos recomendados del usuario (ID: " + id + ")");
         
         List<Product> aux = productsRepository.findByManAndShop(false, "Blanco");
         
@@ -570,7 +566,7 @@ public class Controller
                             , @PathVariable String man
                             , @PathVariable String offset)
     {
-        LOG.info("Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
+        LOG.info("[PRODUCTS] Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
         return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 15) ;
     }
     
@@ -584,8 +580,7 @@ public class Controller
     public List<Product> getProductsBySection(@PathVariable String shop
                                 , @PathVariable String section)
     {
-        LOG.info("Peticion GET para obtener los productos de la seccion de " 
-                        + section + " de la tienda " + shop);
+        LOG.info("[PRODUCTS] Peticion GET para obtener los productos de la seccion de " + section + " de la tienda " + shop);
         return productsRepository.findBySectionAndShop(section, shop) ;
     }
     
@@ -599,25 +594,25 @@ public class Controller
     public List<Product> getProductsByFilter(@RequestBody Filter filter
                                     , @PathVariable String shop)
     {
-        LOG.info("Peticion GET para obtener los productos de " + shop + " que cumplan los siguientes filtros:");
+        LOG.info("[FILTER] Peticion GET para obtener los productos de " + shop + " que cumplan los siguientes filtros:");
         
         List<Product> productList;
         
         if (filter.isMan())
         {
-            LOG.info(" - Solo hombre");
+            LOG.info("[FILTER]  -  Solo hombre");
         } else {
-            LOG.info(" - Solo mujer"); 
+            LOG.info("[FILTER]  -  Solo mujer"); 
         }
             
         if (filter.getPriceFrom() > 0)
         {
-            LOG.info(" - Precio minimo = " + filter.getPriceFrom());
+            LOG.info("[FILTER]  -  Precio minimo = " + filter.getPriceFrom());
         }
             
         if (filter.getPriceTo() > 0)
         {
-            LOG.info(" - Precio maximo = " + filter.getPriceTo()); 
+            LOG.info("[FILTER]  -  Precio maximo = " + filter.getPriceTo()); 
         }
             
         // Ponemos un valor minimo y maximo si no se reciben en el JSON.
@@ -626,7 +621,7 @@ public class Controller
 
         if (filter.isNewness())
         {
-            LOG.info(" - Solo novedades");                                 
+            LOG.info("[FILTER]  -  Solo novedades");                                 
 
             productList = productsRepository.findByShopAndManAndNewnessAndPrice(shop
                                         , filter.isMan()
@@ -635,7 +630,7 @@ public class Controller
                                         , to);
 
         } else {
-            LOG.info(" - Todos los productos");                                 
+            LOG.info("[FILTER]  -  Todos los productos");                                 
 
             productList = productsRepository.findByShopAndManAndPrice(shop
                                         , filter.isMan()
@@ -648,16 +643,16 @@ public class Controller
         // Buscamos primero si tiene el filtro de color y de secciones
         if (!filter.getSections().isEmpty() && ! filter.getColors().isEmpty())
         {
-            LOG.info(" - De las siguientes secciones:");            
+            LOG.info("[FILTER]  -  De las siguientes secciones:");            
             for (String section : filter.getSections())
             {
-                LOG.info("   " + section);   
+                LOG.info("[FILTER]    " + section);   
             }                
                 
-            LOG.info(" - De los siguientes colores:");            
+            LOG.info("[FILTER]  -  De los siguientes colores:");            
             for (String color : filter.getColors())
             {
-                LOG.info("   " + color);  
+                LOG.info("[FILTER]    " + color);  
             }
                 
             for (Product product : productList)
@@ -683,10 +678,10 @@ public class Controller
         // Buscamos la seccion si no tiene el filtro de color
         if (!filter.getSections().isEmpty() && filter.getColors().isEmpty())
         {         
-            LOG.info(" - De las siguientes secciones:");            
+            LOG.info("[FILTER]  -  De las siguientes secciones:");            
             for (String section : filter.getSections())
             {
-                LOG.info("   " + section);   
+                LOG.info("[FILTER]    " + section);   
             }
                 
             for (Product product : productList)
@@ -708,10 +703,10 @@ public class Controller
         // Buscamos el color si no tiene el filtro de secciones
         if (filter.getSections().isEmpty() && ! filter.getColors().isEmpty())
         {   
-            LOG.info(" - De los siguientes colores:");            
+            LOG.info("[FILTER]  -  De los siguientes colores:");            
             for (String color : filter.getColors())
             {
-                LOG.info("   " + color);         
+                LOG.info("[FILTER]    " + color);         
             }
                 
             for (Product product : productList)
@@ -741,21 +736,44 @@ public class Controller
     
     /**
      * Metodo que realiza una busqueda de productos.
-     * @param shop: tienda de la que se quieren los productos.
-     * @param man: hombre o mujer.
+     * @param id: id del usuario.
      * @param search: productos a buscar.
      * @return lista de productos encontrados.
      */
-    @RequestMapping(value = "/search/{shop}/{man}/{search}", method = RequestMethod.GET)
-    public List<Product> getProductsBySearch(@PathVariable String shop
-                                , @PathVariable String man
+    @RequestMapping(value = "/search/{id}/{search}", method = RequestMethod.GET)
+    public List<Product> getProductsBySearch(@PathVariable long id
                                 , @PathVariable String search)
     {
+        LOG.info("[SEARCH] Peticion GET para buscar (" + search + ") por el usuario (ID: " + id + ")" );
+        
         List<Product> newList = new ArrayList<>();
         String[] aux = search.split(" "); 
         
-        // Sacamos los productos de la tienda
-        List<Product> productList = productsRepository.findByManAndShop(Boolean.valueOf(man), shop);
+        User user = usersRepository.findOne(id);
+        
+        if (user == null)
+        {
+            LOG.warn("[SEARCH] Usuario no encontrado (ID: " + id + ")");
+            
+            return new ArrayList<>();
+            
+        } else {
+            LOG.info("[SEARCH] Usuario encontrado, se procede a la busqueda de: " + search);
+            
+            Set<String> searches = user.getSearches();
+            
+            searches.add(search);
+            user.setSearches(searches);
+            
+            usersRepository.save(user);
+        }
+        
+        // Sacamos los productos de sus tiendas.
+        List<Product> productList = new ArrayList<>();
+        for (String shop : user.getShops())
+        {
+            productList.addAll(productsRepository.findByManAndShop(user.getMan(), shop));
+        }
         
         // Eliminamos palabras irrelevantes ('a', 'de', 'con', etc.)
         List<String> keywords = new ArrayList<>();
@@ -822,8 +840,7 @@ public class Controller
                     {
                         break;
                     }
-                }
-                
+                }                
             }
             
             if (candidate)

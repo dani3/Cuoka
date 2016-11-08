@@ -51,6 +51,7 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -544,7 +545,9 @@ public class ProductsFragment extends Fragment
         protected void onPreExecute()
         {
             if (mState != STATE.LOADING)
+            {
                 _loading(true, true);
+            }
         }
 
         @Override
@@ -553,15 +556,15 @@ public class ProductsFragment extends Fragment
         {
             try
             {
-                List<String> aux = (ArrayList<String>)mFilterMap.get("shops");
+                List<String> aux = (ArrayList<String>) mFilterMap.get("shops");
                 List<String> shopsList = (aux == null) ? mShopsList : aux;
 
                 List<RequestFuture<JSONArray>> futures = new ArrayList<>();
+                RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
-                // Creamos un thread por cada tienda a la que tenemos que conectarnos.
-                for (int i = 0; i < shopsList.size(); i++)
+                if (SEARCH_QUERY == null)
                 {
-                    if (SEARCH_QUERY == null)
+                    for (int i = 0; i < shopsList.size(); i++)
                     {
                         final String fixedURL = Utils.fixUrl(
                                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/filter/" + shopsList.get(i));
@@ -594,36 +597,44 @@ public class ProductsFragment extends Fragment
 
                         // La mandamos a la cola de peticiones
                         VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-                    } else {
-                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                + "/search/" + shopsList.get(i) + "/" + MAN + "/" + SEARCH_QUERY);
-
-                        Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
-
-                        futures.add(RequestFuture.<JSONArray>newFuture());
-
-                        // Creamos una peticion
-                        final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                        , fixedURL
-                                                                        , null
-                                                                        , futures.get(i)
-                                                                        , futures.get(i));
-
-                        // La mandamos a la cola de peticiones
-                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
                     }
 
-                    if (isCancelled())
-                        return null;
-                }
+                    // Metemos en content el resultado de cada uno
+                    for (int i = 0; i < shopsList.size(); i++)
+                    {
+                        try
+                        {
+                            JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
-                // Metemos en content el resultado de cada uno
-                for (int i = 0; i < shopsList.size(); i++)
-                {
+                            content.add(response);
+
+                        } catch (InterruptedException e) {
+                            error = "Thread interrumpido";
+                            Log.d(Properties.TAG, error);
+                        }
+                    }
+
+                } else {
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                            + "/search/" + mUser.getId() + "/" + SEARCH_QUERY);
+
+                    Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
+
+                    futures.add(RequestFuture.<JSONArray>newFuture());
+
+                    // Creamos una peticion
+                    final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                                        , fixedURL
+                                                                        , null
+                                                                        , future
+                                                                        , future);
+
+                    // La mandamos a la cola de peticiones
+                    VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+
                     try
                     {
-                        final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+                        JSONArray response = future.get(20, TimeUnit.SECONDS);
 
                         content.add(response);
 
@@ -631,19 +642,15 @@ public class ProductsFragment extends Fragment
                         error = "Thread interrumpido";
                         Log.d(Properties.TAG, error);
                     }
-
-                    if (isCancelled())
-                        return null;
                 }
 
                 EMPTY = content.isEmpty();
 
-            } catch(Exception ex)  {
+            } catch (Exception ex)  {
                 error = ex.getMessage();
             }
 
             return null;
-
         }
 
         @Override
@@ -690,6 +697,7 @@ public class ProductsFragment extends Fragment
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected Void doInBackground(List<JSONArray>... params)
         {
             List<JSONArray> content = params[0];
