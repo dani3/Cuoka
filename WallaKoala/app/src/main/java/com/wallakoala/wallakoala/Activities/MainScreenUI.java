@@ -269,6 +269,14 @@ public class MainScreenUI extends AppCompatActivity
                     case (R.id.nav_favorites):
                         _openActivityFavorites();
                         break;
+
+                    case (R.id.nav_feedback):
+                        _openActivityFeedback();
+                        break;
+
+                    case (R.id.nav_more_shops):
+                        _openActivitySuggested();
+                        break;
                 }
 
                 return true;
@@ -365,6 +373,34 @@ public class MainScreenUI extends AppCompatActivity
 
         // Iniciamos la activity FavoritesUI
         startActivityForResult(intent, MANAGE_FAVORITES_REQUEST);
+
+        // Animacion de transicion para pasar de una activity a otra.
+        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+    }
+
+    /**
+     * Metodo que abre la pantalla de Mis favoritos
+     */
+    protected void _openActivityFeedback()
+    {
+        Intent intent = new Intent(MainScreenUI.this, FeedbackUI.class);
+
+        // Iniciamos la activity FavoritesUI
+        startActivity(intent);
+
+        // Animacion de transicion para pasar de una activity a otra.
+        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+    }
+
+    /**
+     * Metodo que abre la pantalla de Mis favoritos
+     */
+    protected void _openActivitySuggested()
+    {
+        Intent intent = new Intent(MainScreenUI.this, SuggestedUI.class);
+
+        // Iniciamos la activity FavoritesUI
+        startActivity(intent);
 
         // Animacion de transicion para pasar de una activity a otra.
         overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);

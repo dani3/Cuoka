@@ -4,6 +4,8 @@
     <string name="toolbar_filter">Filtros</string>
     <string name="toolbar_shops">Mis tiendas</string>
     <string name="toolbar_favorites">Mis favoritos</string>
+    <string name="toolbar_feedback">Feedback</string>
+    <string name="toolbar_suggested">Más tiendas</string>
 
     <string name="open_drawer">Menu Abierto</string>
     <string name="close_drawer">Menu Cerrado</string>
@@ -124,4 +126,11 @@
     <string name="profile_password">Contraseña:</string>
     <string name="profile_age">Edad:</string>
     <string name="profile_cp">Codigo postal:</string>
+
+    <string name="feedback_header">¡Tu opinión nos importa!</string>
+    <string name="feedback">Cuéntanos tu experiencia (Opcional)</string>
+
+    <string name="suggested_header">¿Te falta alguna tienda?\n Háznoslo saber</string>
+    <string name="suggested_link">Link de la tienda (Opcional)</string>
+    <string name="suggested_name">Nombre de la tienda</string>
 </resources>
