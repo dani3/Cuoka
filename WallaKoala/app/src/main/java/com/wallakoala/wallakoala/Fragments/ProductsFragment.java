@@ -51,7 +51,6 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +112,7 @@ public class ProductsFragment extends Fragment
 
     /* Views */
     protected TextView mNoDataTextView;
+
     protected View mLoadingView;
     protected View mLoadingServerView;
     protected View mNoShopsView;
@@ -351,7 +351,7 @@ public class ProductsFragment extends Fragment
                                     mConnectToServer = new ConnectToServer().execute();
 
                                 } else {
-                                    Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_SHORT).show();
                                     mLoadingServerView.setVisibility(View.GONE);
                                 }
                             }

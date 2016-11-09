@@ -1,13 +1,17 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.Feedback;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
+import es.sidelab.cuokawebscraperrestserver.beans.ShopSuggested;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.beans.UserModification;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import es.sidelab.cuokawebscraperrestserver.repositories.FeedbackRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
+import es.sidelab.cuokawebscraperrestserver.repositories.ShopSuggestedRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
@@ -60,6 +64,38 @@ public class Controller
     
     @Autowired
     private ShopsRepository shopsRepository;
+    
+    @Autowired
+    private ShopSuggestedRepository shopSuggestedRepository;
+    
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+    
+    /**
+     * Metodo que anade la nueva tienda sugerida por un usuario.
+     * @param shopSuggested: tienda sugerida por un usuario.
+     * @return true si ha ido correctamente.
+     */
+    @RequestMapping(value = "/suggested", method = RequestMethod.POST)
+    public String addShopSuggested(@RequestBody ShopSuggested shopSuggested)
+    {
+        shopSuggestedRepository.save(shopSuggested);
+        
+        return Properties.ACCEPTED;
+    }
+    
+    /**
+     * Metodo que anade la opinion de un usuario.
+     * @param feedback: opinion del usuario.
+     * @return true si ha ido correctamente.
+     */
+    @RequestMapping(value = "/feedback", method = RequestMethod.POST)
+    public String addFeedback(@RequestBody Feedback feedback)
+    {
+        feedbackRepository.save(feedback);
+        
+        return Properties.ACCEPTED;
+    }
     
     /**
      * Metodo que anade un usuario a la BD.
