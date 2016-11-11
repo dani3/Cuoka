@@ -353,17 +353,11 @@ public class ProfileUI extends AppCompatActivity
         {
             setResult(RESULT_OK);
 
-            if (mProfileFAB.getVisibility() == View.VISIBLE)
-            {
-                _runExitAnimation(new Runnable() {
-                    public void run() {
-                        finish();
-                    }
-                });
-
-            } else {
-                finish();
-            }
+            _runExitAnimation(new Runnable() {
+                public void run() {
+                    finish();
+                }
+            });
         }
     }
 
@@ -594,23 +588,25 @@ public class ProfileUI extends AppCompatActivity
     {
         EXITING = true;
 
-        // En caso de que haya cambiado de posicion, se recalcula el desplazamiento
-        int[] currentLocation = new int[2];
-        mProfileFAB.getLocationOnScreen(currentLocation);
-        mTopDeltaImage = mThumbnailTop - currentLocation[1];
+        if (mProfileFAB.getVisibility() == View.VISIBLE)
+        {
+            // En caso de que haya cambiado de posicion, se recalcula el desplazamiento
+            int[] currentLocation = new int[2];
+            mProfileFAB.getLocationOnScreen(currentLocation);
+            mTopDeltaImage = mThumbnailTop - currentLocation[1];
 
-        // Animacion de escalado y desplazamiento hasta el tamaño original (HARDWARE_LAYER)
-        mProfileFAB.animate()
-                   .withLayer()
-                   .setDuration(ANIM_DURATION)
-                   .setStartDelay(60)
-                   .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
-                   .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
-                   .withEndAction(endAction);
+            // Animacion de escalado y desplazamiento hasta el tamaño original (HARDWARE_LAYER)
+            mProfileFAB.animate()
+                       .withLayer()
+                       .setDuration(ANIM_DURATION)
+                       .setStartDelay(60)
+                       .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
+                       .translationX(mLeftDeltaImage).translationY(mTopDeltaImage);
+        }
 
         // Efecto fade para aclarar la pantalla
-        mAppBarView.animate().alpha(0.0f).setDuration(ANIM_DURATION).setStartDelay(60).start();
-        mNestedLayout.animate().alpha(0.0f).setDuration(ANIM_DURATION).setStartDelay(60).start();
+        mAppBarView.animate().alpha(0.0f).setDuration(ANIM_DURATION).setStartDelay(60);
+        mNestedLayout.animate().alpha(0.0f).setDuration(ANIM_DURATION).setStartDelay(60).withEndAction(endAction);
 
         Animation translation1 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
         translation1.setInterpolator(new AccelerateInterpolator());
