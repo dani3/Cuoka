@@ -12,13 +12,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -83,8 +84,8 @@ public class ShopsUI extends AppCompatActivity
 
         _initData();
         _initToolbar();
-        _getDataFromServer();
         _initFloatingButton();
+        _getDataFromServer();
     }
 
     /**
@@ -259,8 +260,16 @@ public class ShopsUI extends AppCompatActivity
         {
             findViewById(R.id.shops_loading).setVisibility(View.GONE);
 
+            mAcceptFAB.setVisibility(View.VISIBLE);
+
             if (error == null)
             {
+
+                Animation mExplode = AnimationUtils.loadAnimation(ShopsUI.this, R.anim.explode_animation);
+                mExplode.setStartOffset(275);
+
+                mAcceptFAB.startAnimation(mExplode);
+
                 _initRecyclerView();
 
             } else {
@@ -303,6 +312,8 @@ public class ShopsUI extends AppCompatActivity
     private void _initFloatingButton()
     {
         mAcceptFAB = (FloatingActionButton)findViewById(R.id.shops_accept);
+
+        mAcceptFAB.setVisibility(View.GONE);
 
         mAcceptFAB.setOnClickListener(new View.OnClickListener()
         {
