@@ -545,8 +545,8 @@ public class ProfileUI extends AppCompatActivity
                    .setInterpolator(new AccelerateDecelerateInterpolator());
 
         // Efecto fade para oscurecer la pantalla
-        mAppBarView.animate().alpha(1.0f).setDuration(75).start();
-        mNestedLayout.animate().alpha(1.0f).setDuration(75).start();
+        mAppBarView.animate().alpha(1.0f).setDuration(75);
+        mNestedLayout.animate().alpha(1.0f).setDuration(75);
 
         Animation translation1 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
         translation1.setStartOffset(75);
