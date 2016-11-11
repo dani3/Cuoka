@@ -264,7 +264,6 @@ public class ShopsUI extends AppCompatActivity
 
             if (error == null)
             {
-
                 Animation mExplode = AnimationUtils.loadAnimation(ShopsUI.this, R.anim.explode_animation);
                 mExplode.setStartOffset(275);
 
