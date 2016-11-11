@@ -22,6 +22,10 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -51,14 +55,23 @@ public class ProfileUI extends AppCompatActivity
     private int mLeftDeltaImage;
     private int mTopDeltaImage;
 
-    /* User */
-    private User mUser;
-
     private float mWidthScaleImage;
     private float mHeightScaleImage;
 
+    /* User */
+    private User mUser;
+
     /* Container Layouts */
     private CoordinatorLayout mTopLevelLayout;
+    private View mNestedLayout;
+    private View mStatsLayout;
+    private View mNameLayout;
+    private View mAgeLayout;
+    private View mEmailLayout;
+    private View mCPLayout;
+    private View mPasswordLayout;
+
+    private View mAppBarView;
 
     /* TextInputLayouts */
     private TextInputLayout mEmailInputLayout;
@@ -164,6 +177,16 @@ public class ProfileUI extends AppCompatActivity
     @SuppressWarnings("deprecation")
     private void _initViews()
     {
+        mNestedLayout = findViewById(R.id.profile_nested_scroll_view);
+        mStatsLayout = findViewById(R.id.profile_stats_layout);
+        mNameLayout = findViewById(R.id.profile_name_layout);
+        mCPLayout = findViewById(R.id.profile_cp_layout);
+        mEmailLayout = findViewById(R.id.profile_email_layout);
+        mPasswordLayout = findViewById(R.id.profile_password_layout);
+        mAgeLayout = findViewById(R.id.profile_age_layout);
+
+        mAppBarView = findViewById(R.id.profile_appbar_layout);
+
         mTopLevelLayout = (CoordinatorLayout)findViewById(R.id.profile_coordinator);
         mProfileFAB     = (FloatingActionButton)findViewById(R.id.profile_floating_pic);
         mDeleteFAB      = (FloatingActionButton)findViewById(R.id.profile_delete);
@@ -509,7 +532,8 @@ public class ProfileUI extends AppCompatActivity
      */
     private void _runEnterAnimation()
     {
-        mTopLevelLayout.setAlpha(0.0f);
+        mAppBarView.setAlpha(0.0f);
+        mNestedLayout.setAlpha(0.0f);
 
         mProfileFAB.setPivotX(0);
         mProfileFAB.setPivotY(0);
@@ -527,7 +551,39 @@ public class ProfileUI extends AppCompatActivity
                    .setInterpolator(new AccelerateDecelerateInterpolator());
 
         // Efecto fade para oscurecer la pantalla
-        mTopLevelLayout.animate().alpha(1.0f).setDuration(ANIM_DURATION).start();
+        mAppBarView.animate().alpha(1.0f).setDuration(75).start();
+        mNestedLayout.animate().alpha(1.0f).setDuration(75).start();
+
+        Animation translation1 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
+        translation1.setStartOffset(75);
+        translation1.setInterpolator(new DecelerateInterpolator());
+
+        Animation translation2 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
+        translation2.setStartOffset(95);
+        translation2.setInterpolator(new DecelerateInterpolator());
+
+        Animation translation3 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
+        translation3.setStartOffset(115);
+        translation3.setInterpolator(new DecelerateInterpolator());
+
+        Animation translation4 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
+        translation4.setStartOffset(135);
+        translation4.setInterpolator(new DecelerateInterpolator());
+
+        Animation translation5 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
+        translation5.setStartOffset(155);
+        translation5.setInterpolator(new DecelerateInterpolator());
+
+        Animation translation6 = AnimationUtils.loadAnimation(this, R.anim.appear_from_down_under);
+        translation6.setStartOffset(175);
+        translation6.setInterpolator(new DecelerateInterpolator());
+
+        mStatsLayout.startAnimation(translation1);
+        mNameLayout.startAnimation(translation2);
+        mEmailLayout.startAnimation(translation3);
+        mPasswordLayout.startAnimation(translation4);
+        mAgeLayout.startAnimation(translation5);
+        mCPLayout.startAnimation(translation6);
     }
 
     /**
@@ -547,13 +603,104 @@ public class ProfileUI extends AppCompatActivity
         mProfileFAB.animate()
                    .withLayer()
                    .setDuration(ANIM_DURATION)
-                   .setStartDelay(0)
+                   .setStartDelay(60)
                    .scaleX(mWidthScaleImage).scaleY(mHeightScaleImage)
                    .translationX(mLeftDeltaImage).translationY(mTopDeltaImage)
                    .withEndAction(endAction);
 
-        // Aclarar el fondo
-        mTopLevelLayout.animate().alpha(0.0f).setDuration(ANIM_DURATION).start();
+        // Efecto fade para aclarar la pantalla
+        mAppBarView.animate().alpha(0.0f).setDuration(ANIM_DURATION).setStartDelay(60).start();
+        mNestedLayout.animate().alpha(0.0f).setDuration(ANIM_DURATION).setStartDelay(60).start();
+
+        Animation translation1 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
+        translation1.setInterpolator(new AccelerateInterpolator());
+        translation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) { mStatsLayout.setVisibility(View.GONE); }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        Animation translation2 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
+        translation2.setStartOffset(20);
+        translation2.setInterpolator(new AccelerateInterpolator());
+        translation2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) { mNameLayout.setVisibility(View.GONE); }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        Animation translation3 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
+        translation3.setStartOffset(40);
+        translation3.setInterpolator(new AccelerateInterpolator());
+        translation3.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) { mEmailLayout.setVisibility(View.GONE); }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        Animation translation4 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
+        translation4.setStartOffset(60);
+        translation4.setInterpolator(new AccelerateInterpolator());
+        translation4.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) { mPasswordLayout.setVisibility(View.GONE); }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        Animation translation5 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
+        translation5.setStartOffset(80);
+        translation5.setInterpolator(new AccelerateInterpolator());
+        translation5.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) { mAgeLayout.setVisibility(View.GONE); }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        Animation translation6 = AnimationUtils.loadAnimation(this, R.anim.disappear_to_down_under);
+        translation6.setStartOffset(100);
+        translation6.setInterpolator(new AccelerateInterpolator());
+        translation6.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) { mCPLayout.setVisibility(View.GONE); }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        mStatsLayout.startAnimation(translation1);
+        mNameLayout.startAnimation(translation2);
+        mEmailLayout.startAnimation(translation3);
+        mPasswordLayout.startAnimation(translation4);
+        mAgeLayout.startAnimation(translation5);
+        mCPLayout.startAnimation(translation6);
     }
 
     /**

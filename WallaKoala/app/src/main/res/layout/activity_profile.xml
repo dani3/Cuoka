@@ -48,6 +48,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/profile_nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -65,6 +66,7 @@
 
             <!-- Favoritos y Tiendas -->
             <LinearLayout
+                android:id="@+id/profile_stats_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -140,6 +142,7 @@
 
             <!-- Nombre -->
             <LinearLayout
+                android:id="@+id/profile_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="84dp"
                 android:orientation="horizontal"
@@ -191,6 +194,7 @@
 
             <!-- Email -->
             <LinearLayout
+                android:id="@+id/profile_email_layout"
                 android:layout_width="match_parent"
                 android:layout_height="84dp"
                 android:orientation="horizontal"
@@ -235,6 +239,7 @@
 
             <!-- Contraseña -->
             <LinearLayout
+                android:id="@+id/profile_password_layout"
                 android:layout_width="match_parent"
                 android:layout_height="84dp"
                 android:orientation="horizontal"
@@ -279,6 +284,7 @@
 
             <!-- Edad -->
             <LinearLayout
+                android:id="@+id/profile_age_layout"
                 android:layout_width="match_parent"
                 android:layout_height="84dp"
                 android:orientation="horizontal"
@@ -323,6 +329,7 @@
 
             <!-- Codigo postal -->
             <LinearLayout
+                android:id="@+id/profile_cp_layout"
                 android:layout_width="match_parent"
                 android:layout_height="84dp"
                 android:orientation="horizontal"

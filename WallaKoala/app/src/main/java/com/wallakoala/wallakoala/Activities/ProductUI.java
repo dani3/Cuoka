@@ -611,7 +611,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                 mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
+        {
             _collapseInfo();
+        }
 
         mFloatingActionButtonPlus.startAnimation(mImplodeAnimation);
 
