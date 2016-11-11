@@ -23,9 +23,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Adapters.ShopsListAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
@@ -35,7 +32,6 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
-import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
@@ -47,9 +43,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Pantalla que muestra las tiendas del usuario y las disponibles.
@@ -72,9 +65,6 @@ public class ShopsUI extends AppCompatActivity
     private List<String> mMyShopsList;
     private List<Product> mFavoriteList;
 
-    /* User */
-    private User mUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -95,7 +85,7 @@ public class ShopsUI extends AppCompatActivity
     {
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(ShopsUI.this);
 
-        mUser = sharedPreferencesManager.retreiveUser();
+        User mUser = sharedPreferencesManager.retreiveUser();
 
         mMyShopsList = new ArrayList<>();
         mAllShopsList = new ArrayList<>();
@@ -166,44 +156,7 @@ public class ShopsUI extends AppCompatActivity
         @Override
         protected Void doInBackground(String... unused)
         {
-            RequestFuture<JSONArray> future = RequestFuture.newFuture();
-
-            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                    + "/shops/" + mUser.getMan());
-
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
-
-            // Creamos una peticion
-            final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                , fixedURL
-                                                                , null
-                                                                , future
-                                                                , future);
-
-            // La mandamos a la cola de peticiones
-            VolleySingleton.getInstance(ShopsUI.this).addToRequestQueue(jsonObjReq);
-
-            if (isCancelled())
-            {
-                return null;
-            }
-
-            try
-            {
-                content = future.get(20, TimeUnit.SECONDS);
-
-            } catch (InterruptedException e) {
-                error = "Thread interrumpido";
-                Log.d(Properties.TAG, error);
-            } catch (ExecutionException | TimeoutException e) {
-                error = "Timeout exception";
-                Log.d(Properties.TAG, error);
-            }
-
-            if (isCancelled())
-            {
-                return null;
-            }
+            content = RestClientSingleton.retrieveShops(ShopsUI.this);
 
             // Si content esta vacio, es que ha fallado la conexion.
             if (content == null)
@@ -290,18 +243,18 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _initRecyclerView()
     {
-        StaggeredRecyclerView mShopsRecyclerView = (StaggeredRecyclerView) findViewById(R.id.shops_recyclerview);
-
-        mShopsRecyclerView.setVisibility(View.VISIBLE);
+        StaggeredRecyclerView shopsRecyclerView = (StaggeredRecyclerView) findViewById(R.id.shops_recyclerview);
 
         mShopListAdapter = new ShopsListAdapter(this, mAllShopsList, mMyShopsList, mFavoriteList);
-        mShopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mShopsRecyclerView.setAdapter(mShopListAdapter);
-        mShopsRecyclerView.setHasFixedSize(true);
+
+        shopsRecyclerView.setVisibility(View.VISIBLE);
+        shopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        shopsRecyclerView.setAdapter(mShopListAdapter);
+        shopsRecyclerView.setHasFixedSize(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
-            mShopsRecyclerView.scheduleLayoutAnimation();
+            shopsRecyclerView.scheduleLayoutAnimation();
         }
     }
 

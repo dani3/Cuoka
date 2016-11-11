@@ -39,6 +39,62 @@ import java.util.concurrent.TimeoutException;
 public class RestClientSingleton
 {
     /**
+     * Metodo que devuelve la lista de tiendas del usuario.
+     * @param context: contexto.
+     * @return Array de JSONs con las tiendas.
+     */
+    @Nullable
+    public static JSONArray retrieveShops(Context context)
+    {
+        JSONArray content;
+
+        try
+        {
+            RequestFuture<JSONArray> future = RequestFuture.newFuture();
+
+            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+            final User mUser = mSharedPreferencesManager.retreiveUser();
+
+            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                    + "/shops/" + mUser.getMan());
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las tiendas del usuario");
+
+            // Creamos una peticion
+            final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                                , fixedURL
+                                                                , null
+                                                                , future
+                                                                , future);
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+            try
+            {
+                content = future.get(20, TimeUnit.SECONDS);
+
+            } catch (InterruptedException e) {
+                Log.d(Properties.TAG, e.getMessage());
+
+                return null;
+            }
+
+            // Si content es vacio, es que han fallado todas las conexiones.
+            if (content == null)
+            {
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return content;
+    }
+
+    /**
      * Metodo que devuelve la lista de sugerencias del servidor.
      * @param context: contexto.
      * @param word: palabra para encontrar las sugerencias.
