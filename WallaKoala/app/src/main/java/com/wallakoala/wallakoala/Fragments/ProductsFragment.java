@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Fragments;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,7 +104,7 @@ public class ProductsFragment extends Fragment
     protected List<String> mShopsList;
 
     /* Container Views */
-    protected RecyclerView mProductsRecyclerView;
+    protected StaggeredRecyclerView mProductsRecyclerView;
 
     /* Layouts */
     protected FrameLayout mFrameLayout;
@@ -171,10 +173,10 @@ public class ProductsFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         // FrameLayout
-        mFrameLayout = (FrameLayout)getView().findViewById(R.id.frame);
+        mFrameLayout = (FrameLayout) getView().findViewById(R.id.frame);
 
         // RecyclerView
-        mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.grid_recycler);
+        mProductsRecyclerView = (StaggeredRecyclerView) getView().findViewById(R.id.grid_recycler);
 
         // LoaderView
         mLoadingView       = getView().findViewById(R.id.avloadingIndicatorView);
@@ -182,7 +184,7 @@ public class ProductsFragment extends Fragment
         mLoadingServerView.setVisibility(View.GONE);
 
         // TextView que muestran que no hay productos disponibles
-        mNoDataTextView = (TextView)getView().findViewById(R.id.nodata_textview);
+        mNoDataTextView = (TextView) getView().findViewById(R.id.nodata_textview);
 
         // No shops
         mNoShopsView    = getView().findViewById(R.id.no_shops);
@@ -360,6 +362,11 @@ public class ProductsFragment extends Fragment
                 }
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            mProductsRecyclerView.scheduleLayoutAnimation();
+        }
     }
 
     @Override

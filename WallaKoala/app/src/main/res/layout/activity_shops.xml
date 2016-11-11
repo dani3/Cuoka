@@ -20,7 +20,7 @@
         style="@style/SpinKitView.Large.ChasingDots"
         app:SpinKit_Color="@color/colorAccent"/>
 
-    <android.support.v7.widget.RecyclerView
+    <com.wallakoala.wallakoala.Views.StaggeredRecyclerView
         android:id="@+id/shops_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +28,8 @@
         android:scrollbars="none"
         android:paddingBottom="108dp"
         android:paddingTop="@dimen/action_bar_height"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/grid_enter_animation"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/shops_accept"

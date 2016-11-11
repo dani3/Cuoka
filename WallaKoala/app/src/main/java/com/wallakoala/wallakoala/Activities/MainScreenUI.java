@@ -604,7 +604,6 @@ public class MainScreenUI extends AppCompatActivity
 
                 mProductsFragment.notifyDataSetChanged();
                 mRecommendedFragment.notifyDataSetChanged();
-
             }
         }
     }

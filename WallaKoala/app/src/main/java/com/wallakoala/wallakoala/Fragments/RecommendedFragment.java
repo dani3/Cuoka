@@ -1,11 +1,10 @@
 package com.wallakoala.wallakoala.Fragments;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
 import org.json.JSONArray;
 
@@ -42,7 +42,7 @@ public class RecommendedFragment extends Fragment
     protected static boolean HAS_BEEN_SELECTED;
 
     /* Container Views */
-    protected RecyclerView mProductsRecyclerView;
+    protected StaggeredRecyclerView mProductsRecyclerView;
 
     /* Views */
     protected View mLoadingView;
@@ -60,7 +60,7 @@ public class RecommendedFragment extends Fragment
     protected SharedPreferencesManager mSharedPreferences;
 
     /* Animations */
-    protected Animation mMoveAndFadeAnimation;
+    protected Animation mFadeAnimation;
     protected Animation mShowFromDown, mHideFromUp;
 
     /* Snackbar */
@@ -101,13 +101,13 @@ public class RecommendedFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         // FrameLayout
-        mFrameLayout = (FrameLayout)getView().findViewById(R.id.recommended_frame);
+        mFrameLayout = (FrameLayout) getView().findViewById(R.id.recommended_frame);
 
         // LoaderView
         mLoadingView = getView().findViewById(R.id.recommended_avloadingIndicatorView);
 
         // RecyclerView
-        mProductsRecyclerView = (RecyclerView)getView().findViewById(R.id.recommended_grid_recycler);
+        mProductsRecyclerView = (StaggeredRecyclerView) getView().findViewById(R.id.recommended_grid_recycler);
 
         // Si el usuario no tiene ninguna tienda,
         if (mUser.getShops().isEmpty())
@@ -138,8 +138,8 @@ public class RecommendedFragment extends Fragment
      */
     private void _initAnimations()
     {
-        mMoveAndFadeAnimation = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.translate_and_fade_animation);
+        mFadeAnimation = AnimationUtils.loadAnimation(getActivity()
+                , R.anim.fade_out_animation);
 
         mHideFromUp = AnimationUtils.loadAnimation(getActivity()
                 , R.anim.hide_to_down_animation);
@@ -164,6 +164,11 @@ public class RecommendedFragment extends Fragment
         mProductsRecyclerView.setItemViewCacheSize(NUM_PRODUCTS_CACHED);
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            mProductsRecyclerView.scheduleLayoutAnimation();
+        }
     }
 
     @Override
@@ -284,7 +289,7 @@ public class RecommendedFragment extends Fragment
             if (ok)
             {
                 // Cuando termine la animacion de la view de carga, mostramos el RecyclerView
-                mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
+                mFadeAnimation.setAnimationListener(new Animation.AnimationListener()
                 {
                     @Override
                     public void onAnimationStart(Animation animation) {}
@@ -301,7 +306,7 @@ public class RecommendedFragment extends Fragment
                     public void onAnimationRepeat(Animation animation) {}
                 });
 
-                mLoadingView.startAnimation(mMoveAndFadeAnimation);
+                mLoadingView.startAnimation(mFadeAnimation);
 
                 mState = ProductsFragment.STATE.NORMAL;
 

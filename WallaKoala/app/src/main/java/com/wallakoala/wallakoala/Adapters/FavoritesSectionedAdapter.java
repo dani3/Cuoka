@@ -68,6 +68,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
     private List<Product> mProductList;
     private ProductViewHolder mProductClicked;
     private boolean[] mItemsFlipped;
+    private boolean mHasChanged;
 
     /**
      * Holder de la cabecera de cada seccion.
@@ -148,6 +149,8 @@ public class FavoritesSectionedAdapter extends StatelessSection
                 {
                     if (!mProductFavoriteImageButton.ANIMATING)
                     {
+                        mHasChanged = true;
+
                         RestClientSingleton.sendFavoriteProduct(mContext, mProduct);
 
                         mProductFavoriteImageButton.startAnimation();
@@ -418,6 +421,15 @@ public class FavoritesSectionedAdapter extends StatelessSection
 
             mProductClicked = null;
         }
+    }
+
+    /**
+     * Metodo que indica si ha habido algun cambio con respecto a los favoritos.
+     * @return true si algun producto ha cambiado.
+     */
+    public boolean hasChanged()
+    {
+        return mHasChanged;
     }
 
     @Override

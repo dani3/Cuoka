@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.RecyclerView
+    <com.wallakoala.wallakoala.Views.StaggeredRecyclerView
         android:id="@+id/recommended_grid_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/grid_enter_animation"/>
 
     <!-- Loading View -->
     <com.github.ybq.android.spinkit.SpinKitView

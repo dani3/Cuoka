@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,7 @@ import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
+import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -280,7 +282,7 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _initRecyclerView()
     {
-        RecyclerView mShopsRecyclerView = (RecyclerView) findViewById(R.id.shops_recyclerview);
+        StaggeredRecyclerView mShopsRecyclerView = (StaggeredRecyclerView) findViewById(R.id.shops_recyclerview);
 
         mShopsRecyclerView.setVisibility(View.VISIBLE);
 
@@ -288,6 +290,11 @@ public class ShopsUI extends AppCompatActivity
         mShopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mShopsRecyclerView.setAdapter(mShopListAdapter);
         mShopsRecyclerView.setHasFixedSize(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            mShopsRecyclerView.scheduleLayoutAnimation();
+        }
     }
 
     /**

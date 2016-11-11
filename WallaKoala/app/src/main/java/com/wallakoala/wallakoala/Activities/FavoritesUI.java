@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
+import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +38,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
 public class FavoritesUI extends AppCompatActivity
 {
     /* Container Views */
-    private RecyclerView mProductsRecyclerView;
+    private StaggeredRecyclerView mProductsRecyclerView;
 
     /* Layouts */
     private CoordinatorLayout mFrameLayout;
@@ -77,7 +79,7 @@ public class FavoritesUI extends AppCompatActivity
     protected void _initViews()
     {
         mFrameLayout          = (CoordinatorLayout) findViewById(R.id.favorites_frame);
-        mProductsRecyclerView = (RecyclerView)findViewById(R.id.favorites_grid_recycler);
+        mProductsRecyclerView = (StaggeredRecyclerView) findViewById(R.id.favorites_grid_recycler);
     }
 
     /**
@@ -123,6 +125,11 @@ public class FavoritesUI extends AppCompatActivity
         mProductsRecyclerView.setLayoutManager(gridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setHasFixedSize(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            mProductsRecyclerView.scheduleLayoutAnimation();
+        }
     }
 
     @Override
@@ -141,7 +148,24 @@ public class FavoritesUI extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        setResult(RESULT_OK);
+        boolean hasChanges = false;
+        for (Map.Entry<String, Section> entry : mProductAdapter.getSectionsMap().entrySet())
+        {
+            hasChanges = ((FavoritesSectionedAdapter)entry.getValue()).hasChanged();
+
+            if (hasChanges)
+            {
+                break;
+            }
+        }
+
+        if (hasChanges)
+        {
+            setResult(RESULT_OK);
+
+        } else {
+            setResult(RESULT_CANCELED);
+        }
 
         super.onBackPressed();
     }
