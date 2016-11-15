@@ -20,7 +20,15 @@ path = sys.argv[2]
 urls = [("Camisetas", "http://www.blanco.com/es/es_es/partes-de-arriba/camisetas.html"),
         ("Vestidos", "http://www.blanco.com/es/es_es/vestidos.html"),
         ("Faldas", "http://www.blanco.com/es/es_es/partes-de-abajo/faldas.html"),
-        ("Jeans", "http://www.blanco.com/es/es_es/jeans.html")]
+        ("Jeans", "http://www.blanco.com/es/es_es/jeans.html"),
+        ("Monos", "http://www.blanco.com/es/es_es/monos.html"),
+        ("Tops", "http://www.blanco.com/es/es_es/partes-de-arriba/tops.html"),
+        ("Camisas", "http://www.blanco.com/es/es_es/partes-de-arriba/camisas.html"),
+        ("Pantalones", "http://www.blanco.com/es/es_es/partes-de-abajo/pantalones.html"),
+        ("Shorts", "http://www.blanco.com/es/es_es/partes-de-abajo/shorts.html"),
+        ("Punto", "http://www.blanco.com/es/es_es/punto.html"),
+        ("Chaquetas", "http://www.blanco.com/es/es_es/prenda-exterior.html"),
+        ("Zapatos", "http://www.blanco.com/es/es_es/zapatos.html")]
 
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

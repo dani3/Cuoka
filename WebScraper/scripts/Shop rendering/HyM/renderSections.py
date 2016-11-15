@@ -8,14 +8,15 @@ from selenium.webdriver.chrome.options import Options
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
 path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
+#path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_false\\false\\"
 
 # Lista de secciones con sus URL's
 urls = [("Camisas", "http://www2.hm.com/es_es/mujer/compra-por-producto/camisas-y-blusas.html"),
-        ("Zapatos", "http://www2.hm.com/es_es/mujer/compra-por-producto/calzado.html"),
         ("Vestidos","http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html")]
 
 chrome_options = Options()
@@ -26,7 +27,6 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Se recorren la lista de secciones
 for k,v in urls:
-    
     file_error = open(path + k + "_links_error.txt", 'w')
     
     try:
@@ -61,10 +61,11 @@ for k,v in urls:
             file.write(link + "\n")
 
         file.close()
-        file_error.close()
+        
     except:
         #Escribimos el link de la seccion que falla
         file_error.write(v)
+        
     finally:
         file_error.close()
 

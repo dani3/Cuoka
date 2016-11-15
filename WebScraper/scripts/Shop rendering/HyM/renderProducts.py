@@ -13,12 +13,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Camisas"
+#section = "Vestidos"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -46,6 +46,7 @@ for link in listOfLinks:
     try:
         # Nos conectamos
         dr.get(link)
+        
     except:
         file_error.write("No se ha podido abrir el link: " + link + "\n")
         continue
@@ -55,11 +56,13 @@ for link in listOfLinks:
         element = WebDriverWait(dr, 60).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
         )
+        
     except:
         file_error.write("Imagen no encontrada en: " + link + "\n")
         continue
 
     try:
+        # ****** N O M B R E ****** #
         name = dr.find_element_by_class_name('product-item-headline').text
         result.write("Nombre: " + name + "\n")
         
@@ -69,14 +72,18 @@ for link in listOfLinks:
         continue 
 
     try:
+        # ****** D E S C R I P T I O N ****** #
         description = dr.find_element_by_class_name("product-detail-description-text").text.rstrip()[:255]
         result.write("Descripcion: " + description + "\n")
+        
     except:
         result.write("Descripcion: null\n")
 
     try:
+        # ****** P R E C I O ****** #
         price = dr.find_element_by_class_name("price-value").text.replace(",", ".").replace("€", "")
         result.write("Precio: " + price + "\n")
+        
     except:
         result.write("Precio: null\n")
         file_error.write("Precio no encontrado en: " + link + "\n")
@@ -86,6 +93,7 @@ for link in listOfLinks:
 
     # Colores
     try:
+        # ****** C O L O R E S ****** #
         colors = dr.find_element_by_class_name("inputlist").find_elements_by_xpath(".//li")
         
     except:
@@ -98,7 +106,8 @@ for link in listOfLinks:
             color.find_element_by_class_name("detailbox-pattern").click()
 
             element = WebDriverWait(dr, 60).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container")))
+                EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
+            )
             
         except:
             result.write("*********************************************************\n")
@@ -109,11 +118,12 @@ for link in listOfLinks:
             continue
 
         try:
+            # ****** C O L O R   N O M B R E ****** #
             colorName = dr.find_element_by_class_name("product-input-label").find_element_by_xpath(".//span").text.upper().replace("/","-")
             result.write("*********************************************************\n")
             result.write("  Color: " + colorName + "\n")
-        except:
             
+        except:            
             result.write("  Color: null\n")
             result.write("  Icono: null\n")
             result.write("  Referencia: null\n")
@@ -121,31 +131,47 @@ for link in listOfLinks:
             continue
 
         try:
+            # ****** C O L O R   I C O N O ****** #
             colorIcon = color.find_element_by_xpath(".//img").get_attribute("src")
             result.write("  Icono: " + colorIcon + "\n")
+            
         except:
             result.write("  Icono: null\n")
 
         try:
+            # ****** C O L O R   R E F E R E N C I A ****** #
             dr.find_element_by_css_selector("section > div.product-detail-details > div.parbase.details > div > ul > li:nth-child(2) > a").click()
             reference = dr.find_element_by_class_name("product-detail-article-code").text
             result.write("  Referencia: " + reference + "\n")
+            
         except:
             result.write("  Referencia: null\n")
             file_error.write("Referencia no encontrado en: " + link + "\n")
             continue    
 
         # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande
-        thumbnails = dr.find_elements_by_class_name("product-detail-thumbnail")
+        try:
+            thumbnails = dr.find_elements_by_class_name("product-detail-thumbnail")
+
+        except:
+            file_error.write("Imagenes no encontradas en: " + link + "\n")
+            continue
+
+        # ****** I M G A E N E S ****** #
         for thumbnail in thumbnails:
-            thumbnail.click()
-            
-            #Esperamos a que se cargue bien la imagen
-            WebDriverWait(dr, 60).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container")))
-            
-            image = dr.find_element_by_class_name("product-detail-main-image-container")
-            result.write("     Imagen: " + image.find_element_by_xpath(".//img").get_attribute("src") + "\n")
+            try:
+                thumbnail.click()
+                
+                #Esperamos a que se cargue bien la imagen
+                WebDriverWait(dr, 60).until(
+                    EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
+                )
+                
+                image = dr.find_element_by_class_name("product-detail-main-image-container")
+                result.write("     Imagen: " + image.find_element_by_xpath(".//img").get_attribute("src") + "\n")
+
+            except:
+                pass
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + section + '_done.dat', 'w')
@@ -153,6 +179,7 @@ open(path + section + '_done.dat', 'w')
 file_error.close()
 result.close()
 file.close()
+
 dr.quit()
 
 

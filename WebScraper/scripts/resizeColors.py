@@ -14,6 +14,7 @@ for fname in os.listdir(path):
         try:
             img = Image.open(path + '/' + fname)
             img = img.resize((width,height), PIL.Image.NEAREST)
-            img.save(path + '/' + fname)
+            img.save(path + '/' + fname, optimize = True, quality = 85)
+            
         except Exception:
             pass

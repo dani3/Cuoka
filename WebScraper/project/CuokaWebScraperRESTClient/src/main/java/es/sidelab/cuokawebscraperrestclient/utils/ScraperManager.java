@@ -1,11 +1,8 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
-import es.sidelab.cuokawebscraperrestclient.activity.SectionActivityStats;
-import es.sidelab.cuokawebscraperrestclient.activity.ShopActivityStats;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import es.sidelab.cuokawebscraperrestclient.scrapers.PdHScraper;
 import org.apache.log4j.Logger;
 import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 import java.io.BufferedReader;
@@ -33,11 +30,9 @@ public class ScraperManager
      */
     public static Scraper getScraper(Shop shop) 
     {
-        try {
-            if (shop.getName().equals("Pedro Del Hierro"))
-                return (Scraper) new PdHScraper();
-            else
-                return (Scraper) Class.forName("es.sidelab.cuokawebscraperrestclient.scrapers." 
+        try 
+        {
+            return (Scraper) Class.forName("es.sidelab.cuokawebscraperrestclient.scrapers." 
                                             + shop.getName() + "Scraper").newInstance();
             
         } catch (ClassNotFoundException ex) {
@@ -73,14 +68,8 @@ public class ScraperManager
         {
             if (folder.isDirectory())
             {
-                List<SectionActivityStats> sectionsActivityList = new ArrayList<>();
-
                 // Sacamos el nombre de la tienda ('tienda_online')
                 String folderName = folder.getName();
-
-                ShopActivityStats shopActivity = new ShopActivityStats(
-                                                            folderName.substring(0, folderName.indexOf("_")));
-                shopActivity.setOnline(folderName.contains("true"));
 
                 if (folderName.contains("true"))
                 {               
@@ -95,12 +84,6 @@ public class ScraperManager
                         {
                             // Sacamos si es hombre o mujer
                             String man = subFolder.getName();
-
-                            if (man.equals("true"))
-                                shopActivity.setMan(true);
-
-                            if (man.equals("false"))
-                                shopActivity.setWoman(true);
 
                             // Recorremos los txt dentro
                             File[] sections = new File(Properties.SHOPS_PATH + "\\" 
@@ -134,20 +117,15 @@ public class ScraperManager
                                         , sectionsList
                                         , true));
 
-                        shopActivity.setUrl(url);
-
                     } catch (FileNotFoundException ex) {
                         LOG.error("Error abriendo el fichero de 'url.txt'");
 
                     } catch (IOException ex) {
                         LOG.error("Error leyendo el fichero 'url.txt' o formando la URL");
-                        shopActivity.setUrl(ex.getMessage());
 
                     } finally {
                     }     
 
-                } else {
-                    shopActivity.setOnline(false);
                 }
             }
             

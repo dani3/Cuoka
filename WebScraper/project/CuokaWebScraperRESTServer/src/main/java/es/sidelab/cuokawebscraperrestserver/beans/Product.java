@@ -117,7 +117,7 @@ public class Product implements Comparator
     public float getAspectRatio() { return this.aspectRatio; } 
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
-    @JsonIgnore
+    @JsonProperty("10")
     public boolean isObsolete() { return this.obsolete; }
     
     public void update(Product product, boolean equal)

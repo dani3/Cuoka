@@ -20,12 +20,13 @@ for fname in os.listdir(path):
     if 'Small' not in fname and 'ICON' not in fname and 'Large' not in fname:
         try:
             img = Image.open(path + '/' + fname)
-            img_s = img.resize((width_s,height_s), PIL.Image.NEAREST)
-            img_s.save(path + '/' + fname.replace(".jpg", "_Small.jpg"))
+            img_s = img.resize((width_s,height_s), PIL.Image.ANTIALIAS)
+            img_s.save(path + '/' + fname.replace(".jpg", "_Small.jpg"), optimize = True, quality = 85)
 
-            img_l = img.resize((width_l,height_l), PIL.Image.NEAREST)
-            img_l.save(path + '/' + fname.replace(".jpg", "_Large.jpg"))
+            img_l = img.resize((width_l,height_l), PIL.Image.ANTIALIAS)
+            img_l.save(path + '/' + fname.replace(".jpg", "_Large.jpg"), optimize = True, quality = 85)
 
             os.remove(path + '/' + fname)
+            
         except Exception:
             pass

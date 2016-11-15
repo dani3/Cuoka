@@ -13,6 +13,19 @@ import java.util.List;
 
 public interface Scraper 
 {
-    public List<Product> scrap(Shop shop, Section section) throws IOException;    
+    /**
+     * Metodo que scrapea una seccion de una tienda.
+     * @param shop: tienda.
+     * @param section: seccion.
+     * @return lista con los productos scrapeados.
+     * @throws IOException 
+     */
+    public List<Product> scrap(Shop shop, Section section) throws IOException;  
+    
+    /**
+     * Metodo que corrige una url si es necesario.
+     * @param url: url a corregir.
+     * @return url corregida.
+     */
     public String fixURL(String url);
 }
