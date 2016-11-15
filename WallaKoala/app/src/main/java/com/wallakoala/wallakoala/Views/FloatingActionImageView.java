@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -67,6 +68,7 @@ public class FloatingActionImageView extends FloatingActionButton
     }
 
     @Override
+    @SuppressLint("deprecation")
     protected void onDraw(@NonNull Canvas canvas) {
 
         Drawable drawable = getDrawable();

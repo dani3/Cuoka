@@ -47,11 +47,6 @@ public class FlipLayout extends FrameLayout
         setSoundEffectsEnabled(true);
     }
 
-    public boolean isFlipped()
-    {
-        return isFlipped;
-    }
-
     @Override
     protected void onFinishInflate()
     {

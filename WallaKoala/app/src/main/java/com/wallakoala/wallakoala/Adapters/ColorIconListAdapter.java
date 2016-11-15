@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -81,6 +82,7 @@ public class ColorIconListAdapter extends BaseAdapter
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {

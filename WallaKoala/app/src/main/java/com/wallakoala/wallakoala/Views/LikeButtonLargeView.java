@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ *
  * Created by Miroslav on 04/06/2016.
  */
 

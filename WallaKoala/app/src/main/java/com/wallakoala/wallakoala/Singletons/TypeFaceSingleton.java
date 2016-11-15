@@ -22,7 +22,7 @@ public class TypeFaceSingleton
 
         if (tempTypeface == null)
         {
-            String fontPath = new StringBuilder(TYPEFACE_FOLDER).append('/').append(fileName).toString();
+            String fontPath = TYPEFACE_FOLDER + '/' + fileName;
 
             tempTypeface = Typeface.createFromAsset(context.getAssets(), fontPath);
             sTypeFaces.put(fileName, tempTypeface);

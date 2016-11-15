@@ -24,6 +24,7 @@ import com.wallakoala.wallakoala.R;
 import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 /**
+ *
  * Created by Miroslav on 04/06/2016.
  */
 

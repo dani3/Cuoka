@@ -11,6 +11,7 @@ import android.view.View;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 /**
+ *
  * Created by Miroslav on 04/06/2016.
  */
 

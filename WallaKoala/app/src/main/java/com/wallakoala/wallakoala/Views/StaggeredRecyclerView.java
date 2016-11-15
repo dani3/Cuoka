@@ -5,12 +5,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.GridLayoutAnimationController;
-
-import com.wallakoala.wallakoala.Properties.Properties;
 
 /**
  * An extension of RecyclerView, focused more on resembling a GridView.

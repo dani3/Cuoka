@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
@@ -177,6 +178,7 @@ public class Utils
      * @param price: double con el precio.
      * @return SpannableString con el precio formateado.
      */
+    @SuppressLint("DefaultLocale")
     public static SpannableString priceToString(final double price)
     {
         final String sPrice = (String.format("%.2f", price) + "€").replaceAll(",00", "");

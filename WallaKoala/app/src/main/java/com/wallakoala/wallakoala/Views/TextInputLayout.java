@@ -5,12 +5,12 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Created by Dani on 12/06/2016.
+ * TextInput personalizado.
+ * Created by Daniel Mancebo Aldea on 12/06/2016.
  */
 
-public class TextInputLayout extends android.support.design.widget.TextInputLayout{
-
-
+public class TextInputLayout extends android.support.design.widget.TextInputLayout
+{
     public TextInputLayout(Context context) {
         super(context);
     }

@@ -2,13 +2,9 @@ package com.wallakoala.wallakoala.Views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.TextView;
 
-import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 

@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -45,11 +46,6 @@ import com.wallakoala.wallakoala.Views.RangeSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -763,7 +759,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializar el menu de tiendas.
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation, InflateParams" )
     protected void _initFilterShop()
     {
         mShopsCheckBoxesList = new ArrayList<>();

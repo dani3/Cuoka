@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -148,6 +149,7 @@ public class LoginUI extends AppCompatActivity
      * Metodo que crea un dialogo para registrarse.
      * @return AlertDialog
      */
+    @SuppressLint("InflateParams")
     private AlertDialog createDialogSignUp()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -169,6 +171,7 @@ public class LoginUI extends AppCompatActivity
      * Metodo que crea un dialogo para iniciar sesion.
      * @return AlertDialog
      */
+    @SuppressLint("InflateParams")
     private AlertDialog createDialogSignIn()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

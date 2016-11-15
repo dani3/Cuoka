@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -328,6 +329,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
          * Metodo que inicializa la lista de colores.
          * @param product: producto.
          */
+        @SuppressLint("InflateParams")
         private void _loadColors(Product product)
         {
             // Eliminamos todos los iconos anteriores.

@@ -82,9 +82,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     /* Views */
     private ImageView mImageView;
-    private ImageButton mCartImageButton;
-    private ImageButton mShareImageButton;
-    private ImageButton mRedirectImageButton;
     private LikeButtonLargeView mFavoriteImageButton;
 
     /* TextViews */
@@ -230,12 +227,12 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductReferenceTextView = (TextView) findViewById(R.id.product_info_reference);
         mFavoriteImageButton      = (LikeButtonLargeView) findViewById(R.id.product_favorite);
 
-        mCartImageButton          = (ImageButton) findViewById(R.id.product_cart);
-        mShareImageButton         = (ImageButton) findViewById(R.id.product_share);
-        mRedirectImageButton      = (ImageButton) findViewById(R.id.product_redirect);
+        ImageButton cartImageButton = (ImageButton) findViewById(R.id.product_cart);
+        ImageButton shareImageButton = (ImageButton) findViewById(R.id.product_share);
+        ImageButton redirectImageButton = (ImageButton) findViewById(R.id.product_redirect);
 
         // Inicializamos los listeners a todos los botones.
-        mRedirectImageButton.setOnClickListener(new View.OnClickListener()
+        redirectImageButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -244,7 +241,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             }
         });
 
-        mShareImageButton.setOnClickListener(new View.OnClickListener()
+        shareImageButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -253,7 +250,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             }
         });
 
-        mCartImageButton.setOnClickListener(new View.OnClickListener()
+        cartImageButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

@@ -26,6 +26,11 @@ public class VolleySingleton
         mRequestQueue = getRequestQueue();
     }
 
+    /**
+     * Metodo que devuelve una instancia usando un Singleton.
+     * @param context: contexto.
+     * @return instancia de Volley.
+     */
     public static synchronized VolleySingleton getInstance(Context context)
     {
         if (mInstance == null)
@@ -36,6 +41,10 @@ public class VolleySingleton
         return mInstance;
     }
 
+    /**
+     * Metodo que devuelve la lista de peticiones.
+     * @return lista de peticiones.
+     */
     public RequestQueue getRequestQueue()
     {
         if (mRequestQueue == null)
@@ -48,6 +57,11 @@ public class VolleySingleton
         return mRequestQueue;
     }
 
+    /**
+     * Metodo que añade una peticion a la lista de peticiones.
+     * @param req: peticion a enviar.
+     * @param <T>: tipo de la peticion.
+     */
     public <T> void addToRequestQueue(Request<T> req)
     {
         req.setRetryPolicy(new DefaultRetryPolicy(
