@@ -603,7 +603,7 @@ public class Controller
                             , @PathVariable String offset)
     {
         LOG.info("[PRODUCTS] Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
-        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0) ;
+        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
     }
     
     /**
