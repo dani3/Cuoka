@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/suggested_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -28,6 +29,7 @@
             app:customFont="Existence-StencilLight.otf"/>
 
         <com.wallakoala.wallakoala.Views.ExistenceEditText
+            android:id="@+id/suggested_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="24dp"
@@ -41,6 +43,7 @@
             app:customFontEd="Existence-StencilLight.otf"/>
 
         <com.wallakoala.wallakoala.Views.ExistenceEditText
+            android:id="@+id/suggested_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="24dp"
@@ -58,6 +61,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/suggested_accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

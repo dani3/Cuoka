@@ -10,6 +10,10 @@ public class Properties
     public static final String TAG     = "CUOKA";
     public static final String PACKAGE = "com.wallakoala.wallakoala";
 
+    public static final int CACHED_PRODUCTS_MIN = 10;
+    public static final int CACHED_PRODUCTS_MAX = 20;
+    public static final int CACHED_SHOPS        = 20;
+
     public static final String SERVER_URL         = "http://cuoka-ws.cloudapp.net";
     public static final String SERVER_SPRING_PORT = "8080";
 

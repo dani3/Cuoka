@@ -29,8 +29,6 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wallakoala.wallakoala.Fragments.ProductsFragment.NUM_PRODUCTS_CACHED;
-
 /**
  * Fragmento con la pestaña de Descubre.
  * Created by Daniel Mancebo Aldea on 29/05/2016.
@@ -60,7 +58,7 @@ public class RecommendedFragment extends Fragment
     protected SharedPreferencesManager mSharedPreferences;
 
     /* Animations */
-    protected Animation mFadeAnimation;
+    protected Animation mMoveAndFadeAnimation;
     protected Animation mShowFromDown, mHideFromUp;
 
     /* Snackbar */
@@ -138,8 +136,8 @@ public class RecommendedFragment extends Fragment
      */
     private void _initAnimations()
     {
-        mFadeAnimation = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.fade_out_animation);
+        mMoveAndFadeAnimation = AnimationUtils.loadAnimation(getActivity()
+                , R.anim.translate_and_fade_animation);
 
         mHideFromUp = AnimationUtils.loadAnimation(getActivity()
                 , R.anim.hide_to_down_animation);
@@ -161,7 +159,7 @@ public class RecommendedFragment extends Fragment
                 , mProductList
                 , mFrameLayout);
 
-        mProductsRecyclerView.setItemViewCacheSize(NUM_PRODUCTS_CACHED);
+        mProductsRecyclerView.setItemViewCacheSize(Properties.CACHED_PRODUCTS_MAX);
         mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
 
@@ -289,7 +287,7 @@ public class RecommendedFragment extends Fragment
             if (ok)
             {
                 // Cuando termine la animacion de la view de carga, mostramos el RecyclerView
-                mFadeAnimation.setAnimationListener(new Animation.AnimationListener()
+                mMoveAndFadeAnimation.setAnimationListener(new Animation.AnimationListener()
                 {
                     @Override
                     public void onAnimationStart(Animation animation) {}
@@ -306,7 +304,7 @@ public class RecommendedFragment extends Fragment
                     public void onAnimationRepeat(Animation animation) {}
                 });
 
-                mLoadingView.startAnimation(mFadeAnimation);
+                mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
                 mState = ProductsFragment.STATE.NORMAL;
 

@@ -247,6 +247,7 @@ public class ShopsUI extends AppCompatActivity
 
         mShopListAdapter = new ShopsListAdapter(this, mAllShopsList, mMyShopsList, mFavoriteList);
 
+        shopsRecyclerView.setItemViewCacheSize(Properties.CACHED_SHOPS);
         shopsRecyclerView.setVisibility(View.VISIBLE);
         shopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         shopsRecyclerView.setAdapter(mShopListAdapter);
