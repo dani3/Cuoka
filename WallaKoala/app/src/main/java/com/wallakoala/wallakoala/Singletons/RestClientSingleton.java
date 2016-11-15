@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.ShopSuggested;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.Utils.JSONParser;
@@ -39,6 +40,63 @@ import java.util.concurrent.TimeoutException;
 public class RestClientSingleton
 {
     /**
+     * Metodo que envia una tienda sugerida.
+     * @param context: contexto.
+     * @param shopSuggested: tienda sugerida.
+     * @return true si ha ido correctamente.
+     */
+    public static boolean sendSuggestion(Context context, ShopSuggested shopSuggested)
+    {
+        try
+        {
+            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                    + "/suggested");
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para enviar una tienda sugerida");
+
+            final JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("name", shopSuggested.getShop());
+            jsonObject.put("link", shopSuggested.getLink());
+
+            // Creamos una peticion
+            final StringRequest jsonObjReq = new StringRequest(Request.Method.POST
+                    , fixedURL
+                    , new Response.Listener<String>()
+            {
+                @Override
+                public void onResponse(String response) {}
+            }
+                    , new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error) {}
+            })
+            {
+                @Override
+                public byte[] getBody() throws AuthFailureError
+                {
+                    return jsonObject.toString().getBytes();
+                }
+
+                @Override
+                public String getBodyContentType()
+                {
+                    return "application/json";
+                }
+            };
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Metodo que devuelve la lista de tiendas del usuario.
      * @param context: contexto.
      * @return Array de JSONs con las tiendas.
@@ -63,10 +121,10 @@ public class RestClientSingleton
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                , fixedURL
-                                                                , null
-                                                                , future
-                                                                , future);
+                    , fixedURL
+                    , null
+                    , future
+                    , future);
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
@@ -100,6 +158,7 @@ public class RestClientSingleton
      * @param word: palabra para encontrar las sugerencias.
      * @return Array de JSONs con las sugerencias.
      */
+    @Nullable
     public static JSONArray retrieveSuggestions(Context context, String word)
     {
         JSONArray content;
@@ -115,10 +174,10 @@ public class RestClientSingleton
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                            , fixedURL
-                                                            , null
-                                                            , future
-                                                            , future);
+                    , fixedURL
+                    , null
+                    , future
+                    , future);
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
@@ -151,6 +210,7 @@ public class RestClientSingleton
      * @param context: contexto.
      * @return Array de JSONs con las recomendaciones del usuario.
      */
+    @Nullable
     public static JSONArray retrieveRecommendedProducts(Context context)
     {
         JSONArray content;
@@ -208,6 +268,7 @@ public class RestClientSingleton
      * @param shopList: lista de tiendas.
      * @return Lista de arrays de JSONs con los productos del dia.
      */
+    @Nullable
     public static List<JSONArray> retrieveProducts(Context context, int offset, List<String> shopList)
     {
         List<JSONArray> content = new ArrayList<>();
@@ -290,10 +351,10 @@ public class RestClientSingleton
 
         // Creamos una peticion
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET
-                                                    , fixedURL
-                                                    , null
-                                                    , future
-                                                    , future);
+                , fixedURL
+                , null
+                , future
+                , future);
 
         // La mandamos a la cola de peticiones
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
@@ -342,10 +403,10 @@ public class RestClientSingleton
 
         // Creamos una peticion
         JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                    , fixedURL
-                                                    , null
-                                                    , future
-                                                    , future);
+                , fixedURL
+                , null
+                , future
+                , future);
 
         // La mandamos a la cola de peticiones
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
@@ -401,19 +462,19 @@ public class RestClientSingleton
                 , fixedURL
                 , future
                 , future)
-                {
-                    @Override
-                    public byte[] getBody() throws AuthFailureError
-                    {
-                        return jsonArray.toString().getBytes();
-                    }
+        {
+            @Override
+            public byte[] getBody() throws AuthFailureError
+            {
+                return jsonArray.toString().getBytes();
+            }
 
-                    @Override
-                    public String getBodyContentType()
-                    {
-                        return "application/json";
-                    }
-                };
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/json";
+            }
+        };
 
         // Enviamos la peticion.
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
@@ -512,11 +573,11 @@ public class RestClientSingleton
      * @param postalCode: codigo postal del usuario.
      */
     public static boolean sendUserModification(Context context
-                                , String name
-                                , String email
-                                , String password
-                                , short age
-                                , int postalCode)
+            , String name
+            , String email
+            , String password
+            , short age
+            , int postalCode)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -547,19 +608,19 @@ public class RestClientSingleton
                     , fixedURL
                     , future
                     , future)
-                    {
-                        @Override
-                        public byte[] getBody() throws AuthFailureError
-                        {
-                            return jsonObject.toString().getBytes();
-                        }
+            {
+                @Override
+                public byte[] getBody() throws AuthFailureError
+                {
+                    return jsonObject.toString().getBytes();
+                }
 
-                        @Override
-                        public String getBodyContentType()
-                        {
-                            return "application/json";
-                        }
-                    };
+                @Override
+                public String getBodyContentType()
+                {
+                    return "application/json";
+                }
+            };
 
             // Enviamos la peticion.
             VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
@@ -639,33 +700,33 @@ public class RestClientSingleton
         final StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
                 , new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+
+                if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                 {
-                    @Override
-                    public void onResponse(String response)
+                    // Si contiene el producto, es que se quiere quitar de favoritos.
+                    if (user.getFavoriteProducts().contains(product.getId()))
                     {
-                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+                        user.getFavoriteProducts().remove(product.getId());
 
-                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
-                        {
-                            // Si contiene el producto, es que se quiere quitar de favoritos.
-                            if (user.getFavoriteProducts().contains(product.getId()))
-                            {
-                                user.getFavoriteProducts().remove(product.getId());
-
-                            } else {
-                                user.getFavoriteProducts().add(product.getId());
-                            }
-
-                            mSharedPreferencesManager.insertUser(user);
-                        }
+                    } else {
+                        user.getFavoriteProducts().add(product.getId());
                     }
+
+                    mSharedPreferencesManager.insertUser(user);
                 }
+            }
+        }
                 , new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {}
-                });
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {}
+        });
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
@@ -690,15 +751,15 @@ public class RestClientSingleton
         StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
                 , new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {}
-                }
+        {
+            @Override
+            public void onResponse(String response) {}
+        }
                 , new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {}
-                });
+        {
+            @Override
+            public void onErrorResponse(VolleyError error) {}
+        });
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
