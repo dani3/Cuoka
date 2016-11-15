@@ -203,13 +203,37 @@ public class Utils
      * @param query: string a comprobar.
      * @return true si el string es correcto.
      */
+    public static boolean isAlphaNumeric(final String query)
+    {
+        final char[] chars = query.toCharArray();
+
+        for (char c : chars)
+        {
+            if (!Character.isLetter(c) && !Character.isSpaceChar(c) && !Character.isDigit(c))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Metodo que comprueba si un string contiene solo letras.
+     * @param query: string a comprobar.
+     * @return true si el string es correcto.
+     */
     public static boolean isQueryOk(final String query)
     {
         final char[] chars = query.toCharArray();
 
         for (char c : chars)
+        {
             if (!Character.isLetter(c) && !Character.isSpaceChar(c))
+            {
                 return false;
+            }
+        }
 
         return true;
     }

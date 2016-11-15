@@ -21,12 +21,14 @@ public class ShopSuggested
     @Column(name = "ID")
     private long id;
     
-    @Column(name = "NAME")
+    @Column(name = "SHOP")
     private String shop;
     
     @Column(name = "LINK")
     private String link;
 
+    public ShopSuggested() {}
+    
     public ShopSuggested(String shop, String link) 
     {
         this.shop = shop;
