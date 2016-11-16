@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/feedback_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -35,30 +36,35 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/one_star"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/ic_star_empty"/>
 
             <ImageButton
+                android:id="@+id/two_star"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/ic_star_empty"/>
 
             <ImageButton
+                android:id="@+id/three_star"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/ic_star_empty"/>
 
             <ImageButton
+                android:id="@+id/four_star"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/ic_star_empty"/>
 
             <ImageButton
+                android:id="@+id/five_star"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginRight="8dp"
@@ -67,6 +73,7 @@
         </LinearLayout>
 
         <com.wallakoala.wallakoala.Views.ExistenceEditText
+            android:id="@+id/feedback_suggestion"
             android:layout_width="match_parent"
             android:layout_height="198dp"
             android:layout_marginRight="24dp"
@@ -74,6 +81,7 @@
             android:padding="8dp"
             android:background="@android:color/white"
             android:gravity="top"
+            android:maxLength="256"
             android:textSize="14dp"
             android:textColor="@color/colorDarkerText"
             android:textColorHint="@color/colorText"
@@ -83,6 +91,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/feedback_accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
+import com.wallakoala.wallakoala.Beans.Feedback;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.ShopSuggested;
 import com.wallakoala.wallakoala.Beans.User;
@@ -39,6 +40,63 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    /**
+     * Metodo que envia una sugerencia.
+     * @param context: contexto.
+     * @param feedback: sugerencia del usuario.
+     * @return true si ha ido correctamente.
+     */
+    public static boolean sendFeedback(Context context, Feedback feedback)
+    {
+        try
+        {
+            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                    + "/feedback");
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para enviar una valoracion");
+
+            final JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("stars", feedback.getStars());
+            jsonObject.put("opinion", feedback.getOpinion());
+
+            // Creamos una peticion
+            final StringRequest jsonObjReq = new StringRequest(Request.Method.POST
+                    , fixedURL
+                    , new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response) {}
+                    }
+                            , new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {}
+                    })
+                    {
+                        @Override
+                        public byte[] getBody() throws AuthFailureError
+                        {
+                            return jsonObject.toString().getBytes();
+                        }
+
+                        @Override
+                        public String getBodyContentType()
+                        {
+                            return "application/json";
+                        }
+                    };
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Metodo que envia una tienda sugerida.
      * @param context: contexto.
