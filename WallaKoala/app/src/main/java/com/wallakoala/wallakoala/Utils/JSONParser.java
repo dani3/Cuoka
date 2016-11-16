@@ -108,6 +108,7 @@ public class JSONParser
             String description = jsonObject.getString("7");
             long id = jsonObject.getLong("8");
             float aspectRation = (float) jsonObject.getDouble("9");
+            boolean obsolete = jsonObject.getBoolean("10");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -129,6 +130,7 @@ public class JSONParser
                     , section
                     , price
                     , aspectRation
+                    , obsolete
                     , link
                     , description
                     , colors);

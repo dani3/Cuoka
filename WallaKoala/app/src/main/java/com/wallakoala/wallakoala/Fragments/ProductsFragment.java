@@ -450,7 +450,8 @@ public class ProductsFragment extends Fragment
             String link        = jsonObject.getString("5");
             String description = jsonObject.getString("7");
             long id            = jsonObject.getLong("8");
-            float aspectRation = (float) jsonObject.getDouble("9");
+            float aspectRatio  = (float) jsonObject.getDouble("9");
+            boolean obsolete   = jsonObject.getBoolean("10");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -471,7 +472,8 @@ public class ProductsFragment extends Fragment
                                     , shop
                                     , section
                                     , price
-                                    , aspectRation
+                                    , aspectRatio
+                                    , obsolete
                                     , link
                                     , description
                                     , colors);

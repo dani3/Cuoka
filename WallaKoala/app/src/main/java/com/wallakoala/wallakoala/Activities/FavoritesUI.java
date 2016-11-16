@@ -149,13 +149,16 @@ public class FavoritesUI extends AppCompatActivity
     public void onBackPressed()
     {
         boolean hasChanges = false;
-        for (Map.Entry<String, Section> entry : mProductAdapter.getSectionsMap().entrySet())
+        if (mProductAdapter != null)
         {
-            hasChanges = ((FavoritesSectionedAdapter)entry.getValue()).hasChanged();
-
-            if (hasChanges)
+            for (Map.Entry<String, Section> entry : mProductAdapter.getSectionsMap().entrySet())
             {
-                break;
+                hasChanges = ((FavoritesSectionedAdapter)entry.getValue()).hasChanged();
+
+                if (hasChanges)
+                {
+                    break;
+                }
             }
         }
 
