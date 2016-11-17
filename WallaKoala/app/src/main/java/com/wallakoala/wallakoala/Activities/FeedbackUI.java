@@ -244,7 +244,7 @@ public class FeedbackUI extends AppCompatActivity implements View.OnClickListene
                     mTwoStarImageButton.setBackground(mFilledStarDrawable);
                     mThreeStarImageButton.setBackground(mFilledStarDrawable);
                     mFourStarImageButton.setBackground(mFilledStarDrawable);
-                    mFiveStarImageButton.setBackground(mEmptyStarDrawable);
+                    mFiveStarImageButton.setBackground(mFilledStarDrawable);
                 }
 
                 break;
