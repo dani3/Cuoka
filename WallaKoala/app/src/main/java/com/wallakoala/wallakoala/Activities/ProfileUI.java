@@ -177,13 +177,13 @@ public class ProfileUI extends AppCompatActivity
     @SuppressWarnings("deprecation")
     private void _initViews()
     {
-        mNestedLayout = findViewById(R.id.profile_nested_scroll_view);
-        mStatsLayout = findViewById(R.id.profile_stats_layout);
-        mNameLayout = findViewById(R.id.profile_name_layout);
-        mCPLayout = findViewById(R.id.profile_cp_layout);
-        mEmailLayout = findViewById(R.id.profile_email_layout);
+        mNestedLayout   = findViewById(R.id.profile_nested_scroll_view);
+        mStatsLayout    = findViewById(R.id.profile_stats_layout);
+        mNameLayout     = findViewById(R.id.profile_name_layout);
+        mCPLayout       = findViewById(R.id.profile_cp_layout);
+        mEmailLayout    = findViewById(R.id.profile_email_layout);
         mPasswordLayout = findViewById(R.id.profile_password_layout);
-        mAgeLayout = findViewById(R.id.profile_age_layout);
+        mAgeLayout      = findViewById(R.id.profile_age_layout);
 
         mAppBarView = findViewById(R.id.profile_appbar_layout);
 
