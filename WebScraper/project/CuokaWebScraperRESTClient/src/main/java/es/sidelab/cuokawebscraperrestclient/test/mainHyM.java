@@ -162,7 +162,7 @@ public class mainHyM
                         Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                         images.add(image);
                     }
-
+                    //si la imagen es null en el fichero
                 }
                 color.setImages(images);
                 colors.add(color);
