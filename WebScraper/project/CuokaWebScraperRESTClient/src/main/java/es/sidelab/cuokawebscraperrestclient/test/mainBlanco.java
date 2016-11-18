@@ -171,7 +171,14 @@ public class mainBlanco
             colors.add(color);
             
         }
+        
+        if (colors.isEmpty()) 
+        {
+            return null;
+        }
+        
         product.setColors(colors);
+        
         return product;
     }   
     

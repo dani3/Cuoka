@@ -17,13 +17,11 @@ public class mainHyM
     static boolean finished = false;
     public static void main(String[] args) throws Exception 
     {        
-        
-        String url = "http://www2.hm.com/es_es/";
         //Section section = new Section("Vestidos", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\", false);
         Section section = new Section("Vestidos", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Process process = Runtime.getRuntime().exec(new String[] {"python"
+        /*Process process = Runtime.getRuntime().exec(new String[] {"python"
                                 , section.getPath() + "renderProducts.py"
                                 , Properties.CHROME_DRIVER
                                 , section.getName()
@@ -36,12 +34,11 @@ public class mainHyM
             file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();
+        file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
-            new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
-               
+            new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));               
       
         List<Product> productList = new ArrayList<>();
         Product product;
@@ -53,7 +50,7 @@ public class mainHyM
             if (product != null) //todo ha ido bien, seguimos leyendo los colores
             {
                 product = _readProductColors(product, br);
-                if ((product != null)) //&& (!containsProduct(productList, product.getColors().get(0).getReference()))) // todo ha ido bien, añadimos a la lista
+                if ((product != null) && (!containsProduct(productList, product.getColors().get(0).getReference()))) 
                 {
                     productList.add(product);                                            
                 }
@@ -107,8 +104,7 @@ public class mainHyM
     }
     
     private static Product _readProductColors(Product product, BufferedReader br) throws IOException
-    {
-        
+    {       
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
         br.readLine();   //leemos los *********
@@ -163,7 +159,14 @@ public class mainHyM
                 colors.add(color);
             }
         }
-        product.setColors(colors);
+        
+        if (colors.isEmpty()) 
+        {
+            return null;
+        } else {
+            product.setColors(colors);
+        }
+        
         return product;
     }   
     

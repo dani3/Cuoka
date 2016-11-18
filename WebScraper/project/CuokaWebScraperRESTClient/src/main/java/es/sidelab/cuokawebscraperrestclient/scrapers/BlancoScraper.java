@@ -94,10 +94,10 @@ public class BlancoScraper implements Scraper
     
     private Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
-        String name = br.readLine();
+        String name        = br.readLine();
         String description = br.readLine();
-        String price = br.readLine();
-        String link = br.readLine();
+        String price       = br.readLine();
+        String link        = br.readLine();
         
         // Podemos haber leido ya todos los productos, por lo que name puede ser null
         if (name == null || name.contains("null") || price.contains("null"))
@@ -155,25 +155,26 @@ public class BlancoScraper implements Scraper
                 while (!doneImages)
                 {
                     String url = br.readLine();
-                    if (url == null){
-                        doneImages = true;
-                        doneColor = true;
-                        set(true);
-                    }
-                    else if (url.contains("***")){
-                        /*hemos acabado con las imágenes pero no con los colores*/
-                        doneImages = true; 
-                    } 
-                    else if (url.contains("------") || url.length() == 0) //producto final ==0
+                    if (url == null)
                     {
                         doneImages = true;
-                        doneColor = true;
-                    }
-                    else {
+                        doneColor  = true;
+                        
+                        set(true);
+                        
+                    } else if (url.contains("***")){
+                        // Hemos acabado con las imágenes pero no con los colores
+                        doneImages = true; 
+                        
+                    } else if (url.contains("------") || url.length() == 0) {
+                        // Producto final == 0
+                        doneImages = true;
+                        doneColor  = true;
+                        
+                    } else {
                         Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                         images.add(image);
                     }
-
                 }
 
                 color.setImages(images);
@@ -181,7 +182,13 @@ public class BlancoScraper implements Scraper
             }
         }
         
+        if (colors.isEmpty()) 
+        {
+            return null;
+        }
+        
         product.setColors(colors);
+        
         return product;
     }
     

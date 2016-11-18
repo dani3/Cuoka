@@ -68,6 +68,8 @@ public class HyMScraper implements Scraper
         br.readLine();
         while(!get())
         {   
+            System.out.println(productList.size());
+            
             // Empezamos nuevo producto
             Product product = _readProductGeneralInfo(br);
             if (product != null) //todo ha ido bien, seguimos leyendo los colores
@@ -94,10 +96,10 @@ public class HyMScraper implements Scraper
     
     private Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
-        String name = br.readLine();
+        String name        = br.readLine();
         String description = br.readLine();
-        String price = br.readLine();
-        String link = br.readLine();
+        String price       = br.readLine();
+        String link        = br.readLine();
         
         // Podemos haber leido ya todos los productos, por lo que name puede ser null
         if (name == null || name.contains("null") || price.contains("null"))
@@ -116,38 +118,35 @@ public class HyMScraper implements Scraper
     }
     
     private Product _readProductColors(Product product, BufferedReader br) throws IOException
-    {
-        
+    {       
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
         
         // Leemos los asteriscos
-        br.readLine();       
+        br.readLine();  
         while (!doneColor)
         {
             boolean correct = true;
-            
             ColorVariant color = new ColorVariant();
             List<Image> images = new ArrayList<>();
             
             String colorName = br.readLine();
             String colorIcon = br.readLine();
             String reference = br.readLine();
-            if(colorName.contains("null") || reference.contains("null"))
+            if (colorName.contains("null") || reference.contains("null"))
             {
                 correct = false;
-                
                 String line = br.readLine();
-                if (!line.contains("******"))
+                if(!line.contains("****"))
                 {
                     doneColor = true;
-                }
+                }                        
             }
             
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(null);            
+                color.setColorURL(fixURL(colorIcon.replace("  Icono: ", ""))); 
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes
@@ -155,35 +154,42 @@ public class HyMScraper implements Scraper
                 while (!doneImages)
                 {
                     String url = br.readLine();
-                    if (url == null){
-                        doneImages = true;
-                        doneColor = true;
-                        set(true);
-                    }
-                    else if (url.contains("***")){
-                        /*hemos acabado con las imágenes pero no con los colores*/
-                        doneImages = true; 
-                    } 
-                    else if (url.contains("------") || url.length() == 0) //producto final ==0
+                    if (url == null)
                     {
                         doneImages = true;
+                        doneColor  = true;
+                        
+                        set(true);
+                        
+                    } else if (url.contains("***")){
+                        // Hemos acabado con las imágenes pero no con los colores
+                        doneImages = true; 
+                        
+                    } else if (url.contains("------") || url.length() == 0) {
+                        doneImages = true;
                         doneColor = true;
-                    }
-                    else {
+                        
+                    } else {
                         Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                         images.add(image);
                     }
-
+                    
                 }
-
+                
                 color.setImages(images);
-                colors.add(color);      
+                colors.add(color);
             }
         }
         
+        if (colors.isEmpty()) 
+        {
+            return null;
+        }
+        
         product.setColors(colors);
+        
         return product;
-    }
+    }   
     
     @Override
     public String fixURL(String url)

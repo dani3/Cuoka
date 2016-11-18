@@ -94,6 +94,7 @@ public class MultithreadManager
                 } catch (InterruptedException | ExecutionException ex ) {
                     LOG.error("ERROR: Se ha producido un error en un thread");
                     LOG.error(ex.getMessage());
+                    ex.printStackTrace();
                     
                 } catch (MalformedURLException ex) {
                     LOG.error("ERROR: Error al formar la URL para contactar con el servidor REST");
