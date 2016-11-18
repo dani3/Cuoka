@@ -85,12 +85,6 @@ public class MultithreadManager
                     RestClient restClient = new RestClient(new URL(Properties.SERVER));                            
                     restClient.saveProducts(productList, shop);
                     
-                    // Restamos uno al countDownLatchs
-                    countDownLatch.countDown();
-                            
-                    LOG.info("Finalizamos el executor de secciones de la tienda " + shop.getName());
-                    executorSections.shutdown();
-                    
                 } catch (InterruptedException | ExecutionException ex ) {
                     LOG.error("ERROR: Se ha producido un error en un thread");
                     LOG.error(ex.getMessage());
@@ -99,6 +93,12 @@ public class MultithreadManager
                 } catch (MalformedURLException ex) {
                     LOG.error("ERROR: Error al formar la URL para contactar con el servidor REST");
                     LOG.error(ex.getMessage());
+                    
+                } finally {
+                    countDownLatch.countDown();
+                    
+                    LOG.info("Finalizamos el executor de secciones de la tienda " + shop.getName());
+                    executorSections.shutdown();
                 }
             };
             
