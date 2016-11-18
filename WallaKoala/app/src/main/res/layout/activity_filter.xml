@@ -62,7 +62,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_shops"
                             android:textSize="14dp"
-                            android:textColor="@color/colorMediumText"
+                            android:textColor="@color/colorLightText"
                             android:layout_below="@+id/filter_image_shop"
                             android:layout_centerHorizontal="true"
                             app:customFont="Existence-StencilLight.otf"/>
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_sections"
                             android:textSize="14dp"
-                            android:textColor="@color/colorMediumText"
+                            android:textColor="@color/colorLightText"
                             android:layout_below="@+id/filter_image_section"
                             android:layout_centerHorizontal="true"
                             app:customFont="Existence-StencilLight.otf"/>
@@ -122,7 +122,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_price"
                             android:textSize="14dp"
-                            android:textColor="@color/colorMediumText"
+                            android:textColor="@color/colorLightText"
                             android:layout_below="@+id/filter_image_price"
                             android:layout_centerHorizontal="true"
                             app:customFont="Existence-StencilLight.otf"/>
@@ -152,7 +152,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/filter_item_colors"
                             android:textSize="14dp"
-                            android:textColor="@color/colorMediumText"
+                            android:textColor="@color/colorLightText"
                             android:layout_below="@+id/filter_image_color"
                             android:layout_centerHorizontal="true"
                             app:customFont="Existence-StencilLight.otf"/>
