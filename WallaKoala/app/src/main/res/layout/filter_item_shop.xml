@@ -47,7 +47,7 @@
                 android:paddingBottom="4dp"
                 android:paddingLeft="8dp"
                 android:text="@string/filter_item_shops"
-                android:textSize="12dp"
+                android:textSize="16dp"
                 android:textColor="@color/colorMediumText"
                 android:background="@drawable/filter_bottom_border"
                 app:customFont="Existence-StencilLight.otf"/>

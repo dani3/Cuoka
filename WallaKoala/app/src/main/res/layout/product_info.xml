@@ -21,21 +21,6 @@
             android:background="@drawable/top_border">
 
             <com.wallakoala.wallakoala.Views.ExistenceTextView
-                android:id="@+id/product_info_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="6dp"
-                android:textColor="@android:color/white"
-                android:text="@string/product_info_name"
-                android:textSize="16dp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:customFont="Existence-StencilLight.otf"/>
-
-            <com.wallakoala.wallakoala.Views.ExistenceTextView
                 android:id="@+id/product_info_shop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +28,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:text="@string/footer_shop"
-                android:textSize="16dp"
+                android:textSize="18dp"
                 android:textColor="@android:color/white"
                 android:layout_below="@+id/product_info_name"
                 android:layout_alignLeft="@+id/product_info_name"
@@ -55,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textSize="12dp"
+                android:textSize="14dp"
                 android:text="@string/product_info_description"
                 android:maxLines="6"
                 android:ellipsize="end"
@@ -70,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textSize="12dp"
+                android:textSize="14dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/product_info_reference"
                 android:maxLines="1"
@@ -129,6 +114,23 @@
                     android:background="@drawable/ic_redirect"/>
 
             </LinearLayout>
+
+            <com.wallakoala.wallakoala.Views.ExistenceTextView
+                android:id="@+id/product_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="19dp"
+                android:textColor="@android:color/white"
+                android:text="@string/product_info_name"
+                android:textSize="18dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:customFont="Existence-StencilLight.otf"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="19dp" />
 
         </RelativeLayout>
 

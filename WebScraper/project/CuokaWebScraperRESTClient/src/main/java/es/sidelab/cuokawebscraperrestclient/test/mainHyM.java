@@ -5,15 +5,10 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +19,8 @@ public class mainHyM
     {        
         
         String url = "http://www2.hm.com/es_es/";
-        Section section = new Section("Camisas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\", false);
-        //Section section = new Section("Vestidos", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false);
+        //Section section = new Section("Vestidos", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\", false);
+        Section section = new Section("Vestidos", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         Process process = Runtime.getRuntime().exec(new String[] {"python"
