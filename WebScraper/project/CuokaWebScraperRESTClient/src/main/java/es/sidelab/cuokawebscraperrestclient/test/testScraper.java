@@ -5,34 +5,30 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class mainBlanco 
+public class testScraper 
 {
-    static boolean finished = false;
+    private static boolean finished = false;
+    
     public static void main(String[] args) throws Exception 
-    {        
+    {              
+        List<Product> productList = new ArrayList<>();
         
-        String url = "https://www.blanco.com/";
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\", false);
         Section section = new Section("Vestidos", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Process process = Runtime.getRuntime().exec(new String[] {"python"
-                                , section.getPath() + "renderProducts.py"
-                                , Properties.CHROME_DRIVER
-                                , section.getName()
-                                , section.getPath()});
+        Runtime.getRuntime().exec(new String[] {"python"
+                    , section.getPath() + "renderProducts.py"
+                    , Properties.CHROME_DRIVER
+                    , section.getName()
+                    , section.getPath()});
         
         // Nos quedamos esperando hasta que termine.
         File file = new File(section.getPath() + section.getName() + "_done.dat");
@@ -46,19 +42,16 @@ public class mainBlanco
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
             new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
-               
-      
-        List<Product> productList = new ArrayList<>();
-        Product product;
+        
         br.readLine();
-        while(!finished) // linea de comienzo de producto ---
+        while(!finished)
         {   
            //empezamos nuevo producto
-            product = _readProductGeneralInfo(br);
-            if (product != null) //todo ha ido bien, seguimos leyendo los colores
+            Product product = _readProductGeneralInfo(br);
+            if (product != null)
             {
                 product = _readProductColors(product, br);
-                if ((product != null) && (!containsProduct(productList, product.getColors().get(0).getReference()))) // todo ha ido bien, añadimos a la lista
+                if ((product != null) && (!containsProduct(productList, product.getColors().get(0).getReference()))) 
                 {
                     productList.add(product);                                            
                 }
@@ -84,13 +77,6 @@ public class mainBlanco
                 System.out.println(" - Referencia: " + cv.getReference());
                 for (Image image : cv.getImages())
                     System.out.println(" - " + image.getUrl());
-
-                String path = "C:\\Users\\Dani\\Pictures\\" + p.getShop() + "_" + p.getSection() 
-                                    + "_" + cv.getReference() + "_" + cv.getName().replaceAll(" " , "_") + "_ICON.jpg";
-                
-                URL colorurl = new URL(cv.getColorURL());
-
-                Files.copy(new BufferedInputStream(colorurl.openStream()), Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
                 
                 System.out.println("\n");            
             }
@@ -124,8 +110,9 @@ public class mainBlanco
         
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
-        br.readLine();   //leemos los *********
         
+        // Leemos los asteriscos
+        br.readLine();     
         while (!doneColor)
         {
             ColorVariant color = new ColorVariant();
@@ -138,38 +125,39 @@ public class mainBlanco
             {
                 return null;
             }
+            
             color.setName(colorName.replace("  Color: ", ""));
-            color.setColorURL(null); 
+            color.setColorURL(colorIcon); 
             color.setReference(reference.replace("  Referencia: ", ""));
             
-            /*imagenes*/
+            // Leemos las imagenes
             boolean doneImages = false;
             while (!doneImages)
             {
                 String url = br.readLine();
-                if (url == null){
-                    doneImages = true;
-                    doneColor = true;
-                    finished = true;
-                }
-                else if (url.contains("***")){
-                    /*hemos acabado con las imágenes pero no con los colores*/
-                    doneImages = true; 
-                } 
-                else if (url.contains("------") || url.length() == 0) //producto final ==0
+                if (url == null)
                 {
                     doneImages = true;
+                    doneColor  = true;
+                    finished   = true;
+                    
+                } else if (url.contains("***")) {
+                    // hemos acabado con las imágenes pero no con los colores
+                    doneImages = true; 
+                    
+                } else if (url.contains("------") || url.length() == 0) {
+                    // Producto final == 0
+                    doneImages = true;
                     doneColor = true;
-                }
-                else {
+                    
+                } else {
                     Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                     images.add(image);
                 }
- 
             }
-            color.setImages(images);
-            colors.add(color);
             
+            color.setImages(images);
+            colors.add(color);            
         }
         
         if (colors.isEmpty()) 
@@ -185,9 +173,15 @@ public class mainBlanco
     private static boolean containsProduct(List<Product> productList, String reference)
     {
         for (Product p : productList)
+        {
             for (ColorVariant cv : p.getColors())
+            {
                 if (cv.getReference().equals(reference))
-                    return true;
+                {
+                     return true;
+                }
+            }
+        }
         
         return false;
     }
@@ -195,7 +189,9 @@ public class mainBlanco
     private static String fixURL(String url)
     {
         if (url.startsWith("//"))
+        {
             return "http:".concat(url).replace(" " , "%20");
+        }
         
         return url.replace(" " , "%20");
     }   

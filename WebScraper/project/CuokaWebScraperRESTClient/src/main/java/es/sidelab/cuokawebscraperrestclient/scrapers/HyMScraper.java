@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Scraper especifico para HyM.
- * @author Daniel Mancebo Aldea
+ * @author Lucia Fernandez Guzman
  */
 
 public class HyMScraper implements Scraper
@@ -46,11 +46,11 @@ public class HyMScraper implements Scraper
         LOG.info("Se inicia el scraping de la seccion " + section.getName() + " de la tienda " + shop.getName());
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Process process = Runtime.getRuntime().exec(new String[] {"python"
-                                , section.getPath() + "renderProducts.py"
-                                , Properties.CHROME_DRIVER
-                                , section.getName()
-                                , section.getPath()});
+        Runtime.getRuntime().exec(new String[] {"python"
+                    , section.getPath() + "renderProducts.py"
+                    , Properties.CHROME_DRIVER
+                    , section.getName()
+                    , section.getPath()});
         
         // Nos quedamos esperando hasta que termine.
         File file = new File(section.getPath() + section.getName() + "_done.dat");
@@ -66,7 +66,7 @@ public class HyMScraper implements Scraper
             new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
                
         br.readLine();
-        while(!get())
+        while(!isFinished())
         {   
             System.out.println(productList.size());
             
@@ -159,7 +159,7 @@ public class HyMScraper implements Scraper
                         doneImages = true;
                         doneColor  = true;
                         
-                        set(true);
+                        setFinished(true);
                         
                     } else if (url.contains("***")){
                         // Hemos acabado con las imágenes pero no con los colores
@@ -195,17 +195,19 @@ public class HyMScraper implements Scraper
     public String fixURL(String url)
     {
         if (url.startsWith("//"))
+        {
             return "http:".concat(url).replace(" " , "%20");
-        
+        }
+            
         return url.replace(" " , "%20");
     }
     
-    private boolean get() 
+    private boolean isFinished() 
     {
         return threadFinished.get();
     }
 
-    private void set(Boolean value) 
+    private void setFinished(Boolean value) 
     {
         threadFinished.set(value);
     }
@@ -215,9 +217,15 @@ public class HyMScraper implements Scraper
         synchronized (productList)
         {
             for (Product p : productList)
+            {
                 for (ColorVariant cv : p.getColors())
+                {
                     if (cv.getReference().equals(reference))
+                    {
                         return true;
+                    }
+                }
+            }            
         }
             
         return false;

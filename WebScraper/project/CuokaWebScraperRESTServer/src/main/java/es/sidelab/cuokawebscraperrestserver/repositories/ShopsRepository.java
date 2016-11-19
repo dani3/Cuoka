@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
  * Repositorio que gestiona la tabla de tiendas. 
  * @author Daniel Mancebo Aldea
  */
+
 public interface ShopsRepository extends JpaRepository<Shop, Long> 
 {
     @Query("FROM Shop WHERE man = true")

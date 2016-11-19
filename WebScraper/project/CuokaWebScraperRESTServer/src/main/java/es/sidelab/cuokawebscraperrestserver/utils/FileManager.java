@@ -23,7 +23,7 @@ public class FileManager
         LOG.info("Comprobamos que el directorio '" + Properties.IMAGE_PATH + shop + "' existe");
         File folder = new File(Properties.IMAGE_PATH + shop);
         
-        if (! folder.exists())
+        if (!folder.exists())
         {   
             LOG.info("El directorio no existe, se crea");
             folder.mkdirs();
