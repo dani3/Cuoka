@@ -904,10 +904,11 @@ public class Controller
             // Recorremos las palabras buscadas
             for (String keyword : keywords)
             {
-                // Comprobamos si es una seccion
-                List<String> section = new ArrayList<>();
+                // Comprobamos si es una seccion.
+                List<String> section = new ArrayList<>();                
                 String saux = sectionManager.getSection(keyword);
-                if (saux != null)
+                // Si encontramos la seccion, y no es Zapatos (esta seccion abarca demasiadas prendas)
+                if (saux != null && !saux.equals("Zapatos"))
                 {
                     section.add(saux);
                 }
