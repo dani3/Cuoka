@@ -20,6 +20,7 @@ import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ShopManager;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -232,6 +233,22 @@ public class Controller
             LOG.warn("[LOGIN] Usuario con ID (" + id + ") no encontrado");
         } else {
             LOG.info("[LOGIN] Usuario con ID (" + id + ") encontrado");
+            
+            // Debido a que puede tener productos favoritos obsoletos, eliminamos estos productos.
+            Set<Long> newFavoriteSet = new HashSet<>();
+            for (long productId : user.getFavoriteProducts())
+            {
+                Product product = productsRepository.findOne(productId);
+
+                if (!product.isObsolete())
+                {
+                    newFavoriteSet.add(productId);
+                }
+            }
+
+            user.setFavoriteProducts(newFavoriteSet);
+
+            usersRepository.save(user);
         }
         
         // Si no se encuentra el usuario, se devuelve null.
@@ -289,7 +306,11 @@ public class Controller
         List<Product> productList = new ArrayList<>();
         for (long productId : user.getFavoriteProducts())
         {
-            productList.add(productsRepository.findOne(productId));
+            Product favorite = productsRepository.findOne(productId);
+            if (!favorite.isObsolete())
+            {
+                productList.add(favorite);
+            } 
         }
         
         LOG.info("[PRODUCTS] Usuario encontrado, tiene " + productList.size() + " favoritos");
