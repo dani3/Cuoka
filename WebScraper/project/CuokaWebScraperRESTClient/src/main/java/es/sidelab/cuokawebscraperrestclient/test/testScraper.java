@@ -46,7 +46,7 @@ public class testScraper
         br.readLine();
         while(!finished)
         {   
-           //empezamos nuevo producto
+           // Empezamos nuevo producto
             Product product = _readProductGeneralInfo(br);
             if (product != null)
             {
@@ -97,6 +97,7 @@ public class testScraper
         }
         
         Product product = new Product();
+        
         product.setName(name.replace("Nombre: ", ""));
         product.setDescription(description.replace("Descripcion: ", ""));
         product.setPrice(Double.valueOf(price.replace("Precio: ", "")));
@@ -115,8 +116,8 @@ public class testScraper
         br.readLine();     
         while (!doneColor)
         {
-            ColorVariant color = new ColorVariant();
             List<Image> images = new ArrayList<>();
+            ColorVariant color = new ColorVariant();
             
             String colorName = br.readLine();
             String colorIcon = br.readLine();
@@ -137,12 +138,13 @@ public class testScraper
                 String url = br.readLine();
                 if (url == null)
                 {
+                    // Si la url es null, es que hemos llegado al final del fichero.
                     doneImages = true;
                     doneColor  = true;
                     finished   = true;
                     
                 } else if (url.contains("***")) {
-                    // hemos acabado con las imágenes pero no con los colores
+                    // Hemos acabado con las imágenes pero no con los colores
                     doneImages = true; 
                     
                 } else if (url.contains("------") || url.length() == 0) {
@@ -160,6 +162,7 @@ public class testScraper
             colors.add(color);            
         }
         
+        // Nos aseguramos de que no insertamos productos sin ningun color.
         if (colors.isEmpty()) 
         {
             return null;

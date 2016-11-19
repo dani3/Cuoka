@@ -50,23 +50,21 @@ public class PythonManager
                             // Borramos los txt con los links generados de una ejecucion anterior
                             for (File file : subFolder.listFiles())
                             {
-                                if (file.getName().contains(".txt"))
+                                if (file.getName().contains(".txt") || file.getName().contains(".dat"))
                                 {
                                     file.delete();
                                 }
                             }
                             
                             // Encapsulamos el path entre comillas para que los espacios no afecten                            
-                            LOG.info("Ejecutando: " + "python "
-                                                    + "\"" + path + "renderSections.py" + "\"" + " " + Properties.CHROME_DRIVER + " \"" + path + "\"");
+                            LOG.info(
+                                "Ejecutando: python "+ "\"" + path + "renderSections.py" + "\" " + Properties.CHROME_DRIVER + " \"" + path + "\"");
                             
                             // Ejecutamos el script de la tienda
-                            Process p = Runtime.getRuntime().exec(new String[] { "python"
-                                                    , path + "renderSections.py"
-                                                    , Properties.CHROME_DRIVER
-                                                    , path });
-                            
-                            Thread.sleep(10000);
+                            Runtime.getRuntime().exec(new String[] { "python"
+                                        , path + "renderSections.py"
+                                        , Properties.CHROME_DRIVER
+                                        , path });
                             
                             // Nos quedamos esperando hasta que termine
                             File file = new File(path + "done.dat");
@@ -90,14 +88,14 @@ public class PythonManager
      * @param section: seccion a la que pertenecen los productos.
      * @throws IOException 
      */
-    public static void executeRenderProducts(Section section) throws IOException
+    public static void executeRenderProducts(final Section section) throws IOException
     {
-        Process p = Runtime.getRuntime().exec(new String[]{ "python"
-                            , section.getPath() + "renderProducts.py"
-                            , Properties.CHROME_DRIVER
-                            , section.getName()
-                            , section.getPath()
-                            , section.getPath() + section.getName() + "_LINKS.txt" }); 
+        Runtime.getRuntime().exec(new String[]{ "python"
+                    , section.getPath() + "renderProducts.py"
+                    , Properties.CHROME_DRIVER
+                    , section.getName()
+                    , section.getPath()
+                    , section.getPath() + section.getName() + "_LINKS.txt" }); 
     }
     
     /**
@@ -105,13 +103,13 @@ public class PythonManager
      * @param section: seccion a la que pertenecen los productos.
      * @throws IOException 
      */
-    public static void executeRenderColors(Section section) throws IOException
+    public static void executeRenderColors(final Section section) throws IOException
     {
-        Process p = Runtime.getRuntime().exec(new String[]{ "python"
-                            , section.getPath() + "renderColors.py"
-                            , Properties.CHROME_DRIVER
-                            , section.getName()
-                            , section.getPath()
-                            , section.getPath() + section.getName() + "_LINKS.txt" }); 
+        Runtime.getRuntime().exec(new String[]{ "python"
+                    , section.getPath() + "renderColors.py"
+                    , Properties.CHROME_DRIVER
+                    , section.getName()
+                    , section.getPath()
+                    , section.getPath() + section.getName() + "_LINKS.txt" }); 
     }
 }
