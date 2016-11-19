@@ -163,7 +163,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_name"
                     android:textSize="16dp"
-                    android:textColor="@color/colorDarkerText"
+                    android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -208,7 +208,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_email"
                     android:textSize="16dp"
-                    android:textColor="@color/colorDarkerText"
+                    android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -253,7 +253,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_password"
                     android:textSize="16dp"
-                    android:textColor="@color/colorDarkerText"
+                    android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -298,7 +298,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_age"
                     android:textSize="16dp"
-                    android:textColor="@color/colorDarkerText"
+                    android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout
@@ -343,7 +343,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/profile_cp"
                     android:textSize="16dp"
-                    android:textColor="@color/colorDarkerText"
+                    android:textColor="@color/colorText"
                     app:customFont="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.TextInputLayout

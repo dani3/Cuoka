@@ -49,7 +49,7 @@
                 android:paddingLeft="8dp"
                 android:paddingStart="8dp"
                 android:text="@string/filter_item_price"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:textColor="@color/colorMediumText"
                 android:background="@drawable/filter_bottom_border"
                 app:customFont="Existence-StencilLight.otf"/>

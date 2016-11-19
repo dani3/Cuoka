@@ -27,7 +27,7 @@
                 android:paddingRight="0dp"
                 android:text="@string/sign_up"
                 android:textSize="18dp"
-                android:textColor="@color/colorDarkerText"
+                android:textColor="@color/colorMediumText"
                 android:background="@drawable/filter_bottom_border"
                 app:customFont="Existence-StencilLight.otf"/>
 

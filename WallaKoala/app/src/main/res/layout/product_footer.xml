@@ -20,7 +20,7 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="4dp"
             android:text="@string/footer_section"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="@android:color/white"
             android:ellipsize="end"
             android:maxLines="1"
