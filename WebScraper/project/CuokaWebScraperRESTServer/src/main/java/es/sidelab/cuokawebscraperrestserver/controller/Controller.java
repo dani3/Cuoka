@@ -17,6 +17,7 @@ import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
+import es.sidelab.cuokawebscraperrestserver.utils.ShopManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -51,12 +52,6 @@ public class Controller
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
     
     @Autowired
-    private ColorManager colorManager;
-    
-    @Autowired
-    private SectionManager sectionManager;
-    
-    @Autowired
     private ProductsRepository productsRepository;
     
     @Autowired
@@ -70,6 +65,15 @@ public class Controller
     
     @Autowired
     private FeedbackRepository feedbackRepository;
+    
+    @Autowired
+    private ColorManager colorManager;
+    
+    @Autowired
+    private SectionManager sectionManager;
+    
+    @Autowired
+    private ShopManager shopManager;
     
     /**
      * Metodo que anade la nueva tienda sugerida por un usuario.
@@ -825,13 +829,6 @@ public class Controller
             usersRepository.save(user);
         }
         
-        // Sacamos los productos de sus tiendas.
-        List<Product> productList = new ArrayList<>();
-        for (String shop : user.getShops())
-        {
-            productList.addAll(productsRepository.findByManAndShop(user.getMan(), shop));
-        }
-        
         // Eliminamos palabras irrelevantes ('a', 'de', 'con', etc.)
         List<String> keywords = new ArrayList<>();
         for (String keyword : aux)
@@ -841,6 +838,52 @@ public class Controller
                 keywords.add(keyword);
             }
         }
+        
+        // Si solo se ha recibido una palabra.
+        if (keywords.size() == 1)
+        {
+            // Miramos lo primero si es una tienda.
+            Shop shop = shopManager.getShop(keywords.get(0), user.getMan());
+            
+            List<Product> productList;
+            
+            // Si hemos encontrado una tienda, devolvemos sus productos.
+            if (shop != null)
+            {
+                return productsRepository.findByManAndShop(user.getMan(), shop.getName());
+            }
+            
+            
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        // Sacamos los productos de sus tiendas.
+        List<Product> productList = new ArrayList<>();
+        for (String shop : user.getShops())
+        {
+            productList.addAll(productsRepository.findByManAndShop(user.getMan(), shop));
+        }
+        
+        
         
         // Recorremos los productos 
         for (Product product : productList)

@@ -173,8 +173,7 @@ public class HyMScraper implements Scraper
                     } else {
                         Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                         images.add(image);
-                    }
-                    
+                    }                    
                 }
                 
                 color.setImages(images);
