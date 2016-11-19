@@ -136,6 +136,7 @@ public class HyMScraper implements Scraper
             if (colorName.contains("null") || reference.contains("null"))
             {
                 correct = false;
+                
                 String line = br.readLine();
                 if(!line.contains("****"))
                 {

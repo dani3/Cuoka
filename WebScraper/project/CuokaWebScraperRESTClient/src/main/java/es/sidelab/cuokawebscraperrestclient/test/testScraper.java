@@ -21,10 +21,10 @@ public class testScraper
         List<Product> productList = new ArrayList<>();
         
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\", false);
-        Section section = new Section("Vestidos", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false);
+        Section section = new Section("Vestidos", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Runtime.getRuntime().exec(new String[] {"python"
+        /*Runtime.getRuntime().exec(new String[] {"python"
                     , section.getPath() + "renderProducts.py"
                     , Properties.CHROME_DRIVER
                     , section.getName()
@@ -37,7 +37,7 @@ public class testScraper
             file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();
+        file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
@@ -107,8 +107,7 @@ public class testScraper
     }
     
     private static Product _readProductColors(Product product, BufferedReader br) throws IOException
-    {
-        
+    {        
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
         
@@ -116,6 +115,8 @@ public class testScraper
         br.readLine();     
         while (!doneColor)
         {
+            boolean correct = true;
+            
             List<Image> images = new ArrayList<>();
             ColorVariant color = new ColorVariant();
             
@@ -124,42 +125,51 @@ public class testScraper
             String reference = br.readLine();
             if(colorName.contains("null") || reference.contains("null"))
             {
-                return null;
-            }
-            
-            color.setName(colorName.replace("  Color: ", ""));
-            color.setColorURL(colorIcon); 
-            color.setReference(reference.replace("  Referencia: ", ""));
-            
-            // Leemos las imagenes
-            boolean doneImages = false;
-            while (!doneImages)
-            {
-                String url = br.readLine();
-                if (url == null)
+                correct = false;
+                
+                String line = br.readLine();
+                if (!line.contains("******"))
                 {
-                    // Si la url es null, es que hemos llegado al final del fichero.
-                    doneImages = true;
-                    doneColor  = true;
-                    finished   = true;
-                    
-                } else if (url.contains("***")) {
-                    // Hemos acabado con las imágenes pero no con los colores
-                    doneImages = true; 
-                    
-                } else if (url.contains("------") || url.length() == 0) {
-                    // Producto final == 0
-                    doneImages = true;
                     doneColor = true;
-                    
-                } else {
-                    Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
-                    images.add(image);
                 }
             }
             
-            color.setImages(images);
-            colors.add(color);            
+            if (correct)
+            {
+                color.setName(colorName.replace("  Color: ", ""));
+                color.setColorURL(colorIcon); 
+                color.setReference(reference.replace("  Referencia: ", ""));
+
+                // Leemos las imagenes
+                boolean doneImages = false;
+                while (!doneImages)
+                {
+                    String url = br.readLine();
+                    if (url == null)
+                    {
+                        // Si la url es null, es que hemos llegado al final del fichero.
+                        doneImages = true;
+                        doneColor  = true;
+                        finished   = true;
+
+                    } else if (url.contains("***")) {
+                        // Hemos acabado con las imágenes pero no con los colores
+                        doneImages = true; 
+
+                    } else if (url.contains("------") || url.length() == 0) {
+                        // Producto final == 0
+                        doneImages = true;
+                        doneColor = true;
+
+                    } else {
+                        Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
+                        images.add(image);
+                    }
+                }
+
+                color.setImages(images);
+                colors.add(color); 
+            }
         }
         
         // Nos aseguramos de que no insertamos productos sin ningun color.
