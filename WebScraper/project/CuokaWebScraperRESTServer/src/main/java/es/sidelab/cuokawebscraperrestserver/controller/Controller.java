@@ -808,9 +808,11 @@ public class Controller
         LOG.info("[SEARCH] Peticion GET para buscar (" + search + ") por el usuario (ID: " + id + ")" );
         
         List<Product> newList = new ArrayList<>();
+        List<Product> productList = new ArrayList<>();
+        
         String[] aux = search.split(" "); 
         
-        User user = usersRepository.findOne(id);
+        User user = usersRepository.findOne(id);        
         
         if (user == null)
         {
@@ -845,45 +847,53 @@ public class Controller
             // Miramos lo primero si es una tienda.
             Shop shop = shopManager.getShop(keywords.get(0), user.getMan());
             
-            List<Product> productList;
-            
             // Si hemos encontrado una tienda, devolvemos sus productos.
             if (shop != null)
             {
+                LOG.info("[SEARCH] Solo se busca una palabra y es una tienda: " + shop.getName());
                 return productsRepository.findByManAndShop(user.getMan(), shop.getName());
             }
-            
-            
         }
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        // Sacamos los productos de sus tiendas.
-        List<Product> productList = new ArrayList<>();
-        for (String shop : user.getShops())
+        // Si se ha recibido mas de una palabra.
+        if (keywords.size() > 1)
         {
-            productList.addAll(productsRepository.findByManAndShop(user.getMan(), shop));
-        }
+            List<Object> result = shopManager.findShop(keywords, user.getMan());
+            
+            // Si se ha encontrado la tienda, hay dos opciones, que la nueva lista de keywords este vacia, o no.
+            if (result != null)
+            {
+                Shop shop = (Shop) result.get(0);
+                keywords = (List<String>) result.get(1);
+                
+                // Si esta vacia es que se buscaba por una tienda con un nombre formado por varias palabras.
+                if (keywords.isEmpty())
+                {
+                    LOG.info("[SEARCH] Se buscan varias palabras y es una tienda: " + shop.getName());
+                    return productsRepository.findByManAndShop(user.getMan(), shop.getName());
+                    
+                } else {
+                    LOG.info("[SEARCH] Se buscan varias palabras, se encuentra la tienda: " + shop.getName());
+                    LOG.info("[SEARCH] Quedan por buscar las palabras: " + keywords.toString());
+                    productList = productsRepository.findByManAndShop(user.getMan(), shop.getName());
+                }
+            }
+        }        
         
+        // Si hemos llegado a este punto es que, o bien no se esta buscando una tienda, o bien 
+        // se ha encontrado una tienda pero quedan palabras que procesar en la busqueda
         
+        // Si la lista esta vacia, es que en la busqueda no habia ninguna tienda.
+        if (productList.isEmpty())
+        {
+            // Añadimos en este caso todos los productos de las tiendas del usuario.
+            for (String shop : user.getShops())
+            {
+                productList.addAll(productsRepository.findByManAndShop(user.getMan(), shop));
+            }            
+        }        
+        
+        // En este punto, miramos los productos que cumplen la busqueda.
         
         // Recorremos los productos 
         for (Product product : productList)
