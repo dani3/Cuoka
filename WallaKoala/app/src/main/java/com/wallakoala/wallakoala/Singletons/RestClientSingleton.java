@@ -225,8 +225,12 @@ public class RestClientSingleton
         {
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
+            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+            final User user = mSharedPreferencesManager.retreiveUser();
+
             final String fixedURL = Utils.fixUrl(
-                    Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggest/" + word);
+                    Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggest/" + user.getId() + "/" + word);
 
             Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las sugerencias");
 

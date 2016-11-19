@@ -964,19 +964,58 @@ public class Controller
     
     /**
      * Metodo que devuelve una lista de sugerencias.
-     * @param word palabras buscadas.
+     * @param id: id del usuario.
+     * @param word: palabras buscadas.
      * @return lista de sugerencias.
      */
-    @RequestMapping(value = "/suggest/{word}", method = RequestMethod.GET)
-    public List<String> getSuggestions(@PathVariable String word)
+    @RequestMapping(value = "/suggest/{id}/{word}", method = RequestMethod.GET)
+    public List<String> getSuggestions(@PathVariable long id, @PathVariable String word)
     {
         List<String> suggestions = new ArrayList<>();
         String[] words = word.split(" ");
         
-        // Si solo recibimos un palabra, buscamos una seccion.
+        User user = usersRepository.findOne(id);        
+        
+        if (user == null)
+        {        
+            return new ArrayList<>();
+        }
+        
+        // Si solo recibimos un palabra, buscamos primero una tienda y luego una seccion.
         if (words.length == 1)
-        {            
-            suggestions = sectionManager.getSectionsStartingWith(word);
+        {     
+            // Buscamos las tiendas.
+            List<Shop> shopList = shopManager.getShopsStartingWith(word, user.getMan());
+            
+            // Si se encuentra algo, las añadimos a las sugerencias.
+            if (shopList != null)
+            {
+                for (Shop shop : shopList)
+                {
+                    suggestions.add(shop.getName());
+                }
+            }
+            
+            // Si estan vacias, buscamos secciones.
+            if (suggestions.isEmpty())
+            {
+                suggestions = sectionManager.getSectionsStartingWith(word);
+                
+            } else {
+                // Si no esta vacia, comprobamos que podamos meter mas sugerencias hasta el limite de MAX_SUGGESTIONS
+                if (suggestions.size() < Properties.MAX_SUGGESTIONS)
+                {
+                    List<String> sections = sectionManager.getSectionsStartingWith(word);
+                    
+                    for (String section : sections)
+                    {
+                        if (suggestions.size() < Properties.MAX_SUGGESTIONS)
+                        {
+                            suggestions.add(section);
+                        }
+                    }
+                }
+            }            
         }
         
         // Si recibimos dos palabras, buscamos la primera palabra como seccion
@@ -986,12 +1025,16 @@ public class Controller
             List<String> firstWordSuggestions = sectionManager.getSectionsStartingWith(words[0]);
             
             if (firstWordSuggestions.isEmpty())
+            {
                 return new ArrayList<>();
+            }
             
             List<String> colors = colorManager.getColorStartingWith(words[1]);
             
             if (colors == null)
+            {
                 return new ArrayList<>();
+            }                
             
             for (String firstWordSuggestion : firstWordSuggestions)
             {                
