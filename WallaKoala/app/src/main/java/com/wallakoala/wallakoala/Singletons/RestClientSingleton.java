@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Singletons;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -17,6 +18,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.ShopSuggested;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
+import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -40,6 +42,51 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    /**
+     * Metodo que pregunta al servidor si tiene alguna notificacion por leer.
+     * @param context: contexto.
+     * @param toolbar: toolbar a la que actualizar el Hamburger Icon.
+     */
+    public static void hasNotification(Context context, final Toolbar toolbar)
+    {
+        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final User user = mSharedPreferencesManager.retreiveUser();
+
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/hasNotification/" + user.getId());
+
+        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para saber si tiene alguna notificacion por leer");
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET
+                , fixedURL
+                , new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        if (!response.equals(Properties.NEW_NOTIFICATIONS))
+                        {
+                            Log.d(Properties.TAG, "Hay nuevas notificaciones");
+
+                            toolbar.setNavigationIcon(R.drawable.ic_menu_notif);
+
+                        } else {
+                            Log.d(Properties.TAG, "No hay nuevas notificaciones");
+                        }
+                    }
+                }
+                , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {}
+                });
+
+        // Enviamos la peticion.
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
+
     /**
      * Metodo que envia una sugerencia.
      * @param context: contexto.
@@ -170,10 +217,10 @@ public class RestClientSingleton
 
             final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User mUser = mSharedPreferencesManager.retreiveUser();
+            final User user = mSharedPreferencesManager.retreiveUser();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                    + "/shops/" + mUser.getMan());
+                    + "/shops/" + user.getMan());
 
             Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las tiendas del usuario");
 
@@ -524,19 +571,19 @@ public class RestClientSingleton
                 , fixedURL
                 , future
                 , future)
-        {
-            @Override
-            public byte[] getBody() throws AuthFailureError
-            {
-                return jsonArray.toString().getBytes();
-            }
+                {
+                    @Override
+                    public byte[] getBody() throws AuthFailureError
+                    {
+                        return jsonArray.toString().getBytes();
+                    }
 
-            @Override
-            public String getBodyContentType()
-            {
-                return "application/json";
-            }
-        };
+                    @Override
+                    public String getBodyContentType()
+                    {
+                        return "application/json";
+                    }
+                };
 
         // Enviamos la peticion.
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);

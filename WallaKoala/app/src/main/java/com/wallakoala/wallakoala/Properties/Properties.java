@@ -27,6 +27,7 @@ public class Properties
     public static final String USER_NOT_FOUND    = "USER_NOT_FOUND";
     public static final String PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
     public static final String ACCEPTED          = "ACCEPTED";
+    public static final String NEW_NOTIFICATIONS = "NEW_NOTIFICATIONS";
 
     public static final int REQUEST_TIMEOUT = 60000;
 

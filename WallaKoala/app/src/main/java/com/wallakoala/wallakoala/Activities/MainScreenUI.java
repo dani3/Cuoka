@@ -36,6 +36,7 @@ import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Utils.CustomTypeFaceSpan;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -92,12 +93,13 @@ public class MainScreenUI extends AppCompatActivity
         _initToolbar();
         _initViewPager();
         _initNavigationDrawer();
+        _checkForNotifications();
     }
 
     /**
      * Metodo que inicializa ED's y distintos datos.
      */
-    protected void _initData()
+    private void _initData()
     {
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
@@ -107,7 +109,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Metodo para inicializar la Toolbar
      */
-    protected void _initToolbar()
+    private void _initToolbar()
     {
         mToolbar = (Toolbar)findViewById(R.id.appbar);
 
@@ -177,7 +179,7 @@ public class MainScreenUI extends AppCompatActivity
      * Inicializacion y configuracion del NavigationDrawer.
      */
     @SuppressWarnings("deprecation")
-    protected void _initNavigationDrawer()
+    private void _initNavigationDrawer()
     {
         // Obtenemos las vistas del navigation drawer
         mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
@@ -292,7 +294,7 @@ public class MainScreenUI extends AppCompatActivity
      * Inicializacion y configuracion del drawer toggle del leftDrawer.
      */
     @SuppressWarnings("deprecation")
-    protected void _initDrawerToggle()
+    private void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar.
         mLeftDrawerToggle = new ActionBarDrawerToggle(this
@@ -351,9 +353,17 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
+     * Metodo que comprueba si tiene notificaciones.
+     */
+    private void _checkForNotifications()
+    {
+        RestClientSingleton.hasNotification(this, mToolbar);
+    }
+
+    /**
      * Metodo que abre la pantalla de Mis tiendas
      */
-    protected void _openActivityShops()
+    private void _openActivityShops()
     {
         Intent intent = new Intent(MainScreenUI.this, ShopsUI.class);
 
@@ -367,7 +377,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Metodo que abre la pantalla de Mis favoritos
      */
-    protected void _openActivityFavorites()
+    private void _openActivityFavorites()
     {
         Intent intent = new Intent(MainScreenUI.this, FavoritesUI.class);
 
@@ -381,7 +391,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Metodo que abre la pantalla de Mis favoritos
      */
-    protected void _openActivityFeedback()
+    private void _openActivityFeedback()
     {
         Intent intent = new Intent(MainScreenUI.this, FeedbackUI.class);
 
@@ -395,7 +405,7 @@ public class MainScreenUI extends AppCompatActivity
     /**
      * Metodo que abre la pantalla de Mis favoritos
      */
-    protected void _openActivitySuggested()
+    private void _openActivitySuggested()
     {
         Intent intent = new Intent(MainScreenUI.this, SuggestedUI.class);
 
