@@ -92,6 +92,9 @@ public class IntroUI extends AppCompatActivity
 
                 finish();
 
+                // Animacion de transicion para pasar de una activity a otra.
+                overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+
             } else {
                 Snackbar.make(findViewById(R.id.intro_frame_layout), "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
