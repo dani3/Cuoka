@@ -81,6 +81,11 @@ public class Controller
     @Autowired
     private ShopManager shopManager;
     
+    /**
+     * Metodo que añade una nueva notificacion.
+     * @param notification: notificacion.
+     * @return true si ha ido correctamente.
+     */
     @RequestMapping(value = "/notification", method = RequestMethod.POST)
     public String addNotification(@RequestBody Notification notification)
     {
@@ -88,6 +93,43 @@ public class Controller
         notificationRepository.save(notification);
         
         return Properties.ACCEPTED;
+    }
+    
+    /**
+     * Metodo que obtiene las notificaciones activas y sin leer de un usuario.
+     * @param userId: id del usuario.
+     * @return lista de notificaciones.
+     */
+    @RequestMapping(value = "/notification/{userId}", method = RequestMethod.GET)
+    public List<Notification> getNotifications(@PathVariable long userId)
+    {
+        LOG.info("[NOTIFICATION] Peticion GET para obtener nuevas notificacions del usuario (ID: " + userId + ")");
+        
+        User user = usersRepository.findOne(userId);
+        if (user == null)
+        {
+            LOG.warn("[NOTIFICATION] Usuario con ID (" + userId + ") no encontrado");
+            return null;
+            
+        } else {
+            LOG.info("[NOTIFICATION] Usuario con ID (" + userId + ") encontrado, se buscan nuevas notifiaciones.");
+            
+            // Obtenemos la ultima notificacion leida por el usuario.
+            long lastNotification = user.getLastNotification();
+            
+            // Obtenemos la lista de notificaciones que no hayan caducado y que no haya leido el usuario.
+            List<Notification> allNotifications = notificationRepository.findActive(
+                                                            Properties.NOTIFICATION_LIFESPAN, lastNotification);
+            
+            if (allNotifications.isEmpty())
+            {
+                LOG.info("[NOTIFICATION] El usuario (" + userId + ") no tiene ninguna notificacion nueva.");
+            } else {
+                LOG.info("[NOTIFICATION] El usuario (" + userId + ") tiene " + allNotifications.size() + " notificaciones nueva.");
+            }
+            
+            return allNotifications;
+        }
     }
     
     /**
