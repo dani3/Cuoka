@@ -96,11 +96,33 @@ public class Controller
     }
     
     /**
+     * Metodo que devuelve las notificaciones activas.
+     * @param userId: id del usuario.
+     * @return lista de notificaciones activas.
+     */
+    @RequestMapping(value = "/notification/{userId}", method = RequestMethod.GET)
+    public List<Notification> getActiveNotifications(@PathVariable long userId)
+    {
+        LOG.info("[NOTIFICATION] Peticion GET para obtener las notificaciones del usuario (ID: " + userId + ")");
+        
+        User user = usersRepository.findOne(userId);
+        if (user == null)
+        {
+            LOG.warn("[NOTIFICATION] Usuario con ID (" + userId + ") no encontrado");
+            return null;
+            
+        } else {
+            LOG.info("[NOTIFICATION] Usuario con ID (" + userId + ") encontrado, se devuelven las notificaciones activas");
+            return notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
+        }
+    }
+    
+    /**
      * Metodo que comprueba si el usuario tiene notificaciones por leer.
      * @param userId: id del usuario.
      * @return NEW_NOTIFICATIONS si el usuario tiene alguna notificacion por leer.
      */
-    @RequestMapping(value = "/notification/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/hasNotification/{userId}", method = RequestMethod.GET)
     public String hasNotificationsToRead(@PathVariable long userId)
     {
         LOG.info("[NOTIFICATION] Peticion GET para saber si el usuario tiene alguna notificacion por leer (ID: " + userId + ")");
