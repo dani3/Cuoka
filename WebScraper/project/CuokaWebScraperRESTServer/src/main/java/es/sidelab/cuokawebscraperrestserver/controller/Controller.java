@@ -152,6 +152,12 @@ public class Controller
         return Properties.NO_NOTIFICATIONS;
     }
     
+    /**
+     * Metodo que marca una notificacion como leida.
+     * @param userId: id del usuario.
+     * @param notifId: id de la notificacion.
+     * @return true si ha ido correctamente.
+     */
     @RequestMapping(value = "/notification/{userId}/{notifId}", method = RequestMethod.GET)
     public String markNotificationAsRead(@PathVariable long userId, @PathVariable long notifId)
     {
