@@ -67,9 +67,7 @@ public class HyMScraper implements Scraper
                
         br.readLine();
         while(!isFinished())
-        {   
-            System.out.println(productList.size());
-            
+        {               
             // Empezamos nuevo producto
             Product product = _readProductGeneralInfo(br);
             if (product != null) //todo ha ido bien, seguimos leyendo los colores

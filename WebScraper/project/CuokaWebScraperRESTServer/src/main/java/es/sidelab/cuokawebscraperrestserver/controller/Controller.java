@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestserver.controller;
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.Feedback;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
+import es.sidelab.cuokawebscraperrestserver.beans.Notification;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.beans.ShopSuggested;
@@ -10,6 +11,7 @@ import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.beans.UserModification;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.FeedbackRepository;
+import es.sidelab.cuokawebscraperrestserver.repositories.NotificationsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopSuggestedRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
@@ -68,6 +70,9 @@ public class Controller
     private FeedbackRepository feedbackRepository;
     
     @Autowired
+    private NotificationsRepository notificationRepository;
+    
+    @Autowired
     private ColorManager colorManager;
     
     @Autowired
@@ -75,6 +80,15 @@ public class Controller
     
     @Autowired
     private ShopManager shopManager;
+    
+    @RequestMapping(value = "/notification", method = RequestMethod.POST)
+    public String addNotification(@RequestBody Notification notification)
+    {
+        notification.setInsert_date(Calendar.getInstance());
+        notificationRepository.save(notification);
+        
+        return Properties.ACCEPTED;
+    }
     
     /**
      * Metodo que anade la nueva tienda sugerida por un usuario.
@@ -122,7 +136,7 @@ public class Controller
         }
         
         // Asignamos la fecha de registro.
-        LOG.info("[LOGIN] El usuario no existe, se registra con fecha de: " + Calendar.getInstance());
+        LOG.info("[LOGIN] El usuario no existe, se registra con fecha de: " + Calendar.getInstance().toString());
         user.setRegistrationDate(Calendar.getInstance());
         
         // Guardamos el usuario en BD.

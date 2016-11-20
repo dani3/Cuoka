@@ -45,6 +45,10 @@ public class User
     private int postalCode;
     
     @JsonIgnore
+    @Column(name = "LAST_NOTIFICATION")
+    private int lastNotification;
+    
+    @JsonIgnore
     @Column(name = "DATE")
     private Calendar registrationDate;
     
@@ -105,6 +109,7 @@ public class User
         this.password = password;
         this.postalCode = postalCode;
         this.registrationDate = registrationDate;
+        this.lastNotification = 0;
     }
     
     public String getName()     { return this.name; }
@@ -112,7 +117,9 @@ public class User
     public String getPassword() { return this.password; }
     public short getAge()       { return this.age; }
     public boolean getMan()     { return this.man; }
-    public int getPostalCode()  { return this.postalCode; }       
+    public int getPostalCode()  { return this.postalCode; }  
+    @JsonIgnore
+    public int getLastNotification()  { return this.lastNotification; }      
     @JsonIgnore
     public Calendar getRegistrationDate() { return this.registrationDate; }    
     @JsonProperty
@@ -152,6 +159,8 @@ public class User
     public void setFilters(Set<String> filters) { this.filters = filters; }    
     @JsonIgnore
     public void setShops(Set<String> shops)   { this.shops = shops; } 
+    @JsonIgnore
+    public void setLastNotification(int lastNotification) { this.lastNotification = lastNotification; }
     public void setName(String name)          { this.name = name; }   
     public void setEmail(String email)        { this.email = email; }
     public void setPassword(String password)  { this.password = password; }

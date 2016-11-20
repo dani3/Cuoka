@@ -27,11 +27,11 @@ public class Properties
     public static final String COLOR_PATH             = "/var/www/html/images/products/";
     public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";
     
-    /* Tamanos de las imagenes en HQ y SQ */
+    /* Tamaños de las imagenes en HQ y SQ */
     public static final int IMAGE_HEIGHT_S = 400;  
     public static final int IMAGE_HEIGHT_L = 850;
     
-    /* Tamano de los iconos */
+    /* Tamaño de los iconos */
     public static final int ICON_WIDTH  = 50;
     public static final int ICON_HEIGHT = 50;
     
@@ -49,6 +49,9 @@ public class Properties
     /* Numero maximo de sugerencias */
     public static final short MAX_SUGGESTIONS = 4;
     
+    /* Numero de dias que una notificacion puede estar activa */
+    public static final int NOTIFICATION_LIFESPAN = 14;
+    
     /* Numero maximo de productos que se devolveran en los filtros */
     public static final int MAX_FILTERED_PRODUCTS = 5000;
     
@@ -57,4 +60,7 @@ public class Properties
     public static final short ACTION_FAVORITE      = 1;
     public static final short ACTION_VISITED       = 2;
     public static final short ACTION_ADDED_TO_CART = 3;
+    
+    /* Lista de acciones posibles sobre una notificacion */
+    public static final short GO_TO_SHOPS = 0;
 }
