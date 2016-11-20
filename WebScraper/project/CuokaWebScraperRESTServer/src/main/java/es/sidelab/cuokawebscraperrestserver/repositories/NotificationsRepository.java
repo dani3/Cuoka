@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface NotificationsRepository extends JpaRepository<Notification, Long> 
 {
-    @Query("FROM Notification WHERE DATEDIFF(CURDATE(), insert_date) < ?1 AND id > ?2")
-    List<Notification> findActive(int offset, long lastNotification);
+    @Query("FROM Notification WHERE DATEDIFF(CURDATE(), insert_date) < ?1")
+    List<Notification> findActive(int offset);
 }

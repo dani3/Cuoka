@@ -95,6 +95,41 @@ public class Controller
         return Properties.ACCEPTED;
     }
     
+    /**
+     * Metodo que comprueba si el usuario tiene notificaciones por leer.
+     * @param userId: id del usuario.
+     * @return NEW_NOTIFICATIONS si el usuario tiene alguna notificacion por leer.
+     */
+    @RequestMapping(value = "/notification/{userId}", method = RequestMethod.GET)
+    public String hasNotificationsToRead(@PathVariable long userId)
+    {
+        LOG.info("[NOTIFICATION] Peticion GET para saber si el usuario tiene alguna notificacion por leer (ID: " + userId + ")");
+        
+        User user = usersRepository.findOne(userId);
+        if (user == null)
+        {
+            LOG.warn("[NOTIFICATION] Usuario con ID (" + userId + ") no encontrado");
+            return Properties.USER_NOT_FOUND;
+            
+        } else {
+            List<Notification> allNotifications = notificationRepository.findActive(
+                                                            Properties.NOTIFICATION_LIFESPAN);
+            
+            Set<Long> notificationsRead = user.getNotificationsRead();
+            for (Notification notification : allNotifications)
+            {
+                if (!notificationsRead.contains(notification.getId()))
+                {
+                    LOG.info("[NOTIFICATION] El usuario tiene notificaciones por leer");
+                    return Properties.NEW_NOTIFICATIONS;
+                }
+            }
+        }
+        
+        LOG.info("[NOTIFICATION] El usuario NO tiene notificaciones por leer");
+        return Properties.NO_NOTIFICATIONS;
+    }
+    
     @RequestMapping(value = "/notification/{userId}/{notifId}", method = RequestMethod.GET)
     public String markNotificationAsRead(@PathVariable long userId, @PathVariable long notifId)
     {

@@ -635,11 +635,11 @@ public class RestClientSingleton
      * @param postalCode: codigo postal del usuario.
      */
     public static boolean sendUserModification(Context context
-            , String name
-            , String email
-            , String password
-            , short age
-            , int postalCode)
+                                    , String name
+                                    , String email
+                                    , String password
+                                    , short age
+                                    , int postalCode)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 

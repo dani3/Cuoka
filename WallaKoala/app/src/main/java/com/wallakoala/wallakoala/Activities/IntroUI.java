@@ -113,6 +113,9 @@ public class IntroUI extends AppCompatActivity
             startActivity(intent);
 
             finish();
+
+            // Animacion de transicion para pasar de una activity a otra.
+            overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
         }
     }
 
