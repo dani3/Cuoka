@@ -42,7 +42,7 @@ public class JSONParser
         user.setMan(jsonObject.getBoolean("man"));
         user.setPostalCode(jsonObject.getInt("postalCode"));
 
-        // Sacamos los productos favoritos
+        // Sacamos los productos favoritos.
         JSONArray jsonArray = jsonObject.getJSONArray("favoriteProducts");
         Set<Long> favorites = new HashSet<>();
         for (int i = 0; i < jsonArray.length(); i++)
@@ -51,6 +51,16 @@ public class JSONParser
         }
 
         user.setFavoriteProducts(favorites);
+
+        // Sacamos la lista de notificaciones leidas.
+        jsonArray = jsonObject.getJSONArray("notificationsRead");
+        Set<Long> notificationsRead = new HashSet<>();
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            notificationsRead.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
+        }
+
+        user.setNotificationsRead(notificationsRead);
 
         // Sacamos la lista de tiendas
         jsonArray = jsonObject.getJSONArray("shops");
@@ -76,6 +86,7 @@ public class JSONParser
         Log.d(Properties.TAG, " - Edad: " + user.getAge());
         Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
         Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
+        Log.d(Properties.TAG, " - Numero de notificaciones leidas: " + user.getNotificationsRead().size());
         Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
 
         return user;

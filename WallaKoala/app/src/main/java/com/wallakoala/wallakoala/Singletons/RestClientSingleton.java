@@ -670,19 +670,19 @@ public class RestClientSingleton
                     , fixedURL
                     , future
                     , future)
-            {
-                @Override
-                public byte[] getBody() throws AuthFailureError
-                {
-                    return jsonObject.toString().getBytes();
-                }
+                    {
+                        @Override
+                        public byte[] getBody() throws AuthFailureError
+                        {
+                            return jsonObject.toString().getBytes();
+                        }
 
-                @Override
-                public String getBodyContentType()
-                {
-                    return "application/json";
-                }
-            };
+                        @Override
+                        public String getBodyContentType()
+                        {
+                            return "application/json";
+                        }
+                    };
 
             // Enviamos la peticion.
             VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
@@ -762,33 +762,33 @@ public class RestClientSingleton
         final StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
                 , new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                Log.d(Properties.TAG, "Respuesta del servidor: " + response);
-
-                if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                 {
-                    // Si contiene el producto, es que se quiere quitar de favoritos.
-                    if (user.getFavoriteProducts().contains(product.getId()))
+                    @Override
+                    public void onResponse(String response)
                     {
-                        user.getFavoriteProducts().remove(product.getId());
+                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
 
-                    } else {
-                        user.getFavoriteProducts().add(product.getId());
+                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                        {
+                            // Si contiene el producto, es que se quiere quitar de favoritos.
+                            if (user.getFavoriteProducts().contains(product.getId()))
+                            {
+                                user.getFavoriteProducts().remove(product.getId());
+
+                            } else {
+                                user.getFavoriteProducts().add(product.getId());
+                            }
+
+                            mSharedPreferencesManager.insertUser(user);
+                        }
                     }
-
-                    mSharedPreferencesManager.insertUser(user);
                 }
-            }
-        }
-                , new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {}
-        });
+                        , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {}
+                });
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }

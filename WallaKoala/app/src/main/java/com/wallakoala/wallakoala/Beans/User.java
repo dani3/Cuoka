@@ -18,6 +18,7 @@ public class User
     private boolean man;
     private Set<String> shops;
     private Set<Long> favoriteProducts;
+    private Set<Long> notificationsRead;
 
     public User() {}
 
@@ -29,8 +30,9 @@ public class User
     public boolean getMan()     { return this.man; }
     public int getPostalCode()  { return this.postalCode; }
 
-    public Set<Long> getFavoriteProducts() { return this.favoriteProducts; }
-    public Set<String> getShops()          { return this.shops; }
+    public Set<Long> getNotificationsRead() { return this.notificationsRead; }
+    public Set<Long> getFavoriteProducts()  { return this.favoriteProducts; }
+    public Set<String> getShops()           { return this.shops; }
 
     public void setId(long id)                { this.id = id; }
     public void setName(String name)          { this.name = name; }
@@ -40,6 +42,7 @@ public class User
     public void setMan(boolean man)           { this.man = man; }
     public void setPostalCode(int postalCode) { this.postalCode = postalCode; }
 
-    public void setFavoriteProducts(Set<Long> favoriteProducts) { this.favoriteProducts = favoriteProducts; }
-    public void setShops(Set<String> shops)                     { this.shops = shops; }
+    public void setNotificationsRead(Set<Long> notificationsRead) { this.notificationsRead = notificationsRead; }
+    public void setFavoriteProducts(Set<Long> favoriteProducts)   { this.favoriteProducts = favoriteProducts; }
+    public void setShops(Set<String> shops)                       { this.shops = shops; }
 }
