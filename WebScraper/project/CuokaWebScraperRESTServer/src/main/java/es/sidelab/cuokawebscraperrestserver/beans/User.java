@@ -45,12 +45,13 @@ public class User
     private int postalCode;
     
     @JsonIgnore
-    @Column(name = "LAST_NOTIFICATION")
-    private long lastNotification;
-    
-    @JsonIgnore
     @Column(name = "DATE")
     private Calendar registrationDate;
+    
+    @JsonIgnore
+    @ElementCollection
+    @Column(name = "NOTIFICATIONS_READ")
+    private Set<Long> notificationsRead;
     
     @JsonIgnore
     @ElementCollection
@@ -109,7 +110,6 @@ public class User
         this.password = password;
         this.postalCode = postalCode;
         this.registrationDate = registrationDate;
-        this.lastNotification = 0;
     }
     
     public String getName()     { return this.name; }
@@ -118,8 +118,8 @@ public class User
     public short getAge()       { return this.age; }
     public boolean getMan()     { return this.man; }
     public int getPostalCode()  { return this.postalCode; }  
-    @JsonIgnore
-    public long getLastNotification()  { return this.lastNotification; }      
+    @JsonProperty
+    public Set<Long> getNotificationsRead()  { return this.notificationsRead; }      
     @JsonIgnore
     public Calendar getRegistrationDate() { return this.registrationDate; }    
     @JsonProperty
@@ -160,7 +160,7 @@ public class User
     @JsonIgnore
     public void setShops(Set<String> shops)   { this.shops = shops; } 
     @JsonIgnore
-    public void setLastNotification(long lastNotification) { this.lastNotification = lastNotification; }
+    public void setNotificationsRead(Set<Long> lastNotification) { this.notificationsRead = notificationsRead; }
     public void setName(String name)          { this.name = name; }   
     public void setEmail(String email)        { this.email = email; }
     public void setPassword(String password)  { this.password = password; }
@@ -168,6 +168,7 @@ public class User
     public void setMan(boolean man)           { this.man = man; }
     public void setPostalCode(int postalCode) { this.postalCode = postalCode; }
     
+    public void addNotificationAsRead(Long idNotif)      { this.notificationsRead.add(idNotif); }
     public void addToFavoriteProducts(Long idProduct)    { this.favoriteProducts.add(idProduct); }
     public void addToViewedProducts(Long idProduct)      { this.viewedProducts.add(idProduct); }
     public void addToSharedProducts(Long idProduct)      { this.sharedProducts.add(idProduct); }
