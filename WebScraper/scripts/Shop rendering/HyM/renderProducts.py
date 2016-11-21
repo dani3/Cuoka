@@ -18,7 +18,7 @@ section = sys.argv[2]
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_false\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -171,7 +171,7 @@ for link in listOfLinks:
                 result.write("     Imagen: " + image.find_element_by_xpath(".//img").get_attribute("src") + "\n")
 
             except:
-                pass
+                result.write("     Imagen: null")
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + section + '_done.dat', 'w')

@@ -65,7 +65,7 @@ public class RestClientSingleton
                     @Override
                     public void onResponse(String response)
                     {
-                        if (!response.equals(Properties.NEW_NOTIFICATIONS))
+                        if (response.equals(Properties.NEW_NOTIFICATIONS))
                         {
                             Log.d(Properties.TAG, "Hay nuevas notificaciones");
 

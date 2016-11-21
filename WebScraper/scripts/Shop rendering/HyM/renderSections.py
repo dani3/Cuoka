@@ -17,7 +17,19 @@ path = sys.argv[2]
 
 # Lista de secciones con sus URL's
 urls = [("Camisas", "http://www2.hm.com/es_es/mujer/compra-por-producto/camisas-y-blusas.html"),
-        ("Vestidos","http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html")]
+        ("Vestidos","http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html"),
+        ("Camisetas", "http://www2.hm.com/es_es/mujer/compra-por-producto/tops.html"),
+        ("Punto", "http://www2.hm.com/es_es/mujer/compra-por-producto/prendas-de-punto.html"),
+        ("Jerseys", "http://www2.hm.com/content/hmonline/es_es/mujer/compra-por-producto/cardigans-y-jerseis.html"),
+        ("Chaquetas", "http://www2.hm.com/es_es/mujer/compra-por-producto/chaquetas-y-abrigos.html"),
+        ("Americanas", "http://www2.hm.com/es_es/mujer/compra-por-producto/americanas-y-chalecos.html"),
+        ("Pantalones", "http://www2.hm.com/es_es/mujer/compra-por-producto/pantalones.html"),
+        ("Vaqueros", "http://www2.hm.com/es_es/mujer/compra-por-producto/vaqueros.html"),
+        ("Faldas", "http://www2.hm.com/es_es/mujer/compra-por-producto/faldas.html"),
+        ("Monos", "http://www2.hm.com/es_es/mujer/compra-por-producto/monos.html"),
+        ("Shorts", "http://www2.hm.com/es_es/mujer/compra-por-producto/pantalones-cortos.html"),
+        ("Sport", "http://www2.hm.com/es_es/mujer/compra-por-producto/h-m-sport.html"),
+        ("Zapatos", "http://www2.hm.com/es_es/mujer/compra-por-producto/calzado.html")]
 
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

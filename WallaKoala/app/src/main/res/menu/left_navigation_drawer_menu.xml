@@ -26,6 +26,17 @@
         android:id="@+id/group2">
 
         <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notification"
+            android:title="@string/notification_item"/>
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group3">
+
+        <item
             android:id="@+id/nav_feedback"
             android:icon="@drawable/ic_feedback"
             android:title="@string/feedback_item"/>
@@ -48,7 +59,7 @@
 
     <group
         android:checkableBehavior="single"
-        android:id="@+id/group3">
+        android:id="@+id/group4">
 
         <item
             android:id="@+id/nav_logout"

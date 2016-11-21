@@ -143,10 +143,15 @@ for link in listOfLinks:
             continue    
 
         # ****** I M A G E N E S ******#
-        images = dr.find_elements_by_class_name("gallery-image")
-        for img in images:
-            result.write("     Imagen: " + img.get_attribute("src") + "\n")
-
+        try:
+            images = dr.find_elements_by_class_name("gallery-image")
+        
+            for img in images:
+                result.write("     Imagen: " + img.get_attribute("src") + "\n")
+        except:
+            file_error.write("Imagenes no encontradas en: " + link + "\n")
+            continue
+        
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + section + '_done.dat', 'w')
 
