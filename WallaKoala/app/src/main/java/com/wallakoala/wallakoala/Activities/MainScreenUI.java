@@ -359,7 +359,7 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _checkForNotifications()
     {
-        RestClientSingleton.hasNotification(this, mToolbar);
+        RestClientSingleton.hasNotification(this, mToolbar, mNavigationVew);
     }
 
     /**

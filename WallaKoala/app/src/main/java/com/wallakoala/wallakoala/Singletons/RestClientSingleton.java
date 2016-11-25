@@ -1,9 +1,12 @@
 package com.wallakoala.wallakoala.Singletons;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -46,8 +49,10 @@ public class RestClientSingleton
      * Metodo que pregunta al servidor si tiene alguna notificacion por leer.
      * @param context: contexto.
      * @param toolbar: toolbar a la que actualizar el Hamburger Icon.
+     * @param navigationVew: navigationView necesaria para actualizar el icono si es necesario.
      */
-    public static void hasNotification(Context context, final Toolbar toolbar)
+    @SuppressWarnings("deprecation")
+    public static void hasNotification(final Context context, final Toolbar toolbar, final NavigationView navigationVew)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -69,8 +74,13 @@ public class RestClientSingleton
                         {
                             Log.d(Properties.TAG, "Hay nuevas notificaciones");
 
+                            // Cambiamos el Hamburger Icon
                             toolbar.setNavigationIcon(R.drawable.ic_menu_notif);
 
+                            // Cambiamos el icono de las notificaciones en el menu
+                            MenuItem menuItem = navigationVew.getMenu().findItem(R.id.nav_notifications);
+                            menuItem.setIcon(context.getResources().getDrawable(R.drawable.ic_notification_new));
+                            
                         } else {
                             Log.d(Properties.TAG, "No hay nuevas notificaciones");
                         }

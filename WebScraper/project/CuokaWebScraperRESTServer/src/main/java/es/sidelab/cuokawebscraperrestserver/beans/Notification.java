@@ -55,16 +55,16 @@ public class Notification
     
     @JsonIgnore
     public Calendar getInsert_date() { return insert_date; }
-    public long getId() { return this.id; }
-    public String getExtraInfo() { return extraInfo; }
-    public String getText() { return text; }
-    public short getAction() { return action; }
-    public String getImage() { return image; }
+    public long getId()              { return this.id; }
+    public String getExtraInfo()     { return extraInfo; }
+    public String getText()          { return text; }
+    public short getAction()         { return action; }
+    public String getImage()         { return image; }
     
     @JsonIgnore
     public void setInsert_date(Calendar insert_date) { this.insert_date = insert_date; }
-    public void setExtraInfo(String extraInfo) { this.extraInfo = extraInfo; }
-    public void setText(String text) { this.text = text; }
-    public void setAction(short action) { this.action = action; }
-    public void setImage(String image) { this.image = image; }
+    public void setExtraInfo(String extraInfo)       { this.extraInfo = extraInfo; }
+    public void setText(String text)                 { this.text = text; }
+    public void setAction(short action)              { this.action = action; }
+    public void setImage(String image)               { this.image = image; }
 }
