@@ -36,6 +36,6 @@ public class Properties
     public static final int MAX_AGE             = 110;
     public static final int POSTAL_CODE_LENGHT  = 5;
 
-    public static final short ACTION_VIEWED        = 0;
-    public static final short ACTION_FAVORITE      = 1;
+    public static final short ACTION_VIEWED   = 0;
+    public static final short ACTION_FAVORITE = 1;
 }

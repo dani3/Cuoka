@@ -23,6 +23,9 @@ public class Notification
     @Column(name = "ID")
     private long id;
     
+    @Column(name = "TITLE")
+    private String title;
+    
     @Column(name = "TEXT")
     private String text;
     
@@ -39,13 +42,18 @@ public class Notification
     @Column(name = "IMAGE")
     private String image;
     
+    @Column(name = "OFFSET")
+    private short offset;
+    
     public Notification() {}
 
     public Notification(String text
+                , String title
                 , short action
                 , String extraInfo
                 , String image) 
     {
+        this.title = title;
         this.text = text;
         this.extraInfo = extraInfo;
         this.action = action;
@@ -60,11 +68,15 @@ public class Notification
     public String getText()          { return text; }
     public short getAction()         { return action; }
     public String getImage()         { return image; }
+    public String getTitle()         { return title; }
+    public short getOffset()         { return offset; }
     
     @JsonIgnore
     public void setInsert_date(Calendar insert_date) { this.insert_date = insert_date; }
     public void setExtraInfo(String extraInfo)       { this.extraInfo = extraInfo; }
     public void setText(String text)                 { this.text = text; }
+    public void setTitle(String title)               { this.title = title; }
     public void setAction(short action)              { this.action = action; }
     public void setImage(String image)               { this.image = image; }
+    public void setOffset(short offset)              { this.offset = offset; }
 }
