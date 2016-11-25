@@ -20,6 +20,7 @@ import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ShopManager;
+import es.sidelab.cuokawebscraperrestserver.utils.Utils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -113,7 +114,15 @@ public class Controller
             
         } else {
             LOG.info("[NOTIFICATION] Usuario con ID (" + userId + ") encontrado, se devuelven las notificaciones activas");
-            return notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
+            List<Notification> notifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
+            
+            for (Notification notification : notifications)
+            {
+                notification.setOffset(Utils.daysBetween(notification.getInsert_date().getTimeInMillis()
+                                                , Calendar.getInstance().getTimeInMillis()));
+            }
+            
+            return notifications;
         }
     }
     
