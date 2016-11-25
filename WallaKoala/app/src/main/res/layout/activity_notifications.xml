@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notifications_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include android:id="@+id/notifications_toolbar"
+        layout="@layout/aux_toolbar_filter"/>
+
+    <!-- Loading View -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/notifications_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
+    <com.wallakoala.wallakoala.Views.StaggeredRecyclerView
+        android:id="@+id/notifications_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:scrollbars="none"
+        android:paddingTop="@dimen/action_bar_height"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/grid_enter_animation"/>
+
+</android.support.design.widget.CoordinatorLayout>

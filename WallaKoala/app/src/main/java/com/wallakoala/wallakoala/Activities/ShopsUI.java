@@ -96,14 +96,14 @@ public class ShopsUI extends AppCompatActivity
     /**
      * Inicializacion de la Toolbar.
      */
-    protected void _initToolbar()
+    private void _initToolbar()
     {
-        Toolbar mToolbar = (Toolbar)findViewById(R.id.shops_toolbar);
-        TextView mToolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.shops_toolbar);
+        TextView toolbarTextView = (TextView)findViewById(R.id.toolbar_textview);
 
-        mToolbarTextView.setText(getResources().getString(R.string.toolbar_shops));
+        toolbarTextView.setText(getResources().getString(R.string.toolbar_shops));
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setDisplayShowHomeEnabled(true);

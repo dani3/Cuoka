@@ -80,7 +80,7 @@ public class RestClientSingleton
                             // Cambiamos el icono de las notificaciones en el menu
                             MenuItem menuItem = navigationVew.getMenu().findItem(R.id.nav_notifications);
                             menuItem.setIcon(context.getResources().getDrawable(R.drawable.ic_notification_new));
-                            
+
                         } else {
                             Log.d(Properties.TAG, "No hay nuevas notificaciones");
                         }

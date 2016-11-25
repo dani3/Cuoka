@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -80,6 +78,9 @@ public class MainScreenUI extends AppCompatActivity
 
     /* SharedPreference */
     private SharedPreferencesManager mSharedPreferencesManager;
+
+    /* ImageView */
+    private CircleImageView mProfilePic;
 
     /* Other */
     private long mBackPressed;
@@ -201,33 +202,17 @@ public class MainScreenUI extends AppCompatActivity
         email.setText(user.getEmail());
 
         // Establecemos la imagen del usuario en funcion del sexo.
-        final CircleImageView profilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
+        mProfilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
-        profilePic.setImageBitmap(profile);
+        mProfilePic.setImageBitmap(profile);
 
-        profilePic.setOnClickListener(new View.OnClickListener()
+        mProfilePic.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Activity activity = MainScreenUI.this;
-
-                Intent intent = new Intent(MainScreenUI.this, ProfileUI.class);
-
-                // Sacamos las coordenadas de la imagen
-                int[] imageScreenLocation = new int[2];
-                profilePic.getLocationInWindow(imageScreenLocation);
-
-                intent.putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
-                      .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
-                      .putExtra(Properties.PACKAGE + ".width", profilePic.getWidth())
-                      .putExtra(Properties.PACKAGE + ".height", profilePic.getHeight());
-
-                startActivityForResult(intent, MODIFICATION_REQUEST);
-
-                // Desactivamos las transiciones por defecto
-                activity.overridePendingTransition(0, 0);
+                _openActivityProfile();
             }
         });
 
@@ -259,7 +244,7 @@ public class MainScreenUI extends AppCompatActivity
                 switch (item.getItemId())
                 {
                     case (R.id.nav_my_profile):
-                        profilePic.performClick();
+                        _openActivityProfile();
                         break;
 
                     case (R.id.nav_my_shops):
@@ -360,6 +345,30 @@ public class MainScreenUI extends AppCompatActivity
     private void _checkForNotifications()
     {
         RestClientSingleton.hasNotification(this, mToolbar, mNavigationVew);
+    }
+
+    /**
+     * Metodo que abre la pantalla del perfil.
+     */
+    private void _openActivityProfile()
+    {
+        Activity activity = MainScreenUI.this;
+
+        Intent intent = new Intent(MainScreenUI.this, ProfileUI.class);
+
+        // Sacamos las coordenadas de la imagen
+        int[] imageScreenLocation = new int[2];
+        mProfilePic.getLocationInWindow(imageScreenLocation);
+
+        intent.putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
+                .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
+                .putExtra(Properties.PACKAGE + ".width", mProfilePic.getWidth())
+                .putExtra(Properties.PACKAGE + ".height", mProfilePic.getHeight());
+
+        startActivityForResult(intent, MODIFICATION_REQUEST);
+
+        // Desactivamos las transiciones por defecto
+        activity.overridePendingTransition(0, 0);
     }
 
     /**
