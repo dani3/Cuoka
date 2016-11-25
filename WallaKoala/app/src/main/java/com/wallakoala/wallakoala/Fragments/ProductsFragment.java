@@ -197,7 +197,7 @@ public class ProductsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                ((MainScreenUI)getActivity()).createIntent();
+                ((MainScreenUI)getActivity()).openActivityShops();
             }
         });
 

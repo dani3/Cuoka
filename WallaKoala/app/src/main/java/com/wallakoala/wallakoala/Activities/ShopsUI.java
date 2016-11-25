@@ -217,10 +217,10 @@ public class ShopsUI extends AppCompatActivity
 
             if (error == null)
             {
-                Animation mExplode = AnimationUtils.loadAnimation(ShopsUI.this, R.anim.explode_animation);
-                mExplode.setStartOffset(275);
+                Animation explode = AnimationUtils.loadAnimation(ShopsUI.this, R.anim.explode_animation);
+                explode.setStartOffset(275);
 
-                mAcceptFAB.startAnimation(mExplode);
+                mAcceptFAB.startAnimation(explode);
 
                 _initRecyclerView();
 

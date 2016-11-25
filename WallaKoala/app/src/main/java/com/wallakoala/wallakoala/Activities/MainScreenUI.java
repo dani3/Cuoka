@@ -60,6 +60,7 @@ public class MainScreenUI extends AppCompatActivity
     private static final int MODIFICATION_REQUEST     = 1;
     private static final int MANAGE_SHOPS_REQUEST     = 2;
     private static final int MANAGE_FAVORITES_REQUEST = 3;
+    private static final int NOTIFICATION_REQUEST     = 4;
     private static final int EXIT_TIME_INTERVAL       = 2000;
 
     /* Container Views */
@@ -266,6 +267,10 @@ public class MainScreenUI extends AppCompatActivity
                     case (R.id.nav_more_shops):
                         _openActivitySuggested();
                         break;
+
+                    case (R.id.nav_notifications):
+                        _openActivityNotifications();
+                        break;
                 }
 
                 return true;
@@ -372,7 +377,21 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que abre la pantalla de Mis tiendas
+     * Metodo que abre la pantalla de Notificaciones.
+     */
+    private void _openActivityNotifications()
+    {
+        Intent intent = new Intent(MainScreenUI.this, NotificationsUI.class);
+
+        // Iniciamos la activity NotificationsUI
+        startActivityForResult(intent, NOTIFICATION_REQUEST);
+
+        // Animacion de transicion para pasar de una activity a otra.
+        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+    }
+
+    /**
+     * Metodo que abre la pantalla de Mis tiendas.
      */
     private void _openActivityShops()
     {
@@ -386,7 +405,7 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que abre la pantalla de Mis favoritos
+     * Metodo que abre la pantalla de Mis favoritos.
      */
     private void _openActivityFavorites()
     {
@@ -400,7 +419,7 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que abre la pantalla de Mis favoritos
+     * Metodo que abre la pantalla de Danos tu opinion.
      */
     private void _openActivityFeedback()
     {
@@ -414,7 +433,7 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que abre la pantalla de Mis favoritos
+     * Metodo que abre la pantalla de Mis favoritos.
      */
     private void _openActivitySuggested()
     {
@@ -458,9 +477,9 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
-     * Metodo llamado desde un fragmento para abrir la pantalla de las tiendas.
+     * Metodo publico llamado desde un fragmento para abrir la pantalla de las tiendas.
      */
-    public void createIntent()
+    public void openActivityShops()
     {
         _openActivityShops();
     }

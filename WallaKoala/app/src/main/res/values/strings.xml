@@ -134,4 +134,9 @@
     <string name="suggested_header">¿Te falta alguna tienda?\n Háznoslo saber</string>
     <string name="suggested_link">Link de la tienda (Opcional)</string>
     <string name="suggested_name">Nombre de la tienda</string>
+
+    <string name="notification_shop_header">Tienda nueva</string>
+    <string name="notification_shop_offset">Hoy</string>
+    <string name="notification_shop_body">¡Hay una tienda nueva disponible!</string>
+    <string name="notification_shop_action"><b>Llévame</b></string>
 </resources>

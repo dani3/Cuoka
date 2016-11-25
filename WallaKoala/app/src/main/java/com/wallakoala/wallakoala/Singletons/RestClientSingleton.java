@@ -1,7 +1,6 @@
 package com.wallakoala.wallakoala.Singletons;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +44,61 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    /**
+     * Metodo que devuelve las notificaciones del usuario.
+     * @param context: contexto.
+     * @return Array de JSONs con las notificaciones del usuario.
+     */
+    public static JSONArray retrieveNotifications(final Context context)
+    {
+        JSONArray content;
+
+        try
+        {
+            RequestFuture<JSONArray> future = RequestFuture.newFuture();
+
+            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+            final User user = mSharedPreferencesManager.retreiveUser();
+
+            final String fixedURL = Utils.fixUrl(
+                    Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/notification/" + user.getId());
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las notificaciones del usuario");
+
+            // Creamos una peticion
+            final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                                                                , fixedURL
+                                                                , null
+                                                                , future
+                                                                , future);
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+            try
+            {
+                content = future.get(20, TimeUnit.SECONDS);
+
+            } catch (InterruptedException e) {
+                Log.d(Properties.TAG, e.getMessage());
+
+                return null;
+            }
+
+            // Si content es vacio, es que han fallado todas las conexiones.
+            if (content == null)
+            {
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return content;
+    }
+
     /**
      * Metodo que pregunta al servidor si tiene alguna notificacion por leer.
      * @param context: contexto.

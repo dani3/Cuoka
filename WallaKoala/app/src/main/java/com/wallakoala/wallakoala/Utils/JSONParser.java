@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Utils;
 import android.util.Log;
 
 import com.wallakoala.wallakoala.Beans.ColorVariant;
+import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -23,6 +24,24 @@ import java.util.Set;
 
 public class JSONParser
 {
+    /**
+     * Metodo que convierte un JSON en un objeto Notification.
+     * @param jsonObject: objeto JSON.
+     * @return objeto Notification.
+     * @throws JSONException
+     */
+    public static Notification convertJSONtoNotification(JSONObject jsonObject) throws JSONException
+    {
+        String title = jsonObject.getString("title");
+        String text = jsonObject.getString("text");
+        String extraInfo = jsonObject.getString("extraInfo");
+        String image = jsonObject.getString("image");
+        short offset = (short)jsonObject.getInt("offset");
+        short action = (short)jsonObject.getInt("action");
+
+        return new Notification(title, text, extraInfo, image, offset, action);
+    }
+
     /**
      * Metodo que convierte un JSON en un objeto User.
      * @param jsonObject: objeto JSON

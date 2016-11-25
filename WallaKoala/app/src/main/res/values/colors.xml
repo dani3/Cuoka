@@ -10,6 +10,7 @@
     <color name="colorDarkerText">#393939</color>
     <color name="colorMediumText">#939393</color>
     <color name="colorLightText">#CACACA</color>
+    <color name="colorLight">#DADADA</color>
 
     <color name="colorItemChecked">#F5F5F5</color>
 
