@@ -103,6 +103,7 @@ public class NotificationsUI extends AppCompatActivity
         protected void onPreExecute()
         {
             findViewById(R.id.notifications_loading).setVisibility(View.VISIBLE);
+            findViewById(R.id.notifications_nodata).setVisibility(View.GONE);
 
             mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.notifications_coordinator);
         }
@@ -153,6 +154,9 @@ public class NotificationsUI extends AppCompatActivity
             if (error == null)
             {
                 _initRecyclerView();
+
+            } else if (mNotificationList.isEmpty()) {
+                findViewById(R.id.notifications_nodata).setVisibility(View.VISIBLE);
 
             } else {
                 Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)

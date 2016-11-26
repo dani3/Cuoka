@@ -30,4 +30,17 @@
         android:clipToPadding="false"
         android:layoutAnimation="@anim/grid_enter_animation"/>
 
+    <!-- Texto de no notificaciones -->
+    <com.wallakoala.wallakoala.Views.ExistenceTextView
+        android:id="@+id/notifications_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:paddingTop="@dimen/action_bar_height"
+        android:text="@string/nonotification_message"
+        android:textSize="18dp"
+        android:textColor="@color/colorText"
+        app:customFont="Existence-StencilLight.otf"/>
+
 </android.support.design.widget.CoordinatorLayout>

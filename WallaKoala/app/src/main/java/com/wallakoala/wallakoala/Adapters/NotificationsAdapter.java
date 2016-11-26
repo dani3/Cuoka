@@ -5,13 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -20,8 +20,6 @@ import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -43,9 +41,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     /**
      * Notificacion de nueva tienda.
      */
-    public class NewShopNotificationHolder extends RecyclerView.ViewHolder
+    public class NewShopNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private CardView mCardView;
+        private LinearLayout mBackground;
 
         private CircleImageView mIconImageView;
         private CircleImageView mShopLogoImageView;
@@ -61,7 +60,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             super(itemView);
 
-            mCardView = (CardView) itemView.findViewById(R.id.notification);
+            mCardView   = (CardView) itemView.findViewById(R.id.notification);
+            mBackground = (LinearLayout) itemView.findViewById(R.id.notification_background);
 
             mIconImageView     = (CircleImageView) itemView.findViewById(R.id.notification_icon);
             mShopLogoImageView = (CircleImageView) itemView.findViewById(R.id.notification_shop_logo);
@@ -70,15 +70,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody         = (TextView) itemView.findViewById(R.id.notification_body);
             mOffset       = (TextView) itemView.findViewById(R.id.notification_offset);
             mActionButton = (TextView) itemView.findViewById(R.id.notification_button);
+
+            mCardView.setOnClickListener(this);
+            mActionButton.setOnClickListener(this);
         }
 
         @SuppressWarnings("deprecation")
         public void bindNotification(Notification notification)
         {
+            // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
             mBody.setText(notification.getText());
             mOffset.setText(Utils.getMessageFromDaysOffset(notification.getOffset()));
 
+            // Cargamos el logo del icono
             String fixedUrl = Utils.fixUrl(
                     Properties.SERVER_URL + Properties.NOTIFICATION_PATH + notification.getImage());
 
@@ -115,6 +120,41 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                    .load(fixedUrl)
                    .noFade()
                    .into(mTarget);
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            if (v.getId() == mCardView.getId())
+            {
+                _markNotification();
+
+            } else if (v.getId() == mActionButton.getId()) {
+
+
+            }
+        }
+
+        /**
+         * Metodo que marca la notificacion como leida y la sombrea.
+         */
+        @SuppressWarnings("deprecation")
+        private void _markNotification()
+        {
+            // Llamamos al servidor para marcar la notificacion como leida.
+
+
+            // Sombreamos la CardView y quitamos la elevacion.
+            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_shop_bw));
+
+            mCardView.setCardElevation(0.0f);
+
+            // Ponemos el mismo color en todos los textos.
+            mTitle.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
         }
     }
 

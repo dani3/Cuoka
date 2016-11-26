@@ -40,7 +40,7 @@
         android:id="@+id/favorites_nodata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|top"
         android:layout_marginTop="@dimen/action_bar_height"
         android:paddingTop="@dimen/action_bar_height"
         android:text="@string/nofav_message"
