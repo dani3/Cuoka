@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,11 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.util.List;
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,6 +40,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     /* Data */
     private List<Notification> mNotificationsList;
+    private Set<Long> mNotificationsReadList;
 
     /**
      * Notificacion de nueva tienda.
@@ -120,6 +124,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                    .load(fixedUrl)
                    .noFade()
                    .into(mTarget);
+
+            if (mNotificationsReadList.contains(notification.getId()))
+            {
+                _markNotification(false);
+            }
         }
 
         @Override
@@ -127,7 +136,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (v.getId() == mCardView.getId())
             {
-                _markNotification();
+                _markNotification(true);
 
             } else if (v.getId() == mActionButton.getId()) {
 
@@ -139,10 +148,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification()
+        private void _markNotification(boolean connect)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
-
+            if (connect)
+            {
+                
+            }
 
             // Sombreamos la CardView y quitamos la elevacion.
             mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
@@ -167,6 +179,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     {
         mContext = context;
         mNotificationsList = notifications;
+
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(mContext);
+
+        mNotificationsReadList = sharedPreferencesManager.retreiveUser().getNotificationsRead();
+
+        Log.d(Properties.TAG, "Notificaciones leidas: ");
+        for (Long id : mNotificationsReadList)
+        {
+            Log.d(Properties.TAG, " - " + id);
+        }
     }
 
     @Override

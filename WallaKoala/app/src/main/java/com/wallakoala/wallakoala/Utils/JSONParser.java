@@ -32,6 +32,7 @@ public class JSONParser
      */
     public static Notification convertJSONtoNotification(JSONObject jsonObject) throws JSONException
     {
+        long id = jsonObject.getLong("id");
         String title = jsonObject.getString("title");
         String text = jsonObject.getString("text");
         String extraInfo = jsonObject.getString("extraInfo");
@@ -39,7 +40,7 @@ public class JSONParser
         short offset = (short)jsonObject.getInt("offset");
         short action = (short)jsonObject.getInt("action");
 
-        return new Notification(text, title, extraInfo, image, offset, action);
+        return new Notification(id, text, title, extraInfo, image, offset, action);
     }
 
     /**

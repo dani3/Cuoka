@@ -7,6 +7,7 @@ package com.wallakoala.wallakoala.Beans;
 
 public class Notification
 {
+    private long id;
     private String title;
     private String text;
     private String extraInfo;
@@ -14,13 +15,15 @@ public class Notification
     private short offset;
     private short action;
 
-    public Notification(String text
+    public Notification(long id
+            , String text
             , String title
             , String extraInfo
             , String image
             , short offset
             , short action)
     {
+        this.id = id;
         this.title = title;
         this.text = text;
         this.extraInfo = extraInfo;
@@ -29,6 +32,7 @@ public class Notification
         this.offset = offset;
     }
 
+    public long getId()          { return id; }
     public String getExtraInfo() { return extraInfo; }
     public String getText()      { return text; }
     public String getImage()     { return image; }
