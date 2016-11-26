@@ -148,7 +148,7 @@ public class NotificationsUI extends AppCompatActivity
         @Override
         protected void onPostExecute(Void unused)
         {
-            findViewById(R.id.shops_loading).setVisibility(View.GONE);
+            findViewById(R.id.notifications_loading).setVisibility(View.GONE);
 
             if (error == null)
             {
@@ -175,7 +175,7 @@ public class NotificationsUI extends AppCompatActivity
     {
         StaggeredRecyclerView notificationRecyclerView = (StaggeredRecyclerView) findViewById(R.id.notifications_recyclerview);
 
-        mNotificationListAdapter = new NotificationsAdapter();
+        mNotificationListAdapter = new NotificationsAdapter(this, mNotificationList);
 
         notificationRecyclerView.setItemViewCacheSize(Properties.CACHED_SHOPS);
         notificationRecyclerView.setVisibility(View.VISIBLE);

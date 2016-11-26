@@ -138,5 +138,5 @@
     <string name="notification_shop_header">Tienda nueva</string>
     <string name="notification_shop_offset">Hoy</string>
     <string name="notification_shop_body">¡Hay una tienda nueva disponible!</string>
-    <string name="notification_shop_action"><b>Llévame</b></string>
+    <string name="notification_shop_action">Llévame</string>
 </resources>

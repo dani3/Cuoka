@@ -34,6 +34,33 @@ import java.util.Set;
 public class Utils
 {
     /**
+     * Metodo que dado una diferencia de dias, devuelve un mensaje.
+     * @param offset: diferencia de dias.
+     * @return mensaje descriptivo de la diferencia de dias.
+     */
+    @Nullable
+    public static String getMessageFromDaysOffset(short offset)
+    {
+        if (offset == 0) {
+            return "Hoy";
+
+        } else if (offset == 1) {
+            return "Ayer";
+
+        } else if (offset > 1 && offset < 7) {
+            return "Hace " + offset + " días";
+
+        } else if (offset >= 7 && offset < 12) {
+            return "Hace una semana";
+
+        } else if (offset >= 12) {
+            return "Hace dos semanas";
+        }
+
+        return null;
+    }
+
+    /**
      * Metodo que parsea un JSON en usuario.
      * @param id: id del usuario.
      * @param jsonObject: objeto JSON a parsear.

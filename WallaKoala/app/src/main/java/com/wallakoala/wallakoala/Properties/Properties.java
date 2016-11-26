@@ -21,6 +21,7 @@ public class Properties
     public static final String PREDEFINED_ICONS_PATH = "/images/colors/";
     public static final String ICONS_PATH            = "/images/products/";
     public static final String LOGOS_PATH            = "/images/logos/";
+    public static final String NOTIFICATION_PATH     = "/images";
 
     public static final String ALREADY_EXISTS    = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN   = "USER_INCORRECT_LOGIN";
@@ -38,4 +39,6 @@ public class Properties
 
     public static final short ACTION_VIEWED   = 0;
     public static final short ACTION_FAVORITE = 1;
+
+    public static final short NEW_SHOP_NOTIFICATION = 0;
 }

@@ -28,6 +28,11 @@
             android:configChanges="orientation|keyboardHidden">
         </activity>
 
+        <activity android:name=".Activities.NotificationsUI"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+        </activity>
+
         <activity android:name=".Activities.FeedbackUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">

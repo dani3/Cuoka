@@ -118,8 +118,8 @@ public class Controller
             
             for (Notification notification : notifications)
             {
-                notification.setOffset(Utils.daysBetween(notification.getInsert_date().getTimeInMillis()
-                                                , Calendar.getInstance().getTimeInMillis()));
+                notification.setOffset(Utils.daysBetween(Calendar.getInstance().getTimeInMillis()
+                    , notification.getInsert_date().getTimeInMillis()));
             }
             
             return notifications;

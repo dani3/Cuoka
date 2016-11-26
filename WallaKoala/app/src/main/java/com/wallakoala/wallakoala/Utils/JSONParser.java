@@ -39,7 +39,7 @@ public class JSONParser
         short offset = (short)jsonObject.getInt("offset");
         short action = (short)jsonObject.getInt("action");
 
-        return new Notification(title, text, extraInfo, image, offset, action);
+        return new Notification(text, title, extraInfo, image, offset, action);
     }
 
     /**
