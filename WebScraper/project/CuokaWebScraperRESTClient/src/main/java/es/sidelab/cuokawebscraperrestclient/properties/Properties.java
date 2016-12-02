@@ -18,6 +18,4 @@ public class Properties
     
     //public static final String SHOPS_PATH = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\";
     //public static final String CHROME_DRIVER = "C:\\Users\\lux_f\\Documents\\chromedriver";
-
-    public static final String DONE_FILE_PYTHON = SHOPS_PATH + "done.dat";
 }

@@ -62,7 +62,4 @@ public class Properties
     public static final short ACTION_FAVORITE      = 1;
     public static final short ACTION_VISITED       = 2;
     public static final short ACTION_ADDED_TO_CART = 3;
-    
-    /* Lista de acciones posibles sobre una notificacion */
-    public static final short GO_TO_SHOPS = 0;
 }

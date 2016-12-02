@@ -41,4 +41,5 @@ public class Properties
     public static final short ACTION_FAVORITE = 1;
 
     public static final short NEW_SHOP_NOTIFICATION = 0;
+    public static final short SALES_NOTIFICATION    = 1;
 }

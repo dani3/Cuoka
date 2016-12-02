@@ -2,6 +2,7 @@ package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -60,6 +61,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         private Target mTarget;
 
+        private boolean loading;
+
         public NewShopNotificationHolder(View itemView)
         {
             super(itemView);
@@ -102,6 +105,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     fadeOut.setInterpolator(new AccelerateInterpolator());
                     fadeOut.setDuration(250);
                     mShopLogoImageView.startAnimation(fadeOut);
+
+                    loading = false;
                 }
 
                 @Override
@@ -117,6 +122,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
                     mShopLogoImageView.setImageBitmap(null);
+
+                    loading = true;
                 }
             };
 
@@ -153,7 +160,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
             {
-                
+
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -167,6 +174,141 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
+        }
+    }
+
+    /**
+     * Notificacion de nueva tienda.
+     */
+    public class SalesNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        private CardView mCardView;
+        private LinearLayout mBackground;
+
+        private CircleImageView mIconImageView;
+        private CircleImageView mSalesImageView;
+
+        private TextView mTitle;
+        private TextView mBody;
+        private TextView mOffset;
+
+        private Target mTarget;
+
+        private boolean loading;
+
+        public SalesNotificationHolder(View itemView)
+        {
+            super(itemView);
+
+            mCardView   = (CardView) itemView.findViewById(R.id.notification);
+            mBackground = (LinearLayout) itemView.findViewById(R.id.notification_background);
+
+            mIconImageView  = (CircleImageView) itemView.findViewById(R.id.notification_icon);
+            mSalesImageView = (CircleImageView) itemView.findViewById(R.id.notification_sales_icon);
+
+            mTitle  = (TextView) itemView.findViewById(R.id.notification_title);
+            mBody   = (TextView) itemView.findViewById(R.id.notification_body);
+            mOffset = (TextView) itemView.findViewById(R.id.notification_offset);
+
+            mCardView.setOnClickListener(this);
+        }
+
+        @SuppressWarnings("deprecation")
+        public void bindNotification(Notification notification)
+        {
+            // Establecemos la cabecera, el body y la diferencia de dias.
+            mTitle.setText(notification.getTitle());
+            mBody.setText(notification.getText());
+            mOffset.setText(Utils.getMessageFromDaysOffset(notification.getOffset()));
+
+            // Cargamos el logo del icono
+            String fixedUrl = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.NOTIFICATION_PATH + notification.getImage());
+
+            mTarget = new Target()
+            {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                {
+                    mSalesImageView.setImageBitmap(bitmap);
+
+                    Animation fadeOut = new AlphaAnimation(0, 1);
+                    fadeOut.setInterpolator(new AccelerateInterpolator());
+                    fadeOut.setDuration(250);
+                    mSalesImageView.startAnimation(fadeOut);
+
+                    loading = false;
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable)
+                {
+                    mSalesImageView.setBackgroundColor(
+                            mContext.getResources().getColor(android.R.color.holo_red_dark));
+
+                    mSalesImageView.setAlpha(0.2f);
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable)
+                {
+                    mSalesImageView.setImageBitmap(null);
+
+                    loading = true;
+                }
+            };
+
+            Picasso.with(mContext)
+                   .load(fixedUrl)
+                   .noFade()
+                   .into(mTarget);
+
+            if (mNotificationsReadList.contains(notification.getId()))
+            {
+                _markNotification(false);
+            }
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            if (v.getId() == mCardView.getId())
+            {
+                _markNotification(true);
+            }
+        }
+
+        /**
+         * Metodo que marca la notificacion como leida y la sombrea.
+         */
+        @SuppressWarnings("deprecation")
+        private void _markNotification(boolean connect)
+        {
+            // Llamamos al servidor para marcar la notificacion como leida.
+            if (connect)
+            {
+
+            }
+
+            try
+            {
+                mSalesImageView.setImageBitmap(
+                        Utils.toGrayscale(((BitmapDrawable)mSalesImageView.getDrawable()).getBitmap()));
+
+            } catch (Exception e) {
+                Log.e(Properties.TAG, e.getMessage());
+            }
+
+            // Sombreamos la CardView y quitamos la elevacion.
+            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_sales_bw));
+
+            mCardView.setCardElevation(0.0f);
+
+            // Ponemos el mismo color en todos los textos.
+            mTitle.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
         }
     }
 
@@ -198,17 +340,27 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public NewShopNotificationHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
+        View itemView;
+
         switch (viewType)
         {
             case (Properties.NEW_SHOP_NOTIFICATION):
-                View itemView = LayoutInflater.from(parent.getContext())
+                itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.notification_new_shop
+                            , parent
+                            , false );
+
+                return new NewShopNotificationHolder(itemView);
+
+            case (Properties.SALES_NOTIFICATION):
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.notification_sales
                                 , parent
                                 , false );
 
-                return new NewShopNotificationHolder(itemView);
+                return new SalesNotificationHolder(itemView);
         }
 
         return null;
@@ -221,6 +373,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             case (Properties.NEW_SHOP_NOTIFICATION):
                 ((NewShopNotificationHolder) holder).bindNotification(mNotificationsList.get(position));
+                break;
+
+            case (Properties.SALES_NOTIFICATION):
+                ((SalesNotificationHolder) holder).bindNotification(mNotificationsList.get(position));
                 break;
         }
     }
