@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -138,6 +139,8 @@ public class NotificationsUI extends AppCompatActivity
                     {
                         mNotificationList.add(JSONParser.convertJSONtoNotification(jsonObject));
                     }
+
+                    Collections.sort(mNotificationList);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

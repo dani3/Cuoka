@@ -5,7 +5,7 @@ package com.wallakoala.wallakoala.Beans;
  * Created by Daniel Mancebo Aldea on 25/11/2016.
  */
 
-public class Notification
+public class Notification implements Comparable<Notification>
 {
     private long id;
     private String title;
@@ -39,4 +39,10 @@ public class Notification
     public String getTitle()     { return title; }
     public short getOffset()     { return offset; }
     public short getAction()     { return action; }
+
+    @Override
+    public int compareTo(Notification o)
+    {
+        return (offset >= o.offset) ? 1 : -1;
+    }
 }
