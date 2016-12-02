@@ -143,4 +143,7 @@
 
     <string name="notification_sales_header">¡Rebajas!</string>
     <string name="notification_sales_body">Han empezado las rebajas, ¡Corre que se acaban!</string>
+
+    <string name="notification_shop_discount_header">Descuentos en Tienda</string>
+    <string name="notification_shop_discount_body">Hay descuentos especiales en Tienda, ¡Échale un vistazo!</string>
 </resources>
