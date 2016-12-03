@@ -39,6 +39,9 @@ public class NotificationsUI extends AppCompatActivity
     /* ContainerViews */
     private CoordinatorLayout mCoordinatorLayout;
 
+    /* Adapter */
+    private NotificationsAdapter mNotificationListAdapter;
+
     /* Data */
     private List<Notification> mNotificationList;
 
@@ -180,12 +183,12 @@ public class NotificationsUI extends AppCompatActivity
     {
         StaggeredRecyclerView notificationRecyclerView = (StaggeredRecyclerView) findViewById(R.id.notifications_recyclerview);
 
-        NotificationsAdapter notificationListAdapter = new NotificationsAdapter(this, mNotificationList);
+        mNotificationListAdapter = new NotificationsAdapter(this, mNotificationList);
 
         notificationRecyclerView.setItemViewCacheSize(Properties.CACHED_SHOPS);
         notificationRecyclerView.setVisibility(View.VISIBLE);
         notificationRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        notificationRecyclerView.setAdapter(notificationListAdapter);
+        notificationRecyclerView.setAdapter(mNotificationListAdapter);
         notificationRecyclerView.setHasFixedSize(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -210,7 +213,13 @@ public class NotificationsUI extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        setResult(RESULT_CANCELED);
+        if (mNotificationListAdapter != null)
+        {
+            setResult((mNotificationListAdapter.isEveryNotificationRead()) ? RESULT_OK : RESULT_CANCELED);
+
+        } else {
+            setResult(RESULT_CANCELED);
+        }
 
         super.onBackPressed();
     }

@@ -657,6 +657,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             RestClientSingleton.markNotificationAsRead(mContext, id[0]);
 
+            mNotificationsReadList.add(id[0]);
+            
             return null;
         }
 
@@ -686,6 +688,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             Log.d(Properties.TAG, " - " + id);
         }
+    }
+
+    /**
+     * Metodo que comprueba si todas las notificaciones se han marcado como leidas.
+     * @return true si se han leido todas las notificaciones.
+     */
+    public boolean isEveryNotificationRead()
+    {
+        for (Notification notification : mNotificationsList)
+        {
+            if (!mNotificationsReadList.contains(notification.getId()))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

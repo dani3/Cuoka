@@ -579,6 +579,7 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -644,6 +645,16 @@ public class MainScreenUI extends AppCompatActivity
 
                 mProductsFragment.notifyDataSetChanged();
                 mRecommendedFragment.notifyDataSetChanged();
+
+            } else if (requestCode == NOTIFICATION_REQUEST) {
+                // Si venimos de la pantalla de Notificaciones con OK, es que todas las notificaciones se han leido.
+
+                // Cambiamos el Hamburger Icon
+                mToolbar.setNavigationIcon(R.drawable.ic_menu);
+
+                // Cambiamos el icono de las notificaciones en el menu
+                MenuItem menuItem = mNavigationVew.getMenu().findItem(R.id.nav_notifications);
+                menuItem.setIcon(this.getResources().getDrawable(R.drawable.ic_notification));
             }
         }
     }
