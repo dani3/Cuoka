@@ -45,10 +45,68 @@ import java.util.concurrent.TimeoutException;
 public class RestClientSingleton
 {
     /**
+     * Metodo que marca una notificacion como leida.
+     * @param context: contexto.
+     * @param notifId: id de la notificacion.
+     * @return true si se ha enviado correctamente.
+     */
+    public static boolean markNotificationAsRead(final Context context, long notifId)
+    {
+        String response;
+
+        try
+        {
+            RequestFuture<String> future = RequestFuture.newFuture();
+
+            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+            final User user = mSharedPreferencesManager.retreiveUser();
+
+            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                    + "/notification/" + user.getId() + "/" + notifId);
+
+            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para marcar la notificacion " + notifId + " como leida");
+
+            // Creamos una peticion
+            final StringRequest jsonObjReq = new StringRequest(Request.Method.GET
+                    , fixedURL
+                    , future
+                    , future);
+
+            // La mandamos a la cola de peticiones
+            VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+            try
+            {
+                response = future.get(20, TimeUnit.SECONDS);
+
+                // Si ha ido bien, guardamos la notificacion y actualizamos el usuario.
+                if (response != null && response.equals(Properties.ACCEPTED))
+                {
+                    user.addNotificationAsRead(notifId);
+
+                    mSharedPreferencesManager.insertUser(user);
+                }
+
+            } catch (InterruptedException e) {
+                Log.d(Properties.TAG, e.getMessage());
+
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Metodo que devuelve las notificaciones del usuario.
      * @param context: contexto.
      * @return Array de JSONs con las notificaciones del usuario.
      */
+    @Nullable
     public static JSONArray retrieveNotifications(final Context context)
     {
         JSONArray content;

@@ -166,21 +166,21 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             ERROR = false;
             LOADED = false;
 
-            // Inicializamos los TextViews
+            // Inicializamos los TextViews.
             String name = product.getName().substring(0, 1) + product.getName().split(" ")[0].substring(1).toLowerCase();
             mTitleTextView.setText(name);
             mSubtitleTextView.setText(product.getShop());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
 
-            // Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone
+            // Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone.
             mProductFooterMainView.setVisibility(View.GONE);
             mProductFavoriteImageButton.setVisibility(View.GONE);
 
-            // Inicializamos el boton de favorito
+            // Inicializamos el boton de favorito.
             mProductFavoriteImageButton.changeIcon(
                     mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
 
-            // Cargamos la imagen usando Picasso
+            // Cargamos la imagen usando Picasso.
             mTarget = new Target()
             {
                 @Override
@@ -195,7 +195,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     // Guardamos el bitmap, para asi pasarlo a ProductUI.
                     mBitmap = bitmap;
 
-                    // Por ultimo, cargamos el Bitmap en la ImageView
+                    // Por ultimo, cargamos el Bitmap en la ImageView.
                     mProductImageView.setImageBitmap(bitmap);
 
                     // Reestablecemos la opacidad y el valor de la altura a WRAP_CONTENT, eliminamos el color de fondo.
@@ -225,7 +225,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 @Override
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
-                    // Debido a que los ViewHolder se reciclan, eliminamos el Bitmap antiguo
+                    // Debido a que los ViewHolder se reciclan, eliminamos el Bitmap antiguo.
                     mProductImageView.setImageBitmap(null);
 
                     // Establecemos la altura usando el AspectRatio del producto.

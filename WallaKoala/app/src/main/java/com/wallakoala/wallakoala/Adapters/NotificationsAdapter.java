@@ -1,9 +1,11 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +23,7 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -48,6 +51,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     public class NewShopNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private long notificationId;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -85,12 +90,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @SuppressWarnings("deprecation")
         public void bindNotification(Notification notification)
         {
+            // Guardamos el id de la notificacion.
+            notificationId = notification.getId();
+
             // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
             mBody.setText(notification.getText());
             mOffset.setText(Utils.getMessageFromDaysOffset(notification.getOffset()));
 
-            // Cargamos el logo del icono
+            // Cargamos el logo del icono.
             String fixedUrl = Utils.fixUrl(
                     Properties.SERVER_URL + Properties.NOTIFICATION_PATH + notification.getImage());
 
@@ -134,7 +142,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false);
+                _markNotification(false, notificationId);
             }
         }
 
@@ -143,7 +151,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (v.getId() == mCardView.getId())
             {
-                _markNotification(true);
+                _markNotification(true, notificationId);
 
             } else if (v.getId() == mActionButton.getId()) {
 
@@ -155,12 +163,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect)
+        private void _markNotification(boolean connect, long id)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
             {
-
+                new MarkNotificationAsyncTask().execute(id);
             }
 
             try
@@ -194,6 +202,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     public class SalesNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private long notificationId;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -228,6 +238,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @SuppressWarnings("deprecation")
         public void bindNotification(Notification notification)
         {
+            // Guardamos el id de la notificacion.
+            notificationId = notification.getId();
+
             // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
             mBody.setText(notification.getText());
@@ -277,7 +290,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false);
+                _markNotification(false, notificationId);
             }
         }
 
@@ -286,7 +299,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (v.getId() == mCardView.getId())
             {
-                _markNotification(true);
+                _markNotification(true, notificationId);
             }
         }
 
@@ -294,12 +307,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect)
+        private void _markNotification(boolean connect, long id)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
             {
-
+                new MarkNotificationAsyncTask().execute(id);
             }
 
             try
@@ -332,6 +345,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     public class ShopDiscountNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private long notificationId;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -366,6 +381,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @SuppressWarnings("deprecation")
         public void bindNotification(Notification notification)
         {
+            // Guardamos el id de la notificacion.
+            notificationId = notification.getId();
+
             // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
             mBody.setText(notification.getText());
@@ -415,7 +433,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false);
+                _markNotification(false, notificationId);
             }
         }
 
@@ -424,7 +442,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (v.getId() == mCardView.getId())
             {
-                _markNotification(true);
+                _markNotification(true, notificationId);
             }
         }
 
@@ -432,12 +450,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect)
+        private void _markNotification(boolean connect, long id)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
             {
-
+                new MarkNotificationAsyncTask().execute(id);
             }
 
             try
@@ -470,6 +488,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     public class UpdateNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private long notificationId;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -507,6 +527,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @SuppressWarnings("deprecation")
         public void bindNotification(Notification notification)
         {
+            // Guardamos el id de la notificacion.
+            notificationId = notification.getId();
+
             // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
             mBody.setText(notification.getText());
@@ -556,7 +579,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false);
+                _markNotification(false, notificationId);
             }
         }
 
@@ -565,7 +588,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (v.getId() == mCardView.getId())
             {
-                _markNotification(true);
+                _markNotification(true, notificationId);
 
             } else if (v.getId() == mActionButton.getId()) {
 
@@ -577,12 +600,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect)
+        private void _markNotification(boolean connect, long id)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
             {
-
+                new MarkNotificationAsyncTask().execute(id);
             }
 
             try
@@ -608,6 +631,39 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
+        }
+    }
+
+    /**
+     * Tarea en segundo plano que marca la notificacion como leida.
+     */
+    private class MarkNotificationAsyncTask extends AsyncTask<Long, Void, Void>
+    {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog = new ProgressDialog(mContext, R.style.MyDialogTheme);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Realizando cambios...");
+            progressDialog.setIndeterminate(true);
+
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Long... id)
+        {
+            RestClientSingleton.markNotificationAsRead(mContext, id[0]);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            progressDialog.dismiss();
         }
     }
 

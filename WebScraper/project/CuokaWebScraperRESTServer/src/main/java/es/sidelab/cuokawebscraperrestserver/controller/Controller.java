@@ -143,8 +143,7 @@ public class Controller
             return Properties.USER_NOT_FOUND;
             
         } else {
-            List<Notification> allNotifications = notificationRepository.findActive(
-                                                            Properties.NOTIFICATION_LIFESPAN);
+            List<Notification> allNotifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
             
             Set<Long> notificationsRead = user.getNotificationsRead();
             for (Notification notification : allNotifications)

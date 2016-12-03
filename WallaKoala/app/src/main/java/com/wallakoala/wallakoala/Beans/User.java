@@ -45,4 +45,6 @@ public class User
     public void setNotificationsRead(Set<Long> notificationsRead) { this.notificationsRead = notificationsRead; }
     public void setFavoriteProducts(Set<Long> favoriteProducts)   { this.favoriteProducts = favoriteProducts; }
     public void setShops(Set<String> shops)                       { this.shops = shops; }
+
+    public void addNotificationAsRead(long notifId) { this.notificationsRead.add(notifId); }
 }
