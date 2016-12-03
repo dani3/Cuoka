@@ -80,7 +80,7 @@ for link in listOfLinks:
 
     try:
         # ****** P R E C I O ******#
-        price = dr.find_element_by_class_name("price").text.replace(",", ".").replace("€", "")
+        price = dr.find_element_by_class_name("price-info").find_element_by_class_name("price").text.replace(",", ".").replace("€", "")
         result.write("Precio: " + price + "\n")
         
     except:
