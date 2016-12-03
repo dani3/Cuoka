@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -212,6 +213,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 public void onBitmapFailed(Drawable errorDrawable)
                 {
                     ERROR = true;
+
+                    Log.e(Properties.TAG, "Error cargando imagen "
+                            + product.getShop() + " " + product.getSection() + " " + product.getColors().get(0).getReference());
 
                     mProductImageView.setBackgroundColor(
                             mContext.getResources().getColor(android.R.color.holo_red_dark));

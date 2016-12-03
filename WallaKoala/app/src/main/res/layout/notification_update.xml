@@ -38,7 +38,7 @@
                     android:id="@+id/notification_icon"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/ic_notification_discount"/>
+                    android:src="@drawable/ic_notification_update"/>
 
                 <com.wallakoala.wallakoala.Views.ExistenceTextView
                     android:id="@+id/notification_title"
@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:text="@string/notification_shop_discount_header"
+                    android:text="@string/notification_update_header"
                     android:textColor="@color/colorText"
                     android:textSize="14dp"
                     app:customFont="Existence-StencilLight.otf"/>
@@ -73,9 +73,21 @@
                 android:id="@+id/notification_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@string/notification_shop_discount_body"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/notification_update_body"
                 android:textColor="@color/colorMediumText"
+                android:textSize="14dp"
+                app:customFont="Existence-StencilLight.otf"/>
+
+            <com.wallakoala.wallakoala.Views.ExistenceTextView
+                android:id="@+id/notification_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="@string/notification_update_action"
+                android:textColor="@color/colorAccent"
                 android:textSize="14dp"
                 app:customFont="Existence-StencilLight.otf"/>
 
@@ -88,7 +100,7 @@
             android:gravity="center">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/notification_shop_discount_icon"
+                android:id="@+id/notification_update_logo"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:layout_margin="16dp"

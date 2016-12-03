@@ -136,9 +136,9 @@
     <string name="suggested_link">Link de la tienda (Opcional)</string>
     <string name="suggested_name">Nombre de la tienda</string>
 
-    <string name="notification_shop_header">Tienda nueva</string>
+    <string name="notification_shop_header">Tienda ya dispnible</string>
     <string name="notification_offset">Hoy</string>
-    <string name="notification_shop_body">¡Hay una tienda nueva disponible!</string>
+    <string name="notification_shop_body">Ya puedes añadir Tienda a tus tiendas favoritas, ¡Síguela en el menú Mis Tiendas!</string>
     <string name="notification_shop_action">Llévame</string>
 
     <string name="notification_sales_header">¡Rebajas!</string>
@@ -146,4 +146,8 @@
 
     <string name="notification_shop_discount_header">Descuentos en Tienda</string>
     <string name="notification_shop_discount_body">Hay descuentos especiales en Tienda, ¡Échale un vistazo!</string>
+
+    <string name="notification_update_header">Actualización</string>
+    <string name="notification_update_body">¡Hemos actualizado Cuoka! Puedes ir al PlayStore para tener la última versión o para ver los detalles.</string>
+    <string name="notification_update_action">Ir al PlayStore</string>
 </resources>

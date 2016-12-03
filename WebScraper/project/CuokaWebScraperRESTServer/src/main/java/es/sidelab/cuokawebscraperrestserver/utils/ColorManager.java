@@ -28,32 +28,33 @@ public class ColorManager
         
         colorMap.put("Amarillos", new String[]{ "Amarillo", "Amarillos", "Amarilla", "Amarillas", "Dorado", "Dorados", "Dorada", "Doradas"
                                         , "Oro", "Oros", "Arena", "Arenas", "Beige", "Beiges", "Beis", "Camel", "Nude", "Maquillaje"
-                                        , "Mostaza", "Mostazas" });
+                                        , "Mostaza", "Mostazas", "Limón", "Limon", "Lima", "Ámbar", "Ambar", "Indio" });
         
-        colorMap.put("Azules", new String[]{ "Azul", "Azules", "Azulada", "Celeste", "Celestes", "Agua", "Aguas"
-                                        , "Turquesa", "Turquesas", "Navy", "Marino", "Marinos" });
+        colorMap.put("Azules", new String[]{ "Azul", "Azules", "Azulada", "Celeste", "Celestes", "Agua", "Aguas", "Turquí", "Turqui", "Klein"
+                                        , "Turquesa", "Turquesas", "Navy", "Marino", "Marinos", "Añil", "Cobalto", "Zafiro", "Índigo", "Indigo" });
          
         colorMap.put("Beiges", new String[]{ "Beige", "Beiges", "Arena", "Arenas", "Beis", "Camel", "Nude", "Maquillaje"
                                         , "Crudo", "Crudos", "Cruda", "Crudas" });
         
         colorMap.put("Blancos", new String[]{ "Blanco", "Blancos", "Blanca", "Blancas", "Perla", "Perlas", "Hielo", "Crudo", "Crudos"
-                                        , "Cruda", "Crudas" });
+                                        , "Cruda", "Crudas", "Marfil", "Nieve" });
         
         colorMap.put("Grises", new String[]{ "Gris", "Grises", "Plata", "Platas", "Plateado", "Plateados", "Marengo", "Marengos" });
         
-        colorMap.put("Marrones", new String[]{ "Marron", "Marrones", "Marrón" });
+        colorMap.put("Marrones", new String[]{ "Marron", "Marrones", "Marrón", "Pardo", "Café", "Chocolate", "Castaño", "Borgoña", "Ocre", "Siena" });
         
         colorMap.put("Morados", new String[]{ "Morado", "Morados", "Morada", "Moradas", "Purpura", "Purpuras", "Púrpura", "Púrpuras"
-                                        , "Berenjena", "Berenjenas", "Lavanda", "Lavandas", "Fucsia", "Fucsias", "Lila", "Lilas" });
+                                        , "Berenjena", "Berenjenas", "Lavanda", "Lavandas", "Fucsia", "Fucsias", "Lila", "Lilas", "Malva" });
         
         colorMap.put("Negros", new String[]{ "Negro", "Negros", "Negra", "Negras", "Petroleo", "Petroleos", "Petróleo", "Petróleos" });
         
-        colorMap.put("Rojos", new String[]{ "Rojo", "Rojos", "Roja", "Rojas", "Granate", "Granates", "Burdeos", "Terracota", "Terracotas"
-                                        , "Teja", "Tejas", "Naranja", "Naranjas", "Coral", "Corales" });
+        colorMap.put("Rojos", new String[]{ "Rojo", "Rojos", "Roja", "Rojas", "Granate", "Granates", "Burdeos", "Terracota", "Terracotas", "Escarlata"
+                                        , "Teja", "Tejas", "Naranja", "Naranjas", "Coral", "Corales", "Colorado", "Bermellon", "Bermellón", "Carmín", "Carmin" });
         
-        colorMap.put("Rosas", new String[]{ "Rosa", "Rosas", "Fresa", "Fresas", "Frambuesa", "Frambuesas" });
+        colorMap.put("Rosas", new String[]{ "Rosa", "Rosas", "Fresa", "Fresas", "Frambuesa", "Frambuesas", "Salmón", "Salmon" });
         
-        colorMap.put("Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis" });
+        colorMap.put("Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis", "Esmeralda", "Jade", "Veronés"
+                                        , "Oliva", "Arlequín", "Arlequin", "Esparrago", "Espárrago" });
         
         colorMap.put("Cuadros", new String[]{ "Cuadro", "Cuadros" });
         
@@ -67,6 +68,7 @@ public class ColorManager
         
         colorMap.put("Cuero", new String[]{ "Cuero", "Leather", "Piel", "Pieles" });
         
+        /* Lista de colores sugeridos tanto en masculino como en femenino (IMPORTANTE que estén en el mismo orden y posición */
         suggestedMaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
                                     , "amarillo", "dorado", "azul", "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro"
                                     , "rojo", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
