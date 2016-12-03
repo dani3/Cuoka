@@ -668,9 +668,9 @@ public class RestClientSingleton
      */
     public static boolean sendShops(Context context, List<String> listOfShops)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
+        final User user = sharedPreferencesManager.retreiveUser();
         final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(
@@ -729,7 +729,7 @@ public class RestClientSingleton
 
                 // Guardamos el conjunto de tiendas en las preferencias.
                 user.setShops(shopSet);
-                mSharedPreferencesManager.insertUser(user);
+                sharedPreferencesManager.insertUser(user);
 
                 return true;
             }

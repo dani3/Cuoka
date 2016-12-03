@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class NotificationsUI extends AppCompatActivity
 
     /* Data */
     private List<Notification> mNotificationList;
+    private boolean mShopsChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,6 +65,8 @@ public class NotificationsUI extends AppCompatActivity
     private void _initData()
     {
         mNotificationList = new ArrayList<>();
+
+        mShopsChanged = false;
     }
 
     /**
@@ -213,12 +217,15 @@ public class NotificationsUI extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
+        Intent intent = new Intent();
+        intent.putExtra("shops", mShopsChanged);
+
         if (mNotificationListAdapter != null)
         {
-            setResult((mNotificationListAdapter.isEveryNotificationRead()) ? RESULT_OK : RESULT_CANCELED);
+            setResult((mNotificationListAdapter.isEveryNotificationRead()) ? RESULT_OK : RESULT_CANCELED, intent);
 
         } else {
-            setResult(RESULT_CANCELED);
+            setResult(RESULT_CANCELED, intent);
         }
 
         super.onBackPressed();
@@ -230,5 +237,13 @@ public class NotificationsUI extends AppCompatActivity
         super.finish();
 
         overridePendingTransition(R.anim.left_in_animation, R.anim.left_out_animation);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mShopsChanged = (resultCode == RESULT_OK);
     }
 }

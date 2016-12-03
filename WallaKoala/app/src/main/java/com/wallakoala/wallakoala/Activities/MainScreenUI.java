@@ -657,6 +657,21 @@ public class MainScreenUI extends AppCompatActivity
                 menuItem.setIcon(this.getResources().getDrawable(R.drawable.ic_notification));
             }
         }
+
+        if (resultCode == RESULT_CANCELED)
+        {
+            // Desde las notificaciones puede no haber marcado las notificaciones como leidas, pero si haber modificado sus tiendas.
+            if (requestCode == NOTIFICATION_REQUEST)
+            {
+                if (data.getBooleanExtra("shops", false))
+                {
+                    mViewPager.setCurrentItem(1);
+
+                    mProductsFragment.restart();
+                    mRecommendedFragment.restart();
+                }
+            }
+        }
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter

@@ -1,7 +1,9 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -20,6 +22,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.wallakoala.wallakoala.Activities.NotificationsUI;
+import com.wallakoala.wallakoala.Activities.ShopsUI;
 import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
@@ -39,6 +43,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    /* Constants */
+    private static final int MANAGE_SHOPS_REQUEST = 0;
+
     /* Context */
     private Context mContext;
 
@@ -166,8 +173,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     _markNotification(true, notificationId);
 
                 } else if (v.getId() == mActionButton.getId()) {
+                    Intent intent = new Intent(mContext, ShopsUI.class);
 
+                    // Iniciamos la activity ShopsUI
+                    ((Activity) mContext).startActivityForResult(intent, MANAGE_SHOPS_REQUEST);
 
+                    // Animacion de transicion para pasar de una activity a otra.
+                    ((Activity) mContext).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
                 }
             }
         }
@@ -688,12 +700,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(mContext);
 
         mNotificationsReadList = sharedPreferencesManager.retreiveUser().getNotificationsRead();
-
-        Log.d(Properties.TAG, "Notificaciones leidas: ");
-        for (Long id : mNotificationsReadList)
-        {
-            Log.d(Properties.TAG, " - " + id);
-        }
     }
 
     /**
