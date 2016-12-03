@@ -313,6 +313,24 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
     }
 
     /**
+     * Metodo que devuelve la posicion de una tienda.
+     * @param name: nombre de la tienda.
+     * @return posicion que ocupa la tienda, 0 si no se encuentra.
+     */
+    public int getShopPosition(String name)
+    {
+        for (int i = 0; i < mAllShopsList.size(); i++)
+        {
+            if (mAllShopsList.get(i).getName().equalsIgnoreCase(name))
+            {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * Metodo que actualiza la lista de todas las tiendas.
      * @param allShopList: lista con las nuevas tiendas.
      */

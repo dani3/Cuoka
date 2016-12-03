@@ -59,6 +59,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     public class NewShopNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private long notificationId;
+        private Notification mNotification;
 
         private boolean marked;
 
@@ -99,6 +100,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             // Guardamos el id de la notificacion.
             notificationId = notification.getId();
+            mNotification = notification;
 
             // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
@@ -174,6 +176,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 } else if (v.getId() == mActionButton.getId()) {
                     Intent intent = new Intent(mContext, ShopsUI.class);
+
+                    intent.putExtra("shop", mNotification.getExtraInfo());
 
                     // Iniciamos la activity ShopsUI
                     ((Activity) mContext).startActivityForResult(intent, MANAGE_SHOPS_REQUEST);

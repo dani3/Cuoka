@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,6 +33,7 @@ import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+import com.wallakoala.wallakoala.Utils.SmootherGridLayoutManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
@@ -64,6 +65,8 @@ public class ShopsUI extends AppCompatActivity
     private List<Shop> mAllShopsList;
     private List<String> mMyShopsList;
     private List<Product> mFavoriteList;
+    private boolean mScroll;
+    private String mShopToScroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,7 +75,7 @@ public class ShopsUI extends AppCompatActivity
 
         setContentView(R.layout.activity_shops);
 
-        _initData();
+        _initData(savedInstanceState);
         _initToolbar();
         _initFloatingButton();
         _getDataFromServer();
@@ -81,7 +84,7 @@ public class ShopsUI extends AppCompatActivity
     /**
      * Metodo que inicializa las distintas ED's y datos.
      */
-    private void _initData()
+    private void _initData(Bundle savedInstanceState)
     {
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(ShopsUI.this);
 
@@ -91,6 +94,21 @@ public class ShopsUI extends AppCompatActivity
         mAllShopsList = new ArrayList<>();
 
         mMyShopsList.addAll(mUser.getShops());
+
+        // Solo lo ejecutamos si venimos de una activity.
+        if (savedInstanceState == null)
+        {
+            Bundle bundle = getIntent().getExtras();
+
+            if (bundle != null && !bundle.isEmpty())
+            {
+                if (bundle.getString("shop") != null)
+                {
+                    mScroll = true;
+                    mShopToScroll =  bundle.getString("shop");
+                }
+            }
+        }
     }
 
     /**
@@ -243,19 +261,36 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _initRecyclerView()
     {
-        StaggeredRecyclerView shopsRecyclerView = (StaggeredRecyclerView) findViewById(R.id.shops_recyclerview);
+        final StaggeredRecyclerView shopsRecyclerView = (StaggeredRecyclerView) findViewById(R.id.shops_recyclerview);
 
         mShopListAdapter = new ShopsListAdapter(this, mAllShopsList, mMyShopsList, mFavoriteList);
 
         shopsRecyclerView.setItemViewCacheSize(Properties.CACHED_SHOPS);
         shopsRecyclerView.setVisibility(View.VISIBLE);
-        shopsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        shopsRecyclerView.setLayoutManager(new SmootherGridLayoutManager(this, 1));
         shopsRecyclerView.setAdapter(mShopListAdapter);
         shopsRecyclerView.setHasFixedSize(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             shopsRecyclerView.scheduleLayoutAnimation();
+
+            if (mScroll)
+            {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        shopsRecyclerView.smoothScrollToPosition(mShopListAdapter.getShopPosition(mShopToScroll));
+                    }
+
+                }, 500 + (int)((500*0.15)*5));
+            }
+
+        } else {
+            shopsRecyclerView.smoothScrollToPosition(mShopListAdapter.getShopPosition(mShopToScroll));
         }
     }
 
