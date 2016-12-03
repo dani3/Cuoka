@@ -53,6 +53,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     {
         private long notificationId;
 
+        private boolean marked;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -65,8 +67,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView mActionButton;
 
         private Target mTarget;
-
-        private boolean loading;
 
         public NewShopNotificationHolder(View itemView)
         {
@@ -114,7 +114,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     fadeOut.setDuration(250);
                     mShopLogoImageView.startAnimation(fadeOut);
 
-                    loading = false;
+                    try
+                    {
+                        if (marked)
+                        {
+                            mShopLogoImageView.setImageBitmap(
+                                    Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(Properties.TAG, e.getMessage());
+                    }
                 }
 
                 @Override
@@ -130,10 +140,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
                     mShopLogoImageView.setImageBitmap(null);
-
-                    loading = true;
                 }
             };
+
+            marked = mNotificationsReadList.contains(notification.getId());
 
             Picasso.with(mContext)
                    .load(fixedUrl)
@@ -149,13 +159,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Override
         public void onClick(View v)
         {
-            if (v.getId() == mCardView.getId())
+            if (!marked)
             {
-                _markNotification(true, notificationId);
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId);
 
-            } else if (v.getId() == mActionButton.getId()) {
+                } else if (v.getId() == mActionButton.getId()) {
 
 
+                }
             }
         }
 
@@ -169,18 +182,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
-            }
-
-            try
-            {
-                if (!loading)
-                {
-                    mShopLogoImageView.setImageBitmap(
-                            Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
-                }
-
-            } catch (Exception e) {
-                Log.e(Properties.TAG, e.getMessage());
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -204,6 +205,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     {
         private long notificationId;
 
+        private boolean marked;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -215,8 +218,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView mOffset;
 
         private Target mTarget;
-
-        private boolean loading;
 
         public SalesNotificationHolder(View itemView)
         {
@@ -262,7 +263,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     fadeOut.setDuration(250);
                     mSalesImageView.startAnimation(fadeOut);
 
-                    loading = false;
+                    try
+                    {
+                        if (marked)
+                        {
+                            mSalesImageView.setImageBitmap(
+                                    Utils.toGrayscale(((BitmapDrawable) mSalesImageView.getDrawable()).getBitmap()));
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(Properties.TAG, e.getMessage());
+                    }
                 }
 
                 @Override
@@ -278,10 +289,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
                     mSalesImageView.setImageBitmap(null);
-
-                    loading = true;
                 }
             };
+
+            marked = mNotificationsReadList.contains(notification.getId());
 
             Picasso.with(mContext)
                    .load(fixedUrl)
@@ -297,9 +308,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Override
         public void onClick(View v)
         {
-            if (v.getId() == mCardView.getId())
+            if (!marked)
             {
-                _markNotification(true, notificationId);
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId);
+
+                }
             }
         }
 
@@ -313,18 +328,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
-            }
-
-            try
-            {
-                if (!loading)
-                {
-                    mSalesImageView.setImageBitmap(
-                            Utils.toGrayscale(((BitmapDrawable) mSalesImageView.getDrawable()).getBitmap()));
-                }
-
-            } catch (Exception e) {
-                Log.e(Properties.TAG, e.getMessage());
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -347,19 +350,19 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     {
         private long notificationId;
 
+        private boolean marked;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
         private CircleImageView mIconImageView;
-        private CircleImageView mSalesImageView;
+        private CircleImageView mShopLogoImageView;
 
         private TextView mTitle;
         private TextView mBody;
         private TextView mOffset;
 
         private Target mTarget;
-
-        private boolean loading;
 
         public ShopDiscountNotificationHolder(View itemView)
         {
@@ -368,8 +371,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mCardView   = (CardView) itemView.findViewById(R.id.notification);
             mBackground = (LinearLayout) itemView.findViewById(R.id.notification_background);
 
-            mIconImageView  = (CircleImageView) itemView.findViewById(R.id.notification_icon);
-            mSalesImageView = (CircleImageView) itemView.findViewById(R.id.notification_shop_discount_icon);
+            mIconImageView     = (CircleImageView) itemView.findViewById(R.id.notification_icon);
+            mShopLogoImageView = (CircleImageView) itemView.findViewById(R.id.notification_shop_discount_icon);
 
             mTitle  = (TextView) itemView.findViewById(R.id.notification_title);
             mBody   = (TextView) itemView.findViewById(R.id.notification_body);
@@ -398,33 +401,43 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
                 {
-                    mSalesImageView.setImageBitmap(bitmap);
+                    mShopLogoImageView.setImageBitmap(bitmap);
 
                     Animation fadeOut = new AlphaAnimation(0, 1);
                     fadeOut.setInterpolator(new AccelerateInterpolator());
                     fadeOut.setDuration(250);
-                    mSalesImageView.startAnimation(fadeOut);
+                    mShopLogoImageView.startAnimation(fadeOut);
 
-                    loading = false;
+                    try
+                    {
+                        if (marked)
+                        {
+                            mShopLogoImageView.setImageBitmap(
+                                    Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(Properties.TAG, e.getMessage());
+                    }
                 }
 
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable)
                 {
-                    mSalesImageView.setBackgroundColor(
+                    mShopLogoImageView.setBackgroundColor(
                             mContext.getResources().getColor(android.R.color.holo_red_dark));
 
-                    mSalesImageView.setAlpha(0.2f);
+                    mShopLogoImageView.setAlpha(0.2f);
                 }
 
                 @Override
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
-                    mSalesImageView.setImageBitmap(null);
-
-                    loading = true;
+                    mShopLogoImageView.setImageBitmap(null);
                 }
             };
+
+            marked = mNotificationsReadList.contains(notification.getId());
 
             Picasso.with(mContext)
                    .load(fixedUrl)
@@ -440,9 +453,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Override
         public void onClick(View v)
         {
-            if (v.getId() == mCardView.getId())
+            if (!marked)
             {
-                _markNotification(true, notificationId);
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId);
+
+                }
             }
         }
 
@@ -456,18 +473,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
-            }
-
-            try
-            {
-                if (!loading)
-                {
-                    mSalesImageView.setImageBitmap(
-                            Utils.toGrayscale(((BitmapDrawable) mSalesImageView.getDrawable()).getBitmap()));
-                }
-
-            } catch (Exception e) {
-                Log.e(Properties.TAG, e.getMessage());
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -490,6 +495,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     {
         private long notificationId;
 
+        private boolean marked;
+
         private CardView mCardView;
         private LinearLayout mBackground;
 
@@ -502,8 +509,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView mActionButton;
 
         private Target mTarget;
-
-        private boolean loading;
 
         public UpdateNotificationHolder(View itemView)
         {
@@ -551,7 +556,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     fadeOut.setDuration(250);
                     mUpdateImageView.startAnimation(fadeOut);
 
-                    loading = false;
+                    try
+                    {
+                        if (marked)
+                        {
+                            mUpdateImageView.setImageBitmap(
+                                    Utils.toGrayscale(((BitmapDrawable) mUpdateImageView.getDrawable()).getBitmap()));
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(Properties.TAG, e.getMessage());
+                    }
                 }
 
                 @Override
@@ -567,10 +582,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
                     mUpdateImageView.setImageBitmap(null);
-
-                    loading = true;
                 }
             };
+
+            marked = mNotificationsReadList.contains(notification.getId());
 
             Picasso.with(mContext)
                    .load(fixedUrl)
@@ -586,13 +601,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Override
         public void onClick(View v)
         {
-            if (v.getId() == mCardView.getId())
+            if (!marked)
             {
-                _markNotification(true, notificationId);
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId);
 
-            } else if (v.getId() == mActionButton.getId()) {
+                } else if (v.getId() == mActionButton.getId()) {
 
 
+                }
             }
         }
 
@@ -606,18 +624,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
-            }
-
-            try
-            {
-                if (!loading)
-                {
-                    mUpdateImageView.setImageBitmap(
-                            Utils.toGrayscale(((BitmapDrawable) mUpdateImageView.getDrawable()).getBitmap()));
-                }
-
-            } catch (Exception e) {
-                Log.e(Properties.TAG, e.getMessage());
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -658,7 +664,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             RestClientSingleton.markNotificationAsRead(mContext, id[0]);
 
             mNotificationsReadList.add(id[0]);
-            
+
             return null;
         }
 

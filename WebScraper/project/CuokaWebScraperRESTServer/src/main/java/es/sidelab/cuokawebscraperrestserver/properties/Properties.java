@@ -52,7 +52,7 @@ public class Properties
     public static final short MAX_SUGGESTIONS = 4;
     
     /* Numero de dias que una notificacion puede estar activa */
-    public static final int NOTIFICATION_LIFESPAN = 21;
+    public static final int NOTIFICATION_LIFESPAN = 14;
     
     /* Numero maximo de productos que se devolveran en los filtros */
     public static final int MAX_FILTERED_PRODUCTS = 5000;
