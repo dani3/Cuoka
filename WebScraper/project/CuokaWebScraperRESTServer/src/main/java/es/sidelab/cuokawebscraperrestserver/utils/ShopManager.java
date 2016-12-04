@@ -4,7 +4,10 @@ import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,12 +25,35 @@ public class ShopManager
     
     private List<Shop> shopMaleList;
     private List<Shop> shopFemaleList;
+    private List<Shop> shopList;
+    
+    private Map<String, Map<String, Integer>> recommendationsMatrix;
     
     @PostConstruct
     private void init()
     {
         shopMaleList   = shopsRepository.findByMan();
         shopFemaleList = shopsRepository.findByWoman();
+        shopList       = shopsRepository.findAll();
+        
+        recommendationsMatrix = new HashMap<>();
+        
+        // TODO inicializar mapa de recomendaciones.
+        Map<String, Integer> auxMap = new HashMap<>();
+        
+        recommendationsMatrix.put("Blanco", auxMap);
+    }
+    
+    /**
+     * Metodo que devuelve las tiendas recomendadas segun las tiendas del usuario.
+     * @param userShops: lista de tiendas del usuario.
+     * @return lista con las tiendas recomendadas.
+     */
+    public List<Shop> getRecommendedShops(Set<String> userShops)
+    {
+        List<Shop> recommendedShops = new ArrayList<>();
+        
+        return recommendedShops;
     }
     
     /**

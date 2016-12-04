@@ -44,4 +44,5 @@ public class Properties
     public static final short SALES_NOTIFICATION         = 1;
     public static final short SHOP_DISCOUNT_NOTIFICATION = 2;
     public static final short UPDATE_NOTIFICATION        = 3;
+    public static final short RECOMMENDED_NOTIFICATION   = 4;
 }

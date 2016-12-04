@@ -115,14 +115,37 @@ public class Controller
         } else {
             LOG.info("[NOTIFICATION] Usuario con ID (" + userId + ") encontrado, se devuelven las notificaciones activas");
             List<Notification> notifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
+            List<Notification> userNotifications = new ArrayList<>();
             
+            // Recorremos las notificaciones en busca de una relacionada con la pantalla Descubre
             for (Notification notification : notifications)
+            {
+                if (notification.getAction() == Properties.RECOMMENDED_NOTIFICATION)
+                {
+                    // Sacamos la lista de tiendas recomendadas del usuario.
+                    List<Shop> recommendedShops = shopManager.getRecommendedShops(user.getShops());
+                    for (Shop recommendedShop : recommendedShops)
+                    {
+                        // Si la tienda nueva se recomienda, entonces la notificacion debe aparecerle.
+                        if (user.getShops().contains(recommendedShop.getName()))
+                        {
+                            userNotifications.add(notification);
+                            break;
+                        }
+                    }
+                    
+                } else {
+                    userNotifications.add(notification);
+                }
+            }
+            
+            for (Notification notification : userNotifications)
             {
                 notification.setOffset(Utils.daysBetween(notification.getInsert_date().getTimeInMillis()
                                 , Calendar.getInstance().getTimeInMillis()));
             }
             
-            return notifications;
+            return userNotifications;
         }
     }
     
@@ -746,7 +769,7 @@ public class Controller
         {
             if (product.getName().equalsIgnoreCase(product.getDescription()))
             {
-                product.setDescription("");
+                product.setDescription(null);
             }
         }
         
