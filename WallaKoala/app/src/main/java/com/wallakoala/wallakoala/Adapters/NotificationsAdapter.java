@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.wallakoala.wallakoala.Activities.NotificationsUI;
 import com.wallakoala.wallakoala.Activities.ShopsUI;
 import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -725,6 +724,166 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     /**
+     * Notificacion de nueva recomendacion.
+     */
+    public class RecommendedNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        private long notificationId;
+
+        private boolean marked;
+
+        private CardView mCardView;
+        private LinearLayout mBackground;
+
+        private CircleImageView mIconImageView;
+        private CircleImageView mShopLogoImageView;
+
+        private TextView mTitle;
+        private TextView mBody;
+        private TextView mOffset;
+        private TextView mActionButton;
+
+        private Target mTarget;
+
+        public RecommendedNotificationHolder(View itemView)
+        {
+            super(itemView);
+
+            mCardView   = (CardView) itemView.findViewById(R.id.notification);
+            mBackground = (LinearLayout) itemView.findViewById(R.id.notification_background);
+
+            mIconImageView     = (CircleImageView) itemView.findViewById(R.id.notification_icon);
+            mShopLogoImageView = (CircleImageView) itemView.findViewById(R.id.notification_shop_logo);
+
+            mTitle        = (TextView) itemView.findViewById(R.id.notification_title);
+            mBody         = (TextView) itemView.findViewById(R.id.notification_body);
+            mOffset       = (TextView) itemView.findViewById(R.id.notification_offset);
+            mActionButton = (TextView) itemView.findViewById(R.id.notification_button);
+
+            mCardView.setOnClickListener(this);
+            mActionButton.setOnClickListener(this);
+        }
+
+        @SuppressWarnings("deprecation")
+        public void bindNotification(Notification notification)
+        {
+            // Guardamos el id de la notificacion.
+            notificationId = notification.getId();
+
+            // Establecemos la cabecera, el body y la diferencia de dias.
+            mTitle.setText(notification.getTitle());
+            mBody.setText(notification.getText());
+            mOffset.setText(Utils.getMessageFromDaysOffset(notification.getOffset()));
+
+            // Cargamos el logo del icono.
+            String fixedUrl = Utils.fixUrl(
+                    Properties.SERVER_URL + Properties.NOTIFICATION_PATH + notification.getImage());
+
+            mTarget = new Target()
+            {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                {
+                    mShopLogoImageView.setImageBitmap(bitmap);
+
+                    Animation fadeOut = new AlphaAnimation(0, 1);
+                    fadeOut.setInterpolator(new AccelerateInterpolator());
+                    fadeOut.setDuration(250);
+                    mShopLogoImageView.startAnimation(fadeOut);
+
+                    try
+                    {
+                        if (marked)
+                        {
+                            mShopLogoImageView.setImageBitmap(
+                                    Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(Properties.TAG, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable)
+                {
+                    mShopLogoImageView.setBackgroundColor(
+                            mContext.getResources().getColor(android.R.color.holo_red_dark));
+
+                    mShopLogoImageView.setAlpha(0.2f);
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable)
+                {
+                    mShopLogoImageView.setImageBitmap(null);
+                }
+            };
+
+            marked = mNotificationsReadList.contains(notification.getId());
+
+            Picasso.with(mContext)
+                   .load(fixedUrl)
+                   .noFade()
+                   .into(mTarget);
+
+            if (mNotificationsReadList.contains(notification.getId()))
+            {
+                _markNotification(false, notificationId);
+            }
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            if (!marked)
+            {
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId);
+
+                } else if (v.getId() == mActionButton.getId()) {
+
+                }
+            }
+        }
+
+        /**
+         * Metodo que marca la notificacion como leida y la sombrea.
+         */
+        @SuppressWarnings("deprecation")
+        private void _markNotification(boolean connect, long id)
+        {
+            // Llamamos al servidor para marcar la notificacion como leida.
+            if (connect)
+            {
+                new MarkNotificationAsyncTask().execute(id);
+
+                try
+                {
+                    mShopLogoImageView.setImageBitmap(
+                            Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
+
+                } catch (Exception e) {
+                    Log.e(Properties.TAG, e.getMessage());
+                }
+            }
+
+            // Sombreamos la CardView y quitamos la elevacion.
+            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_shop_bw));
+
+            mCardView.setCardElevation(0.0f);
+
+            // Ponemos el mismo color en todos los textos.
+            mTitle.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
+            mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
+        }
+    }
+
+    /**
      * Constructor del adapter.
      * @param context: contexto.
      * @param notifications: lista de notificaciones.
@@ -800,6 +959,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     , false);
 
                 return new UpdateNotificationHolder(itemView);
+
+            case (Properties.RECOMMENDED_NOTIFICATION):
+                itemView = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.notification_update
+                                    , parent
+                                    , false);
+
+                return new RecommendedNotificationHolder(itemView);
         }
 
         return null;
@@ -824,6 +991,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             case (Properties.UPDATE_NOTIFICATION):
                 ((UpdateNotificationHolder) holder).bindNotification(mNotificationsList.get(position));
+                break;
+
+            case (Properties.RECOMMENDED_NOTIFICATION):
+                ((RecommendedNotificationHolder) holder).bindNotification(mNotificationsList.get(position));
                 break;
         }
     }

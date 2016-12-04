@@ -139,6 +139,7 @@ public class Controller
                 }
             }
             
+            // Calculamos la diferencia de dias.
             for (Notification notification : userNotifications)
             {
                 notification.setOffset(Utils.daysBetween(notification.getInsert_date().getTimeInMillis()
@@ -167,9 +168,32 @@ public class Controller
             
         } else {
             List<Notification> allNotifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
+            List<Notification> userNotifications = new ArrayList<>();
+            
+            // Recorremos las notificaciones en busca de una relacionada con la pantalla Descubre
+            for (Notification notification : allNotifications)
+            {
+                if (notification.getAction() == Properties.RECOMMENDED_NOTIFICATION)
+                {
+                    // Sacamos la lista de tiendas recomendadas del usuario.
+                    List<Shop> recommendedShops = shopManager.getRecommendedShops(user.getShops());
+                    for (Shop recommendedShop : recommendedShops)
+                    {
+                        // Si la tienda nueva se recomienda, entonces la notificacion debe aparecerle.
+                        if (user.getShops().contains(recommendedShop.getName()))
+                        {
+                            userNotifications.add(notification);
+                            break;
+                        }
+                    }
+                    
+                } else {
+                    userNotifications.add(notification);
+                }
+            }            
             
             Set<Long> notificationsRead = user.getNotificationsRead();
-            for (Notification notification : allNotifications)
+            for (Notification notification : userNotifications)
             {
                 if (!notificationsRead.contains(notification.getId()))
                 {
