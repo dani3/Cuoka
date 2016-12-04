@@ -198,6 +198,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
+
+                try
+                {
+                    mShopLogoImageView.setImageBitmap(
+                            Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
+
+                } catch (Exception e) {
+                    Log.e(Properties.TAG, e.getMessage());
+                }
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -329,7 +338,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (v.getId() == mCardView.getId())
                 {
                     _markNotification(true, notificationId);
-
                 }
             }
         }
@@ -344,6 +352,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
+
+                try
+                {
+                    mSalesImageView.setImageBitmap(
+                            Utils.toGrayscale(((BitmapDrawable) mSalesImageView.getDrawable()).getBitmap()));
+
+                } catch (Exception e) {
+                    Log.e(Properties.TAG, e.getMessage());
+                }
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -474,7 +491,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (v.getId() == mCardView.getId())
                 {
                     _markNotification(true, notificationId);
-
                 }
             }
         }
@@ -489,6 +505,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
+
+                try
+                {
+                    mShopLogoImageView.setImageBitmap(
+                            Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
+
+                } catch (Exception e) {
+                    Log.e(Properties.TAG, e.getMessage());
+                }
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
@@ -624,8 +649,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     _markNotification(true, notificationId);
 
                 } else if (v.getId() == mActionButton.getId()) {
-
-
+                    // TODO llevar al PlayStore
                 }
             }
         }
@@ -640,6 +664,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (connect)
             {
                 new MarkNotificationAsyncTask().execute(id);
+
+                try
+                {
+                    mUpdateImageView.setImageBitmap(
+                            Utils.toGrayscale(((BitmapDrawable) mUpdateImageView.getDrawable()).getBitmap()));
+
+                } catch (Exception e) {
+                    Log.e(Properties.TAG, e.getMessage());
+                }
             }
 
             // Sombreamos la CardView y quitamos la elevacion.

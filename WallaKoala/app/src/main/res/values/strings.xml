@@ -139,7 +139,7 @@
     <string name="notification_shop_header">Tienda ya dispnible</string>
     <string name="notification_offset">Hoy</string>
     <string name="notification_shop_body">Ya puedes añadir Tienda a tus tiendas favoritas, ¡Síguela en el menú Mis Tiendas!</string>
-    <string name="notification_shop_action">Llévame</string>
+    <string name="notification_shop_action">Ir a Mis Tiendas</string>
 
     <string name="notification_sales_header">¡Rebajas!</string>
     <string name="notification_sales_body">Han empezado las rebajas, ¡Corre que se acaban!</string>

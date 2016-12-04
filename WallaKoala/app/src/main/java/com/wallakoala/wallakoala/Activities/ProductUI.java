@@ -263,7 +263,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         String name = "<b>" + mProduct.getName() + "</b>";
         boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
-        String description = "<b>Descripción: </b>" +  (emptyDescription ? "No disponible" : mProduct.getDescription());
+        String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
+        description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
+        description = "<b>Descripción: </b>" + description;
         SpannableString price = Utils.priceToString(mProduct.getPrice());
 
         mProductNameTextView.setText(Html.fromHtml(name));

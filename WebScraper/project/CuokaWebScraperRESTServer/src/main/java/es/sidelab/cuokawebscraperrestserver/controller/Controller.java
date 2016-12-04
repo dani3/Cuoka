@@ -727,7 +727,7 @@ public class Controller
     }
     
     /**
-     * Metodo que devuelve una lista de novedades de una tienda
+     * Metodo que devuelve una lista de productos de una tienda de un día determinado.
      * @param shop: Tienda de la que se quieren las novedades.
      * @param man: true si se quiere solo los productos de hombre.
      * @param offset: numero de dias del que se quiere los productos.
@@ -740,6 +740,16 @@ public class Controller
                             , @PathVariable String offset)
     {
         LOG.info("[PRODUCTS] Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
+        
+        List<Product> productList = productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
+        for (Product product : productList)
+        {
+            if (product.getName().equalsIgnoreCase(product.getDescription()))
+            {
+                product.setDescription("");
+            }
+        }
+        
         return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
     }
     
