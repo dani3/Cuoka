@@ -94,59 +94,6 @@ public class Utils
     }
 
     /**
-     * Metodo que parsea un JSON en usuario.
-     * @param id: id del usuario.
-     * @param jsonObject: objeto JSON a parsear.
-     * @return objeto usuario.
-     * @throws JSONException
-     */
-    public static User getUserFromJSON(long id, JSONObject jsonObject) throws JSONException
-    {
-        User user = new User();
-
-        user.setId(id);
-        user.setName(jsonObject.getString("name"));
-        user.setAge(jsonObject.getInt("age"));
-        user.setEmail(jsonObject.getString("email"));
-        user.setPassword(jsonObject.getString("password"));
-        user.setMan(jsonObject.getBoolean("man"));
-        user.setPostalCode(jsonObject.getInt("postalCode"));
-
-        // Sacamos los productos favoritos
-        JSONArray jsonArray = jsonObject.getJSONArray("favoriteProducts");
-        Set<Long> favorites = new HashSet<>();
-        for (int i = 0; i < jsonArray.length(); i++)
-        {
-            favorites.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));
-        }
-
-        user.setFavoriteProducts(favorites);
-
-        // Sacamos la lista de tiendas
-        jsonArray = jsonObject.getJSONArray("shops");
-        Set<String> shops = new HashSet<>();
-        for (int i = 0; i < jsonArray.length(); i++)
-        {
-            shops.add((String.valueOf(jsonArray.get(i))));
-        }
-
-        user.setShops(shops);
-
-        Log.d(Properties.TAG, "Datos del usuario: ");
-        Log.d(Properties.TAG, " - ID: " + id);
-        Log.d(Properties.TAG, " - Nombre: " + user.getName());
-        Log.d(Properties.TAG, " - Email: " + user.getAge());
-        Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
-        Log.d(Properties.TAG, " - Hombre: " + user.getMan());
-        Log.d(Properties.TAG, " - Edad: " + user.getAge());
-        Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
-        Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
-        Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
-
-        return user;
-    }
-
-    /**
      * Metodo que devuelve la url de un icono.
      * @param colorVariant: color variant del icono.
      * @param shop: tienda del producto.

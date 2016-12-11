@@ -34,6 +34,8 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
+import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -52,8 +54,9 @@ public class LoginUI extends AppCompatActivity
     /* Constants */
     private static final float INACTIVE_ALPHA = 0.5f;
     private static final float ACTIVE_ALPHA = 1.0f;
-    private static boolean MALE_SELECTED;
-    private static boolean FEMALE_SELECTED;
+
+    private boolean MALE_SELECTED;
+    private boolean FEMALE_SELECTED;
 
     /* SharedPreferences */
     private SharedPreferencesManager mSharedPreferencesManager;
@@ -116,28 +119,32 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initButtons()
     {
-        final Button mSignInButton = (Button) findViewById(R.id.sign_in);
-        final Button mSingUpButton = (Button) findViewById(R.id.sign_up);
+        final Button signInButton = (Button) findViewById(R.id.sign_in);
+        final Button signUpButton = (Button) findViewById(R.id.sign_up);
 
-        mSignInButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mSingUpButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        signInButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        signUpButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
-        mSingUpButton.setOnClickListener(new View.OnClickListener()
+        signUpButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Registrar");
+
                 mAlertDialog = createDialogSignUp();
 
                 mAlertDialog.show();
             }
         });
 
-        mSignInButton.setOnClickListener(new View.OnClickListener()
+        signInButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Iniciar sesión");
+
                 mAlertDialog = createDialogSignIn();
 
                 mAlertDialog.show();
@@ -152,6 +159,8 @@ public class LoginUI extends AppCompatActivity
     @SuppressLint("InflateParams")
     private AlertDialog createDialogSignUp()
     {
+        Log.d(Properties.TAG, "[LOGIN] Se crea el diálogo para registrarse");
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = this.getLayoutInflater();
@@ -174,6 +183,8 @@ public class LoginUI extends AppCompatActivity
     @SuppressLint("InflateParams")
     private AlertDialog createDialogSignIn()
     {
+        Log.d(Properties.TAG, "[LOGIN] Se crea el diálogo para iniciar sesión");
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = this.getLayoutInflater();
@@ -227,17 +238,22 @@ public class LoginUI extends AppCompatActivity
             {
                 if (_validateEmail() && _validatePassword() && (mEnterButton.getProgress() == 0))
                 {
+                    Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Entrar");
+
                     // Guardamos el estado de la pantalla por si acaso el usuario lo cambia mientras se loguea.
                     final boolean rememberMe = mRememberMeCheckBox.isChecked();
                     final String email = mEmailEdittext.getText().toString();
                     final String password = mPasswordEdittext.getText().toString();
+
+                    Log.d(Properties.TAG, "[LOGIN] El check Recuérdame " + (rememberMe ? "" : "NO ") + "está marcado");
+                    Log.d(Properties.TAG, "[LOGIN] El email es: " + email);
 
                     mEnterButton.setProgress(50);
 
                     final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                             + "/users" + "/" + email + "/" + password);
 
-                    Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para logear un usuario");
+                    Log.d(Properties.TAG, "[LOGIN] Conectando con: " + fixedURL + " para logear el usuario");
 
                     StringRequest stringRequest = new StringRequest(Request.Method.GET
                             , fixedURL
@@ -246,10 +262,12 @@ public class LoginUI extends AppCompatActivity
                                 @Override
                                 public void onResponse(String response)
                                 {
-                                    Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+                                    Log.d(Properties.TAG, "[LOGIN] Respuesta del servidor: " + response);
 
                                     if (response.equals(Properties.INCORRECT_LOGIN))
                                     {
+                                        Log.d(Properties.TAG, "[LOGIN] Los datos son incorrectos");
+
                                         mEnterButton.setProgress(0);
 
                                         Snackbar.make(mAlertDialogView
@@ -259,8 +277,7 @@ public class LoginUI extends AppCompatActivity
                                     } else {
                                         final long id = Long.valueOf(response);
 
-                                        Log.d(Properties.TAG, "Usuario logueado correctamente (ID: " + id + ")");
-
+                                        Log.d(Properties.TAG, "[LOGIN] Usuario logueado correctamente (ID: " + id + ")");
                                         _getUserInfo(id, mEnterButton, rememberMe);
                                     }
 
@@ -271,13 +288,11 @@ public class LoginUI extends AppCompatActivity
                                 @Override
                                 public void onErrorResponse(VolleyError error)
                                 {
+                                    ExceptionPrinter.printException("LOGIN", error);
+
                                     mEnterButton.setProgress(0);
 
-                                    Log.d(Properties.TAG, "Error logeando usuario: " + error.getMessage());
-
-                                    error.printStackTrace();
-
-                                    Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                    Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                                             .setAction("Reintentar", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v)
@@ -289,6 +304,7 @@ public class LoginUI extends AppCompatActivity
                                 }
                             });
 
+                    Log.d(Properties.TAG, "[LOGIN] Se envía la petición la servidor");
                     VolleySingleton.getInstance(LoginUI.this).addToRequestQueue(stringRequest);
                 }
             }
@@ -481,6 +497,9 @@ public class LoginUI extends AppCompatActivity
                 // Si se hace click cuando se ha completado el registro se llama a la siguiente pantalla
                 if (mRegisterCircularButton.getProgress() == 100)
                 {
+                    Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Tick");
+                    Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> MainScreenUI");
+
                     Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
 
                     startActivity(intent);
@@ -495,6 +514,9 @@ public class LoginUI extends AppCompatActivity
                 if (mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100 &&
                     _validateEmail() && _validatePassword() && _validateAge() && _validatePostalCode() && _validateName() && _isGenderSelected())
                 {
+                    Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Hecho");
+                    Log.d(Properties.TAG, "[LOGIN] Los datos son correctos");
+
                     try
                     {
                         // 0 < X < 100 -> Cargando
@@ -503,7 +525,7 @@ public class LoginUI extends AppCompatActivity
                         final String fixedURL = Utils.fixUrl(
                                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users");
 
-                        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para registrar un usuario");
+                        Log.d(Properties.TAG, "[LOGIN] Conectando con: " + fixedURL + " para registrar un usuario");
 
                         // Creamos el JSON con los datos del usuario
                         final JSONObject jsonObject = new JSONObject();
@@ -515,7 +537,7 @@ public class LoginUI extends AppCompatActivity
                         jsonObject.put("man", (mMaleImageButton.getAlpha() == ACTIVE_ALPHA));
                         jsonObject.put("postalCode", Integer.valueOf(mPostalCodeEdittext.getText().toString()));
 
-                        Log.d(Properties.TAG, "JSON con el usuario:\n    " + jsonObject.toString());
+                        Log.d(Properties.TAG, "[LOGIN] JSON con el usuario:\n    " + jsonObject.toString());
 
                         StringRequest stringRequest = new StringRequest(Request.Method.POST
                                 , fixedURL
@@ -524,10 +546,12 @@ public class LoginUI extends AppCompatActivity
                                     @Override
                                     public void onResponse(String response)
                                     {
-                                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+                                        Log.d(Properties.TAG, "[LOGIN] Respuesta del servidor: " + response);
 
                                         if (response.equals(Properties.ALREADY_EXISTS))
                                         {
+                                            Log.d(Properties.TAG, "[LOGIN] El email ya está registrado");
+
                                             // X = 0 -> Idle
                                             mRegisterCircularButton.setProgress(0);
 
@@ -537,7 +561,8 @@ public class LoginUI extends AppCompatActivity
                                             // Si ha ido bien, actualizamos las preferencias.
                                             long id = Long.valueOf(response);
 
-                                            Log.d(Properties.TAG, "Usuario registrado correctamente (ID: " + id + ")");
+                                            Log.d(Properties.TAG, "[LOGIN] Usuario registrado correctamente (ID: " + id + ")");
+                                            Log.d(Properties.TAG, "[LOGIN] Se guarda el usuario en las SharedPreferences");
 
                                             // X = 100 -> Complete
                                             mRegisterCircularButton.setProgress(100);
@@ -575,15 +600,16 @@ public class LoginUI extends AppCompatActivity
                                         // X = -1 -> Error
                                         mRegisterCircularButton.setProgress(-1);
 
-                                        Log.d(Properties.TAG, "Error registrando usuario: " + error.getMessage());
+                                        ExceptionPrinter.printException("LOGIN", error);
 
-                                        error.printStackTrace();
-
-                                        Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                                                 .setAction("Reintentar", new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v)
                                                     {
+                                                        Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Reintentar");
+                                                        Log.d(Properties.TAG, "[LOGIN] Se vuelve a intentar registrar al usuario");
+
                                                         mRegisterCircularButton.setProgress(0);
                                                         mRegisterCircularButton.performClick();
                                                     }
@@ -608,7 +634,7 @@ public class LoginUI extends AppCompatActivity
                         VolleySingleton.getInstance(LoginUI.this).addToRequestQueue(stringRequest);
 
                     } catch (JSONException e) {
-                        Log.d(Properties.TAG, "Error creando JSON (" + e.getMessage() + ")");
+                        ExceptionPrinter.printException("LOGIN", e);
                     }
                 }
             }
@@ -626,7 +652,7 @@ public class LoginUI extends AppCompatActivity
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para obtener los datos del usuario");
+        Log.d(Properties.TAG, "[LOGIN] Conectando con: " + fixedURL + " para obtener los datos del usuario");
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET
                 , fixedURL
@@ -638,11 +664,14 @@ public class LoginUI extends AppCompatActivity
                     {
                         try
                         {
-                            User user = Utils.getUserFromJSON(id, response);
+                            Log.d(Properties.TAG, "[LOGIN] Respuesta recibida, se parsea el JSON");
+                            User user = JSONParser.convertJSONtoUser(response, id);
 
+                            Log.d(Properties.TAG, "[LOGIN] User creado, se inserta en las SharedPreferences");
                             mSharedPreferencesManager.insertUser(user);
                             mSharedPreferencesManager.insertLoggedIn(rememberMe);
 
+                            Log.d(Properties.TAG, "[LOGIN] Se avanza a la pantalla -> MainScreenUI");
                             // Avanzamos automaticamente a la siguiente pantalla.
                             Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
 
@@ -654,17 +683,17 @@ public class LoginUI extends AppCompatActivity
                             overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            ExceptionPrinter.printException("LOGIN", e);
 
                             enterButton.setProgress(0);
 
-                            Log.d(Properties.TAG, "Error logeando usuario: no se pudo parsear el JSON");
-
-                            Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                            Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                                     .setAction("Reintentar", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v)
                                         {
+                                            Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Reintentar");
+
                                             enterButton.setProgress(0);
                                             enterButton.performClick();
                                         }
@@ -677,17 +706,19 @@ public class LoginUI extends AppCompatActivity
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        enterButton.setProgress(0);
+                        ExceptionPrinter.printException("LOGIN", error);
 
-                        Log.d(Properties.TAG, "VOLLEYERROR: Error logeando usuario: no se pudo sacar sus datos");
+                        enterButton.setProgress(0);
 
                         error.printStackTrace();
 
-                        Snackbar.make(mAlertDialogView, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                        Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Reintentar", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v)
                                     {
+                                        Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Reintentar");
+
                                         enterButton.setProgress(0);
                                         enterButton.performClick();
                                     }
@@ -695,6 +726,7 @@ public class LoginUI extends AppCompatActivity
                     }
                 });
 
+        Log.d(Properties.TAG, "[LOGIN] Se envía la petición al servidor");
         VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
@@ -704,11 +736,16 @@ public class LoginUI extends AppCompatActivity
      */
     private boolean _isGenderSelected()
     {
+        Log.d(Properties.TAG, "[LOGIN] Se valida el sexo");
         boolean selected = (mMaleImageButton.getAlpha() == ACTIVE_ALPHA) || (mFemaleImageButton.getAlpha() == ACTIVE_ALPHA);
 
         if (!selected)
         {
+            Log.d(Properties.TAG, "[LOGIN] Sexo NO elegido");
             Snackbar.make(mAlertDialogView, "No has elegido tu sexo", Snackbar.LENGTH_LONG).show();
+
+        } else {
+            Log.d(Properties.TAG, "[LOGIN] Sexo elegido: " + ((mMaleImageButton.getAlpha() == ACTIVE_ALPHA) ? "Hombre" : "Mujer"));
         }
 
         return selected;
@@ -721,9 +758,12 @@ public class LoginUI extends AppCompatActivity
     private boolean _validateEmail()
     {
         String email = mEmailEdittext.getText().toString().trim();
+        Log.d(Properties.TAG, "[LOGIN] Se valida el email: " + email);
 
         if (!Utils.isValidEmail(email))
         {
+            Log.d(Properties.TAG, "[LOGIN] Email incorrecto");
+
             mEmailInputLayout.setErrorEnabled(true);
             mEmailInputLayout.setError("Email incorrecto");
 
@@ -732,6 +772,8 @@ public class LoginUI extends AppCompatActivity
             return false;
 
         } else {
+            Log.d(Properties.TAG, "[LOGIN] Email correcto");
+
             mEmailInputLayout.setError(null);
             mEmailInputLayout.setErrorEnabled(false);
         }
@@ -746,9 +788,12 @@ public class LoginUI extends AppCompatActivity
     private boolean _validatePassword()
     {
         String password = mPasswordEdittext.getText().toString();
+        Log.d(Properties.TAG, "[LOGIN] Se valida la contraseña: " + password);
 
         if (!Utils.isValidPassword(password))
         {
+            Log.d(Properties.TAG, "[LOGIN] Contraseña incorrecta");
+
             mPasswordInputLayout.setErrorEnabled(true);
             mPasswordInputLayout.setError("Contraseña incorrecta (6 caracteres min)");
 
@@ -757,6 +802,8 @@ public class LoginUI extends AppCompatActivity
             return false;
 
         } else {
+            Log.d(Properties.TAG, "[LOGIN] Contraseña correcta");
+
             mPasswordInputLayout.setError(null);
             mPasswordInputLayout.setErrorEnabled(false);
         }
@@ -771,9 +818,12 @@ public class LoginUI extends AppCompatActivity
     private boolean _validateAge()
     {
         String age = mAgeEdittext.getText().toString();
+        Log.d(Properties.TAG, "[LOGIN] Se valida la edad: " + age);
 
         if (!Utils.isValidAge(age))
         {
+            Log.d(Properties.TAG, "[LOGIN] Edad incorrecta");
+
             mAgeInputLayout.setErrorEnabled(true);
             mAgeInputLayout.setError("Edad incorrecta");
 
@@ -782,6 +832,8 @@ public class LoginUI extends AppCompatActivity
             return false;
 
         } else {
+            Log.d(Properties.TAG, "[LOGIN] Edad correcta");
+
             mAgeInputLayout.setError(null);
             mAgeInputLayout.setErrorEnabled(false);
         }
@@ -796,9 +848,12 @@ public class LoginUI extends AppCompatActivity
     private boolean _validatePostalCode()
     {
         String postalCode = mPostalCodeEdittext.getText().toString();
+        Log.d(Properties.TAG, "[LOGIN] Se valida el código postal: " + postalCode);
 
         if (!Utils.isValidPostalCode(postalCode))
         {
+            Log.d(Properties.TAG, "[LOGIN] Código postal incorrecto");
+
             mPostalCodeInputLayout.setErrorEnabled(true);
             mPostalCodeInputLayout.setError("Código postal incorrecto");
 
@@ -807,6 +862,8 @@ public class LoginUI extends AppCompatActivity
             return false;
 
         } else {
+            Log.d(Properties.TAG, "[LOGIN] Código postal correcto");
+
             mPostalCodeInputLayout.setError(null);
             mPostalCodeInputLayout.setErrorEnabled(false);
         }
@@ -821,9 +878,12 @@ public class LoginUI extends AppCompatActivity
     private boolean _validateName()
     {
         String name = mNameEdittext.getText().toString();
+        Log.d(Properties.TAG, "[LOGIN] Se valida el nombre: " + name);
 
         if (!Utils.isValidName(name))
         {
+            Log.d(Properties.TAG, "[LOGIN] Nombre incorrecto");
+
             mNameInputLayout.setErrorEnabled(true);
             mNameInputLayout.setError("Nombre incorrecto");
 
@@ -832,6 +892,8 @@ public class LoginUI extends AppCompatActivity
             return false;
 
         } else {
+            Log.d(Properties.TAG, "[LOGIN] Nombre correcto");
+
             mNameInputLayout.setError(null);
             mNameInputLayout.setErrorEnabled(false);
         }

@@ -71,7 +71,7 @@ public class MainScreenUI extends AppCompatActivity
 
     /* Toolbar */
     private Toolbar mToolbar;
-    private ActionBarDrawerToggle mLeftDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     /* Fragments */
     private RecommendedFragment mRecommendedFragment;
@@ -279,7 +279,7 @@ public class MainScreenUI extends AppCompatActivity
 
         _initDrawerToggle();
 
-        mDrawerLayout.setDrawerListener(mLeftDrawerToggle);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     /**
@@ -289,7 +289,7 @@ public class MainScreenUI extends AppCompatActivity
     private void _initDrawerToggle()
     {
         // Inicializamos el control en la action bar.
-        mLeftDrawerToggle = new ActionBarDrawerToggle(this
+        mDrawerToggle = new ActionBarDrawerToggle(this
                 , mDrawerLayout
                 , mToolbar
                 , R.string.open_drawer
@@ -299,21 +299,17 @@ public class MainScreenUI extends AppCompatActivity
             @Override
             public void onDrawerClosed(View drawerView)
             {
-                if (drawerView == findViewById(R.id.leftDrawerLayout))
-                    mLeftDrawerToggle.syncState();
+                mDrawerToggle.syncState();
             }
 
             // Metodo llamado cuando el drawer esta completamente abierto.
             @Override
             public void onDrawerOpened(View drawerView)
             {
-                if (drawerView == findViewById(R.id.leftDrawerLayout))
-                {
-                    // Crea la llamada a onPrepareOptionsMenu()
-                    supportInvalidateOptionsMenu();
+                // Crea la llamada a onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu();
 
-                    mLeftDrawerToggle.syncState();
-                }
+                mDrawerToggle.syncState();
             }
 
             @Override
@@ -328,7 +324,7 @@ public class MainScreenUI extends AppCompatActivity
             }
         };
 
-        mLeftDrawerToggle.setDrawerIndicatorEnabled(false);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener()
@@ -337,9 +333,11 @@ public class MainScreenUI extends AppCompatActivity
             public void onClick(View v)
             {
                 if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                {
                     mDrawerLayout.closeDrawer(GravityCompat.START);
-                else
+                }else {
                     mDrawerLayout.openDrawer(GravityCompat.START);
+                }
             }
         });
     }
@@ -512,9 +510,10 @@ public class MainScreenUI extends AppCompatActivity
     protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
-        if(mLeftDrawerToggle != null)
+
+        if(mDrawerToggle != null)
         {
-            mLeftDrawerToggle.syncState();
+            mDrawerToggle.syncState();
         }
     }
 
@@ -522,9 +521,9 @@ public class MainScreenUI extends AppCompatActivity
     public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        if(mLeftDrawerToggle != null)
+        if(mDrawerToggle != null)
         {
-            mLeftDrawerToggle.onConfigurationChanged(newConfig);
+            mDrawerToggle.onConfigurationChanged(newConfig);
         }
     }
 
