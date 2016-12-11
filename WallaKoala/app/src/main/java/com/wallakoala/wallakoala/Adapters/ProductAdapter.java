@@ -1,9 +1,17 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +39,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     private ImageView mImageView;
 
     /* Data */
+    private Bitmap mFirstImageBitmap;
     private ColorVariant mColor;
     private double mAspectRatio;
     private String mShop;
     private String mSection;
+    private boolean mLoaded;
 
     /**
-     * ViewHolder de la imagen con todos los componentes graficos necesarios
+     * ViewHolder de la imagen con todos los componentes graficos necesarios.
      */
     public class ProductHolder extends RecyclerView.ViewHolder
     {
@@ -71,7 +81,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 {
                     if (getAdapterPosition() == 0)
                     {
+                        mFirstImageBitmap = bitmap;
+
                         mImageView.setVisibility(View.GONE);
+
+                        mLoaded = true;
                     }
 
                     mProductImageView.setImageBitmap(bitmap);
@@ -123,6 +137,37 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         mShop = shop;
         mSection = section;
         mImageView = image;
+        mLoaded = false;
+    }
+
+    /**
+     * Metodo que devuelve la URI de la primera imagen para compartirla.
+     * @return URI de la primera imagen si ha sido descargada, null EOC.
+     */
+    @Nullable
+    public Uri getFirstImageUri()
+    {
+        // Comprobamos que el usuario ha dado permisos para acceder a las imagenes.
+        int permissionCheck = ContextCompat.checkSelfPermission(
+                mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        // Si no tiene permisos, se piden al usuario.
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(
+                    (Activity) mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+
+        } else {
+            if (mLoaded)
+            {
+                String path = MediaStore.Images.Media.insertImage(
+                        mContext.getContentResolver(), mFirstImageBitmap, "Image Description", null);
+
+                return Uri.parse(path);
+            }
+        }
+
+        return null;
     }
 
     @Override

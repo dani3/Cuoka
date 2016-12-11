@@ -80,12 +80,6 @@
                 android:layout_marginBottom="4dp">
 
                 <ImageButton
-                    android:id="@+id/product_cart"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/ic_cart"/>
-
-                <ImageButton
                     android:id="@+id/product_share"
                     android:layout_width="24dp"
                     android:layout_height="24dp"

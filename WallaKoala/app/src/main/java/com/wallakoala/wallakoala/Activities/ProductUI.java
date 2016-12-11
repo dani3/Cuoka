@@ -227,7 +227,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductReferenceTextView = (TextView) findViewById(R.id.product_info_reference);
         mFavoriteImageButton      = (LikeButtonLargeView) findViewById(R.id.product_favorite);
 
-        ImageButton cartImageButton = (ImageButton) findViewById(R.id.product_cart);
         ImageButton shareImageButton = (ImageButton) findViewById(R.id.product_share);
         ImageButton redirectImageButton = (ImageButton) findViewById(R.id.product_redirect);
 
@@ -247,15 +246,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             public void onClick(View v)
             {
                 _shareProduct();
-            }
-        });
-
-        cartImageButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                _addProductToCart();
             }
         });
 
@@ -307,15 +297,15 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             }
         });
 
-        // Cargamos el bitmap de la imagen en baja calidad
+        // Cargamos el bitmap de la imagen en baja calidad.
         File filePath = getFileStreamPath(mBitmapUri);
         BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromPath(filePath.toString());
         mImageView.setImageDrawable(bitmapDrawable);
 
-        // Calculamos el aspect ratio de la imagen
+        // Calculamos el aspect ratio de la imagen.
         mRatio = (double) bitmapDrawable.getIntrinsicHeight() / (double) bitmapDrawable.getIntrinsicWidth();
 
-        // Background
+        // Background.
         mBackground = new ColorDrawable(Color.WHITE);
         frameLayout.setBackground(mBackground);
     }
@@ -335,7 +325,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         mColorIconListView.setAdapter(mColorIconAdapter);
 
-        // Listener para cambiar de color
+        // Listener para cambiar de color.
         mColorIconListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -382,8 +372,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                 , mImageView);
 
         mImagesRecylcerView.setLayoutManager(linearLayoutManager);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mImagesRecylcerView.setAdapter(mImagesAdapter);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mImagesRecylcerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -462,22 +452,18 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     private void _shareProduct()
     {
-        Intent shareIntent = new Intent();
+        Uri uri = mImagesAdapter.getFirstImageUri();
 
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mBitmapUri));
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Mira lo que he encontrado en Cuoka!");
-        shareIntent.setType("*/*");
+        if (mImagesAdapter != null && uri != null)
+        {
+            Intent shareIntent = new Intent();
 
-        startActivity(Intent.createChooser(shareIntent, "Compartir con..."));
-    }
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.setType("image/*");
 
-    /**
-     * Metodo que añade el producto al carrito.
-     */
-    private void _addProductToCart()
-    {
-
+            startActivity(Intent.createChooser(shareIntent, "Compartir imagen"));
+        }
     }
 
     /**
