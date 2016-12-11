@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
+import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -42,6 +44,10 @@ public class IntroUI extends AppCompatActivity
         new RetrieveUserTask(this).execute();
     }
 
+    /**
+     * Metodo que vuelca en un fichero los logs.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void _initLogFile()
     {
         try
@@ -77,10 +83,13 @@ public class IntroUI extends AppCompatActivity
         {
             if (context.get() != null)
             {
+                Log.d(Properties.TAG, "[INTRO] Comprobamos que hay red");
                 isNetworkAvailable = _isNetworkAvailable();
 
                 if (!isNetworkAvailable)
                 {
+                    Log.d(Properties.TAG, "[INTRO] NO hay conexión a Internet");
+
                     Snackbar.make(findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Reintentar", new View.OnClickListener()
                             {
@@ -99,6 +108,8 @@ public class IntroUI extends AppCompatActivity
         {
             if (isNetworkAvailable)
             {
+                Log.d(Properties.TAG, "[INTRO] Hay conexión a Internet");
+
                 _retrieveUser();
             }
 
@@ -113,12 +124,16 @@ public class IntroUI extends AppCompatActivity
     {
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
+        Log.d(Properties.TAG, "[INTRO] Comprobamos que el usuario está logueado");
         if (mSharedPreferencesManager.retreiveLoggedIn())
         {
+            Log.d(Properties.TAG, "[INTRO] El usuario está logueado, se traen sus datos");
             boolean correct = RestClientSingleton.retrieveUser(this);
 
             if (correct)
             {
+                Log.d(Properties.TAG, "[INTRO] Todo correcto -> MainScreenUI");
+
                 Intent intent = new Intent(this, MainScreenUI.class);
 
                 startActivity(intent);
@@ -129,13 +144,18 @@ public class IntroUI extends AppCompatActivity
                 overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
 
             } else {
+                Log.d(Properties.TAG, "[INTRO] Algo ha fallado, se muestra Snackbar");
+
                 Snackbar.make(findViewById(R.id.intro_frame_layout), "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
                             public void onClick(View v)
                             {
-                                // Si ocurre algun error (raro), forzamos a que se loguee
+                                Log.d(Properties.TAG, "[INTRO] El usuario hace CLICK -> 'Reintentar'");
+                                Log.d(Properties.TAG, "[INTRO] Se desloguea al usuario y se llama de nuevo a RetrieveUserTask");
+
+                                // Si ocurre algun error (raro), forzamos a que se loguee,
                                 mSharedPreferencesManager.insertLoggedIn(false);
 
                                 new RetrieveUserTask(IntroUI.this).execute();
@@ -144,6 +164,8 @@ public class IntroUI extends AppCompatActivity
             }
 
         } else {
+            Log.d(Properties.TAG, "[INTRO] El usuario no está logueado -> LoginUI");
+
             Intent intent = new Intent(this, LoginUI.class);
 
             startActivity(intent);

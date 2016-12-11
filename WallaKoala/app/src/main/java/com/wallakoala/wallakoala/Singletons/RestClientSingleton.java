@@ -21,6 +21,7 @@ import com.wallakoala.wallakoala.Beans.ShopSuggested;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -576,37 +577,41 @@ public class RestClientSingleton
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para obtener los datos del usuario");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para obtener los datos del usuario");
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
-        // Creamos una peticion
+        // Creamos una peticion.
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET
                 , fixedURL
                 , null
                 , future
                 , future);
 
-        // La mandamos a la cola de peticiones
+        // La mandamos a la cola de peticiones.
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada al servidor");
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
 
         try
         {
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Esperando respuesta del servidor");
             JSONObject response = future.get(20, TimeUnit.SECONDS);
 
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta recibida, se parsea el JSON");
             User user = JSONParser.convertJSONtoUser(response, id);
 
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] User creado, se inserta en las SharedPreferences");
             mSharedPreferencesManager.insertUser(user);
 
             return true;
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            Log.d(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
 
         } catch (JSONException e) {
-            Log.d(Properties.TAG, "Error parseando el usuario: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
         }

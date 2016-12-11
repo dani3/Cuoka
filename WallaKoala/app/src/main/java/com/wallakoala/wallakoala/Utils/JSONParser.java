@@ -52,6 +52,9 @@ public class JSONParser
      */
     public static User convertJSONtoUser(JSONObject jsonObject, long id) throws JSONException
     {
+        Log.d(Properties.TAG, "[JSON_PARSER] JSON recibido para parsearlo a un objeto User");
+        Log.d(Properties.TAG, "[JSON_PARSER] JSON -> " + jsonObject.toString());
+
         final User user = new User();
 
         user.setId(id);
@@ -90,24 +93,23 @@ public class JSONParser
             shops.add((String.valueOf(jsonArray.get(i))));
         }
 
-        if (!shops.isEmpty())
-        {
+        if (!shops.isEmpty()) {
             user.setShops(shops);
         } else {
             user.setShops(new HashSet<String>());
         }
 
-        Log.d(Properties.TAG, "Datos del usuario: ");
-        Log.d(Properties.TAG, " - ID: " + id);
-        Log.d(Properties.TAG, " - Nombre: " + user.getName());
-        Log.d(Properties.TAG, " - Email: " + user.getEmail());
-        Log.d(Properties.TAG, " - Contraseña: " + user.getPassword());
-        Log.d(Properties.TAG, " - Hombre: " + user.getMan());
-        Log.d(Properties.TAG, " - Edad: " + user.getAge());
-        Log.d(Properties.TAG, " - Codigo Postal: " + user.getPostalCode());
-        Log.d(Properties.TAG, " - Numero de favoritos: " + user.getFavoriteProducts().size());
-        Log.d(Properties.TAG, " - Numero de notificaciones leidas: " + user.getNotificationsRead().size());
-        Log.d(Properties.TAG, " - Tiendas: " + jsonArray);
+        Log.d(Properties.TAG, "[JSON_PARSER] Datos del usuario: ");
+        Log.d(Properties.TAG, "[JSON_PARSER] - ID: " + id);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Nombre: " + user.getName());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Email: " + user.getEmail());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Contraseña: " + user.getPassword());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Hombre: " + user.getMan());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Edad: " + user.getAge());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Código Postal: " + user.getPostalCode());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Numero de favoritos: " + user.getFavoriteProducts().size());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Numero de notificaciones leídas: " + user.getNotificationsRead().size());
+        Log.d(Properties.TAG, "[JSON_PARSER] - Tiendas: " + jsonArray);
 
         return user;
     }
