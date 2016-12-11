@@ -205,7 +205,7 @@ public class MainScreenUI extends AppCompatActivity
         // Establecemos la imagen del usuario en funcion del sexo.
         mProfilePic = (CircleImageView)navHeader.findViewById(R.id.profile_pic);
         Bitmap profile = (user.getMan() ?
-                BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
+                BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.ic_female_thumbnail));
         mProfilePic.setImageBitmap(profile);
 
         mProfilePic.setOnClickListener(new View.OnClickListener()

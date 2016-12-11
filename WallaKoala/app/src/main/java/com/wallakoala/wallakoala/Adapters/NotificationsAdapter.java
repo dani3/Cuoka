@@ -167,24 +167,25 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Override
         public void onClick(View v)
         {
-            if (!marked)
+            if (v.getId() == mCardView.getId())
             {
-                if (v.getId() == mCardView.getId())
+                if (!marked)
                 {
                     _markNotification(true, notificationId);
-
-                } else if (v.getId() == mActionButton.getId()) {
-                    Intent intent = new Intent(mContext, ShopsUI.class);
-
-                    intent.putExtra("shop", mNotification.getExtraInfo());
-
-                    // Iniciamos la activity ShopsUI
-                    ((Activity) mContext).startActivityForResult(intent, MANAGE_SHOPS_REQUEST);
-
-                    // Animacion de transicion para pasar de una activity a otra.
-                    ((Activity) mContext).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
                 }
+                
+            } else if (v.getId() == mActionButton.getId()) {
+                Intent intent = new Intent(mContext, ShopsUI.class);
+
+                intent.putExtra("shop", mNotification.getExtraInfo());
+
+                // Iniciamos la activity ShopsUI
+                ((Activity) mContext).startActivityForResult(intent, MANAGE_SHOPS_REQUEST);
+
+                // Animacion de transicion para pasar de una activity a otra.
+                ((Activity) mContext).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
             }
+
         }
 
         /**

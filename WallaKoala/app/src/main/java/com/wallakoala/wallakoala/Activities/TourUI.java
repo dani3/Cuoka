@@ -44,7 +44,7 @@ public class TourUI extends AppIntro2
     public void onDonePressed(Fragment currentFragment)
     {
         super.onDonePressed(currentFragment);
-        
+
         // Do something when users tap on Done button.
     }
 }
