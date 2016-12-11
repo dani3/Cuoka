@@ -250,8 +250,11 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         });
 
         // Inicializamos la info del producto
+        boolean emptyDescription = (mProduct.getDescription() == null ||
+                mProduct.getDescription().isEmpty() ||
+                mProduct.getDescription().equalsIgnoreCase("null"));
+
         String name = "<b>" + mProduct.getName() + "</b>";
-        boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
         String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
         description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
@@ -460,7 +463,9 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            shareIntent.setType("image/*");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mira lo que he encontrado en Cuoka");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Probando");
+            shareIntent.setType("*/*");
 
             startActivity(Intent.createChooser(shareIntent, "Compartir imagen"));
         }
