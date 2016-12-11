@@ -463,8 +463,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mira lo que he encontrado en Cuoka");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Probando");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "¡Mira lo que he encontrado en Cuoka!");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "¡Mira lo que he encontrado en Cuoka!");
             shareIntent.setType("*/*");
 
             startActivity(Intent.createChooser(shareIntent, "Compartir imagen"));

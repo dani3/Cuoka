@@ -44,6 +44,11 @@
             android:configChanges="orientation|keyboardHidden">
         </activity>
 
+        <activity android:name=".Activities.TourUI"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+        </activity>
+
         <activity android:name=".Activities.FavoritesUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">

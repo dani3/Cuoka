@@ -74,7 +74,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
     /**
      * Holder de la cabecera de cada seccion.
      */
-    public class HeaderViewHolder extends RecyclerView.ViewHolder
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder
     {
         private TextView mShopTextView;
         private TextView mShopInitialTextView;
