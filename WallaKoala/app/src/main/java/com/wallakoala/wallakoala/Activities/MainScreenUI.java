@@ -366,9 +366,9 @@ public class MainScreenUI extends AppCompatActivity
         mProfilePic.getLocationInWindow(imageScreenLocation);
 
         intent.putExtra(Properties.PACKAGE + ".left", imageScreenLocation[0])
-                .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
-                .putExtra(Properties.PACKAGE + ".width", mProfilePic.getWidth())
-                .putExtra(Properties.PACKAGE + ".height", mProfilePic.getHeight());
+              .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
+              .putExtra(Properties.PACKAGE + ".width", mProfilePic.getWidth())
+              .putExtra(Properties.PACKAGE + ".height", mProfilePic.getHeight());
 
         startActivityForResult(intent, MODIFICATION_REQUEST);
 

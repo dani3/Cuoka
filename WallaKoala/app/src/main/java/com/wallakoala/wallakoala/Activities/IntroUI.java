@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,6 +14,10 @@ import android.view.View;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 /**
  * Pantalla de introduccion de la app.
@@ -32,32 +37,60 @@ public class IntroUI extends AppCompatActivity
         // Especificamos el layout 'activity_intro.xml'
         setContentView(R.layout.activity_intro);
 
-        new RetrieveUser().execute();
+        _initLogFile();
+
+        new RetrieveUserTask(this).execute();
+    }
+
+    private void _initLogFile()
+    {
+        try
+        {
+            File filename = new File(Environment.getExternalStorageDirectory() + "/cuoka.log");
+            filename.createNewFile();
+
+            String cmd = "logcat -d -f " + filename.getAbsolutePath();
+
+            Runtime.getRuntime().exec(cmd);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Tarea en segundo plano que trae los datos del usuario.
      */
-    private class RetrieveUser extends AsyncTask<String, Void, Void>
+    private class RetrieveUserTask extends AsyncTask<String, Void, Void>
     {
-        boolean isNetworkAvailable;
+        private WeakReference<IntroUI> context;
+
+        private boolean isNetworkAvailable;
+
+        public RetrieveUserTask(IntroUI context)
+        {
+            this.context = new WeakReference<>(context);
+        }
 
         @Override
         protected void onPreExecute()
         {
-            isNetworkAvailable = _isNetworkAvailable();
-
-            if (!isNetworkAvailable)
+            if (context.get() != null)
             {
-                Snackbar.make(findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Reintentar", new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
+                isNetworkAvailable = _isNetworkAvailable();
+
+                if (!isNetworkAvailable)
+                {
+                    Snackbar.make(findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Reintentar", new View.OnClickListener()
                             {
-                                new RetrieveUser().execute();
-                            }
-                        }).show();
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    new RetrieveUserTask(IntroUI.this).execute();
+                                }
+                            }).show();
+                }
             }
         }
 
@@ -105,7 +138,7 @@ public class IntroUI extends AppCompatActivity
                                 // Si ocurre algun error (raro), forzamos a que se loguee
                                 mSharedPreferencesManager.insertLoggedIn(false);
 
-                                new RetrieveUser().execute();
+                                new RetrieveUserTask(IntroUI.this).execute();
                             }
                         }).show();
             }

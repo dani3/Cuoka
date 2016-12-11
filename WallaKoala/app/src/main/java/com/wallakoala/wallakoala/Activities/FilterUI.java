@@ -46,6 +46,7 @@ import com.wallakoala.wallakoala.Views.RangeSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,31 +62,32 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private static final float ALPHA_ACTIVE_FILTER = 1.0f;
     private static final float ALPHA_INACTIVE_FILTER = 0.2f;
     private static final String ALL = "All";
-    private static String SECTION_FILTER_MAN_1;
-    private static String SECTION_FILTER_MAN_2;
-    private static String SECTION_FILTER_MAN_3;
-    private static String SECTION_FILTER_MAN_4;
-    private static String SECTION_FILTER_MAN_5;
-    private static String SECTION_FILTER_MAN_6;
-    private static String SECTION_FILTER_MAN_7;
-    private static String SECTION_FILTER_MAN_8;
-    private static String SECTION_FILTER_MAN_9;
-    private static String SECTION_FILTER_MAN_10;
-    private static String SECTION_FILTER_MAN_11;
-    private static String SECTION_FILTER_MAN_12;
-    private static String SECTION_FILTER_WOMAN_1;
-    private static String SECTION_FILTER_WOMAN_2;
-    private static String SECTION_FILTER_WOMAN_3;
-    private static String SECTION_FILTER_WOMAN_4;
-    private static String SECTION_FILTER_WOMAN_5;
-    private static String SECTION_FILTER_WOMAN_6;
-    private static String SECTION_FILTER_WOMAN_7;
-    private static String SECTION_FILTER_WOMAN_8;
-    private static String SECTION_FILTER_WOMAN_9;
-    private static String SECTION_FILTER_WOMAN_10;
-    private static String SECTION_FILTER_WOMAN_11;
-    private static String SECTION_FILTER_WOMAN_12;
-    private static boolean MAN;
+
+    private String SECTION_FILTER_MAN_1;
+    private String SECTION_FILTER_MAN_2;
+    private String SECTION_FILTER_MAN_3;
+    private String SECTION_FILTER_MAN_4;
+    private String SECTION_FILTER_MAN_5;
+    private String SECTION_FILTER_MAN_6;
+    private String SECTION_FILTER_MAN_7;
+    private String SECTION_FILTER_MAN_8;
+    private String SECTION_FILTER_MAN_9;
+    private String SECTION_FILTER_MAN_10;
+    private String SECTION_FILTER_MAN_11;
+    private String SECTION_FILTER_MAN_12;
+    private String SECTION_FILTER_WOMAN_1;
+    private String SECTION_FILTER_WOMAN_2;
+    private String SECTION_FILTER_WOMAN_3;
+    private String SECTION_FILTER_WOMAN_4;
+    private String SECTION_FILTER_WOMAN_5;
+    private String SECTION_FILTER_WOMAN_6;
+    private String SECTION_FILTER_WOMAN_7;
+    private String SECTION_FILTER_WOMAN_8;
+    private String SECTION_FILTER_WOMAN_9;
+    private String SECTION_FILTER_WOMAN_10;
+    private String SECTION_FILTER_WOMAN_11;
+    private String SECTION_FILTER_WOMAN_12;
+    private boolean MAN;
 
     /* Snackbar */
     private Snackbar mSnackbar;
@@ -1341,6 +1343,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             search.setSuggestionsAdapter(new SuggestionAdapter(FilterUI.this, cursor, suggestions));
             search.getSuggestionsAdapter().notifyDataSetChanged();
+
         }
 
     } /* [END getSuggestionsFromServer] */

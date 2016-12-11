@@ -173,7 +173,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 {
                     _markNotification(true, notificationId);
                 }
-                
+
             } else if (v.getId() == mActionButton.getId()) {
                 Intent intent = new Intent(mContext, ShopsUI.class);
 
