@@ -332,10 +332,12 @@ public class MainScreenUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
-                {
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se cierra el NavigationDrawer");
                     mDrawerLayout.closeDrawer(GravityCompat.START);
+
                 }else {
+                    Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre el NavigationDrawer");
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
             }
@@ -347,6 +349,7 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _checkForNotifications()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se comprueba si el usuario tiene notificaciones por leer");
         RestClientSingleton.hasNotification(this, mToolbar, mNavigationVew);
     }
 
@@ -355,6 +358,9 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _openActivityProfile()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Mi cuenta");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> ProfileUI con REQUEST_CODE = " + MODIFICATION_REQUEST);
+
         Activity activity = MainScreenUI.this;
 
         Intent intent = new Intent(MainScreenUI.this, ProfileUI.class);
@@ -379,6 +385,9 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _openActivityNotifications()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Notificaciones");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> NotificationsUI con REQUEST_CODE = " + NOTIFICATION_REQUEST);
+
         Intent intent = new Intent(MainScreenUI.this, NotificationsUI.class);
 
         // Iniciamos la activity NotificationsUI
@@ -393,6 +402,9 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _openActivityShops()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Mis tiendas");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> ShopsUI con REQUEST_CODE = " + MANAGE_SHOPS_REQUEST);
+
         Intent intent = new Intent(MainScreenUI.this, ShopsUI.class);
 
         // Iniciamos la activity ShopsUI
@@ -407,6 +419,9 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _openActivityFavorites()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Mis favoritos");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> FavoritesUI con REQUEST_CODE = " + MANAGE_FAVORITES_REQUEST);
+
         Intent intent = new Intent(MainScreenUI.this, FavoritesUI.class);
 
         // Iniciamos la activity FavoritesUI
@@ -421,9 +436,12 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _openActivityFeedback()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Dános tu opinión");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> FeedbackUI");
+
         Intent intent = new Intent(MainScreenUI.this, FeedbackUI.class);
 
-        // Iniciamos la activity FavoritesUI
+        // Iniciamos la activity FeedbackUI
         startActivity(intent);
 
         // Animacion de transicion para pasar de una activity a otra.
@@ -431,13 +449,16 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
-     * Metodo que abre la pantalla de Mis favoritos.
+     * Metodo que abre la pantalla de Mas tiendas.
      */
     private void _openActivitySuggested()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Más Tiendas");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> SuggestedUI");
+
         Intent intent = new Intent(MainScreenUI.this, SuggestedUI.class);
 
-        // Iniciamos la activity FavoritesUI
+        // Iniciamos la activity SuggestedUI
         startActivity(intent);
 
         // Animacion de transicion para pasar de una activity a otra.
@@ -463,6 +484,10 @@ public class MainScreenUI extends AppCompatActivity
      */
     private void _logout()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace click -> Cerrar sesión");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se desloguea al usuario");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> LoginUI");
+
         mSharedPreferencesManager.insertLoggedIn(false);
 
         Intent intent = new Intent(this, LoginUI.class);
@@ -485,18 +510,26 @@ public class MainScreenUI extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se pulsa el botón ATRAS");
+
         // Si el navigation drawer esta abierto, lo cerramos.
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
         {
+            Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se cierra el NavigationDrawer");
+
             mDrawerLayout.closeDrawer(GravityCompat.START);
 
         } else {
             if (mBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis())
             {
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Saliendo de la aplicación");
+
                 super.onBackPressed();
                 return;
 
             } else {
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se pide confirmación para salir");
+
                 Snackbar.make(mCoordinatorLayout
                         , getResources().getString(R.string.exit_message)
                         , Snackbar.LENGTH_SHORT).show();
@@ -548,14 +581,27 @@ public class MainScreenUI extends AppCompatActivity
     {
         if (item.getItemId() == R.id.menu_item_filter)
         {
+            Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> FilterUI");
+
             // Solo si no se esta cargando los productos.
             if (mProductsFragment.canFilter())
             {
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se puede filtrar");
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Estado del mapa de filtros:");
+
                 // Creamos un Intent.
                 Intent intent = new Intent(MainScreenUI.this, FilterUI.class);
 
                 // Obtenemos el mapa de filtros.
                 Map<String, Object> filterMap = mProductsFragment.getFilterMap();
+
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("newness"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("sections"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("colors"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("shops"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("minPrice"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("maxPrice"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " +  mProductsFragment.getMan());
 
                 // Lo mandamos en el Intent
                 intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)filterMap.get("newness"));
@@ -571,6 +617,9 @@ public class MainScreenUI extends AppCompatActivity
 
                 // Animacion de transicion para pasar de una activity a otra.
                 overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+
+            } else {
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI] NO se puede filtrar");
             }
         }
 

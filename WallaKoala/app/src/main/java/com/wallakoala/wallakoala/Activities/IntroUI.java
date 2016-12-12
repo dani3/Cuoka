@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -15,6 +16,7 @@ import android.view.View;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 
 import java.io.File;
@@ -28,9 +30,6 @@ import java.lang.ref.WeakReference;
 
 public class IntroUI extends AppCompatActivity
 {
-    /* SharedPreferences */
-    private SharedPreferencesManager mSharedPreferencesManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -60,14 +59,14 @@ public class IntroUI extends AppCompatActivity
             Runtime.getRuntime().exec(cmd);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionPrinter.printException("INTRO", e);
         }
     }
 
     /**
      * Tarea en segundo plano que trae los datos del usuario.
      */
-    private class RetrieveUserTask extends AsyncTask<String, Void, Void>
+    private static class RetrieveUserTask extends AsyncTask<String, Void, Void>
     {
         private WeakReference<IntroUI> context;
 
@@ -84,19 +83,19 @@ public class IntroUI extends AppCompatActivity
             if (context.get() != null)
             {
                 Log.d(Properties.TAG, "[INTRO] Comprobamos que hay red");
-                isNetworkAvailable = _isNetworkAvailable();
+                isNetworkAvailable = _isNetworkAvailable(context.get());
 
                 if (!isNetworkAvailable)
                 {
                     Log.d(Properties.TAG, "[INTRO] NO hay conexión a Internet");
 
-                    Snackbar.make(findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.make(context.get().findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Reintentar", new View.OnClickListener()
                             {
                                 @Override
                                 public void onClick(View v)
                                 {
-                                    new RetrieveUserTask(IntroUI.this).execute();
+                                    new RetrieveUserTask(context.get()).execute();
                                 }
                             }).show();
                 }
@@ -110,7 +109,7 @@ public class IntroUI extends AppCompatActivity
             {
                 Log.d(Properties.TAG, "[INTRO] Hay conexión a Internet");
 
-                _retrieveUser();
+                _retrieveUser(context.get(), context.get());
             }
 
             return null;
@@ -120,33 +119,33 @@ public class IntroUI extends AppCompatActivity
     /**
      * Metodo que se conecta al servidor para traer los datos del usuario.
      */
-    private void _retrieveUser()
+    private static void _retrieveUser(final Context context, final IntroUI introUI)
     {
-        mSharedPreferencesManager = new SharedPreferencesManager(this);
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
         Log.d(Properties.TAG, "[INTRO] Comprobamos que el usuario está logueado");
-        if (mSharedPreferencesManager.retreiveLoggedIn())
+        if (sharedPreferencesManager.retreiveLoggedIn())
         {
             Log.d(Properties.TAG, "[INTRO] El usuario está logueado, se traen sus datos");
-            boolean correct = RestClientSingleton.retrieveUser(this);
+            boolean correct = RestClientSingleton.retrieveUser(context);
 
             if (correct)
             {
                 Log.d(Properties.TAG, "[INTRO] Todo correcto -> MainScreenUI");
 
-                Intent intent = new Intent(this, MainScreenUI.class);
+                Intent intent = new Intent(context, MainScreenUI.class);
 
-                startActivity(intent);
+                context.startActivity(intent);
 
-                finish();
+                ((Activity)context).finish();
 
                 // Animacion de transicion para pasar de una activity a otra.
-                overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                ((Activity)context).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
 
             } else {
                 Log.d(Properties.TAG, "[INTRO] Algo ha fallado, se muestra Snackbar");
 
-                Snackbar.make(findViewById(R.id.intro_frame_layout), "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout), "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -156,9 +155,9 @@ public class IntroUI extends AppCompatActivity
                                 Log.d(Properties.TAG, "[INTRO] Se desloguea al usuario y se llama de nuevo a RetrieveUserTask");
 
                                 // Si ocurre algun error (raro), forzamos a que se loguee,
-                                mSharedPreferencesManager.insertLoggedIn(false);
+                                sharedPreferencesManager.insertLoggedIn(false);
 
-                                new RetrieveUserTask(IntroUI.this).execute();
+                                new RetrieveUserTask(introUI).execute();
                             }
                         }).show();
             }
@@ -166,14 +165,14 @@ public class IntroUI extends AppCompatActivity
         } else {
             Log.d(Properties.TAG, "[INTRO] El usuario no está logueado -> LoginUI");
 
-            Intent intent = new Intent(this, LoginUI.class);
+            Intent intent = new Intent(context, LoginUI.class);
 
-            startActivity(intent);
+            context.startActivity(intent);
 
-            finish();
+            ((Activity)context).finish();
 
             // Animacion de transicion para pasar de una activity a otra.
-            overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+            ((Activity)context).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
         }
     }
 
@@ -181,10 +180,10 @@ public class IntroUI extends AppCompatActivity
      * Metodo que comprueba si hay conexion a Internet.
      * @return true si hay conexion a Internet.
      */
-    private boolean _isNetworkAvailable()
+    private static boolean _isNetworkAvailable(Context context)
     {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 

@@ -174,7 +174,7 @@ public class RestClientSingleton
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/hasNotification/" + user.getId());
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para saber si tiene alguna notificacion por leer");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para saber si tiene alguna notificacion por leer");
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
@@ -185,7 +185,8 @@ public class RestClientSingleton
                     {
                         if (response.equals(Properties.NEW_NOTIFICATIONS))
                         {
-                            Log.d(Properties.TAG, "Hay nuevas notificaciones");
+                            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Hay nuevas notificaciones");
+                            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se actualizan los iconos");
 
                             // Cambiamos el Hamburger Icon
                             toolbar.setNavigationIcon(R.drawable.ic_menu_notif);
@@ -195,7 +196,7 @@ public class RestClientSingleton
                             menuItem.setIcon(context.getResources().getDrawable(R.drawable.ic_notification_new));
 
                         } else {
-                            Log.d(Properties.TAG, "No hay nuevas notificaciones");
+                            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] No hay notificaciones nuevas");
                         }
                     }
                 }
@@ -203,11 +204,15 @@ public class RestClientSingleton
                 {
                     @Override
                     public void onErrorResponse(VolleyError error)
-                    {}
+                    {
+                        ExceptionPrinter.printException("REST_CLIENT_SINGLETON", error);
+                    }
                 });
 
         // Enviamos la peticion.
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición enviada al servidor");
     }
 
     /**

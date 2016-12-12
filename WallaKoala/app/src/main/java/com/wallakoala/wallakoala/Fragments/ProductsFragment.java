@@ -1067,6 +1067,8 @@ public class ProductsFragment extends Fragment
      */
     public boolean canFilter()
     {
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se comprueba si se puede filtrar");
+
         return ((mShopsList != null) && (!mShopsList.isEmpty()) &&
                 (mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
     }

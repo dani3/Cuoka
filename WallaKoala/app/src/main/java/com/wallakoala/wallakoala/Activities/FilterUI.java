@@ -1,6 +1,5 @@
 package com.wallakoala.wallakoala.Activities;
 
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -195,7 +194,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         PRICE_FILTER_ACTIVE = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
         NEWNESS_FILTER_ACTIVE = true;
 
-        mColorCheckBoxesList = new ArrayList<>();
+        mColorCheckBoxesList   = new ArrayList<>();
         mSectionCheckBoxesList = new ArrayList<>();
 
         mShopsList = new ArrayList<>();
@@ -1249,7 +1248,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             {
                 if (newText.length() > 1)
                 {
-                    new GetSuggestionsFromServer().execute(newText);
+                    new GetSuggestionsFromServer(FilterUI.this, mMenu).execute(newText);
                 }
 
                 return true;
@@ -1296,14 +1295,23 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Tarea en segundo plano para traer las sugerencias del servidor.
      */
-    private class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
+    private static class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
     {
+        private WeakReference<FilterUI> context;
+        private WeakReference<Menu> menu;
+
         private List<String> suggestions = new ArrayList<>();
+
+        public GetSuggestionsFromServer(FilterUI context, Menu menu)
+        {
+            this.context = new WeakReference<>(context);
+            this.menu = new WeakReference<>(menu);
+        }
 
         @Override
         protected Void doInBackground(String... params)
         {
-            JSONArray jsonArray = RestClientSingleton.retrieveSuggestions(FilterUI.this, params[0]);
+            JSONArray jsonArray = RestClientSingleton.retrieveSuggestions(context.get(), params[0]);
 
             if (jsonArray != null)
             {
@@ -1326,24 +1334,26 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(Void unused)
         {
-            String[] columns = new String[] { "_id", "text" };
-            Object[] temp = new Object[] { 0, "default" };
-
-            MatrixCursor cursor = new MatrixCursor(columns);
-
-            for(int i = 0; i < suggestions.size(); i++)
+            if (context.get() != null)
             {
-                temp[0] = i;
-                temp[1] = suggestions.get(i);
+                String[] columns = new String[] { "_id", "text" };
+                Object[] temp = new Object[] { 0, "default" };
 
-                cursor.addRow(temp);
+                MatrixCursor cursor = new MatrixCursor(columns);
+
+                for(int i = 0; i < suggestions.size(); i++)
+                {
+                    temp[0] = i;
+                    temp[1] = suggestions.get(i);
+
+                    cursor.addRow(temp);
+                }
+
+                final SearchView search = (SearchView) menu.get().findItem(R.id.menu_item_search).getActionView();
+
+                search.setSuggestionsAdapter(new SuggestionAdapter(context.get(), cursor, suggestions));
+                search.getSuggestionsAdapter().notifyDataSetChanged();
             }
-
-            final SearchView search = (SearchView) mMenu.findItem(R.id.menu_item_search).getActionView();
-
-            search.setSuggestionsAdapter(new SuggestionAdapter(FilterUI.this, cursor, suggestions));
-            search.getSuggestionsAdapter().notifyDataSetChanged();
-
         }
 
     } /* [END getSuggestionsFromServer] */
@@ -1390,7 +1400,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Adapter para las sugerencias.
      */
-    public class SuggestionAdapter extends CursorAdapter
+    public static class SuggestionAdapter extends CursorAdapter
     {
         private List<String> items;
         private TextView text;
