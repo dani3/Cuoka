@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -18,9 +17,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +35,6 @@ import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.FlipLayout;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -97,6 +92,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
             mShopTextView        = (TextView) view.findViewById(R.id.favorite_header);
             mShopInitialTextView = (TextView) view.findViewById(R.id.favorite_header_initial);
             mExpandImageButton   = (ImageButton) view.findViewById(R.id.favorite_header_expand);
+
             mContainer.setOnClickListener(this);
         }
 
@@ -425,8 +421,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
         mShop = shop;
         mContext = context;
 
-        // Utilizar el constructor para tener dos listas distintas.
-        mProductList = new ArrayList<>(productList);
+        mProductList = productList;
 
         mIsExpanded = true;
 
