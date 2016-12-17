@@ -33,6 +33,7 @@ import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.CustomRequest;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
@@ -204,6 +205,8 @@ public class ProductsFragment extends Fragment
         // Si el usuario no tiene tiendas.
         if (mUser.getShops().isEmpty())
         {
+            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] El usuario no tiene ninguna tienda");
+
             mLoadingView.setVisibility(View.GONE);
             mLoadingServerView.setVisibility(View.GONE);
 
@@ -211,6 +214,8 @@ public class ProductsFragment extends Fragment
             mProductsRecyclerView.setVisibility(View.GONE);
 
         } else {
+            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] El usuario tiene " + mUser.getShops().size() + " tiendas");
+
             mNoShopsView.setVisibility(View.GONE);
 
             mConnectToServer = new ConnectToServer().execute();
@@ -250,7 +255,7 @@ public class ProductsFragment extends Fragment
 
         mUser = mSharedPreferences.retreiveUser();
 
-        Log.d(Properties.TAG, "Numero de procesadores: " + NUMBER_OF_CORES);
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Numero de procesadores: " + NUMBER_OF_CORES);
     }
 
     /**
@@ -328,6 +333,8 @@ public class ProductsFragment extends Fragment
                         // Si la cola de candidatos no esta lista, es que todavia quedan productos
                         if (!mProductsCandidatesDeque.isEmpty())
                         {
+                            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha ha hecho SCROLL -> todavía quedan productos candidatos");
+
                             // Sacamos los siguientes productos
                             _getNextProductsToBeDisplayed();
 
@@ -345,13 +352,20 @@ public class ProductsFragment extends Fragment
                             // Siempre que no se este cargando, o bien no estemos en los filtros
                             if ((mState != STATE.LOADING) && (DAYS_OFFSET >= 0))
                             {
+                                Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha hecho SCROLL -> No quedan candidatos");
+
                                 DAYS_OFFSET++;
 
                                 if (DAYS_WITH_NOTHING < MAX_OFFSET)
                                 {
+                                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se traen más productos");
+
                                     mConnectToServer = new ConnectToServer().execute();
 
                                 } else {
+                                    Log.d(Properties.TAG
+                                            , "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
+
                                     Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_SHORT).show();
                                     mLoadingServerView.setVisibility(View.GONE);
                                 }
@@ -416,6 +430,8 @@ public class ProductsFragment extends Fragment
                 convertJSONtoProduct(mJsonArray);
 
             } catch (Exception e) {
+                ExceptionPrinter.printException("PRODUCTS_FRAGMENT", e);
+
                 return false;
             }
 
@@ -510,11 +526,13 @@ public class ProductsFragment extends Fragment
         @Override
         protected Void doInBackground(String... unused)
         {
+            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se traen los productos de hace " + DAYS_OFFSET + " dias");
             content = RestClientSingleton.retrieveProducts(getActivity(), DAYS_OFFSET, mShopsList);
 
             if (content == null)
             {
-                error = "Error obteniendo productos";
+                error = "Se ha producido un error obteniendo productos";
+                Log.e(Properties.TAG, "[PRODUCTS_FRAGMENT] " + error);
             }
 
             return null;
@@ -694,6 +712,7 @@ public class ProductsFragment extends Fragment
         @Override
         protected void onPreExecute()
         {
+            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se crea un executor de " + (NUMBER_OF_CORES * 4) + " núcleos");
             // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
             executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
                     , NUMBER_OF_CORES * 4
@@ -717,7 +736,8 @@ public class ProductsFragment extends Fragment
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
-                    Log.d(Properties.TAG, "Tamano en bytes: " + (content.get(i).toString().getBytes().length / 1000) + "kB");
+                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se crea un ConversionTask para parsear el primer JSONArray ("
+                            + (content.get(i).toString().getBytes().length / 1000) + "kB)");
 
                     ConversionTask task = new ConversionTask(content.get(i));
 
@@ -728,7 +748,10 @@ public class ProductsFragment extends Fragment
                 for (int i = 0; i < content.size(); i++)
                 {
                     completionService.take();
+                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Productos parseados correctamente");
                 }
+
+                Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Todos los productos parseados correctamente");
 
                 // Liberamos el executor ya que no hara falta.
                 executor.shutdown();
@@ -741,6 +764,9 @@ public class ProductsFragment extends Fragment
                 // Si no es la primera conexion
                 if (!FIRST_CONNECTION)
                 {
+                    Log.d(Properties.TAG
+                            , "[PRODUCTS_FRAGMENT] NO es primera conexión, se actualiza el adapter con los productos nuevos");
+
                     // Sacamos el indice del primer producto a insertar
                     start = mProductsDisplayedList.size() - mProductsInsertedPreviously;
                     count = mProductsInsertedPreviously;
@@ -753,6 +779,8 @@ public class ProductsFragment extends Fragment
                 }
 
             } catch (Exception e) {
+                ExceptionPrinter.printException("PRODUCTS_FRAGMENT", e);
+
                 error = e.getMessage();
             }
 
@@ -769,47 +797,63 @@ public class ProductsFragment extends Fragment
                 _errorConnectingToServer(false);
 
             } else {
-
                 // Si lo ultimo que hemos traido esta vacio, o no se llega al minimo y NO estamos en los filtros
                 if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty()) && (DAYS_OFFSET >= 0))
                 {
+                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] No se ha traído ningún producto");
+
                     DAYS_WITH_NOTHING++;
                     DAYS_OFFSET++;
 
                     if (DAYS_WITH_NOTHING < MAX_OFFSET)
                     {
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se vuelve a conectar con el servidor para traer más productos");
+
                         mConnectToServer = new ConnectToServer().execute();
 
                     } else {
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
+
                         Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
 
                         mState = STATE.NORMAL;
+
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
                         mLoadingServerView.setVisibility(View.GONE);
                     }
 
                 } else if (mProductsCandidatesDeque.isEmpty() && mProductsDisplayedList.size() < MIN_PRODUCTS && (DAYS_OFFSET >= 0)) {
 
+                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] No se han traído suficientes productos");
+
                     DAYS_WITH_NOTHING++;
                     DAYS_OFFSET++;
 
                     if (DAYS_WITH_NOTHING < MAX_OFFSET)
                     {
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se vuelve a conectar con el servidor para traer más productos");
+
                         mConnectToServer = new ConnectToServer().execute();
 
                     } else {
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
+
                         Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
 
                         mState = STATE.NORMAL;
+
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
                         mLoadingServerView.setVisibility(View.GONE);
                     }
 
                 } else {
-
                     // Si estamos en los filtros y no se ha recuperado nada
                     if ((mProductsListMap.get(mProductsListMap.size()-1).isEmpty() && (DAYS_OFFSET == -1)))
                     {
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] El filtro no ha devuelto ningún producto");
+
                         _noData(true);
 
                     } else {
@@ -906,7 +950,7 @@ public class ProductsFragment extends Fragment
             mState = STATE.LOADING;
         }
 
-        Log.d(Properties.TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
     }
 
     /**
@@ -928,7 +972,7 @@ public class ProductsFragment extends Fragment
             mState = STATE.NODATA;
         }
 
-        Log.d(Properties.TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado:" + mState.toString());
     }
 
     /**
@@ -967,7 +1011,7 @@ public class ProductsFragment extends Fragment
 
         mState = STATE.ERROR;
 
-        Log.d(Properties.TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado:" + mState.toString());
     }
 
     /**
@@ -975,6 +1019,8 @@ public class ProductsFragment extends Fragment
      */
     private void _updateCandidates()
     {
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ordenan los productos y se sacan los productos candidatos");
+
         // Mapa de indices para trackear por donde nos hemos quedado en la iteracion anterior.
         final Map<String, Integer> indexMap = new HashMap<>();
 
@@ -983,7 +1029,9 @@ public class ProductsFragment extends Fragment
 
         // Inicializar mapa de indices con todos a 0.
         for (String key : mProductsListMap.get(mProductsListMap.size()-1).keySet())
+        {
             indexMap.put(key, 0);
+        }
 
         Iterator<String> iterator = mProductsListMap.get(mProductsListMap.size()-1).keySet().iterator();
 
@@ -997,7 +1045,7 @@ public class ProductsFragment extends Fragment
             List<Product> list = mProductsListMap.get(mProductsListMap.size()-1).get(key);
 
             // Mientras queden productos y no encontremos un producto mostrable.
-            while((index < list.size()) && (turn))
+            while ((index < list.size()) && (turn))
             {
                 mProductsCandidatesDeque.addLast(list.get(index++));
 
@@ -1017,7 +1065,7 @@ public class ProductsFragment extends Fragment
 
         } // while #1
 
-        Log.d(Properties.TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Lista de candidatos actualizada: " + mProductsCandidatesDeque.size());
     }
 
     /**
@@ -1025,11 +1073,15 @@ public class ProductsFragment extends Fragment
      */
     private void _getNextProductsToBeDisplayed()
     {
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se sacan los productos que se van a mostrar");
+
         mProductsInsertedPreviously = NUM_PRODUCTS_DISPLAYED;
 
-        // Si no hay tantos suficientes productos en la cola...
+        // Si no hay suficientes productos en la cola.
         if (NUM_PRODUCTS_DISPLAYED > mProductsCandidatesDeque.size())
+        {
             mProductsInsertedPreviously = mProductsCandidatesDeque.size();
+        }
 
         for (int i = 0; i < mProductsInsertedPreviously; i++)
         {
@@ -1038,8 +1090,8 @@ public class ProductsFragment extends Fragment
             mProductsCandidatesDeque.removeFirst();
         }
 
-        Log.d(Properties.TAG, "Lista de candidatos: " + mProductsCandidatesDeque.size());
-        Log.d(Properties.TAG, "Lista de mostrados: "  + mProductsDisplayedList.size());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Lista de candidatos actualizada: " + mProductsCandidatesDeque.size());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Lista de productos mostrados actualizada: " + mProductsDisplayedList.size());
     }
 
     /**

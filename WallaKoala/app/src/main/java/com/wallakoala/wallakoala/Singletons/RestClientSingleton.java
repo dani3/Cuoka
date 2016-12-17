@@ -296,28 +296,28 @@ public class RestClientSingleton
             final StringRequest jsonObjReq = new StringRequest(Request.Method.POST
                     , fixedURL
                     , new Response.Listener<String>()
-            {
-                @Override
-                public void onResponse(String response) {}
-            }
-                    , new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error) {}
-            })
-            {
-                @Override
-                public byte[] getBody() throws AuthFailureError
-                {
-                    return jsonObject.toString().getBytes();
-                }
+                    {
+                        @Override
+                        public void onResponse(String response) {}
+                    }
+                            , new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {}
+                    })
+                    {
+                        @Override
+                        public byte[] getBody() throws AuthFailureError
+                        {
+                            return jsonObject.toString().getBytes();
+                        }
 
-                @Override
-                public String getBodyContentType()
-                {
-                    return "application/json";
-                }
-            };
+                        @Override
+                        public String getBodyContentType()
+                        {
+                            return "application/json";
+                        }
+                    };
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
@@ -524,7 +524,7 @@ public class RestClientSingleton
                 final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                         + "/products/" + shopList.get(i) + "/" + man + "/" + offset);
 
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL
                         + " para traer los productos de hace " + Integer.toString(offset) + " dias");
 
                 futures.add(RequestFuture.<JSONArray>newFuture());
@@ -538,6 +538,7 @@ public class RestClientSingleton
 
                 // La mandamos a la cola de peticiones
                 VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición (" + shopList.get(i) + ") creada y enviada");
             }
 
             for (int i = 0; i < shopList.size(); i++)
@@ -546,10 +547,12 @@ public class RestClientSingleton
                 {
                     final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
+                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta (" + shopList.get(i) + ") recibida");
+
                     content.add(response);
 
                 } catch (InterruptedException e) {
-                    Log.d(Properties.TAG, e.getMessage());
+                    ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                     return null;
                 }
@@ -558,10 +561,14 @@ public class RestClientSingleton
             // Si content es vacio, es que han fallado todas las conexiones.
             if (content.isEmpty())
             {
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Todas las peticiones han fallado");
+
                 return null;
             }
 
         } catch(Exception ex)  {
+            ExceptionPrinter.printException("REST_CIENT_SINGLETON", ex);
+
             return null;
         }
 
