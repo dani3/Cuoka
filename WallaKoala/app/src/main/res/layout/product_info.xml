@@ -123,10 +123,23 @@
                 android:text="@string/footer_shop"
                 android:textSize="18dp"
                 android:textColor="@android:color/white"
-                app:customFont="Existence-StencilLight.otf"
                 android:layout_below="@+id/product_info_name"
                 android:layout_alignLeft="@+id/product_info_name"
-                android:layout_alignStart="@+id/product_info_name" />
+                android:layout_alignStart="@+id/product_info_name"
+                app:customFont="Existence-StencilLight.otf"/>
+
+            <com.wallakoala.wallakoala.Views.ExistenceTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="4dp"
+                android:textColor="@android:color/white"
+                android:text="@string/product_info_discount"
+                android:layout_alignBottom="@+id/product_info_price"
+                android:layout_toRightOf="@+id/product_info_price"
+                android:layout_toEndOf="@+id/product_info_price"
+                app:customFont="Existence-StencilLight.otf"/>
 
         </RelativeLayout>
 

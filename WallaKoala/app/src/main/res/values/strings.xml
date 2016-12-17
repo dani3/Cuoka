@@ -27,6 +27,7 @@
 
     <string name="product_info_name"><b>NOMBRE DEL PRODUCTO</b></string>
     <string name="product_info_price">29.99€</string>
+    <string name="product_info_discount">35.99€</string>
     <string name="product_info_description">Camisa de manga larga entallada con cuello inglés y pinzas que moldean la espalda. Planchado fácil. Corte ajustado.</string>
     <string name="product_info_reference"><b>Referencia:</b> 123456789</string>
 

@@ -1091,29 +1091,10 @@ public class Controller
             boolean candidate = true;            
             Product paux = null;
             
-            // Recorremos las palabras buscadas
+            // Recorremos las palabras buscadas.
             for (String keyword : keywords)
-            {
-                // Comprobamos si es una seccion.
-                List<String> section = new ArrayList<>();                
-                String saux = sectionManager.getSection(keyword);
-                // Si encontramos la seccion, y no es Zapatos (esta seccion abarca demasiadas prendas)
-                if (saux != null && !saux.equals("Zapatos"))
-                {
-                    section.add(saux);
-                }
-                    
-                if (!section.isEmpty())
-                {
-                    candidate = _searchForSection(product, section);
-                    
-                    if (!candidate)
-                    {
-                        break;
-                    }
-                }
-                
-                // Comprobamos si es un color
+            {                
+                // Comprobamos si es un color.
                 List<String> color = new ArrayList<>();
                 String caux = colorManager.getColor(keyword);
                 if (caux != null)
@@ -1132,8 +1113,8 @@ public class Controller
                     }
                 }
                 
-                // Si no es ni seccion ni color
-                if (color.isEmpty() && section.isEmpty())
+                // Si no es un color.
+                if (color.isEmpty())
                 {
                     candidate = _searchForKeyword(product, keyword);
                     

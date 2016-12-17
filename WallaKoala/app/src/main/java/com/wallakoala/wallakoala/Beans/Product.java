@@ -15,6 +15,7 @@ public class Product implements Serializable, Comparable<Product>
 	private String shop;
 	private String section;
 	private double price;
+	private double discount;
 	private float aspectRatio;
 	boolean obsolete;
 	private String link;
@@ -28,6 +29,7 @@ public class Product implements Serializable, Comparable<Product>
 			 , String shop
 			 , String section
 			 , double price
+		     , double discount
 		     , float aspectRatio
 			 , boolean obsolete
 			 , String link
@@ -41,6 +43,7 @@ public class Product implements Serializable, Comparable<Product>
 		this.aspectRatio = aspectRatio;
 		this.obsolete = obsolete;
 		this.price = price;
+		this.discount = discount;
 		this.link = link;
         this.description = description;
 		this.colors = colors;
@@ -51,6 +54,7 @@ public class Product implements Serializable, Comparable<Product>
 	public String getShop()               { return this.shop; }
 	public String getSection()            { return this.section; }
 	public double getPrice()              { return this.price; }
+	public double getDiscount()           { return this.discount; }
 	public float getAspectRatio()         { return this.aspectRatio; }
     public String getDescription()        { return this.description; }
 	public List<ColorVariant> getColors() { return this.colors; }

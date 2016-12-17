@@ -959,17 +959,21 @@ public class RestClientSingleton
                             // Si contiene el producto, es que se quiere quitar de favoritos.
                             if (user.getFavoriteProducts().contains(product.getId()))
                             {
+                                Log.d(Properties.TAG, "QUITAR FAVORITO: hay " + user.getFavoriteProducts().size());
                                 user.getFavoriteProducts().remove(product.getId());
+                                Log.d(Properties.TAG, "QUITAR FAVORITO: hay " + user.getFavoriteProducts().size());
 
                             } else {
+                                Log.d(Properties.TAG, "AÑADIR FAVORITO: hay " + user.getFavoriteProducts().size());
                                 user.getFavoriteProducts().add(product.getId());
+                                Log.d(Properties.TAG, "AÑADIR FAVORITO: hay " + user.getFavoriteProducts().size());
                             }
 
                             mSharedPreferencesManager.insertUser(user);
                         }
                     }
                 }
-                        , new Response.ErrorListener()
+                , new Response.ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError error)
