@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,10 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +39,7 @@ import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.FlipLayout;
 import com.wallakoala.wallakoala.Views.LikeButtonView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -70,12 +76,15 @@ public class FavoritesSectionedAdapter extends StatelessSection
     private ProductViewHolder mProductClicked;
     private boolean[] mItemsFlipped;
     private boolean mHasChanged;
+    private boolean mIsExpanded;
 
     /**
      * Holder de la cabecera de cada seccion.
      */
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder
+    public class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private View mContainer;
+        private ImageButton mExpandImageButton;
         private TextView mShopTextView;
         private TextView mShopInitialTextView;
 
@@ -83,14 +92,30 @@ public class FavoritesSectionedAdapter extends StatelessSection
         {
             super(view);
 
+            mContainer = view.findViewById(R.id.favorite_header_container);
+
             mShopTextView        = (TextView) view.findViewById(R.id.favorite_header);
             mShopInitialTextView = (TextView) view.findViewById(R.id.favorite_header_initial);
+            mExpandImageButton   = (ImageButton) view.findViewById(R.id.favorite_header_expand);
+            mContainer.setOnClickListener(this);
         }
 
         public void bindHeader(String text)
         {
             mShopTextView.setText(text);
             mShopInitialTextView.setText(Character.toString(text.charAt(0)));
+        }
+
+        @Override
+        @SuppressWarnings("deprecation")
+        public void onClick(View v)
+        {
+            mExpandImageButton.setBackground(
+                    mContext.getResources().getDrawable(mIsExpanded ? R.drawable.ic_collapse : R.drawable.ic_expand));
+
+            mSectionAdapter.notifyDataSetChanged();
+
+            mIsExpanded = !mIsExpanded;
         }
     }
 
@@ -121,7 +146,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
         private LikeButtonView mProductFavoriteImageButton;
 
         /**
-         * Constructor del holder
+         * Constructor del holder.
          * @param view: vista del producto.
          */
         public ProductViewHolder(View view)
@@ -387,10 +412,10 @@ public class FavoritesSectionedAdapter extends StatelessSection
      * @param shop: nombre de la tienda.
      */
     public FavoritesSectionedAdapter(Context context
-                                , SectionedRecyclerViewAdapter sectionAdapter
-                                , List<Product> productList
-                                , CoordinatorLayout frameLayout
-                                , String shop)
+                            , SectionedRecyclerViewAdapter sectionAdapter
+                            , List<Product> productList
+                            , CoordinatorLayout frameLayout
+                            , String shop)
     {
         super(R.layout.aux_header_section, R.layout.product_recommended);
 
@@ -399,7 +424,11 @@ public class FavoritesSectionedAdapter extends StatelessSection
         mSectionAdapter = sectionAdapter;
         mShop = shop;
         mContext = context;
-        mProductList = productList;
+
+        // Utilizar el constructor para tener dos listas distintas.
+        mProductList = new ArrayList<>(productList);
+
+        mIsExpanded = true;
 
         mItemsFlipped = new boolean[mProductList.size()];
         for (int i = 0; i < mItemsFlipped.length; i++)
@@ -437,7 +466,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
     @Override
     public int getContentItemsTotal()
     {
-        return mProductList.size();
+        return mIsExpanded ? mProductList.size() : 0;
     }
 
     @Override

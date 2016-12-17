@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorite_header_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="18dp"
@@ -57,5 +58,16 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
+
+    <ImageButton
+        android:id="@+id/favorite_header_expand"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/ic_expand"/>
 
 </RelativeLayout>
