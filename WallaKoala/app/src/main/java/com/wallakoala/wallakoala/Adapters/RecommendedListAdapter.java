@@ -38,8 +38,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.wallakoala.wallakoala.Properties.Properties.TAG;
-
 /**
  * Adapter para el grid de productos recomendados.
  * Created by Daniel Mancebo on 25/06/2016.
@@ -289,7 +287,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
 
                     // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
                     // y ralentiza la animacion
-                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
+                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition());
 
                     if (mBitmapFileName != null)
                     {

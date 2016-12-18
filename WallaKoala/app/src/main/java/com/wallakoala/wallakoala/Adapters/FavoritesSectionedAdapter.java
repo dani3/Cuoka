@@ -302,7 +302,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
 
                     // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
                     // y ralentiza la animacion
-                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), TAG);
+                    mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition());
 
                     if (mBitmapFileName != null)
                     {
