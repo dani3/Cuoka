@@ -908,7 +908,7 @@ public class Controller
                 
             for (Product product : productList)
             {
-                if (_searchForSection(product, filter.getSections()))
+                if (_filterForSection(product, filter.getSections()))
                 {
                     Product aux = _searchForColor(product, filter.getColors());
                     if (aux != null)
@@ -937,7 +937,7 @@ public class Controller
                 
             for (Product product : productList)
             {
-                if (_searchForSection(product, filter.getSections()))
+                if (_filterForSection(product, filter.getSections()))
                 {
                     newList.add(product);  
                 }
@@ -1093,7 +1093,19 @@ public class Controller
             
             // Recorremos las palabras buscadas.
             for (String keyword : keywords)
-            {                
+            {           
+                // Comprobamos si es una seccion.             
+                String section = sectionManager.getSection(keyword);                    
+                if (section != null)
+                {
+                    candidate = _searchForSection(product, keyword);
+                    
+                    if (!candidate)
+                    {
+                        break;
+                    }
+                }
+                
                 // Comprobamos si es un color.
                 List<String> color = new ArrayList<>();
                 String caux = colorManager.getColor(keyword);
@@ -1113,8 +1125,8 @@ public class Controller
                     }
                 }
                 
-                // Si no es un color.
-                if (color.isEmpty())
+                // Si no es ni una seccion ni un color.
+                if ((section == null) && (color.isEmpty()))
                 {
                     candidate = _searchForKeyword(product, keyword);
                     
@@ -1281,12 +1293,39 @@ public class Controller
     }
     
     /**
+     * Metodo que busca una palabra clave en el producto.
+     * @param product: producto donde buscar la palabra.
+     * @param section: seccion a buscar.
+     * @return true si el producto contiene la palabra.
+     */
+    private boolean _searchForSection(Product product, String section)
+    {        
+        // Buscamos la seccion en el nombre.        
+        String[] decomposedName = product.getName().split(" ");
+        for (String single : decomposedName)
+        {
+            single = single.replace("," , "").replace("." , "").replace("\n", "").trim();
+            
+            if (org.apache.commons.lang3.StringUtils
+                            .getJaroWinklerDistance(section
+                                    , single) >= Properties.MEDIUM_SIMILARITY_THRESHOLD)
+            {
+                LOG.info("[SEARCH] Seccion '" + section + "' encontrada: " + single);
+
+                return true;
+            }
+        } 
+        
+        return false;
+    }
+    
+    /**
      * Metodo que busca en el producto las secciones recibidas.
      * @param product: producto en el que buscar las secciones.
      * @param sections: secciones que buscar en el producto.
      * @return true si alguna seccion esta en el producto.
      */
-    private boolean _searchForSection(Product product, List<String> sections)
+    private boolean _filterForSection(Product product, List<String> sections)
     {           
         sections = sectionManager.getEquivalentSections(sections);
         

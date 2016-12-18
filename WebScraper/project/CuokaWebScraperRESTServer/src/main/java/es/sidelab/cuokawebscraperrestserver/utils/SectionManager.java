@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SectionManager 
 {
+    private static final Log LOG = LogFactory.getLog(SectionManager.class);
+    
     private final Map<String, String[]> sectionsMap;
     private final List<String> suggestedSections;
     private final List<String> maleSections;
@@ -27,23 +31,23 @@ public class SectionManager
         sectionsMap = new HashMap<>();
         
         sectionsMap.put("Abrigos", new String[]{ "Cazadora", "Cazadoras", "Capa", "Capas", "Bomber", "Bombers", "Parka", "Parkas"
-                                            , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cardigans" });
+                                            , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetón", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cárdigan", "Cardigans" });
         
         sectionsMap.put("Americanas", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Chaleco", "Chalecos"
                                             , "Cazadora", "Cazadoras", "Bomber", "Bombers", "Americana", "Americanas" });
         
         sectionsMap.put("Camisas", new String[]{ "Blusa", "Blusas", "Camisola", "Camisolas"
-                                            , "Bluson", "Blusones", "Camisa", "Camisas" });
+                                            , "Bluson","Blusón" , "Blusones", "Camisa", "Camisas" });
         
         sectionsMap.put("Polos", new String[]{ "Polo", "Polos" });
         
         sectionsMap.put("Camisetas", new String[]{ "Top", "Tops", "Bodies", "Camiseta", "Camisetas", "Henley", "T-Shirt" });
         
-        sectionsMap.put("Jerseis", new String[]{ "Jersey", "Jerseys", "Sudadera", "Sudaderas", "Cardigan", "Cardigans", "Jersei", "Jerseis" });
+        sectionsMap.put("Jerseis", new String[]{ "Jersey", "Jerseys", "Jerséy", "Jerséis", "Sudadera", "Sudaderas", "Cardigan", "Cardigans", "Jersei", "Jerseis", "Jerséi", "Jerséis"  });
         
-        sectionsMap.put("Pantalones", new String[]{ "Vaqueros", "Vaquero", "Jeans", "Jean", "Chinos", "Chinos", "Pantalon", "Pantalones", "Leggins" });
+        sectionsMap.put("Pantalones", new String[]{ "Vaqueros", "Vaquero", "Jeans", "Jean", "Chinos", "Chinos", "Pantalon", "Pantalones", "Leggins", "Leggin" });
         
-        sectionsMap.put("Shorts", new String[]{ "Shorts", "Short" , "Pantalones cortos", "Pantalon corto", "Bermuda", "Bermudas" });
+        sectionsMap.put("Shorts", new String[]{ "Shorts", "Short" , "Pantalones cortos", "Pantalon corto", "Bermuda", "Bermudas", "Pantalón" });
         
         sectionsMap.put("Trajes", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Americana", "Americanas", "Traje", "Trajes" });
         
@@ -54,7 +58,7 @@ public class SectionManager
         sectionsMap.put("Ponchos y Monos", new String[]{ "Mono", "Monos", "Kimono", "Kimonos", "Quimono", "Quimonos"
                                         , "Peto", "Petos", "Poncho", "Poncho" });
         
-        sectionsMap.put("Sudaderas", new String[]{ "Sudadera", "Sudaderas", "Jersey", "Jerseys", "Jersei", "Jerseis" });
+        sectionsMap.put("Sudaderas", new String[]{ "Sudadera", "Sudaderas", "Jersey", "Jerseys", "Jersei", "Jerseis", "Jerséy", "Jerséys", "Jerséi", "Jerséis"});
         
         sectionsMap.put("Sport", new String[]{ "Leggin", "Leggins", "Sport", "Gym", "Gimnasia", "Jogging", "Easywear"
                                         , "Deportivo", "Deportivos", "Sportwear", "Beachwear" });
@@ -109,6 +113,8 @@ public class SectionManager
                                 .getJaroWinklerDistance(section
                                         , keyword) >= Properties.MAX_SIMILARITY_THRESHOLD)
                 {
+                    LOG.debug("[SECTION_MANAGER] Seccion encontrada: " + entry.getKey());
+                    
                     return entry.getKey();
                 }
             }
@@ -123,6 +129,8 @@ public class SectionManager
                                 .getJaroWinklerDistance(section
                                         , keyword) >= Properties.MEDIUM_SIMILARITY_THRESHOLD)
                 {
+                    LOG.debug("[SECTION_MANAGER] Seccion encontrada: " + entry.getKey());
+                    
                     return entry.getKey();
                 }
             }

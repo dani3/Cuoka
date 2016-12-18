@@ -38,7 +38,7 @@ public class SharedPreferencesManager
      * @param loggedIn: true si el usuario esta logeado
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertLoggedIn(final boolean loggedIn)
+    public synchronized boolean insertLoggedIn(final boolean loggedIn)
     {
         mEditor = mSharedPreferences.edit();
         mEditor.putBoolean(KEY_LOGGED_IN, loggedIn);
@@ -60,7 +60,7 @@ public class SharedPreferencesManager
      * @param user: actividad del usuario.
      * @return true si se ha insertado correctamente.
      */
-    public boolean insertUser(final User user)
+    public synchronized boolean insertUser(final User user)
     {
         mEditor = mSharedPreferences.edit();
 

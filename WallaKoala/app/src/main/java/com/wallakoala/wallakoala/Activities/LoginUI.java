@@ -34,6 +34,7 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
+import com.wallakoala.wallakoala.Utils.ConcurrentSet;
 import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -42,7 +43,9 @@ import com.wallakoala.wallakoala.Utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Pantalla para logearse de distinta formas.
@@ -584,7 +587,7 @@ public class LoginUI extends AppCompatActivity
                                             user.setPassword(password);
                                             user.setAge(age);
                                             user.setEmail(email);
-                                            user.setFavoriteProducts(new HashSet<Long>());
+                                            user.setFavoriteProducts(new ConcurrentSet<Long>());
                                             user.setShops(new HashSet<String>());
 
                                             mSharedPreferencesManager.insertUser(user);

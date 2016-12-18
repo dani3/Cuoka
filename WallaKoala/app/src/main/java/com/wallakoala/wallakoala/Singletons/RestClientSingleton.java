@@ -45,6 +45,8 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
+    private static final Object object = new Object();
+
     /**
      * Metodo que marca una notificacion como leida.
      * @param context: contexto.
@@ -649,21 +651,31 @@ public class RestClientSingleton
 
         RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
-        // Creamos una peticion
+        // Creamos una peticion.
         JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                , fixedURL
-                , null
-                , future
-                , future);
+                                                    , fixedURL
+                                                    , null
+                                                    , future
+                                                    , future);
 
-        // La mandamos a la cola de peticiones
+        // La mandamos a la cola de peticiones.
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
 
         try
         {
             JSONArray response = future.get(20, TimeUnit.SECONDS);
 
-            return JSONParser.convertJSONtoProduct(response);
+            List<Product> favorites = JSONParser.convertJSONtoProduct(response);
+            Set<Long> userFavorites = new HashSet<>();
+            for (Product favorite : favorites)
+            {
+                userFavorites.add(favorite.getId());
+            }
+
+            user.setFavoriteProducts(userFavorites);
+            mSharedPreferencesManager.insertUser(user);
+
+            return favorites;
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
             Log.d(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
@@ -933,7 +945,7 @@ public class RestClientSingleton
      * @param context: contexto
      * @param product: producto favorito
      */
-    public static void sendFavoriteProduct(Context context, final Product product)
+    public static void sendFavoriteProduct(final Context context, final Product product)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -943,7 +955,7 @@ public class RestClientSingleton
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id + "/" + product.getId() + "/" + Properties.ACTION_FAVORITE);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para anadir/quitar un producto de favoritos");
 
         final StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
@@ -952,24 +964,26 @@ public class RestClientSingleton
                     @Override
                     public void onResponse(String response)
                     {
-                        Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+                        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se recibe respuesta del servidor: " + response);
 
-                        if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                        synchronized (object)
                         {
-                            // Si contiene el producto, es que se quiere quitar de favoritos.
-                            if (user.getFavoriteProducts().contains(product.getId()))
+                            if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                             {
-                                Log.d(Properties.TAG, "QUITAR FAVORITO: hay " + user.getFavoriteProducts().size());
-                                user.getFavoriteProducts().remove(product.getId());
-                                Log.d(Properties.TAG, "QUITAR FAVORITO: hay " + user.getFavoriteProducts().size());
+                                // Si contiene el producto, es que se quiere quitar de favoritos.
+                                if (user.getFavoriteProducts().contains(product.getId()))
+                                {
+                                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se elimina el producto de favoritos");
+                                    user.getFavoriteProducts().remove(product.getId());
 
-                            } else {
-                                Log.d(Properties.TAG, "AÑADIR FAVORITO: hay " + user.getFavoriteProducts().size());
-                                user.getFavoriteProducts().add(product.getId());
-                                Log.d(Properties.TAG, "AÑADIR FAVORITO: hay " + user.getFavoriteProducts().size());
+                                } else {
+                                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se añade el producto de favoritos");
+                                    user.getFavoriteProducts().add(product.getId());
+                                }
+
+                                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se actualiza el usuario en las SharedPreferences");
+                                mSharedPreferencesManager.insertUser(user);
                             }
-
-                            mSharedPreferencesManager.insertUser(user);
                         }
                     }
                 }
@@ -977,7 +991,9 @@ public class RestClientSingleton
                 {
                     @Override
                     public void onErrorResponse(VolleyError error)
-                    {}
+                    {
+                        ExceptionPrinter.printException("REST_CLIENT_SINGLETON", error);
+                    }
                 });
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);

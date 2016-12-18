@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class JSONParser
 
         // Sacamos los productos favoritos.
         JSONArray jsonArray = jsonObject.getJSONArray("favoriteProducts");
-        Set<Long> favorites = new HashSet<>();
+        Set<Long> favorites = new ConcurrentSet<>();
         for (int i = 0; i < jsonArray.length(); i++)
         {
             favorites.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));

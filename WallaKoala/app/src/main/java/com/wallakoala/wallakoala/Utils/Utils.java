@@ -245,9 +245,17 @@ public class Utils
         return true;
     }
 
+    /**
+     * Metodo que guarda una imagen de forma privada.
+     * @param context: contexto.
+     * @param bitmap: imagen a guardar.
+     * @param pos: posicion que ocupa en el adapter.
+     * @return URI de la imagen.
+     */
     @Nullable
-    public static String saveImage(final Context context, final Bitmap bitmap, final int pos, final String TAG)
+    public static String saveImage(final Context context, final Bitmap bitmap, int pos)
     {
+        Log.d(Properties.TAG, "[UTILS] Se guarda la imagen");
         final String fileName = "thumbnail_" + pos + ".png";
 
         try
@@ -262,12 +270,13 @@ public class Utils
             fileOutStream.close();
 
         } catch (IOException ioe) {
-            ioe.printStackTrace();
-            Log.e(TAG, "Error guardando la imagen");
+            Log.e(Properties.TAG, "[UTILS] No se ha guardado correctamente la imagen");
+            ExceptionPrinter.printException("UTILS", ioe);
 
             return null;
         }
 
+        Log.d(Properties.TAG, "[UTILS] Imagen guardada correctamente");
         return fileName;
     }
 

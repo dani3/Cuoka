@@ -99,6 +99,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 {
                     if (!mProductFavoriteImageButton.ANIMATING)
                     {
+                        Log.d(Properties.TAG, "[PRODUCTS_GRID_ADAPTER] Se hace click -> Favorito");
+
                         RestClientSingleton.sendFavoriteProduct(mContext, mProduct);
 
                         mProductFavoriteImageButton.startAnimation();
@@ -114,9 +116,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 @Override
                 public void onAnimationEnd(Animation animation)
                 {
+                    Log.d(Properties.TAG, "[PRODUCTS_GRID_ADAPTER] Se crea la activity -> ProductUI");
+
                     mProductFooterView.setVisibility(View.GONE);
 
-                    Activity activity = (Activity)mContext;
+                    Activity activity = (Activity) mContext;
 
                     // Sacamos las coordenadas de la imagen y del corazon
                     int[] imageScreenLocation = new int[2];
@@ -214,7 +218,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                 {
                     ERROR = true;
 
-                    Log.e(Properties.TAG, "Error cargando imagen "
+                    Log.e(Properties.TAG, "[PRODUCTS_GRID_ADAPTER] Error cargando imagen: "
                             + product.getShop() + " " + product.getSection() + " " + product.getColors().get(0).getReference());
 
                     mProductImageView.setBackgroundColor(
@@ -258,9 +262,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             if (!ERROR && LOADED && mProductClicked == null)
             {
+                Log.d(Properties.TAG, "[PRODUCTS_GRID_ADAPTER] Se hace click -> Imagen");
+
                 // Guardamos el bitmap antes de iniciar la animacion, ya que es una operacion pesada
-                // y ralentiza la animacion
-                mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition(), Properties.TAG);
+                // y puede ralentizar la animacion.
+                mBitmapFileName = Utils.saveImage(mContext, mBitmap, getAdapterPosition());
 
                 if (mBitmapFileName != null)
                 {
