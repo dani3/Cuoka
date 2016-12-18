@@ -161,11 +161,13 @@ public class NotificationsUI extends AppCompatActivity
 
             if (error == null)
             {
-                _initRecyclerView();
-
-            } else if (mNotificationList.isEmpty()) {
-                findViewById(R.id.notifications_nodata).setVisibility(View.VISIBLE);
-
+                if (mNotificationList.isEmpty())
+                {
+                    findViewById(R.id.notifications_nodata).setVisibility(View.VISIBLE);
+                } else {
+                    _initRecyclerView();
+                }
+                
             } else {
                 Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
