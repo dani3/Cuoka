@@ -467,7 +467,6 @@ public class ProductsFragment extends Fragment
             String description = jsonObject.getString("7");
             long id            = jsonObject.getLong("8");
             float aspectRatio  = (float) jsonObject.getDouble("9");
-            boolean obsolete   = jsonObject.getBoolean("10");
             double discount    = jsonObject.getDouble("11");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
@@ -486,7 +485,7 @@ public class ProductsFragment extends Fragment
 
             Product product = new Product(id, name, shop
                                     , section, price, discount
-                                    , aspectRatio, obsolete, link
+                                    , aspectRatio, link
                                     , description, colors);
 
             if (product.isOkay())

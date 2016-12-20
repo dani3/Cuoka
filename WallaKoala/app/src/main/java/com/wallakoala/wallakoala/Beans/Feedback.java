@@ -21,18 +21,8 @@ public class Feedback
         return stars;
     }
 
-    public void setStars(short stars)
-    {
-        this.stars = stars;
-    }
-
     public String getOpinion()
     {
         return opinion;
-    }
-
-    public void setOpinion(String opinion)
-    {
-        this.opinion = opinion;
     }
 }
