@@ -632,11 +632,13 @@ public class RestClientSingleton
             return true;
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] Error conectando con el servidor: " + e.getMessage());
             ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
 
         } catch (JSONException e) {
+            Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] Error parseando el usuario: " + e.getMessage());
             ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
@@ -693,13 +695,13 @@ public class RestClientSingleton
             return favorites;
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            Log.e(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
+            Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] Error conectando con el servidor: " + e.getMessage());
             ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return null;
 
         } catch (JSONException e) {
-            Log.e(Properties.TAG, "Error parseando los productos: " + e.getMessage());
+            Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] Error parseando los productos: " + e.getMessage());
             ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return null;
