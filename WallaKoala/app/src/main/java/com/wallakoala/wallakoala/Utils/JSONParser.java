@@ -5,6 +5,7 @@ import android.util.Log;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Beans.Product;
+import com.wallakoala.wallakoala.Beans.Shop;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 
@@ -13,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +26,44 @@ import java.util.Set;
 public class JSONParser
 {
     /**
+     * Metodo que parsea un array de JSONs en una lista de Shops.
+     * @param jsonArray: array de JSONs.
+     * @return lista de tiendas.
+     * @throws JSONException
+     */
+    public static List<Shop> convertJSONsToShops(final JSONArray jsonArray) throws JSONException
+    {
+        Log.d(Properties.TAG, "[JSON_PARSER] Array de JSONs recibido para parsearlos a una lista de Shops");
+
+        List<JSONObject> jsonList = new ArrayList<>();
+        List<Shop> shopList = new ArrayList<>();
+
+        // Se saca cada JSON (tienda).
+        for (int j = 0; j < jsonArray.length(); j++)
+        {
+            JSONObject js = jsonArray.getJSONObject(j);
+
+            jsonList.add(js);
+        }
+
+        // Se parsea cada JSON.
+        for (JSONObject jsonObject : jsonList)
+        {
+            String name = jsonObject.getString("name");
+            int numberOfProducts = jsonObject.getInt("products");
+
+            Shop shop = new Shop(name, false, false, numberOfProducts);
+
+            shopList.add(shop);
+
+            Log.d(Properties.TAG, "[JSON_PARSER] Tienda (" + name + ") parseada y añadida");
+        }
+
+        Log.d(Properties.TAG, "[JSON_PARSER] Tiendas parseadas correctamente, se devuelven " + shopList.size() + " tiendas");
+        return shopList;
+    }
+
+    /**
      * Metodo que convierte un JSON en un objeto Notification.
      * @param jsonObject: objeto JSON.
      * @return objeto Notification.
@@ -33,6 +71,9 @@ public class JSONParser
      */
     public static Notification convertJSONtoNotification(JSONObject jsonObject) throws JSONException
     {
+        Log.d(Properties.TAG, "[JSON_PARSER] JSON recibido para parsearlo a un objeto Notification");
+        Log.d(Properties.TAG, "[JSON_PARSER] JSON -> " + jsonObject.toString());
+
         long id = jsonObject.getLong("id");
         String title = jsonObject.getString("title");
         String text = jsonObject.getString("text");
@@ -40,6 +81,15 @@ public class JSONParser
         String image = jsonObject.getString("image");
         short offset = (short)jsonObject.getInt("offset");
         short action = (short)jsonObject.getInt("action");
+
+        Log.d(Properties.TAG, "[JSON_PARSER] Datos de la notificacion: ");
+        Log.d(Properties.TAG, "[JSON_PARSER] - ID: " + id);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Titulo: " + title);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Texto: " + text);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Extra Info: " + extraInfo);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Imagen: " + image);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Dias: " + offset);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Tipo: " + action);
 
         return new Notification(id, text, title, extraInfo, image, offset, action);
     }
@@ -120,8 +170,10 @@ public class JSONParser
      * @param jsonArray: lista de JSON a convertir.
      * @throws JSONException
      */
-    public static List<Product> convertJSONtoProduct(final JSONArray jsonArray) throws JSONException
+    public static List<Product> convertJSONsToProducts(final JSONArray jsonArray) throws JSONException
     {
+        Log.d(Properties.TAG, "[JSON_PARSER] Array de JSONs recibido para parsearlos a una lista de Products");
+
         List<Product> productList = new ArrayList<>();
         List<JSONObject> jsonList = new ArrayList<>();
 
@@ -143,7 +195,7 @@ public class JSONParser
             long id = jsonObject.getLong("8");
             float aspectRation = (float) jsonObject.getDouble("9");
             boolean obsolete = jsonObject.getBoolean("10");
-            //double discount = jsonObject.getDouble("11");
+            double discount = jsonObject.getDouble("11");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -159,17 +211,10 @@ public class JSONParser
                 colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
-            Product product = new Product(id
-                                    , name
-                                    , shop
-                                    , section
-                                    , price
-                                    , 0.0f
-                                    , aspectRation
-                                    , obsolete
-                                    , link
-                                    , description
-                                    , colors);
+            Product product = new Product(id, name, shop
+                                    , section, price, discount
+                                    , aspectRation, obsolete, link
+                                    , description, colors);
 
             if (product.isOkay())
             {
@@ -177,6 +222,7 @@ public class JSONParser
             }
         }
 
+        Log.d(Properties.TAG, "[JSON_PARSER] Productos parseados correctamente, se devuelven " + productList.size() + " productos");
         return productList;
     }
 }

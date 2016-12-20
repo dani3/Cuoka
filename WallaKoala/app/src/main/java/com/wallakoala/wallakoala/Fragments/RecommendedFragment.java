@@ -248,7 +248,7 @@ public class RecommendedFragment extends Fragment
             {
                 Log.d(Properties.TAG, "Tamano en bytes: " + (content.toString().getBytes().length / 1000) + "kB");
 
-                mProductList = JSONParser.convertJSONtoProduct(content);
+                mProductList = JSONParser.convertJSONsToProducts(content);
 
             } catch (Exception e) {
                 error = e.getMessage();

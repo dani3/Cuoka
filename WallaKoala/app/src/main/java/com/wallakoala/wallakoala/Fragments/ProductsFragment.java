@@ -468,7 +468,7 @@ public class ProductsFragment extends Fragment
             long id            = jsonObject.getLong("8");
             float aspectRatio  = (float) jsonObject.getDouble("9");
             boolean obsolete   = jsonObject.getBoolean("10");
-            //double discount    = jsonObject.getDouble("11");
+            double discount    = jsonObject.getDouble("11");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -484,17 +484,10 @@ public class ProductsFragment extends Fragment
                 colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
-            Product product = new Product(id
-                                    , name
-                                    , shop
-                                    , section
-                                    , price
-                                    , 0.0f
-                                    , aspectRatio
-                                    , obsolete
-                                    , link
-                                    , description
-                                    , colors);
+            Product product = new Product(id, name, shop
+                                    , section, price, discount
+                                    , aspectRatio, obsolete, link
+                                    , description, colors);
 
             if (product.isOkay())
             {

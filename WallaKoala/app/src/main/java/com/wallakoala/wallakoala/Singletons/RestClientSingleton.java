@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Singletons;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.Toolbar;
@@ -45,8 +46,6 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientSingleton
 {
-    private static final Object object = new Object();
-
     /**
      * Metodo que marca una notificacion como leida.
      * @param context: contexto.
@@ -116,7 +115,7 @@ public class RestClientSingleton
 
         try
         {
-            RequestFuture<JSONArray> future = RequestFuture.newFuture();
+            final RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
             final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -125,7 +124,7 @@ public class RestClientSingleton
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/notification/" + user.getId());
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las notificaciones del usuario");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para traer las notificaciones del usuario");
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
@@ -136,13 +135,14 @@ public class RestClientSingleton
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada");
 
             try
             {
                 content = future.get(20, TimeUnit.SECONDS);
 
             } catch (InterruptedException e) {
-                Log.d(Properties.TAG, e.getMessage());
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                 return null;
             }
@@ -150,10 +150,14 @@ public class RestClientSingleton
             // Si content es vacio, es que han fallado todas las conexiones.
             if (content == null)
             {
+                Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] No se ha recibido ningún dato");
+
                 return null;
             }
 
         } catch (Exception e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
             return null;
         }
 
@@ -352,7 +356,7 @@ public class RestClientSingleton
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/shops/" + user.getMan());
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las tiendas del usuario");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para traer las tiendas del usuario");
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
@@ -364,12 +368,14 @@ public class RestClientSingleton
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
 
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Petición creada y enviada");
+
             try
             {
                 content = future.get(20, TimeUnit.SECONDS);
 
             } catch (InterruptedException e) {
-                Log.d(Properties.TAG, e.getMessage());
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                 return null;
             }
@@ -377,12 +383,18 @@ public class RestClientSingleton
             // Si content es vacio, es que han fallado todas las conexiones.
             if (content == null)
             {
+                Log.e(Properties.TAG, "[REST_CLIENT_SINGLENTON] No se ha recibido nada");
+
                 return null;
             }
 
         } catch (Exception e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
             return null;
         }
+
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Respuesta recibida");
 
         return content;
     }
@@ -647,7 +659,7 @@ public class RestClientSingleton
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/favorites/" + id);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para otener los productos favoritos");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para otener los productos favoritos");
 
         RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
@@ -660,30 +672,35 @@ public class RestClientSingleton
 
         // La mandamos a la cola de peticiones.
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Petición creada y enviada");
 
         try
         {
             JSONArray response = future.get(20, TimeUnit.SECONDS);
 
-            List<Product> favorites = JSONParser.convertJSONtoProduct(response);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Se parsean los JSONs recibidos");
+            List<Product> favorites = JSONParser.convertJSONsToProducts(response);
             Set<Long> userFavorites = new HashSet<>();
             for (Product favorite : favorites)
             {
                 userFavorites.add(favorite.getId());
             }
 
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Se actualiza la lista de favoritos del usuario");
             user.setFavoriteProducts(userFavorites);
             mSharedPreferencesManager.insertUser(user);
 
             return favorites;
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            Log.d(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
+            Log.e(Properties.TAG, "Error conectando con el servidor: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return null;
 
         } catch (JSONException e) {
-            Log.d(Properties.TAG, "Error parseando los productos: " + e.getMessage());
+            Log.e(Properties.TAG, "Error parseando los productos: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return null;
         }
@@ -705,7 +722,7 @@ public class RestClientSingleton
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops/" + id);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para añadir las tiendas");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para añadir las tiendas");
 
         // Creamos el JSON con la lista de las tiendas.
         final JSONArray jsonArray = new JSONArray();
@@ -714,7 +731,7 @@ public class RestClientSingleton
             jsonArray.put(shop);
         }
 
-        Log.d(Properties.TAG, "JSON con las tiendas:\n    " + jsonArray.toString());
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] JSON con las tiendas:\n - " + jsonArray.toString());
 
         RequestFuture<String> future = RequestFuture.newFuture();
 
@@ -738,16 +755,16 @@ public class RestClientSingleton
 
         // Enviamos la peticion.
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Petición creada y enviada");
 
         try
         {
             String response = future.get(20, TimeUnit.SECONDS);
-
-            Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Respuesta recibida: " + response);
 
             if (response.equals(Properties.ACCEPTED))
             {
-                Log.d(Properties.TAG, "Tiendas actualizadas correctamente");
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Tiendas actualizadas correctamente");
 
                 // Metemos las tiendas en un Set
                 Set<String> shopSet = new HashSet<>();
@@ -764,7 +781,8 @@ public class RestClientSingleton
             }
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            Log.d(Properties.TAG, "Error borrando usuario: " + e.getMessage());
+            Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] Error enviando tiendas: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
         }
@@ -962,29 +980,38 @@ public class RestClientSingleton
                 , new Response.Listener<String>()
                 {
                     @Override
-                    public void onResponse(String response)
+                    public void onResponse(final String response)
                     {
                         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se recibe respuesta del servidor: " + response);
 
-                        synchronized (object)
+                        AsyncTask.execute(new Runnable()
                         {
-                            if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                            @Override
+                            public void run()
                             {
-                                // Si contiene el producto, es que se quiere quitar de favoritos.
-                                if (user.getFavoriteProducts().contains(product.getId()))
+                                synchronized (RestClientSingleton.class)
                                 {
-                                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se elimina el producto de favoritos");
-                                    user.getFavoriteProducts().remove(product.getId());
+                                    if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
+                                    {
+                                        // Si contiene el producto, es que se quiere quitar de favoritos.
+                                        if (user.getFavoriteProducts().contains(product.getId()))
+                                        {
+                                            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se elimina el producto de favoritos");
+                                            user.getFavoriteProducts().remove(product.getId());
 
-                                } else {
-                                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se añade el producto de favoritos");
-                                    user.getFavoriteProducts().add(product.getId());
+                                        } else {
+                                            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se añade el producto de favoritos: " + product.getId());
+                                            user.getFavoriteProducts().add(product.getId());
+                                        }
+
+                                        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se actualiza el usuario en las SharedPreferences");
+                                        mSharedPreferencesManager.insertUser(user);
+
+                                        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Set size: " + user.getFavoriteProducts().size());
+                                    }
                                 }
-
-                                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se actualiza el usuario en las SharedPreferences");
-                                mSharedPreferencesManager.insertUser(user);
                             }
-                        }
+                        });
                     }
                 }
                 , new Response.ErrorListener()

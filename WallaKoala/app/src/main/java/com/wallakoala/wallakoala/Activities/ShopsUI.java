@@ -32,6 +32,8 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
+import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.SmootherGridLayoutManager;
 import com.wallakoala.wallakoala.Utils.Utils;
@@ -39,7 +41,6 @@ import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,6 +107,9 @@ public class ShopsUI extends AppCompatActivity
                 {
                     mScroll = true;
                     mShopToScroll =  bundle.getString("shop");
+
+                    Log.d(Properties.TAG, "[SHOPS_UI] Se viene de la pantalla NotificationsUI");
+                    Log.d(Properties.TAG, "[SHOPS_UI] Hay que hacer scroll automático hasta la tienda " + mShopToScroll);
                 }
             }
         }
@@ -136,6 +140,8 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _fetchImages()
     {
+        Log.d(Properties.TAG, "[SHOPS_UI] Se precargan los logos de las tiendas");
+
         for (Shop shop : mAllShopsList)
         {
             String logoFile = shop.getName() + "-logo.jpg";
@@ -152,13 +158,13 @@ public class ShopsUI extends AppCompatActivity
      */
     private void _getDataFromServer()
     {
-        new RetrieveDataFromServer().execute();
+        new RetrieveShopsTask().execute();
     }
 
     /**
      * Tarea en segundo plano que trae la lista de tiendas y de favoritos del servidor.
      */
-    private class RetrieveDataFromServer extends AsyncTask<String, Void, Void>
+    private class RetrieveShopsTask extends AsyncTask<String, Void, Void>
     {
         private JSONArray content = null;
         private String error = null;
@@ -174,44 +180,22 @@ public class ShopsUI extends AppCompatActivity
         @Override
         protected Void doInBackground(String... unused)
         {
+            Log.d(Properties.TAG, "[SHOPS_UI] Se conecta con el servidor para traer la lista de tiendas");
+
             content = RestClientSingleton.retrieveShops(ShopsUI.this);
 
             // Si content esta vacio, es que ha fallado la conexion.
             if (content == null)
             {
                 error = "Imposible conectar con el servidor";
-                Log.d(Properties.TAG, error);
 
             } else {
                 try
                 {
-                    List<JSONObject> jsonList = new ArrayList<>();
-
-                    // Sacamos cada JSON (tienda).
-                    for (int j = 0; j < content.length(); j++)
-                    {
-                        JSONObject js = content.getJSONObject(j);
-
-                        jsonList.add(js);
-                    }
-
-                    // Parseamos el JSON manualmente.
-                    for (JSONObject jsonObject : jsonList)
-                    {
-                        String name = jsonObject.getString("name");
-                        int numberOfProducts = jsonObject.getInt("products");
-
-                        Shop shop = new Shop(name, false, false, numberOfProducts);
-
-                        mAllShopsList.add(shop);
-                    }
-
+                    Log.d(Properties.TAG, "[SHOPS_UI] Se parsean los JSONs con las tiendas");
+                    mAllShopsList = JSONParser.convertJSONsToShops(content);
+                    Log.d(Properties.TAG, "[SHOPS_UI] Se conecta con el servidor para traer la lista de favoritos del usuario");
                     mFavoriteList = RestClientSingleton.getFavoriteProducts(ShopsUI.this);
-
-                    if (mFavoriteList == null)
-                    {
-                        error = "Error al obtener los productos favoritos";
-                    }
 
                     // Ordenamos alfabeticamente.
                     Collections.sort(mAllShopsList);
@@ -219,7 +203,7 @@ public class ShopsUI extends AppCompatActivity
                     _fetchImages();
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    ExceptionPrinter.printException("SHOPS_UI", e);
                 }
             }
 
@@ -235,6 +219,8 @@ public class ShopsUI extends AppCompatActivity
 
             if (error == null)
             {
+                Log.d(Properties.TAG, "[SHOPS_UI] Todo correcto -> se muestran las tiendas");
+
                 Animation explode = AnimationUtils.loadAnimation(ShopsUI.this, R.anim.explode_animation);
                 explode.setStartOffset(275);
 
@@ -249,7 +235,7 @@ public class ShopsUI extends AppCompatActivity
                             @Override
                             public void onClick(View v)
                             {
-                                new RetrieveDataFromServer().execute();
+                                new RetrieveShopsTask().execute();
                             }
                         }).show();
             }
@@ -277,6 +263,8 @@ public class ShopsUI extends AppCompatActivity
 
             if (mScroll)
             {
+                Log.d(Properties.TAG, "[SHOPS_UI] Se realiza scroll automático hasta la tienda " + mShopToScroll);
+
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable()
                 {
@@ -302,13 +290,14 @@ public class ShopsUI extends AppCompatActivity
         mAcceptFAB = (FloatingActionButton)findViewById(R.id.shops_accept);
 
         mAcceptFAB.setVisibility(View.GONE);
-
         mAcceptFAB.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                new SendShopsToServer().execute();
+                Log.d(Properties.TAG, "[SHOPS_UI] Se hace click -> Aceptar");
+
+                new SendShopsTask().execute();
             }
         });
     }
@@ -316,7 +305,7 @@ public class ShopsUI extends AppCompatActivity
     /**
      * Tarea en segundo plano que envia la seleccion de tiendas al servidor.
      */
-    private class SendShopsToServer extends AsyncTask<String, Void, Void>
+    private class SendShopsTask extends AsyncTask<String, Void, Void>
     {
         private ProgressDialog progressDialog;
         private boolean correct;
@@ -335,6 +324,7 @@ public class ShopsUI extends AppCompatActivity
         @Override
         protected Void doInBackground(String... unused)
         {
+            Log.d(Properties.TAG, "[SHOPS_UI] Se envían nos cambios al servidor");
             correct = RestClientSingleton.sendShops(ShopsUI.this, mShopListAdapter.getListOfShops());
 
             return null;
@@ -347,6 +337,9 @@ public class ShopsUI extends AppCompatActivity
 
             if (correct)
             {
+                Log.d(Properties.TAG, "[SHOPS_UI] Cambios realizados correctamente");
+                Log.d(Properties.TAG, "[SHOPS_UI] Se vuelve a la activity con el RESULT_CODE -> RESULT_OK");
+
                 Intent intent = new Intent();
 
                 setResult(RESULT_OK, intent);
@@ -446,6 +439,8 @@ public class ShopsUI extends AppCompatActivity
     {
         if (item.getItemId() == android.R.id.home)
         {
+            Log.d(Properties.TAG, "[SHOPS_UI] Se pulsa el botón Atrás");
+
             onBackPressed();
 
             return true;

@@ -19,6 +19,7 @@ import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
@@ -117,13 +118,13 @@ public class NotificationsUI extends AppCompatActivity
         @Override
         protected Void doInBackground(String... unused)
         {
+            Log.d(Properties.TAG, "[NOTIFICATIONS_UI] Se obtienen las notificaciones");
             content = RestClientSingleton.retrieveNotifications(NotificationsUI.this);
 
             // Si content esta vacio, es que ha fallado la conexion.
             if (content == null)
             {
                 error = "Imposible conectar con el servidor";
-                Log.d(Properties.TAG, error);
 
             } else {
                 try
@@ -147,7 +148,7 @@ public class NotificationsUI extends AppCompatActivity
                     Collections.sort(mNotificationList);
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    ExceptionPrinter.printException("NOTIFICATIONS_UI", e);
                 }
             }
 
@@ -163,11 +164,13 @@ public class NotificationsUI extends AppCompatActivity
             {
                 if (mNotificationList.isEmpty())
                 {
+                    Log.d(Properties.TAG, "[NOTIFICATION_UI] No hay notificaciones por leer");
                     findViewById(R.id.notifications_nodata).setVisibility(View.VISIBLE);
+
                 } else {
                     _initRecyclerView();
                 }
-                
+
             } else {
                 Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()

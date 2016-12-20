@@ -10,7 +10,7 @@ public class Properties
     public static final int MAX_THREADS_SHOP = 4;
     public static final int MAX_THREADS_SECTIONS = 2;
     
-    public static final String SERVER = "http://cuoka-ws.cloudapp.net:8080";
+    public static final String SERVER = "http://46.183.117.190:8080";
     public static final int TIMEOUT = 60000;   
     
     public static final String SHOPS_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
