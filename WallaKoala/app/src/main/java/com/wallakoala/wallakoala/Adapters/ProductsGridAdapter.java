@@ -276,7 +276,9 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductFooterView.startAnimation(scaleDownFooter);
 
                 } else {
-                    Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mFrameLayout
+                            , mContext.getResources().getString(R.string.error_message)
+                            , Snackbar.LENGTH_SHORT).show();
                 }
             }
         }

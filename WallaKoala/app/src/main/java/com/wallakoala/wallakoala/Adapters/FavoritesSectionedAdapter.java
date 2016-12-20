@@ -340,7 +340,9 @@ public class FavoritesSectionedAdapter extends StatelessSection
                         activity.overridePendingTransition(0, 0);
 
                     } else {
-                        Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mFrameLayout
+                                , mContext.getResources().getString(R.string.error_message)
+                                , Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }

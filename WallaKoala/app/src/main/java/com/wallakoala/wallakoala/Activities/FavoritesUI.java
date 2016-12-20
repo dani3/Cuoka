@@ -257,7 +257,7 @@ public class FavoritesUI extends AppCompatActivity
                 findViewById(R.id.favorites_nodata).setVisibility(View.VISIBLE);
 
             } else {
-                Snackbar.make(mFrameLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mFrameLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override

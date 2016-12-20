@@ -145,8 +145,9 @@ public class IntroUI extends AppCompatActivity
             } else {
                 Log.d(Properties.TAG, "[INTRO] Algo ha fallado, se muestra Snackbar");
 
-                Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout), "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Reintentar", new View.OnClickListener()
+                Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout)
+                        , context.getResources().getString(R.string.error_message)
+                        , Snackbar.LENGTH_INDEFINITE).setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
                             public void onClick(View v)

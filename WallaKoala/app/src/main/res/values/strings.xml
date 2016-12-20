@@ -31,7 +31,7 @@
     <string name="product_info_description">Camisa de manga larga entallada con cuello inglés y pinzas que moldean la espalda. Planchado fácil. Corte ajustado.</string>
     <string name="product_info_reference"><b>Referencia:</b> 123456789</string>
 
-    <string name="error_message">Ops! Algo ha ido mal</string>
+    <string name="error_message">¡Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado…</string>
     <string name="nofav_message">Todavía no tienes ningún favorito</string>
     <string name="nonotification_message">No tienes ninguna notificación nueva</string>

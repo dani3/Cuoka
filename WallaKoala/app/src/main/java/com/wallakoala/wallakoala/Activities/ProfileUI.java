@@ -440,7 +440,7 @@ public class ProfileUI extends AppCompatActivity
                 startActivity(intent);
 
             } else {
-                Snackbar.make(mTopLevelLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mTopLevelLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -507,7 +507,7 @@ public class ProfileUI extends AppCompatActivity
                 onBackPressed();
 
             } else {
-                Snackbar.make(mTopLevelLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mTopLevelLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override

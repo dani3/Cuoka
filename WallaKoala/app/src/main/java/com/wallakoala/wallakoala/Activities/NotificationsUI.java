@@ -172,7 +172,7 @@ public class NotificationsUI extends AppCompatActivity
                 }
 
             } else {
-                Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override

@@ -1,5 +1,7 @@
 package com.wallakoala.wallakoala.Beans;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -86,7 +88,7 @@ public class Product implements Serializable, Comparable<Product>
 	}
 
     @Override
-    public int compareTo(Product o)
+    public int compareTo(@NonNull Product o)
     {
         return this.shop.compareTo(o.shop);
     }

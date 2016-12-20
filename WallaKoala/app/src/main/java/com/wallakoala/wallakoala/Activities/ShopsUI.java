@@ -229,7 +229,7 @@ public class ShopsUI extends AppCompatActivity
                 _initRecyclerView();
 
             } else {
-                Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -347,7 +347,7 @@ public class ShopsUI extends AppCompatActivity
                 finish();
 
             } else {
-                Snackbar.make(mCoordinatorLayout, "Ops, algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override

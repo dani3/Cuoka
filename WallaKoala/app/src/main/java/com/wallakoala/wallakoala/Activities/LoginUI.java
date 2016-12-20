@@ -295,7 +295,7 @@ public class LoginUI extends AppCompatActivity
 
                                     mEnterButton.setProgress(0);
 
-                                    Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                    Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                             .setAction("Reintentar", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v)
@@ -605,7 +605,7 @@ public class LoginUI extends AppCompatActivity
 
                                         ExceptionPrinter.printException("LOGIN", error);
 
-                                        Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                                 .setAction("Reintentar", new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v)
@@ -690,7 +690,7 @@ public class LoginUI extends AppCompatActivity
 
                             enterButton.setProgress(0);
 
-                            Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                            Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                     .setAction("Reintentar", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v)
@@ -715,7 +715,7 @@ public class LoginUI extends AppCompatActivity
 
                         error.printStackTrace();
 
-                        Snackbar.make(mAlertDialogView, "Ops, Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                        Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Reintentar", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v)
