@@ -182,7 +182,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             // Inicializamos el boton de favorito.
             mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                    mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
 
             // Cargamos la imagen usando Picasso.
             mTarget = new Target()
@@ -299,7 +299,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private void notifyFavoriteChanged()
         {
             mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                    mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
         }
 
     } /* [END] ViewHolder */

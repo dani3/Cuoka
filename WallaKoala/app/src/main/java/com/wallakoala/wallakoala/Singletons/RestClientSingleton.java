@@ -52,7 +52,7 @@ public class RestClientSingleton
      * @param notifId: id de la notificacion.
      * @return true si se ha enviado correctamente.
      */
-    public static boolean markNotificationAsRead(final Context context, long notifId)
+    public synchronized static boolean markNotificationAsRead(final Context context, long notifId)
     {
         String response;
 
@@ -60,14 +60,15 @@ public class RestClientSingleton
         {
             RequestFuture<String> future = RequestFuture.newFuture();
 
-            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User user = mSharedPreferencesManager.retreiveUser();
+            User user = mSharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/notification/" + user.getId() + "/" + notifId);
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para marcar la notificacion " + notifId + " como leida");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL
+                    + " para marcar la notificacion " + notifId + " como leida");
 
             // Creamos una peticion
             final StringRequest jsonObjReq = new StringRequest(Request.Method.GET
@@ -77,26 +78,34 @@ public class RestClientSingleton
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada");
 
             try
             {
                 response = future.get(20, TimeUnit.SECONDS);
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta recibida: " + response);
 
                 // Si ha ido bien, guardamos la notificacion y actualizamos el usuario.
                 if (response != null && response.equals(Properties.ACCEPTED))
                 {
+                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se añade la notificación como leída");
+
+                    user = mSharedPreferencesManager.retrieveUser();
+
                     user.addNotificationAsRead(notifId);
 
                     mSharedPreferencesManager.insertUser(user);
                 }
 
             } catch (InterruptedException e) {
-                Log.d(Properties.TAG, e.getMessage());
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                 return false;
             }
 
         } catch (Exception e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
             return false;
         }
 
@@ -119,7 +128,7 @@ public class RestClientSingleton
 
             final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User user = mSharedPreferencesManager.retreiveUser();
+            final User user = mSharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/notification/" + user.getId());
@@ -175,7 +184,7 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
+        final User user = mSharedPreferencesManager.retrieveUser();
 
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/hasNotification/" + user.getId());
@@ -217,8 +226,7 @@ public class RestClientSingleton
 
         // Enviamos la peticion.
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-
-        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición enviada al servidor");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada al servidor");
     }
 
     /**
@@ -351,7 +359,7 @@ public class RestClientSingleton
 
             final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User user = mSharedPreferencesManager.retreiveUser();
+            final User user = mSharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/shops/" + user.getMan());
@@ -414,14 +422,14 @@ public class RestClientSingleton
         {
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
-            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User user = mSharedPreferencesManager.retreiveUser();
+            User user = mSharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggest/" + user.getId() + "/" + word);
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer las sugerencias");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para traer las sugerencias");
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
@@ -432,13 +440,14 @@ public class RestClientSingleton
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y recibida");
 
             try
             {
                 content = future.get(20, TimeUnit.SECONDS);
 
             } catch (InterruptedException e) {
-                Log.d(Properties.TAG, e.getMessage());
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                 return null;
             }
@@ -446,10 +455,14 @@ public class RestClientSingleton
             // Si content es vacio, es que han fallado todas las conexiones.
             if (content == null)
             {
+                Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] No se ha recibido nada");
+
                 return null;
             }
 
         } catch (Exception e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
             return null;
         }
 
@@ -468,16 +481,16 @@ public class RestClientSingleton
 
         try
         {
-            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final long id = mSharedPreferencesManager.retreiveUser().getId();
+            long id = mSharedPreferencesManager.retrieveUser().getId();
 
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/recommended/" + id);
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer los productos recomendados");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para traer los productos recomendados");
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
@@ -488,13 +501,16 @@ public class RestClientSingleton
 
             // La mandamos a la cola de peticiones
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada");
 
             try
             {
                 content = future.get(20, TimeUnit.SECONDS);
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta recibida del servidor" +
+                        "");
 
             } catch (InterruptedException e) {
-                Log.d(Properties.TAG, e.getMessage());
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                 return null;
             }
@@ -502,10 +518,14 @@ public class RestClientSingleton
             // Si content es vacio, es que han fallado todas las conexiones.
             if (content == null)
             {
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] No se ha recibido nada");
+
                 return null;
             }
 
         } catch (Exception e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
             return null;
         }
 
@@ -528,7 +548,7 @@ public class RestClientSingleton
         {
             final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final boolean man = mSharedPreferencesManager.retreiveUser().getMan();
+            final boolean man = mSharedPreferencesManager.retrieveUser().getMan();
 
             final List<RequestFuture<JSONArray>> futures = new ArrayList<>();
 
@@ -559,7 +579,7 @@ public class RestClientSingleton
             {
                 try
                 {
-                    final JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+                    JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
 
                     Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta (" + shopList.get(i) + ") recibida");
 
@@ -598,7 +618,7 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final long id = mSharedPreferencesManager.retreiveUser().getId();
+        final long id = mSharedPreferencesManager.retrieveUser().getId();
 
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
@@ -655,7 +675,7 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
+        final User user = mSharedPreferencesManager.retrieveUser();
         final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(
@@ -718,7 +738,7 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = sharedPreferencesManager.retreiveUser();
+        final User user = sharedPreferencesManager.retrieveUser();
         final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(
@@ -799,15 +819,15 @@ public class RestClientSingleton
      */
     public static boolean deleteUser(final Context context)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
-        final long id = user.getId();
+        User user = mSharedPreferencesManager.retrieveUser();
+        long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para borrar un usuario");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para borrar un usuario");
 
         RequestFuture<String> future = RequestFuture.newFuture();
 
@@ -818,16 +838,17 @@ public class RestClientSingleton
 
         // Enviamos la peticion.
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada");
 
         try
         {
             String response = future.get(20, TimeUnit.SECONDS);
 
-            Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta del servidor: " + response);
 
             if (response.equals(Properties.ACCEPTED))
             {
-                Log.d(Properties.TAG, "Usuario borrado correctamente (ID: " + id + ")");
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Usuario borrado correctamente (ID: " + id + ")");
 
                 mSharedPreferencesManager.clear();
 
@@ -835,7 +856,7 @@ public class RestClientSingleton
             }
 
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            Log.d(Properties.TAG, "Error borrando usuario: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
         }
@@ -859,15 +880,15 @@ public class RestClientSingleton
                                     , short age
                                     , int postalCode)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
-        final long id = user.getId();
+        User user = mSharedPreferencesManager.retrieveUser();
+        long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para modificar el usuario");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para modificar el usuario");
 
         try
         {
@@ -882,7 +903,7 @@ public class RestClientSingleton
             jsonObject.put("password", (password.isEmpty()) ? null : password);
             jsonObject.put("postalCode", postalCode);
 
-            Log.d(Properties.TAG, "JSON con las modificaciones:\n    " + jsonObject.toString());
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] JSON con las modificaciones:\n  - " + jsonObject.toString());
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST
                     , fixedURL
@@ -904,16 +925,17 @@ public class RestClientSingleton
 
             // Enviamos la peticion.
             VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Petición creada y enviada");
 
             try
             {
                 String response = future.get(20, TimeUnit.SECONDS);
 
-                Log.d(Properties.TAG, "Respuesta del servidor: " + response);
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta del servidor: " + response);
 
                 if (response.equals(Properties.ACCEPTED))
                 {
-                    Log.d(Properties.TAG, "Usuario modificado correctamente (ID: " + id + ")");
+                    Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Usuario modificado correctamente (ID: " + id + ")");
 
                     if (!name.isEmpty())
                     {
@@ -946,13 +968,13 @@ public class RestClientSingleton
                 }
 
             } catch (ExecutionException | InterruptedException | TimeoutException e) {
-                Log.d(Properties.TAG, "Error modificando usuario: " + e.getMessage());
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
                 return false;
             }
 
         } catch (JSONException e) {
-            Log.d(Properties.TAG, "Error creando JSON (" + e.getMessage() + ")");
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
 
             return false;
         }
@@ -969,7 +991,7 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final long id = mSharedPreferencesManager.retreiveUser().getId();
+        final long id = mSharedPreferencesManager.retrieveUser().getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id + "/" + product.getId() + "/" + Properties.ACTION_FAVORITE);
@@ -994,7 +1016,7 @@ public class RestClientSingleton
                                 {
                                     if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                                     {
-                                        User user = mSharedPreferencesManager.retreiveUser();
+                                        User user = mSharedPreferencesManager.retrieveUser();
 
                                         // Si contiene el producto, es que se quiere quitar de favoritos.
                                         if (user.getFavoriteProducts().contains(product.getId()))
@@ -1036,26 +1058,26 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
+        final User user = mSharedPreferencesManager.retrieveUser();
         final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id + "/" + product.getId() + "/" + Properties.ACTION_VIEWED);
 
-        Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para marcar el producto como visto");
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para marcar el producto como visto");
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET
                 , fixedURL
                 , new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response) {}
-        }
+                {
+                    @Override
+                    public void onResponse(String response) {}
+                }
                 , new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error) {}
-        });
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {}
+                });
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }

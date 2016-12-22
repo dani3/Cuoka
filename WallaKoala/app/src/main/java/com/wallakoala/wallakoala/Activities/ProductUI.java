@@ -485,7 +485,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mImageView.setTranslationY(mTopDeltaImage);
 
         mFavoriteImageButton.changeIcon(
-                mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
 
         if (mThumbnailWidthFav != 0)
         {
@@ -598,7 +598,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         }
 
         mFavoriteImageButton.changeIcon(
-                mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
 
         if (mProductInfoLayout.getVisibility() == View.VISIBLE)
         {

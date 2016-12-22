@@ -76,7 +76,7 @@ public class SharedPreferencesManager
      * Metodo que devuelve un usuario.
      * @return usuario.
      */
-    public User retreiveUser()
+    public User retrieveUser()
     {
         final Gson gson = new Gson();
         final String json = mSharedPreferences.getString(KEY_USER, null);

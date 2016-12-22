@@ -41,8 +41,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
-import static com.wallakoala.wallakoala.Properties.Properties.TAG;
-
 /**
  * Adapter con seccion para mostrar los productos favoritos.
  * Created by Daniel Mancebo Aldea on 31/10/2016.
@@ -208,7 +206,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
 
             // Inicializamos el boton de favorito
             mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                    mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
 
             mFlippableView.setFlipped(mItemsFlipped[mSectionAdapter.getSectionPosition(holder.getAdapterPosition())]);
 
@@ -397,7 +395,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
         private void notifyFavoriteChanged()
         {
             mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                    mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
         }
     }
 

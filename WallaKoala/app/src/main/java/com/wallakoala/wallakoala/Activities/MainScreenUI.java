@@ -191,7 +191,7 @@ public class MainScreenUI extends AppCompatActivity
         mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
 
         // Obtenemos el usuario para inicializar la cabecera
-        User user = mSharedPreferencesManager.retreiveUser();
+        User user = mSharedPreferencesManager.retrieveUser();
 
         // Sacamos la cabecera del navigation drawer
         View navHeader = mNavigationVew.getHeaderView(0);
@@ -669,7 +669,7 @@ public class MainScreenUI extends AppCompatActivity
                 // Si venimos de la pantalla del perfil
 
                 // Obtenemos el usuario para actualizar la cabecera
-                User user = mSharedPreferencesManager.retreiveUser();
+                User user = mSharedPreferencesManager.retrieveUser();
 
                 // Sacamos la cabecera del navigation drawer
                 View navHeader = mNavigationVew.getHeaderView(0);

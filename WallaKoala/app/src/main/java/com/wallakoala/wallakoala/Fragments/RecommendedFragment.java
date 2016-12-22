@@ -124,7 +124,7 @@ public class RecommendedFragment extends Fragment
     {
         mSharedPreferences = new SharedPreferencesManager(getActivity());
 
-        mUser = mSharedPreferences.retreiveUser();
+        mUser = mSharedPreferences.retrieveUser();
 
         mProductList = new ArrayList<>();
 

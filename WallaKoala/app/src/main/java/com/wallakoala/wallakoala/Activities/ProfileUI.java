@@ -144,7 +144,7 @@ public class ProfileUI extends AppCompatActivity
 
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
 
-        mUser = sharedPreferencesManager.retreiveUser();
+        mUser = sharedPreferencesManager.retrieveUser();
 
         Bundle bundle = getIntent().getExtras();
 
@@ -198,7 +198,7 @@ public class ProfileUI extends AppCompatActivity
         mShopsTextView.setText(Integer.toString(mUser.getShops().size()));
 
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
-        User user = sharedPreferencesManager.retreiveUser();
+        User user = sharedPreferencesManager.retrieveUser();
 
         Bitmap profile = (user.getMan() ?
                 BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));

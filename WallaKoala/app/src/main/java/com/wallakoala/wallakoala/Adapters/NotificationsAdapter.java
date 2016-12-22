@@ -27,6 +27,7 @@ import com.wallakoala.wallakoala.Beans.Notification;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -131,7 +132,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
 
                     } catch (Exception e) {
-                        Log.e(Properties.TAG, e.getMessage());
+                        ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                     }
                 }
 
@@ -171,10 +172,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             {
                 if (!marked)
                 {
+                    Log.d(Properties.TAG, "[NOTIFICATIONS_ADAPTER] Se hace click -> Se marca como leída.");
                     _markNotification(true, notificationId);
                 }
 
             } else if (v.getId() == mActionButton.getId()) {
+                Log.d(Properties.TAG, "[NOTIFICATIONS_ADAPTER] Se hace click -> Ir a Mis Tiendas");
+
                 Intent intent = new Intent(mContext, ShopsUI.class);
 
                 intent.putExtra("shop", mNotification.getExtraInfo());
@@ -205,7 +209,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
 
                 } catch (Exception e) {
-                    Log.e(Properties.TAG, e.getMessage());
+                    ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                 }
             }
 
@@ -297,7 +301,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
 
                     } catch (Exception e) {
-                        Log.e(Properties.TAG, e.getMessage());
+                        ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                     }
                 }
 
@@ -359,7 +363,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             Utils.toGrayscale(((BitmapDrawable) mSalesImageView.getDrawable()).getBitmap()));
 
                 } catch (Exception e) {
-                    Log.e(Properties.TAG, e.getMessage());
+                    ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                 }
             }
 
@@ -450,7 +454,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
 
                     } catch (Exception e) {
-                        Log.e(Properties.TAG, e.getMessage());
+                        ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                     }
                 }
 
@@ -512,7 +516,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
 
                 } catch (Exception e) {
-                    Log.e(Properties.TAG, e.getMessage());
+                    ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                 }
             }
 
@@ -606,7 +610,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
 
                     } catch (Exception e) {
-                        Log.e(Properties.TAG, e.getMessage());
+                        ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                     }
                 }
 
@@ -671,7 +675,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             Utils.toGrayscale(((BitmapDrawable) mUpdateImageView.getDrawable()).getBitmap()));
 
                 } catch (Exception e) {
-                    Log.e(Properties.TAG, e.getMessage());
+                    ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                 }
             }
 
@@ -729,6 +733,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     public class RecommendedNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        private Notification mNotification;
         private long notificationId;
 
         private boolean marked;
@@ -770,6 +775,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             // Guardamos el id de la notificacion.
             notificationId = notification.getId();
+            mNotification = notification;
 
             // Establecemos la cabecera, el body y la diferencia de dias.
             mTitle.setText(notification.getTitle());
@@ -801,7 +807,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
 
                     } catch (Exception e) {
-                        Log.e(Properties.TAG, e.getMessage());
+                        ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                     }
                 }
 
@@ -844,7 +850,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     _markNotification(true, notificationId);
 
                 } else if (v.getId() == mActionButton.getId()) {
+                    Intent intent = new Intent(mContext, ShopsUI.class);
 
+                    intent.putExtra("shop", mNotification.getExtraInfo());
+
+                    // Iniciamos la activity ShopsUI
+                    ((Activity) mContext).startActivityForResult(intent, MANAGE_SHOPS_REQUEST);
+
+                    // Animacion de transicion para pasar de una activity a otra.
+                    ((Activity) mContext).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
                 }
             }
         }
@@ -866,7 +880,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             Utils.toGrayscale(((BitmapDrawable) mShopLogoImageView.getDrawable()).getBitmap()));
 
                 } catch (Exception e) {
-                    Log.e(Properties.TAG, e.getMessage());
+                    ExceptionPrinter.printException("NOTIFICATIONS_ADAPTER", e);
                 }
             }
 
@@ -896,7 +910,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(mContext);
 
-        mNotificationsReadList = sharedPreferencesManager.retreiveUser().getNotificationsRead();
+        mNotificationsReadList = sharedPreferencesManager.retrieveUser().getNotificationsRead();
     }
 
     /**

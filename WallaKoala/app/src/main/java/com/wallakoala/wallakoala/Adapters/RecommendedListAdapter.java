@@ -143,7 +143,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
 
             // Inicializamos el boton de favorito
             mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                    mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
 
             mFlippableView.setFlipped(mItemsFlipped[this.getAdapterPosition()]);
 
@@ -267,7 +267,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         private void notifyFavoriteChanged()
         {
             mProductFavoriteImageButton.changeIcon(
-                    mSharedPreferencesManager.retreiveUser().getFavoriteProducts().contains(mProduct.getId()));
+                    mSharedPreferencesManager.retrieveUser().getFavoriteProducts().contains(mProduct.getId()));
         }
 
         @Override

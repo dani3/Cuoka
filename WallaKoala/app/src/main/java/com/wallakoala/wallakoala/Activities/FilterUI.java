@@ -199,7 +199,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         mShopsList = new ArrayList<>();
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
-        for (String shop : sharedPreferencesManager.retreiveUser().getShops())
+        for (String shop : sharedPreferencesManager.retrieveUser().getShops())
         {
             mShopsList.add(shop);
         }

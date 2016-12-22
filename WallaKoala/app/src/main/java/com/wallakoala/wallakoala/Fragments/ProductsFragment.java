@@ -235,7 +235,7 @@ public class ProductsFragment extends Fragment
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
 
-        for (String shop : mSharedPreferences.retreiveUser().getShops())
+        for (String shop : mSharedPreferences.retrieveUser().getShops())
         {
             mShopsList.add(shop);
         }
@@ -247,13 +247,13 @@ public class ProductsFragment extends Fragment
 
         DAYS_OFFSET = 0;
         DAYS_WITH_NOTHING = 0;
-        MAN = mSharedPreferences.retreiveUser().getMan();
+        MAN = mSharedPreferences.retrieveUser().getMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
         FIRST_CONNECTION = true;
 
-        mUser = mSharedPreferences.retreiveUser();
+        mUser = mSharedPreferences.retrieveUser();
 
         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Numero de procesadores: " + NUMBER_OF_CORES);
     }

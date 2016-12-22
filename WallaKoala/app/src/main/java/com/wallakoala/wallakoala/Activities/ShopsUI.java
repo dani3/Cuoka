@@ -89,7 +89,7 @@ public class ShopsUI extends AppCompatActivity
     {
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(ShopsUI.this);
 
-        User mUser = sharedPreferencesManager.retreiveUser();
+        User mUser = sharedPreferencesManager.retrieveUser();
 
         mMyShopsList = new ArrayList<>();
         mAllShopsList = new ArrayList<>();
