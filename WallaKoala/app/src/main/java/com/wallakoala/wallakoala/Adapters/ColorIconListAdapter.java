@@ -2,7 +2,6 @@ package com.wallakoala.wallakoala.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.BaseAdapter;
 
 import com.squareup.picasso.Picasso;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
-import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Utils.Utils;
 
@@ -53,9 +51,9 @@ public class ColorIconListAdapter extends BaseAdapter
      * @param colorVariants: lista de ColorVariants.
      */
     public ColorIconListAdapter(final Context context
-                    , final List<ColorVariant> colorVariants
-                    , final String shop
-                    , final String section)
+                    , List<ColorVariant> colorVariants
+                    , String shop
+                    , String section)
     {
         mContext = context;
         mColorList = colorVariants;
@@ -122,8 +120,6 @@ public class ColorIconListAdapter extends BaseAdapter
         } else {
             colorIconHolder.mSelectedView.setVisibility(View.INVISIBLE);
         }
-
-        Log.d(Properties.TAG, url);
 
         Picasso.with(mContext)
                .load(url)
