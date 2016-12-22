@@ -155,8 +155,8 @@ public class Utils
 
             // Pre-Cargamos el icono utilizando Picasso.
             Picasso.with(context)
-                    .load(url)
-                    .fetch();
+                   .load(url)
+                   .fetch();
         }
     }
 

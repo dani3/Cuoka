@@ -1,5 +1,7 @@
 package com.wallakoala.wallakoala.Beans;
 
+import android.support.annotation.NonNull;
+
 /**
  * Clase que representa una notificacion.
  * Created by Daniel Mancebo Aldea on 25/11/2016.
@@ -41,7 +43,7 @@ public class Notification implements Comparable<Notification>
     public short getAction()     { return action; }
 
     @Override
-    public int compareTo(Notification o)
+    public int compareTo(@NonNull Notification o)
     {
         return (offset >= o.offset) ? 1 : -1;
     }

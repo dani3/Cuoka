@@ -52,7 +52,7 @@ public class JSONParser
             String name = jsonObject.getString("name");
             int numberOfProducts = jsonObject.getInt("products");
 
-            Shop shop = new Shop(name, false, false, numberOfProducts);
+            Shop shop = new Shop(name, numberOfProducts);
 
             shopList.add(shop);
 
@@ -118,7 +118,7 @@ public class JSONParser
 
         // Sacamos los productos favoritos.
         JSONArray jsonArray = jsonObject.getJSONArray("favoriteProducts");
-        Set<Long> favorites = new ConcurrentSet<>();
+        Set<Long> favorites = new HashSet<>();
         for (int i = 0; i < jsonArray.length(); i++)
         {
             favorites.add(Long.valueOf((String.valueOf(jsonArray.get(i)))));

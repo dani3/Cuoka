@@ -27,30 +27,29 @@ public class SmootherGridLayoutManager extends GridLayoutManager
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position)
     {
-        //Create your RecyclerView.SmoothScroller instance? Check.
+        // Create your RecyclerView.SmoothScroller instance? Check.
         LinearSmoothScroller smoothScroller = new LinearSmoothScroller(mContext)
         {
             @Override
-            public PointF computeScrollVectorForPosition
-                    (int targetPosition) {
-                return SmootherGridLayoutManager.this
-                        .computeScrollVectorForPosition(targetPosition);
+            public PointF computeScrollVectorForPosition(int targetPosition)
+            {
+                return SmootherGridLayoutManager.this.computeScrollVectorForPosition(targetPosition);
             }
 
-            //This returns the milliseconds it takes to
-            //scroll one pixel.
+            // This returns the milliseconds it takes to
+            // scroll one pixel.
             @Override
-            protected float calculateSpeedPerPixel
-            (DisplayMetrics displayMetrics) {
-                return MILLISECONDS_PER_INCH/displayMetrics.densityDpi;
+            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics)
+            {
+                return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
             }
         };
 
-        //Docs do not tell us anything about this,
-        //but we need to set the position we want to scroll to.
+        // Docs do not tell us anything about this,
+        // but we need to set the position we want to scroll to.
         smoothScroller.setTargetPosition(position);
 
-        //Call startSmoothScroll(SmoothScroller)? Check.
+        // Call startSmoothScroll(SmoothScroller)? Check.
         startSmoothScroll(smoothScroller);
     }
 }
