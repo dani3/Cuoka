@@ -227,14 +227,14 @@ public class RestClientSingleton
      * @param feedback: sugerencia del usuario.
      * @return true si ha ido correctamente.
      */
-    public static boolean sendFeedback(Context context, Feedback feedback)
+    public static boolean sendFeedback(final Context context, final Feedback feedback)
     {
         try
         {
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/feedback");
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para enviar una valoracion");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para enviar una valoracion");
 
             final JSONObject jsonObject = new JSONObject();
 
@@ -249,7 +249,7 @@ public class RestClientSingleton
                         @Override
                         public void onResponse(String response) {}
                     }
-                            , new Response.ErrorListener()
+                    , new Response.ErrorListener()
                     {
                         @Override
                         public void onErrorResponse(VolleyError error) {}
@@ -272,7 +272,7 @@ public class RestClientSingleton
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
 
         } catch (Exception e) {
-            return false;
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
         }
 
         return true;
@@ -284,14 +284,14 @@ public class RestClientSingleton
      * @param shopSuggested: tienda sugerida.
      * @return true si ha ido correctamente.
      */
-    public static boolean sendSuggestion(Context context, ShopSuggested shopSuggested)
+    public static boolean sendSuggestion(final Context context, final ShopSuggested shopSuggested)
     {
         try
         {
-            final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                    + "/suggested");
+            final String fixedURL = Utils.fixUrl(
+                    Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggested");
 
-            Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para enviar una tienda sugerida");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para enviar una tienda sugerida");
 
             final JSONObject jsonObject = new JSONObject();
 
@@ -306,7 +306,7 @@ public class RestClientSingleton
                         @Override
                         public void onResponse(String response) {}
                     }
-                            , new Response.ErrorListener()
+                    , new Response.ErrorListener()
                     {
                         @Override
                         public void onErrorResponse(VolleyError error) {}
@@ -329,7 +329,7 @@ public class RestClientSingleton
             VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
 
         } catch (Exception e) {
-            return false;
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
         }
 
         return true;
@@ -341,7 +341,7 @@ public class RestClientSingleton
      * @return Array de JSONs con las tiendas.
      */
     @Nullable
-    public static JSONArray retrieveShops(Context context)
+    public static JSONArray retrieveShops(final Context context)
     {
         JSONArray content;
 
@@ -406,7 +406,7 @@ public class RestClientSingleton
      * @return Array de JSONs con las sugerencias.
      */
     @Nullable
-    public static JSONArray retrieveSuggestions(Context context, String word)
+    public static JSONArray retrieveSuggestions(final Context context, String word)
     {
         JSONArray content;
 
@@ -462,7 +462,7 @@ public class RestClientSingleton
      * @return Array de JSONs con las recomendaciones del usuario.
      */
     @Nullable
-    public static JSONArray retrieveRecommendedProducts(Context context)
+    public static JSONArray retrieveRecommendedProducts(final Context context)
     {
         JSONArray content;
 
@@ -520,7 +520,7 @@ public class RestClientSingleton
      * @return Lista de arrays de JSONs con los productos del dia.
      */
     @Nullable
-    public static List<JSONArray> retrieveProducts(Context context, int offset, List<String> shopList)
+    public static List<JSONArray> retrieveProducts(final Context context, int offset, List<String> shopList)
     {
         List<JSONArray> content = new ArrayList<>();
 
@@ -594,7 +594,7 @@ public class RestClientSingleton
      * @param context: contexto.
      * @return true si se ha obtenido correctamente.
      */
-    public static boolean retrieveUser(Context context)
+    public static boolean retrieveUser(final Context context)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -651,7 +651,7 @@ public class RestClientSingleton
      * @return lista de productos favoritos.
      */
     @Nullable
-    public static List<Product> getFavoriteProducts(Context context)
+    public static List<Product> getFavoriteProducts(final Context context)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -714,7 +714,7 @@ public class RestClientSingleton
      * @param listOfShops: lista de tiendas a enviar.
      * @return true si se han enviado correctamente.
      */
-    public static boolean sendShops(Context context, List<String> listOfShops)
+    public static boolean sendShops(final Context context, List<String> listOfShops)
     {
         final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -797,7 +797,7 @@ public class RestClientSingleton
      * @param context: contexto
      * @return true si se ha borrado correctamente.
      */
-    public static boolean deleteUser(Context context)
+    public static boolean deleteUser(final Context context)
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
@@ -852,7 +852,7 @@ public class RestClientSingleton
      * @param age: edad del usuario.
      * @param postalCode: codigo postal del usuario.
      */
-    public static boolean sendUserModification(Context context
+    public static boolean sendUserModification(final Context context
                                     , String name
                                     , String email
                                     , String password

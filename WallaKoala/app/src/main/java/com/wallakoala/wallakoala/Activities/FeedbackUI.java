@@ -133,14 +133,33 @@ public class FeedbackUI extends AppCompatActivity implements View.OnClickListene
     }
 
     /**
-     * Metodo que crea un dialogo para confirmar el borrado de la cuenta.
+     * Metodo que crea un dialogo para mostrar un mensaje.
      */
     private AlertDialog _createDeleteDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(FeedbackUI.this, R.style.MyDialogTheme);
 
         builder.setTitle("");
-        builder.setMessage("¡Gracias!");
+
+        switch (mFeedback)
+        {
+            case 1:
+                builder.setMessage(getResources().getString(R.string.feedback_message_1));
+                break;
+            case 2:
+                builder.setMessage(getResources().getString(R.string.feedback_message_2));
+                break;
+            case 3:
+                builder.setMessage(getResources().getString(R.string.feedback_message_3));
+                break;
+            case 4:
+                builder.setMessage(getResources().getString(R.string.feedback_message_4));
+                break;
+            case 5:
+                builder.setMessage(getResources().getString(R.string.feedback_message_5));
+                break;
+        }
+
         builder.setPositiveButton("Volver", new DialogInterface.OnClickListener()
         {
             @Override

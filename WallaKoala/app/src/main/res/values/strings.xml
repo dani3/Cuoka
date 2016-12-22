@@ -132,10 +132,16 @@
 
     <string name="feedback_header">¡Tu opinión nos importa!</string>
     <string name="feedback">Cuéntanos tu experiencia (Opcional)</string>
+    <string name="feedback_message_1">Cuéntanos qué es lo que no te gusta, ¡Queremos mejorar!</string>
+    <string name="feedback_message_2">Cuéntanos qué es lo que no te gusta, ¡Queremos mejorar!</string>
+    <string name="feedback_message_3">¡Gracias! Día a día Cuoka está mejorando.</string>
+    <string name="feedback_message_4">¡Gracias por tu valoración! ¡Seguiremos trabajando!</string>
+    <string name="feedback_message_5">¡Cinco estrellas, gracias! Cuoka no te defraudará.</string>
 
     <string name="suggested_header">¿Te falta alguna tienda?\n Háznoslo saber</string>
     <string name="suggested_link">Link de la tienda (Opcional)</string>
     <string name="suggested_name">Nombre de la tienda</string>
+    <string name="suggested_message">¡Gracias! Vamos a estudiar tu sugerencia.</string>
 
     <string name="notification_shop_header">Tienda ya dispnible</string>
     <string name="notification_offset">Hoy</string>

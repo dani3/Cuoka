@@ -1,8 +1,10 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -36,6 +38,7 @@ public class SuggestedUI extends AppCompatActivity
     /**
      * Metodo que inicializa las distintas vistas.
      */
+    @SuppressWarnings("deprecation")
     private void _initViews()
     {
         final EditText nameEditText = (EditText) findViewById(R.id.suggested_name);
@@ -63,7 +66,19 @@ public class SuggestedUI extends AppCompatActivity
 
                     RestClientSingleton.sendSuggestion(SuggestedUI.this, shopSuggested);
 
-                    finish();
+                    final AlertDialog alertDialog = _createDeleteDialog();
+
+                    alertDialog.show();
+
+                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener()
+                    {
+                        @Override
+                        public void onShow(DialogInterface dialog)
+                        {
+                            alertDialog.getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+                        }
+                    });
                 }
             }
         });
@@ -87,6 +102,28 @@ public class SuggestedUI extends AppCompatActivity
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
         }
+    }
+
+    /**
+     * Metodo que crea un dialogo para mostrar un mensaje.
+     */
+    private AlertDialog _createDeleteDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuggestedUI.this, R.style.MyDialogTheme);
+
+        builder.setTitle("");
+        builder.setMessage(getResources().getString(R.string.suggested_message));
+
+        builder.setPositiveButton("Volver", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                finish();
+            }
+        });
+
+        return builder.create();
     }
 
     @Override
