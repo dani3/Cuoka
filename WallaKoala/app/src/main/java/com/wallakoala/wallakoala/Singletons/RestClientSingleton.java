@@ -969,8 +969,7 @@ public class RestClientSingleton
     {
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retreiveUser();
-        final long id = user.getId();
+        final long id = mSharedPreferencesManager.retreiveUser().getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id + "/" + product.getId() + "/" + Properties.ACTION_FAVORITE);
@@ -995,6 +994,8 @@ public class RestClientSingleton
                                 {
                                     if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                                     {
+                                        User user = mSharedPreferencesManager.retreiveUser();
+
                                         // Si contiene el producto, es que se quiere quitar de favoritos.
                                         if (user.getFavoriteProducts().contains(product.getId()))
                                         {
@@ -1008,8 +1009,6 @@ public class RestClientSingleton
 
                                         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se actualiza el usuario en las SharedPreferences");
                                         mSharedPreferencesManager.insertUser(user);
-
-                                        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Set size: " + user.getFavoriteProducts().size());
                                     }
                                 }
                             }

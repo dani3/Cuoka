@@ -51,12 +51,14 @@ public class IntroUI extends AppCompatActivity
     {
         try
         {
-            File filename = new File(Environment.getExternalStorageDirectory() + "/cuoka.log");
-            filename.createNewFile();
+            if (_isExternalStorageWritable())
+            {
+                File logFile = new File("cuoka" + System.currentTimeMillis() + ".txt");
 
-            String cmd = "logcat -d -f " + filename.getAbsolutePath();
-
-            Runtime.getRuntime().exec(cmd);
+                // Limpiamos el logcat antiguo y escribimos el nuevo.
+                Runtime.getRuntime().exec("logcat -c");
+                Runtime.getRuntime().exec("logcat -f " + logFile);
+            }
 
         } catch (IOException e) {
             ExceptionPrinter.printException("INTRO", e);
@@ -143,8 +145,6 @@ public class IntroUI extends AppCompatActivity
                 ((Activity)context).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
 
             } else {
-                Log.d(Properties.TAG, "[INTRO] Algo ha fallado, se muestra Snackbar");
-
                 Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout)
                         , context.getResources().getString(R.string.error_message)
                         , Snackbar.LENGTH_INDEFINITE).setAction("Reintentar", new View.OnClickListener()
@@ -189,5 +189,12 @@ public class IntroUI extends AppCompatActivity
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
+    }
+
+    private static boolean _isExternalStorageWritable()
+    {
+        String state = Environment.getExternalStorageState();
+
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 }
