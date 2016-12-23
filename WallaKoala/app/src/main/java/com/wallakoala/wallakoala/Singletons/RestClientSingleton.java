@@ -22,6 +22,7 @@ import com.wallakoala.wallakoala.Beans.ShopSuggested;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.CustomRequest;
 import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -1054,14 +1056,14 @@ public class RestClientSingleton
      * @param context: contexto
      * @param product: producto favorito
      */
-    public static void sendViewedProduct(Context context, final Product product)
+    public static void sendViewedProduct(final Context context, final Product product)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retrieveUser();
-        final long id = user.getId();
+        User user = mSharedPreferencesManager.retrieveUser();
+        long id = user.getId();
 
-        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id + "/" + product.getId() + "/" + Properties.ACTION_VIEWED);
 
         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para marcar el producto como visto");
@@ -1080,5 +1082,133 @@ public class RestClientSingleton
                 });
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
+
+    /**
+     * Metodo que envia una peticion para filtrar productos.
+     * @param context: contexto.
+     * @param shopsList: lista de tiendas.
+     * @param filterMap: mapa de filtros.
+     * @return lista de JSONs con los productos devueltos.
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static List<JSONArray> sendFilterRequest(final Context context, List<String> shopsList, Map<String, Object> filterMap)
+    {
+        List<JSONArray> content = new ArrayList<>();
+
+        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        User user = mSharedPreferencesManager.retrieveUser();
+
+        List<RequestFuture<JSONArray>> futures = new ArrayList<>();
+
+        try
+        {
+            for (int i = 0; i < shopsList.size(); i++)
+            {
+                String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                        + "/filter/" + user.getId() + "/" + shopsList.get(i));
+
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " + para realizar un filtro");
+
+                // Creamos el JSON con los filtros
+                JSONObject jsonObject = new JSONObject();
+
+                List<String> sectionsList = (ArrayList<String>)filterMap.get("sections");
+                List<String> colorsList   = (ArrayList<String>)filterMap.get("colors");
+
+                jsonObject.put("newness", filterMap.get("newness"));
+                jsonObject.put("man", user.getMan());
+                jsonObject.put("priceFrom", filterMap.get("minPrice"));
+                jsonObject.put("priceTo", filterMap.get("maxPrice"));
+                jsonObject.put("colors", new JSONArray(colorsList));
+                jsonObject.put("sections", new JSONArray(sectionsList));
+
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] JSON con los filtros:\n " + jsonObject.toString());
+
+                futures.add(RequestFuture.<JSONArray>newFuture());
+
+                // Creamos una peticion
+                CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
+                        , fixedURL
+                        , jsonObject
+                        , futures.get(i)
+                        , futures.get(i));
+
+                // La mandamos a la cola de peticiones
+                VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+            }
+
+        } catch (JSONException e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
+            return null;
+        }
+
+        // Metemos en content el resultado de cada uno
+        for (int i = 0; i < shopsList.size(); i++)
+        {
+            try
+            {
+                JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
+
+                content.add(response);
+
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
+                return null;
+            }
+        }
+
+        return content;
+    }
+
+    /**
+     * Metodo que envia una peticion para realizar una busqueda.
+     * @param context: contexto.
+     * @param query: texto a buscar.
+     * @return lista de JSONs con los productos devueltos.
+     */
+    @Nullable
+    public static List<JSONArray> sendSearchRequest(final Context context, String query)
+    {
+        List<JSONArray> content = new ArrayList<>();
+
+        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        User user = mSharedPreferencesManager.retrieveUser();
+
+        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                + "/search/" + user.getId() + "/" + query);
+
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " + para realizar una búsqueda");
+
+        // Creamos una peticion
+        final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
+                , fixedURL
+                , null
+                , future
+                , future);
+
+        // La mandamos a la cola de peticiones
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
+
+        try
+        {
+            JSONArray response = future.get(20, TimeUnit.SECONDS);
+
+            content.add(response);
+
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
+            return null;
+        }
+
+        return content;
     }
 }

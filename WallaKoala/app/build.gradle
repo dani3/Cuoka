@@ -38,4 +38,5 @@ dependencies {
     compile 'com.github.ybq:Android-SpinKit:1.0.4'
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4'
     compile 'com.github.paolorotolo:appintro:4.1.0'
+    compile 'com.github.emanzanoaxa:RippleEffect:52ea2a0ab6'
 }

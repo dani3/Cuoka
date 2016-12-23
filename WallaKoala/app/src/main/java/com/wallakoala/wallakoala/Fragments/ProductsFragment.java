@@ -136,7 +136,7 @@ public class ProductsFragment extends Fragment
     protected SharedPreferencesManager mSharedPreferences;
 
     /* AsynTasks */
-    protected AsyncTask mConnectToServer, mRetreiveProductsFromServer;
+    protected AsyncTask mConnectToServer, mRetreiveProductsTask;
 
     /* User */
     protected User mUser;
@@ -367,7 +367,9 @@ public class ProductsFragment extends Fragment
                                             , "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
                                     Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_SHORT).show();
+
                                     mLoadingServerView.setVisibility(View.GONE);
+                                    mLoadingView.setVisibility(View.GONE);
                                 }
                             }
                         }
@@ -405,9 +407,9 @@ public class ProductsFragment extends Fragment
             if (!mConnectToServer.isCancelled())
                 mConnectToServer.cancel(true);
 
-        if (mRetreiveProductsFromServer != null)
-            if (!mRetreiveProductsFromServer.isCancelled())
-                mRetreiveProductsFromServer.cancel(true);
+        if (mRetreiveProductsTask != null)
+            if (!mRetreiveProductsTask.isCancelled())
+                mRetreiveProductsTask.cancel(true);
     }
 
     /**
@@ -555,11 +557,10 @@ public class ProductsFragment extends Fragment
      * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
      * que cumplan los filtros establecidos.
      */
-    private class RetreiveProductsFromServer extends AsyncTask<String, Void, Void>
+    private class RetreiveProductsTask extends AsyncTask<String, Void, Void>
     {
-        private List<JSONArray> content = new ArrayList<>();
+        private List<JSONArray> content;
         private String error = null;
-        private boolean EMPTY;
 
         @Override
         protected void onPreExecute()
@@ -579,95 +580,22 @@ public class ProductsFragment extends Fragment
                 List<String> aux = (ArrayList<String>) mFilterMap.get("shops");
                 List<String> shopsList = (aux == null) ? mShopsList : aux;
 
-                List<RequestFuture<JSONArray>> futures = new ArrayList<>();
-                RequestFuture<JSONArray> future = RequestFuture.newFuture();
-
                 if (SEARCH_QUERY == null)
                 {
-                    for (int i = 0; i < shopsList.size(); i++)
-                    {
-                        final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                                        + "/filter/" + mUser.getId() + "/" + shopsList.get(i));
-
-                        Log.d(Properties.TAG, "Conectando con: " + fixedURL);
-
-                        // Creamos el JSON con los filtros
-                        final JSONObject jsonObject = new JSONObject();
-
-                        final List<String> sectionsList = (ArrayList<String>)mFilterMap.get("sections");
-                        final List<String> colorsList   = (ArrayList<String>)mFilterMap.get("colors");
-
-                        jsonObject.put("newness", mFilterMap.get("newness"));
-                        jsonObject.put("man", MAN);
-                        jsonObject.put("priceFrom", mFilterMap.get("minPrice"));
-                        jsonObject.put("priceTo", mFilterMap.get("maxPrice"));
-                        jsonObject.put("colors", new JSONArray(colorsList));
-                        jsonObject.put("sections", new JSONArray(sectionsList));
-
-                        Log.d(Properties.TAG, "JSON con los filtros:\n    " + jsonObject.toString());
-
-                        futures.add(RequestFuture.<JSONArray>newFuture());
-
-                        // Creamos una peticion
-                        final CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST
-                                                                    , fixedURL
-                                                                    , jsonObject
-                                                                    , futures.get(i)
-                                                                    , futures.get(i));
-
-                        // La mandamos a la cola de peticiones
-                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-                    }
-
-                    // Metemos en content el resultado de cada uno
-                    for (int i = 0; i < shopsList.size(); i++)
-                    {
-                        try
-                        {
-                            JSONArray response = futures.get(i).get(20, TimeUnit.SECONDS);
-
-                            content.add(response);
-
-                        } catch (InterruptedException e) {
-                            error = "Thread interrumpido";
-                            Log.d(Properties.TAG, error);
-                        }
-                    }
+                    content = RestClientSingleton.sendFilterRequest(getContext(), shopsList, mFilterMap);
 
                 } else {
-                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                            + "/search/" + mUser.getId() + "/" + SEARCH_QUERY);
-
-                    Log.d(Properties.TAG, "Realizando busqueda: " + fixedURL);
-
-                    futures.add(RequestFuture.<JSONArray>newFuture());
-
-                    // Creamos una peticion
-                    final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
-                                                                        , fixedURL
-                                                                        , null
-                                                                        , future
-                                                                        , future);
-
-                    // La mandamos a la cola de peticiones
-                    VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-                    try
-                    {
-                        JSONArray response = future.get(20, TimeUnit.SECONDS);
-
-                        content.add(response);
-
-                    } catch (InterruptedException e) {
-                        error = "Thread interrumpido";
-                        Log.d(Properties.TAG, error);
-                    }
+                    content = RestClientSingleton.sendSearchRequest(getContext(), SEARCH_QUERY);
                 }
 
-                EMPTY = content.isEmpty();
+                if (content == null)
+                {
+                    error = "Se ha producido un error obteniendo productos";
+                    Log.e(Properties.TAG, "[PRODUCTS_FRAGMENT] " + error);
+                }
 
             } catch (Exception ex)  {
-                error = ex.getMessage();
+                ExceptionPrinter.printException("PRODUCTS_FRAGMENT", ex);
             }
 
             return null;
@@ -684,14 +612,14 @@ public class ProductsFragment extends Fragment
                 _errorConnectingToServer(true);
 
             } else {
-                if (!EMPTY)
+                if (!content.isEmpty())
                 {
                     new MultithreadConversion().execute(content);
                 }
             }
         }
 
-    } /* [END RetreiveProductsFromServer] */
+    } /* [END RetreiveProductsTask] */
 
     /**
      * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
@@ -815,6 +743,7 @@ public class ProductsFragment extends Fragment
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
                         mLoadingServerView.setVisibility(View.GONE);
+                        mLoadingView.setVisibility(View.GONE);
                     }
 
                 } else if (mProductsCandidatesDeque.isEmpty() && mProductsDisplayedList.size() < MIN_PRODUCTS && (DAYS_OFFSET >= 0)) {
@@ -840,6 +769,7 @@ public class ProductsFragment extends Fragment
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
                         mLoadingServerView.setVisibility(View.GONE);
+                        mLoadingView.setVisibility(View.GONE);
                     }
 
                 } else {
@@ -996,7 +926,7 @@ public class ProductsFragment extends Fragment
                 @Override
                 public void onClick(View view)
                 {
-                    mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+                    mRetreiveProductsTask = new RetreiveProductsTask().execute();
                 }
             });
         }
@@ -1139,48 +1069,35 @@ public class ProductsFragment extends Fragment
 
         mFilterMap = filterMap;
 
-        Log.d(Properties.TAG, " Novedades = " + Boolean.toString((boolean) mFilterMap.get("newness")));
-        Log.d(Properties.TAG, " Precio Min = " + Integer.toString((int) mFilterMap.get("minPrice")));
-        Log.d(Properties.TAG, " Precio Max = " + Integer.toString((int) mFilterMap.get("maxPrice")));
-
-        List<String> shopsList = (ArrayList<String>) mFilterMap.get("shops");
-        if (shopsList != null)
-            for (String shop : shopsList)
-                Log.d(Properties.TAG, " Tienda = " + shop);
-
+        List<String> shopsList    = (ArrayList<String>) mFilterMap.get("shops");
         List<String> sectionsList = (ArrayList<String>) mFilterMap.get("sections");
-        if (sectionsList != null)
-            for (String section : sectionsList)
-                Log.d(Properties.TAG, " Seccion = " + section);
+        List<String> colorsList   = (ArrayList<String>) mFilterMap.get("colors");
+        boolean newness           = (boolean) mFilterMap.get("newness");
+        int from                  = (int) mFilterMap.get("minPrice");
+        int to                    = (int) mFilterMap.get("maxPrice");
 
-        List<String> colorsList = (ArrayList<String>) mFilterMap.get("colors");
-        if (colorsList != null)
-            for (String color : colorsList)
-                Log.d(Properties.TAG, " Color = " + color);
-
-        if (shopsList != null)
-            if (shopsList.size() == mShopsList.size())
-                if (shopsList.containsAll(mShopsList))
-                    shopsList = null;
-
-        boolean newness = (boolean) mFilterMap.get("newness");
-        int from = (int) mFilterMap.get("minPrice");
-        int to = (int) mFilterMap.get("maxPrice");
+        if (shopsList != null && shopsList.size() == mShopsList.size() && shopsList.containsAll(mShopsList))
+        {
+            shopsList = null;
+        }
 
         _reinitializeData();
 
         if (mProductsRecyclerView != null)
+        {
             mProductsRecyclerView.setVisibility(View.GONE);
+        }
 
         // Se comprueba si los filtros son los por defecto, si es asi, se realiza una peticion normal.
-        if ((shopsList == null)
-                && (colorsList == null)
-                && (sectionsList == null)
-                && (!newness)
-                && (from < 0)
-                && (to < 0))
+        if ((shopsList == null) &&
+            (colorsList == null) &&
+            (sectionsList == null) &&
+            (!newness) &&
+            (from < 0) &&
+            (to < 0))
         {
-            Log.d(Properties.TAG, "Filtros por defecto");
+            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se han introducido los filtros por defecto");
+            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se vuelve al funcionamiento normal");
 
             // Reiniciamos el mapa de filtros.
             mFilterMap = new HashMap<>();
@@ -1194,10 +1111,12 @@ public class ProductsFragment extends Fragment
             // Si ha marcado todas las tiendas, tenemos que traerlas antes.
             if ((shopsList != null) && (shopsList.get(0).equals(ALL)))
             {
+                Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se han marcado todas las tiendas");
+
                 final String fixedURL = Utils.fixUrl(
                         Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops/" + mUser.getMan());
 
-                Log.d(Properties.TAG, "Conectando con: " + fixedURL + " para traer la lista de tiendas");
+                Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Conectando con: " + fixedURL + " para traer la lista de tiendas");
 
                 // Creamos la peticion para obtener la lista de tiendas.
                 final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET
@@ -1208,7 +1127,7 @@ public class ProductsFragment extends Fragment
                             @Override
                             public void onResponse(JSONArray response)
                             {
-                                Log.d(Properties.TAG, "Respuesta: " + response);
+                                Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se recibe la respuesta con las siguientes tiendas: ");
 
                                 // Sacamos la lista de tiendas
                                 List<String> shops = new ArrayList<>();
@@ -1217,9 +1136,10 @@ public class ProductsFragment extends Fragment
                                     try
                                     {
                                         shops.add(response.getJSONObject(i).getString("name"));
+                                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] - " + shops.get(i));
 
                                     } catch (JSONException e) {
-                                        e.printStackTrace();
+                                        ExceptionPrinter.printException("PRODUCTS_FRAGMENT", e);
                                     }
                                 }
 
@@ -1227,7 +1147,7 @@ public class ProductsFragment extends Fragment
 
                                 _loading(true, true);
 
-                                mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+                                mRetreiveProductsTask = new RetreiveProductsTask().execute();
                             }
                         }
                         , new Response.ErrorListener()
@@ -1237,7 +1157,7 @@ public class ProductsFragment extends Fragment
                             {
                                 _loading(false, false);
 
-                                Snackbar.make(mFrameLayout, "Ops! Algo ha ido mal", Snackbar.LENGTH_INDEFINITE)
+                                Snackbar.make(mFrameLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                         .setAction("Reintentar", new View.OnClickListener()
                                         {
                                             @Override
@@ -1250,9 +1170,10 @@ public class ProductsFragment extends Fragment
                         });
 
                 VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
+                Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Petición creada y enviada");
 
             } else {
-                mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+                mRetreiveProductsTask = new RetreiveProductsTask().execute();
             }
         }
     }
@@ -1280,7 +1201,7 @@ public class ProductsFragment extends Fragment
         // Lo ponemos a -1 para detectar cuando estamos en los filtros
         DAYS_OFFSET = -1;
 
-        mRetreiveProductsFromServer = new RetreiveProductsFromServer().execute();
+        mRetreiveProductsTask = new RetreiveProductsTask().execute();
     }
 
     /**

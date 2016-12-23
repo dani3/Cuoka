@@ -29,8 +29,7 @@
             android:layout_height="24dp"
             android:layout_margin="14dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_call_made_black"
-            android:alpha="0.4"
+            android:src="@drawable/ic_enter_suggestion"
             android:background="@android:color/transparent"
             android:onClick="onClickButton"/>
 

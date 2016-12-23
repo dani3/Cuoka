@@ -38,6 +38,7 @@ import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.RangeSeekBar;
@@ -277,7 +278,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         // [BEGIN] Listener FAB OK
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                Log.d(Properties.TAG, "[FILTER_UI] Se hace CLICK -> Aceptar");
                 boolean OK = true;
 
                 if (!COLOR_FILTER_ACTIVE &&
@@ -286,6 +289,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     !PRICE_FILTER_ACTIVE &&
                     !NEWNESS_FILTER_ACTIVE)
                 {
+                    Log.d(Properties.TAG, "[FILTER_UI] No hay ningún filtro establecido");
+
                     mSnackbar = Snackbar.make(mCoordinatorLayout
                             , "No se ha establecido ningún filtro"
                             , Snackbar.LENGTH_SHORT);
@@ -293,11 +298,15 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     mSnackbar.show();
 
                 } else {
+                    Log.d(Properties.TAG, "[FILTER_UI] Se buscan productos que cumplan los siguientes filtros:");
+
                     Intent intent = new Intent();
 
                     ArrayList<String> shopsList = null;
                     if (SHOP_FILTER_ACTIVE)
                     {
+                        Log.d(Properties.TAG, "[FILTER_UI] - De las siguientes tiendas:");
+
                         boolean none = true;
 
                         shopsList = new ArrayList<>();
@@ -309,6 +318,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             {
                                 if (checkBox.isChecked())
                                 {
+                                    Log.d(Properties.TAG, "[FILTER_UI]  - " + checkBox.getText().toString());
+
                                     none = false;
 
                                     shopsList.add(checkBox.getText().toString());
@@ -316,6 +327,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             }
 
                         } else {
+                            Log.d(Properties.TAG, "[FILTER_UI]  - Todas ");
+
                             none = false;
 
                             shopsList.add(ALL);
@@ -323,6 +336,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                         if (none)
                         {
+                            Log.d(Properties.TAG, "[FILTER_UI]  - No se ha marcado ninguna tienda");
+
                             OK = false;
 
                             mFilterShopMenuLayout.startAnimation(
@@ -333,6 +348,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     ArrayList<String> colorsList = null;
                     if (COLOR_FILTER_ACTIVE)
                     {
+                        Log.d(Properties.TAG, "[FILTER_UI] De los siguientes colores:");
+
                         boolean none = true;
 
                         colorsList = new ArrayList<>();
@@ -340,6 +357,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         {
                             if (checkBox.isChecked())
                             {
+                                Log.d(Properties.TAG, "[FILTER_UI]  - " + checkBox.getText().toString());
+
                                 none = false;
 
                                 colorsList.add(checkBox.getText().toString());
@@ -348,6 +367,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                         if (none)
                         {
+                            Log.d(Properties.TAG, "[FILTER_UI]  - No se ha marcado ningún color");
+
                             OK = false;
 
                             mFilterColorMenuLayout.startAnimation(
@@ -358,6 +379,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     ArrayList<String> sectionsList = null;
                     if (SECTION_FILTER_ACTIVE)
                     {
+                        Log.d(Properties.TAG, "[FILTER_UI] De las siguientes secciones:");
+
                         boolean none = true;
 
                         sectionsList = new ArrayList<>();
@@ -365,6 +388,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         {
                             if (checkBox.isChecked())
                             {
+                                Log.d(Properties.TAG, "[FILTER_UI]  - " + checkBox.getText().toString());
+
                                 none = false;
 
                                 sectionsList.add(checkBox.getText().toString());
@@ -373,6 +398,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                         if (none)
                         {
+                            Log.d(Properties.TAG, "[FILTER_UI]  - No se ha marcado ninguna sección");
+
                             OK = false;
 
                             mFilterSectionMenuLayout.startAnimation(
@@ -396,12 +423,19 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                             mFilterPriceMenuLayout.startAnimation(
                                     AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
+                        } else {
+                            Log.d(Properties.TAG, "[FILTER_UI] - A partir de " + lengthFrom + "€ hasta " + lengthTo + "€");
                         }
                     }
 
                     if (OK)
                     {
                         final boolean newness = mNewnessNewRadioButton.isChecked();
+
+                        Log.d(Properties.TAG, "[FILTER_UI] " + ((newness) ? "Sólo novedades" : "Todos los productos"));
+
+                        Log.d(Properties.TAG, "[FILTER_UI] Todos los filtros introducidos son correctos");
+                        Log.d(Properties.TAG, "[FILTER_UI] Se vuelve a la Activity -> MainScreenUI");
 
                         intent.putExtra(Properties.PACKAGE + ".shops", shopsList);
                         intent.putExtra(Properties.PACKAGE + ".colors", colorsList);
@@ -916,6 +950,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     @SuppressWarnings("deprecation")
     protected void _resetFilter()
     {
+        Log.d(Properties.TAG, "[FILTER_UI] Se resetean los filtros");
+
         mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtros restablecidos", Snackbar.LENGTH_SHORT);
 
         mSnackbar.show();
@@ -1229,6 +1265,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             {
                 if (Utils.isQueryOk(query))
                 {
+                    Log.d(Properties.TAG, "[FILTER_UI] Se realiza la búsqueda de: " + query);
+
                     Intent intent = new Intent();
 
                     intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)null);
@@ -1252,7 +1290,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             {
                 if (newText.length() > 1)
                 {
-                    new GetSuggestionsFromServer(FilterUI.this, mMenu).execute(newText);
+                    new GetSuggestionsTask(FilterUI.this, mMenu).execute(newText);
                 }
 
                 return true;
@@ -1267,6 +1305,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         if (item.getItemId() == android.R.id.home)
         {
+            Log.d(Properties.TAG, "[FILTER_UI] Se pulsa el botón Atrás");
+
             onBackPressed();
 
             return true;
@@ -1274,6 +1314,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (item.getItemId() == R.id.menu_item_options)
         {
+            Log.d(Properties.TAG, "[FILTER_UI] Se hace CLICK -> Restablecer filtros");
+
             _resetFilter();
         }
 
@@ -1299,14 +1341,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Tarea en segundo plano para traer las sugerencias del servidor.
      */
-    private static class GetSuggestionsFromServer extends AsyncTask<String, Void, Void>
+    private static class GetSuggestionsTask extends AsyncTask<String, Void, Void>
     {
         private WeakReference<FilterUI> context;
         private WeakReference<Menu> menu;
 
         private List<String> suggestions = new ArrayList<>();
 
-        public GetSuggestionsFromServer(FilterUI context, Menu menu)
+        public GetSuggestionsTask(FilterUI context, Menu menu)
         {
             this.context = new WeakReference<>(context);
             this.menu = new WeakReference<>(menu);
@@ -1323,12 +1365,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 {
                     for (int i = 0; i < jsonArray.length(); i++)
                     {
+                        Log.d(Properties.TAG, "[FILTER_UI] Sugerencia #" + i + ": " + jsonArray.getString(i));
                         suggestions.add(jsonArray.getString(i));
                     }
 
                 } catch (JSONException e) {
-                    Log.d(Properties.TAG, "Error parseando las sugerencias");
-                    e.printStackTrace();
+                    ExceptionPrinter.printException("FILTER_UI", e);
                 }
             }
 
@@ -1372,6 +1414,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         if (Utils.isQueryOk(textView.getText().toString()))
         {
+            Log.d(Properties.TAG, "[FILTER_UI] Se hace CLICK -> Sugerencia");
+            Log.d(Properties.TAG, "[FILTER_UI] Se realiza la búsqueda de: " + textView.getText().toString());
+
             Intent intent = new Intent();
 
             intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)null);

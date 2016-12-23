@@ -646,7 +646,7 @@ public class MainScreenUI extends AppCompatActivity
                 // Si es null significa que se quiere filtrar.
                 if (searchQuery == null)
                 {
-                    Log.d(Properties.TAG, "Filtro establecido:");
+                    Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se quiere realizar un filtro");
 
                     Map<String, Object> filterMap = new HashMap<>();
 
@@ -657,11 +657,13 @@ public class MainScreenUI extends AppCompatActivity
                     filterMap.put("minPrice", data.getIntExtra(Properties.PACKAGE + ".minPrice", -1));
                     filterMap.put("maxPrice", data.getIntExtra(Properties.PACKAGE + ".maxPrice", -1));
 
+                    Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se llama al Fragment -> PRODUCTS_FRAGMENT");
                     mProductsFragment.processFilter(filterMap);
 
                 } else {
-                    Log.d(Properties.TAG, "Busqueda: " + searchQuery);
+                    Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se quiere realizar una búsqueda");
 
+                    Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se llama al Fragment -> PRODUCTS_FRAGMENT");
                     mProductsFragment.processSearch(searchQuery);
                 }
 
