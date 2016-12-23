@@ -34,6 +34,9 @@ public class Product implements Comparator
     @Column(name = "PRICE")
     private double price;
     
+    @Column(name = "DISCOUNT")
+    private double discount;
+    
     @Column(name = "NAME")
     private String name;
     
@@ -74,6 +77,8 @@ public class Product implements Comparator
     
     @JsonProperty("price")
     public void setPrice(double price) { this.price = price; }
+    @JsonProperty("discount")
+    public void setDiscount(double discount) { this.discount = discount; }
     @JsonProperty("name")
     public void setName(String name) { this.name = name; }
     @JsonProperty("shop")
@@ -115,6 +120,8 @@ public class Product implements Comparator
     public long getId() { return this.id; } 
     @JsonProperty("9")
     public float getAspectRatio() { return this.aspectRatio; } 
+    @JsonProperty("10")
+    public double getDiscount() { return this.discount; }
     @JsonIgnore
     public Calendar getInsertDate() { return this.insertDate; }
     @JsonIgnore
@@ -147,7 +154,7 @@ public class Product implements Comparator
             (thisProduct.man == otherProduct.man) &&
             (thisProduct.colors.get(0).getReference().equals(otherProduct.colors.get(0).getReference())))
         {
-            return (thisProduct.price == otherProduct.price) ? 0 : 1;
+            return (thisProduct.price == otherProduct.price && thisProduct.discount == otherProduct.discount) ? 0 : 1;
         }
      
         return -1;

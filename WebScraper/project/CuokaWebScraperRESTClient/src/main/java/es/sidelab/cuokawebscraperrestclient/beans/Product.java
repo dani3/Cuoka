@@ -13,6 +13,7 @@ import java.util.List;
 public class Product 
 {
     private double price;
+    private double discount;
     private String name;
     private String shop;
     private String section;
@@ -26,6 +27,7 @@ public class Product
     public Product() {}
 
     public Product(double price
+            , double discount
             , String name
             , String shop
             , String section
@@ -35,6 +37,7 @@ public class Product
             , List<ColorVariant> colors) 
     {
         this.price = price;
+        this.discount = discount;
         this.name = name;
         this.shop = shop;
         this.section = section;
@@ -47,6 +50,7 @@ public class Product
     }  
     
     public void setPrice(double price) { this.price = price; }
+    public void setDiscount(double discount) { this.discount = discount; }
     public void setName(String name) { this.name = name; }
     public void setShop(String shop) { this.shop = shop; }
     public void setSection(String section) { this.section = section; }
@@ -58,6 +62,7 @@ public class Product
     public void setInsertDate(Calendar insertDate) { this.insertDate = insertDate; }
     
     public double getPrice() { return this.price; }
+    public double getDiscount() { return this.discount; }
     public String getName() { return this.name; }
     public String getShop() { return this.shop; }
     public String getSection() { return this.section; }

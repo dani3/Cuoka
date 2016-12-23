@@ -28,7 +28,7 @@ public class testScraper
         List<Product> productList = new ArrayList<>();
         
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\", false);
-        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\", false);
+        Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         /*Runtime.getRuntime().exec(new String[] {"python"
@@ -76,6 +76,7 @@ public class testScraper
             System.out.println("Link: " + p.getLink());
             System.out.println("Descripcion: " + p.getDescription());
             System.out.println("Precio: " + p.getPrice() + " €");
+            System.out.println("Descuento: " + p.getDiscount()+ " €");
             System.out.println("-------- INFO COLORES -----------");
             for (ColorVariant cv : p.getColors())
             {
@@ -94,10 +95,11 @@ public class testScraper
     
     private static Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
-        String name = br.readLine();
+        String name        = br.readLine();
         String description = br.readLine();
-        String price = br.readLine();
-        String link = br.readLine();
+        String price       = br.readLine();
+        String discount    = br.readLine();
+        String link        = br.readLine();
         
         // Podemos haber leido ya todos los productos, por lo que name puede ser null
         if (name == null || name.contains("null") || price.contains("null"))
@@ -107,12 +109,15 @@ public class testScraper
         
         Product product = new Product();
         
+        discount = discount.replaceAll("Descuento: ", "");    
+        
         product.setName(name.replace("Nombre: ", ""));
         product.setDescription(description.replace("Descripcion: ", ""));
-        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));
+        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));            
+        product.setDiscount((discount.isEmpty()) ? 0.0f : Double.valueOf(discount));
         product.setLink(fixURL(link.replace("Link: ", "")));
         
-        return product;        
+        return product;            
     }
     
     private static Product _readProductColors(Product product, BufferedReader br) throws IOException

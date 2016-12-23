@@ -97,6 +97,7 @@ public class HyMScraper implements Scraper
         String name        = br.readLine();
         String description = br.readLine();
         String price       = br.readLine();
+        String discount    = br.readLine();
         String link        = br.readLine();
         
         // Podemos haber leido ya todos los productos, por lo que name puede ser null
@@ -107,9 +108,12 @@ public class HyMScraper implements Scraper
         
         Product product = new Product();
         
+        discount = discount.replaceAll("Descuento: ", "");    
+        
         product.setName(name.replace("Nombre: ", ""));
         product.setDescription(description.replace("Descripcion: ", ""));
-        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));
+        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));            
+        product.setDiscount((discount.isEmpty()) ? 0.0f : Double.valueOf(discount));
         product.setLink(fixURL(link.replace("Link: ", "")));
         
         return product;        
