@@ -53,7 +53,7 @@ public class IntroUI extends AppCompatActivity
         {
             if (_isExternalStorageWritable())
             {
-                File logFile = new File("cuoka" + System.currentTimeMillis() + ".txt");
+                File logFile = new File(getExternalCacheDir(), "cuoka.log");
 
                 // Limpiamos el logcat antiguo y escribimos el nuevo.
                 Runtime.getRuntime().exec("logcat -c");

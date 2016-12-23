@@ -198,7 +198,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
                                     ? Html.fromHtml("<b>Siguiendo</b>") : Html.fromHtml("<b>Seguir</b>"));
 
                             mActionButton.setTextColor((!actionDeleted)
-                                    ? mContext.getResources().getColor(android.R.color.white) : mContext.getResources().getColor(R.color.colorText));
+                                    ? mContext.getResources().getColor(android.R.color.white)
+                                    : mContext.getResources().getColor(R.color.colorText));
 
                             // Mostramos el icono de la seccion/corazon
                             mFavOrNumberImageView.setImageDrawable((!actionDeleted)

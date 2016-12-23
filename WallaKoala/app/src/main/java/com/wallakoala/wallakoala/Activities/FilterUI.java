@@ -265,8 +265,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initViews()
     {
-        mCoordinatorLayout    = (CoordinatorLayout)findViewById(R.id.filter_coordinator_layout);
-        mItemsMenuViewGroup   = (ViewGroup)findViewById(R.id.menu_items);
+        mCoordinatorLayout  = (CoordinatorLayout)findViewById(R.id.filter_coordinator_layout);
+        mItemsMenuViewGroup = (ViewGroup)findViewById(R.id.menu_items);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton);
 
@@ -436,10 +436,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterColorImageView   = (ImageView)findViewById(R.id.filter_image_color);
         mFilterNewnessImageView = (ImageView)findViewById(R.id.filter_image_newness);
 
-        mFilterShopImageView.setAlpha((mFilterShops == null || mFilterShops.isEmpty()) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
-        mFilterSectionImageView.setAlpha((mFilterSections == null || mFilterSections.isEmpty()) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
-        mFilterPriceImageView.setAlpha(((mFilterMinPrice == -1) && (mFilterMaxPrice == -1)) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
-        mFilterColorImageView.setAlpha((mFilterColors == null || mFilterColors.isEmpty()) ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterShopImageView.setAlpha((mFilterShops == null || mFilterShops.isEmpty())
+                ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterSectionImageView.setAlpha((mFilterSections == null || mFilterSections.isEmpty())
+                ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterPriceImageView.setAlpha(((mFilterMinPrice == -1) && (mFilterMaxPrice == -1))
+                ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterColorImageView.setAlpha((mFilterColors == null || mFilterColors.isEmpty())
+                ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
         mFilterNewnessImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
         mFilterShopItemLayout.setOnClickListener(this);
