@@ -457,7 +457,7 @@ public class ProductsFragment extends Fragment
             jsonList.add(js);
         }
 
-        for(JSONObject jsonObject : jsonList)
+        for (JSONObject jsonObject : jsonList)
         {
             double price       = jsonObject.getDouble("1");
             String name        = jsonObject.getString("2");
@@ -630,28 +630,39 @@ public class ProductsFragment extends Fragment
         private String error = null;
 
         @Override
-        protected void onPreExecute()
-        {
-            Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se crea un executor de " + (NUMBER_OF_CORES * 4) + " núcleos");
-            // Creamos un executor, con cuatro veces mas de threads que nucleos fisicos.
-            executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
-                    , NUMBER_OF_CORES * 4
-                    , 60L
-                    , TimeUnit.SECONDS
-                    , new LinkedBlockingQueue<Runnable>());
-
-            completionService = new ExecutorCompletionService<>(executor);
-        }
-
-        @Override
         @SuppressWarnings("unchecked")
         protected Void doInBackground(List<JSONArray>... params)
         {
             List<JSONArray> content = params[0];
+            boolean empty = true;
 
             try
             {
                 mProductsListMap.add(new ConcurrentHashMap<String, List<Product>>());
+
+                // Comprobamos que se han traido productos.
+                for (JSONArray jsonArray : content)
+                {
+                    if (jsonArray.length() != 0)
+                    {
+                        empty = false;
+                    }
+                }
+
+                // Si no hay productos, forzamos a que se conecte de nuevo.
+                if (empty)
+                {
+                    return null;
+                }
+
+                // Creamos un executor: 4 x CORES
+                executor = new ThreadPoolExecutor(NUMBER_OF_CORES * 4
+                        , NUMBER_OF_CORES * 4
+                        , 60L
+                        , TimeUnit.SECONDS
+                        , new LinkedBlockingQueue<Runnable>());
+
+                completionService = new ExecutorCompletionService<>(executor);
 
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
@@ -673,7 +684,7 @@ public class ProductsFragment extends Fragment
 
                 Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Todos los productos parseados correctamente");
 
-                // Liberamos el executor ya que no hara falta.
+                // Liberamos el executor.
                 executor.shutdown();
 
                 // Una vez cargados los productos, actualizamos la cola de candidatos...
@@ -894,7 +905,7 @@ public class ProductsFragment extends Fragment
             mState = STATE.NODATA;
         }
 
-        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado:" + mState.toString());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
     }
 
     /**
@@ -933,7 +944,7 @@ public class ProductsFragment extends Fragment
 
         mState = STATE.ERROR;
 
-        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado:" + mState.toString());
+        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
     }
 
     /**

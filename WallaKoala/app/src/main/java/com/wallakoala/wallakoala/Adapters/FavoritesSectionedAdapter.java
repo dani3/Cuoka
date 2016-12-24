@@ -376,7 +376,6 @@ public class FavoritesSectionedAdapter extends StatelessSection
 
                 // Obtenemos la url del icono del color.
                 String url = Utils.getColorUrl(colorVariant, product.getShop(), product.getSection());
-                Log.d(Properties.TAG, url);
 
                 Picasso.with(mContext)
                        .load(url)

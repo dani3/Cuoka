@@ -678,10 +678,9 @@ public class RestClientSingleton
         final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
 
         final User user = mSharedPreferencesManager.retrieveUser();
-        final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(
-                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/favorites/" + id);
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/favorites/" + user.getId());
 
         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para otener los productos favoritos");
 
