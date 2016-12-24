@@ -424,7 +424,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             mFilterPriceMenuLayout.startAnimation(
                                     AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
                         } else {
-                            Log.d(Properties.TAG, "[FILTER_UI] - A partir de " + lengthFrom + "€ hasta " + lengthTo + "€");
+                            Log.d(Properties.TAG, "[FILTER_UI] - A partir de " + from + "€ hasta " + to + "€");
                         }
                     }
 

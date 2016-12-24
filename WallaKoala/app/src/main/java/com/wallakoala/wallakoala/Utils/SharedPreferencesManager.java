@@ -15,6 +15,7 @@ public class SharedPreferencesManager
 {
     private static final String KEY_LOGGED_IN = "logged_in";
     private static final String KEY_USER      = "user_activity";
+    private static final String KEY_FIRST_USE = "first_use";
 
     private static SharedPreferences mSharedPreferences;
     private static SharedPreferences.Editor mEditor;
@@ -82,5 +83,28 @@ public class SharedPreferencesManager
         final String json = mSharedPreferences.getString(KEY_USER, null);
 
         return gson.fromJson(json, User.class);
+    }
+
+    /**
+     * Metodo que devuelve si se debe mostrar el tour.
+     * @return true si se debe mostrar el tour.
+     */
+    public boolean retrieveTourVisited()
+    {
+        return mSharedPreferences.getBoolean(KEY_FIRST_USE, false);
+    }
+
+    /**
+     * Metodo que inserta si se ha visitado el tour.
+     * @param tourVisited: true si se ha visitado el tour
+     * @return true si se ha insertado correctamente.
+     */
+    public synchronized boolean insertTourVisited(boolean tourVisited)
+    {
+        mEditor = mSharedPreferences.edit();
+
+        mEditor.putBoolean(KEY_FIRST_USE, tourVisited);
+
+        return mEditor.commit();
     }
 }

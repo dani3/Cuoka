@@ -1,10 +1,12 @@
 package com.wallakoala.wallakoala.Fragments;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -93,7 +95,7 @@ public class RecommendedFragment extends Fragment
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions, deprecation")
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
@@ -115,6 +117,24 @@ public class RecommendedFragment extends Fragment
             // IMPORTANTE quitar el RecyclerView de los productos.
             mProductsRecyclerView.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * Metodo que crea un dialogo informativo.
+     * @return AlertDialog.
+     */
+    private AlertDialog _createDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
+
+        builder.setTitle("No has seleccionado ninguna tienda");
+        builder.setMessage("Selecciona tus tiendas para poder mostrarte nuestras recomendaciones.");
+        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        });
+
+        return builder.create();
     }
 
     /**
@@ -319,7 +339,7 @@ public class RecommendedFragment extends Fragment
             mState = ProductsFragment.STATE.LOADING;
         }
 
-        Log.d(Properties.TAG, "Estado = " + mState.toString());
+        Log.d(Properties.TAG, "[RECOMMENDED_FRAGMENT] Estado = " + mState.toString());
     }
 
     /**
@@ -355,6 +375,22 @@ public class RecommendedFragment extends Fragment
             HAS_BEEN_SELECTED = true;
 
             mConnectToServer = new ConnectToServer().execute();
+
+        } else if (mUser.getShops().isEmpty()) {
+            final AlertDialog dialog = _createDialog();
+
+            dialog.setOnShowListener(new DialogInterface.OnShowListener()
+            {
+                @Override
+                @SuppressWarnings("deprecation")
+                public void onShow(DialogInterface dialogInterface)
+                {
+                    dialog.getButton(
+                            AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+                }
+            });
+
+            dialog.show();
         }
     }
 

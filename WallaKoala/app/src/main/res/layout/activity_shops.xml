@@ -6,8 +6,24 @@
     android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include android:id="@+id/shops_toolbar"
-        layout="@layout/aux_toolbar_filter"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include android:id="@+id/shops_toolbar"
+            layout="@layout/aux_toolbar_filter"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.wallakoala.wallakoala.Views.StaggeredRecyclerView
+        android:id="@+id/shops_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="108dp"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:layoutAnimation="@anim/grid_enter_animation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <!-- Loading View -->
     <com.github.ybq.android.spinkit.SpinKitView
@@ -19,17 +35,6 @@
         android:alpha="0.75"
         style="@style/SpinKitView.Large.ChasingDots"
         app:SpinKit_Color="@color/colorAccent"/>
-
-    <com.wallakoala.wallakoala.Views.StaggeredRecyclerView
-        android:id="@+id/shops_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:scrollbars="none"
-        android:paddingBottom="108dp"
-        android:paddingTop="@dimen/action_bar_height"
-        android:clipToPadding="false"
-        android:layoutAnimation="@anim/grid_enter_animation"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/shops_accept"

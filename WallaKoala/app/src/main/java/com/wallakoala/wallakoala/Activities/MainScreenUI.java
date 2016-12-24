@@ -150,9 +150,13 @@ public class MainScreenUI extends AppCompatActivity
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
         {
             @Override
+            @SuppressWarnings("ConstantConditions")
             public void onTabSelected(TabLayout.Tab tab)
             {
-                mRecommendedFragment.select();
+                if (tab.getText().toString().equalsIgnoreCase("DESCUBRE"))
+                {
+                    mRecommendedFragment.select();
+                }
             }
 
             @Override

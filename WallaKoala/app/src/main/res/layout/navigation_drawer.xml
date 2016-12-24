@@ -17,7 +17,7 @@
         app:itemTextColor="@color/colorText"
         app:itemBackground="@color/navigation_item_colors"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:menu="@menu/left_navigation_drawer_menu">
+        app:menu="@menu/navigation_drawer_menu">
 
     </android.support.design.widget.NavigationView>
 

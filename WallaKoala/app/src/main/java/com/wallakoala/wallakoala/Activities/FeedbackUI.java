@@ -90,7 +90,7 @@ public class FeedbackUI extends AppCompatActivity implements View.OnClickListene
 
                     RestClientSingleton.sendFeedback(FeedbackUI.this, feedback);
 
-                    mDialog = _createDeleteDialog();
+                    mDialog = _createDialog();
 
                     mDialog.show();
 
@@ -135,7 +135,7 @@ public class FeedbackUI extends AppCompatActivity implements View.OnClickListene
     /**
      * Metodo que crea un dialogo para mostrar un mensaje.
      */
-    private AlertDialog _createDeleteDialog()
+    private AlertDialog _createDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(FeedbackUI.this, R.style.MyDialogTheme);
 

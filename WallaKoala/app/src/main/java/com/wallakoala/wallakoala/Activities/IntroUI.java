@@ -55,6 +55,11 @@ public class IntroUI extends AppCompatActivity
             {
                 File logFile = new File(getExternalCacheDir(), "cuoka.log");
 
+                if (logFile.exists())
+                {
+                    logFile.delete();
+                }
+
                 // Limpiamos el logcat antiguo y escribimos el nuevo.
                 Runtime.getRuntime().exec("logcat -c");
                 Runtime.getRuntime().exec("logcat -f " + logFile);
@@ -166,7 +171,16 @@ public class IntroUI extends AppCompatActivity
         } else {
             Log.d(Properties.TAG, "[INTRO] El usuario no está logueado -> LoginUI");
 
-            Intent intent = new Intent(context, LoginUI.class);
+            Intent intent;
+
+            /*if (!sharedPreferencesManager.retrieveTourVisited())
+            {
+                intent = new Intent(context, TourUI.class);
+            } else {
+                intent = new Intent(context, LoginUI.class);
+            }*/
+
+            intent = new Intent(context, LoginUI.class);
 
             context.startActivity(intent);
 
