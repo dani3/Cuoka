@@ -220,6 +220,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         TextView mProductPriceTextView       = (TextView) findViewById(R.id.product_info_price);
         TextView mProductDescriptionTextView = (TextView) findViewById(R.id.product_info_description);
         TextView mProductShopTextView        = (TextView) findViewById(R.id.product_info_shop);
+        TextView mProductDiscountTextView    = (TextView) findViewById(R.id.product_info_discount);
 
         mImageView                = (ImageView) findViewById(R.id.imageView);
         mFloatingActionButtonPlus = (FloatingActionButton) findViewById(R.id.floatingButton);
@@ -227,8 +228,38 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mProductReferenceTextView = (TextView) findViewById(R.id.product_info_reference);
         mFavoriteImageButton      = (LikeButtonLargeView) findViewById(R.id.product_favorite);
 
-        ImageButton shareImageButton = (ImageButton) findViewById(R.id.product_share);
+        ImageButton shareImageButton    = (ImageButton) findViewById(R.id.product_share);
         ImageButton redirectImageButton = (ImageButton) findViewById(R.id.product_redirect);
+
+        // Inicializamos la info del producto
+        boolean emptyDescription = (mProduct.getDescription() == null ||
+                mProduct.getDescription().isEmpty() ||
+                mProduct.getDescription().equalsIgnoreCase("null"));
+
+        String name = "<b>" + mProduct.getName() + "</b>";
+        String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
+        String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
+        description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
+        description = "<b>Descripción: </b>" + description;
+        SpannableString price = Utils.priceToString(mProduct.getPrice());
+
+        if (mProduct.getDiscount() != 0.0f)
+        {
+            SpannableString discount = Utils.priceToString(mProduct.getDiscount());
+            mProductDiscountTextView.setText(discount);
+
+        } else {
+            mProductDiscountTextView.setVisibility(View.GONE);
+        }
+
+        mProductNameTextView.setText(Html.fromHtml(name));
+        mProductShopTextView.setText(mProduct.getShop());
+        mProductDescriptionTextView.setText(Html.fromHtml(description));
+        mProductReferenceTextView.setText(Html.fromHtml(reference));
+        mProductPriceTextView.setText(price);
+
+        mProductInfoLayout.setVisibility(View.INVISIBLE);
+        mFloatingActionButtonPlus.setVisibility(View.GONE);
 
         // Inicializamos los listeners a todos los botones.
         redirectImageButton.setOnClickListener(new View.OnClickListener()
@@ -249,26 +280,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             }
         });
 
-        // Inicializamos la info del producto
-        boolean emptyDescription = (mProduct.getDescription() == null ||
-                mProduct.getDescription().isEmpty() ||
-                mProduct.getDescription().equalsIgnoreCase("null"));
-
-        String name = "<b>" + mProduct.getName() + "</b>";
-        String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
-        String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
-        description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
-        description = "<b>Descripción: </b>" + description;
-        SpannableString price = Utils.priceToString(mProduct.getPrice());
-
-        mProductNameTextView.setText(Html.fromHtml(name));
-        mProductShopTextView.setText(mProduct.getShop());
-        mProductDescriptionTextView.setText(Html.fromHtml(description));
-        mProductReferenceTextView.setText(Html.fromHtml(reference));
-        mProductPriceTextView.setText(price);
-
-        mProductInfoLayout.setVisibility(View.INVISIBLE);
-
         mFavoriteImageButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -284,7 +295,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         });
 
         // Floating Button para expandir la info.
-        mFloatingActionButtonPlus.setVisibility(View.GONE);
         mFloatingActionButtonPlus.setOnClickListener(new View.OnClickListener()
         {
             @Override

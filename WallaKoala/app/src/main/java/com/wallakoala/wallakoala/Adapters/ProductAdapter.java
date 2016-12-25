@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     /* Data */
     private Bitmap mFirstImageBitmap;
     private ColorVariant mColor;
-    private double mAspectRatio;
     private String mShop;
     private String mSection;
+    private double mAspectRatio;
     private boolean mLoaded;
 
     /**
@@ -148,23 +149,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public Uri getFirstImageUri()
     {
         // Comprobamos que el usuario ha dado permisos para acceder a las imagenes.
+        Log.d(Properties.TAG, "[PRODUCT_ADAPTER] Se comprueba si tiene permisos de escritura");
         int permissionCheck = ContextCompat.checkSelfPermission(
                 mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         // Si no tiene permisos, se piden al usuario.
         if (permissionCheck != PackageManager.PERMISSION_GRANTED)
         {
+            Log.d(Properties.TAG, "[PRODUCT_ADAPTER] NO se tiene permisos de escritura, se piden");
             ActivityCompat.requestPermissions(
                     (Activity) mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 
-        } else {
-            if (mLoaded)
-            {
-                String path = MediaStore.Images.Media.insertImage(
-                        mContext.getContentResolver(), mFirstImageBitmap, "Image Description", null);
+        } else if (mLoaded) {
 
-                return Uri.parse(path);
-            }
+            Log.d(Properties.TAG, "[PRODUCT_ADAPTER] Sí se tienen permisos de escritura, se guarda la imagen temporalmente");
+            String path = MediaStore.Images.Media.insertImage(
+                    mContext.getContentResolver(), mFirstImageBitmap, "Image compartida", null);
+
+            return Uri.parse(path);
         }
 
         return null;

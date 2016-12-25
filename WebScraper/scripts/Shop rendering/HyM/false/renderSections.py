@@ -17,7 +17,7 @@ path = sys.argv[2]
 
 # Lista de secciones con sus URL's
 urls = [("Camisas", "http://www2.hm.com/es_es/mujer/compra-por-producto/camisas-y-blusas.html"),
-        ("Vestidos","http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html"),
+        ("Vestidos", "http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html"),
         ("Camisetas", "http://www2.hm.com/es_es/mujer/compra-por-producto/tops.html"),
         ("Punto", "http://www2.hm.com/es_es/mujer/compra-por-producto/prendas-de-punto.html"),
         ("Jerseys", "http://www2.hm.com/content/hmonline/es_es/mujer/compra-por-producto/cardigans-y-jerseis.html"),

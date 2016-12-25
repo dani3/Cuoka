@@ -129,6 +129,7 @@
                 app:customFont="Existence-StencilLight.otf"/>
 
             <com.wallakoala.wallakoala.Views.ExistenceTextView
+                android:id="@+id/product_info_discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"

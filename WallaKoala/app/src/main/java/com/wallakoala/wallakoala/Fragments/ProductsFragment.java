@@ -82,15 +82,15 @@ public class ProductsFragment extends Fragment
                 },
         LOADING
                 { @Override
-                  public String toString() { return "LOADING"; }
+                  public String toString() { return "CARGANDO"; }
                 },
         NODATA
                 { @Override
-                  public String toString() { return "NO_DATA"; }
+                  public String toString() { return "SIN DATOS"; }
                 },
-        NORMAL
+        OK
                 { @Override
-                  public String toString() { return "NORMAL"; }
+                  public String toString() { return "OK"; }
                 },
     }
 
@@ -467,7 +467,7 @@ public class ProductsFragment extends Fragment
             String description = jsonObject.getString("7");
             long id            = jsonObject.getLong("8");
             float aspectRatio  = (float) jsonObject.getDouble("9");
-            double discount    = jsonObject.getDouble("11");
+            double discount    = jsonObject.getDouble("10");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();
@@ -745,9 +745,9 @@ public class ProductsFragment extends Fragment
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                        Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG).show();
 
-                        mState = STATE.NORMAL;
+                        mState = STATE.OK;
 
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
@@ -773,7 +773,7 @@ public class ProductsFragment extends Fragment
 
                         Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
 
-                        mState = STATE.NORMAL;
+                        mState = STATE.OK;
 
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
@@ -835,7 +835,7 @@ public class ProductsFragment extends Fragment
 
                     mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
-                    mState = STATE.NORMAL;
+                    mState = STATE.OK;
 
                     FIRST_CONNECTION = false;
 
@@ -857,7 +857,7 @@ public class ProductsFragment extends Fragment
 
                     mLoadingServerView.startAnimation(mHideFromUp);
 
-                    mState = STATE.NORMAL;
+                    mState = STATE.OK;
                 }
 
             } else {
@@ -896,7 +896,7 @@ public class ProductsFragment extends Fragment
         {
             mNoDataTextView.setVisibility(View.GONE);
 
-            mState = STATE.NORMAL;
+            mState = STATE.OK;
 
         } else {
             mNoDataTextView.setVisibility(View.VISIBLE);
@@ -992,7 +992,9 @@ public class ProductsFragment extends Fragment
 
             // Si se ha terminado el recorrido, lo iniciamos de nuevo.
             if (!iterator.hasNext())
+            {
                 iterator = mProductsListMap.get(mProductsListMap.size()-1).keySet().iterator();
+            }
 
             finished = _checkIfFinished(indexMap);
 
@@ -1035,6 +1037,7 @@ public class ProductsFragment extends Fragment
     private boolean _checkIfFinished(final Map<String, Integer> indexMap)
     {
         boolean finished = true;
+
         Iterator<String> iterator = indexMap.keySet().iterator();
         while ((iterator.hasNext()) && (finished))
         {

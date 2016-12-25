@@ -1,7 +1,6 @@
 import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
@@ -13,22 +12,22 @@ path_to_chromedriver = sys.argv[1]
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Blanco_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_false\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Camisetas", "http://www.blanco.com/es/es_es/partes-de-arriba/camisetas.html"),
-        ("Vestidos", "http://www.blanco.com/es/es_es/vestidos.html"),
-        ("Faldas", "http://www.blanco.com/es/es_es/partes-de-abajo/faldas.html"),
-        ("Jeans", "http://www.blanco.com/es/es_es/jeans.html"),
-        ("Monos", "http://www.blanco.com/es/es_es/monos.html"),
-        ("Tops", "http://www.blanco.com/es/es_es/partes-de-arriba/tops.html"),
-        ("Camisas", "http://www.blanco.com/es/es_es/partes-de-arriba/camisas.html"),
-        ("Pantalones", "http://www.blanco.com/es/es_es/partes-de-abajo/pantalones.html"),
-        ("Shorts", "http://www.blanco.com/es/es_es/partes-de-abajo/shorts.html"),
-        ("Punto", "http://www.blanco.com/es/es_es/punto.html"),
-        ("Chaquetas", "http://www.blanco.com/es/es_es/prenda-exterior.html"),
-        ("Zapatos", "http://www.blanco.com/es/es_es/zapatos.html")]
+urls = [("Camisetas", "http://www2.hm.com/es_es/hombre/compra-por-producto/camisetas-de-manga-corta-y-sin-mangas.html"),
+        ("Camisas","http://www2.hm.com/es_es/hombre/compra-por-producto/camisas.html"),
+        ("Sudaderas", "http://www2.hm.com/es_es/hombre/compra-por-producto/sudaderas-con-y-sin-capucha.html"),
+        ("Jerseys", "http://www2.hm.com/es_es/hombre/compra-por-producto/cardigans-y-jerseis.html"),
+        ("Americanas", "http://www2.hm.com/es_es/hombre/compra-por-producto/americanas-y-trajes.html"),
+        ("Chaquetas", "http://www2.hm.com/es_es/hombre/compra-por-producto/chaquetas-y-abrigos.html"),
+        ("Pantalones", "http://www2.hm.com/es_es/hombre/compra-por-producto/pantalones-y-chinos.html"),
+        ("Vaqueros", "http://www2.hm.com/es_es/hombre/compra-por-producto/vaqueros.html"),
+        ("Shorts", "http://www2.hm.com/es_es/hombre/compra-por-producto/pantalones-cortos.html"),
+        ("Sport", "http://www2.hm.com/es_es/hombre/compra-por-producto/sport.html"),
+        ("Calzado", "http://www2.hm.com/es_es/hombre/compra-por-producto/calzado.html")]
+    
 
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
@@ -38,12 +37,14 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Se recorren la lista de secciones
 for k,v in urls:
-    try:        
+    file_error = open(path + k + "_links_error.txt", 'w')
+    
+    try:
         dr.get(v)
 
         # Esperamos a que aparezcan los productos un maximo de 60 segundos.
-        element = WebDriverWait(dr, 60).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "item"))
+        element = WebDriverWait(dr, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "product-item-image"))
         )
 
         # Sacamos el tamano del html.
@@ -59,9 +60,9 @@ for k,v in urls:
             lastHeight = newHeight
 
         links = []
-        products = dr.find_elements_by_class_name("product-image")
+        products = dr.find_elements_by_class_name("product-item-headline")
         for product in products:
-            links.append(product.get_attribute("href"))
+            links.append(product.find_element_by_xpath(".//a").get_attribute("href"))
 
         # Escribimos los links de cada producto en fichero.
         file = open(path + k + ".txt", 'w')
@@ -70,9 +71,13 @@ for k,v in urls:
             file.write(link + "\n")
 
         file.close()
-
+        
     except:
-        pass
+        #Escribimos el link de la seccion que falla
+        file_error.write(v)
+        
+    finally:
+        file_error.close()
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + 'done.dat', 'w')

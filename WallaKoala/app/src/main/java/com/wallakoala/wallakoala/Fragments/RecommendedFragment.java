@@ -326,7 +326,7 @@ public class RecommendedFragment extends Fragment
 
                 mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
-                mState = ProductsFragment.STATE.NORMAL;
+                mState = ProductsFragment.STATE.OK;
 
             } else {
                 mLoadingView.setVisibility(View.GONE);

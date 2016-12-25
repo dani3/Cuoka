@@ -194,7 +194,7 @@ public class JSONParser
             String description = jsonObject.getString("7");
             long id = jsonObject.getLong("8");
             float aspectRation = (float) jsonObject.getDouble("9");
-            double discount = jsonObject.getDouble("11");
+            double discount = jsonObject.getDouble("10");
 
             JSONArray jsColors = jsonObject.getJSONArray("6");
             List<ColorVariant> colors = new ArrayList<>();

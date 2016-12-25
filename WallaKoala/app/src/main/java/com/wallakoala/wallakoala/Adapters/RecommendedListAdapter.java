@@ -127,7 +127,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
         {
             mProduct = product;
 
-            loadColors(product);
+            _loadColors(product);
 
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
@@ -178,8 +178,11 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
                 {
                     ERROR = true;
 
-                    mProductImageView.setBackgroundColor(mContext.getResources()
-                                                            .getColor(android.R.color.holo_red_dark));
+                    Log.e(Properties.TAG, "[RECOMMENDED_LIST_ADAPTER] Error cargando imagen: "
+                            + mProduct.getShop() + " " + mProduct.getSection() + " " + mProduct.getColors().get(0).getReference());
+
+                    mProductImageView.setBackgroundColor(
+                            mContext.getResources().getColor(android.R.color.holo_red_dark));
                     mProductImageView.setAlpha(0.2f);
                 }
 
@@ -222,7 +225,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
          * @param product: producto.
          */
         @SuppressLint("InflateParams")
-        private void loadColors(Product product)
+        private void _loadColors(Product product)
         {
             // Eliminamos todos los iconos anteriores.
             mIconList.removeAllViews();

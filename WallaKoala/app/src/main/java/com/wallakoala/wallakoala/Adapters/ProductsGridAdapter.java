@@ -83,8 +83,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
             mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.product_item_favorite);
 
-            mProductFooterView      = itemView.findViewById(R.id.footer);
-            mProductFooterMainView  = itemView.findViewById(R.id.mainFooter);
+            mProductFooterView     = itemView.findViewById(R.id.footer);
+            mProductFooterMainView = itemView.findViewById(R.id.mainFooter);
 
             mProductFooterView.setOnClickListener(this);
             mProductImageView.setOnClickListener(this);

@@ -89,6 +89,14 @@ for link in listOfLinks:
         file_error.write("Precio no encontrado en: " + link + "\n")
         continue
 
+    try:
+        # ****** D E S C U E N T O ****** #
+        discount = dr.find_element_by_class_name("price-value-original").text.replace(",", ".").replace("€", "")
+        result.write("Descuento: " + discount + "\n")
+        
+    except:
+        result.write("Descuento: \n")
+
     result.write("Link: " + link + "\n")
 
     # Colores
