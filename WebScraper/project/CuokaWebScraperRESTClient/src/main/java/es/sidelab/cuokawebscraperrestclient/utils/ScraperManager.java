@@ -32,8 +32,17 @@ public class ScraperManager
     {
         try 
         {
+            String className;
+            
+            if (shop.getName().equalsIgnoreCase("Pedro Del Hierro"))
+            {
+                className = "PdH";
+            } else {
+                className = shop.getName();
+            }
+            
             return (Scraper) Class.forName("es.sidelab.cuokawebscraperrestclient.scrapers." 
-                                            + shop.getName() + "Scraper").newInstance();
+                                            + className + "Scraper").newInstance();
             
         } catch (ClassNotFoundException ex) {
             LOG.error("ERROR: No se encontro la clase");

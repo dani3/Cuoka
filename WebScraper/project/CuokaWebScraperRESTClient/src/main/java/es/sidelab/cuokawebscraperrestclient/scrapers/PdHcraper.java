@@ -17,13 +17,13 @@ import javax.annotation.Nullable;
 import org.apache.log4j.Logger;
 
 /**
- * Scraper especifico para HyM.
- * @author Lucia Fernandez Guzman
+ * Scraper especifico para Pedro Del Hierro.
+ * @author Daniel Mancebo Aldea
  */
 
-public class HyMScraper implements Scraper
+public class PdHcraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger(HyMScraper.class);
+    private static final Logger LOG = Logger.getLogger(PdHcraper.class);
     
     // Lista preparada para la concurrencia donde escribiran todos los scrapers.
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());

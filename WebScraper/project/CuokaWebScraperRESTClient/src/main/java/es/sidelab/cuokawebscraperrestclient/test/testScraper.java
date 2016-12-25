@@ -5,19 +5,13 @@ import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class testScraper 
 {
@@ -27,11 +21,16 @@ public class testScraper
     {              
         List<Product> productList = new ArrayList<>();
         
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Blanco_true\\false\\", false);
+        /***************** HyM *****************/
+        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\", false);
         Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
         
+        /***************** Pedro Del Hierro *****************/
+        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Pedro Del Hierro_true\\false\\", false);
+        //Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\", false);
+        
         // Ejecutamos el script que crea el fichero con todos los productos.
-        /*Runtime.getRuntime().exec(new String[] {"python"
+        Runtime.getRuntime().exec(new String[] {"python"
                     , section.getPath() + "renderProducts.py"
                     , Properties.CHROME_DRIVER
                     , section.getName()
@@ -44,21 +43,21 @@ public class testScraper
             file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();*/
+        file.delete();
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
             new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
         
         br.readLine();
-        while(!finished)
+        while (!finished)
         {   
-           // Empezamos nuevo producto
+            // Empezamos nuevo producto
             Product product = _readProductGeneralInfo(br);
             if (product != null)
             {
                 product = _readProductColors(product, br);
-                if ((product != null) && (!containsProduct(productList, product.getColors().get(0).getReference()))) 
+                if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
                 {
                     productList.add(product);                                            
                 }
@@ -93,6 +92,13 @@ public class testScraper
         }
     }
     
+    /**
+     * Metodo que lee los atributos básicos del producto.
+     * @param br: BuffereReader
+     * @return producto.
+     * @throws IOException 
+     */
+    @Nullable
     private static Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
         String name        = br.readLine();
@@ -111,15 +117,26 @@ public class testScraper
         
         discount = discount.replaceAll("Descuento: ", "");    
         
+        double _price = Double.valueOf(price.replace("Precio: ", ""));
+        double _discount = (discount.isEmpty()) ? 0.0f : Double.valueOf(discount);
+        
         product.setName(name.replace("Nombre: ", ""));
         product.setDescription(description.replace("Descripcion: ", ""));
-        product.setPrice(Double.valueOf(price.replace("Precio: ", "")));            
-        product.setDiscount((discount.isEmpty()) ? 0.0f : Double.valueOf(discount));
+        product.setPrice(Math.max(_price, _discount));            
+        product.setDiscount(Math.min(_price, _discount));
         product.setLink(fixURL(link.replace("Link: ", "")));
         
         return product;            
     }
     
+    /**
+     * Metodo que lee los colores y los inserta en el producto.
+     * @param product: producto al que insertar los colores.
+     * @param br: BufferedReader.
+     * @return producto.
+     * @throws IOException 
+     */
+    @Nullable
     private static Product _readProductColors(Product product, BufferedReader br) throws IOException
     {        
         List<ColorVariant> colors = new ArrayList<>();
@@ -197,7 +214,13 @@ public class testScraper
         return product;
     }   
     
-    private static boolean containsProduct(List<Product> productList, String reference)
+    /**
+     * Metodo que comprueba si el producto esta ya en la lista.
+     * @param productList: lista de productos.
+     * @param reference: producto a buscar.
+     * @return true si el producto ya se encuentra en la lista.
+     */
+    private static boolean _containsProduct(List<Product> productList, String reference)
     {
         for (Product p : productList)
         {
@@ -213,6 +236,11 @@ public class testScraper
         return false;
     }
     
+    /**
+     * Metodo que corrige una url si es incorrecta. Codifica los espacios y añade la cabecera HTTP.
+     * @param url: url a corregir.
+     * @return url corregida.
+     */
     private static String fixURL(String url)
     {
         if (url.startsWith("//"))
@@ -222,28 +250,4 @@ public class testScraper
         
         return url.replace(" " , "%20");
     }  
-    
-    private static boolean downloadImage(String imageURL, String path)
-    {
-        InputStream in;
-                
-        try 
-        {            
-            URL url = new URL(imageURL);
-            
-            in = new BufferedInputStream(url.openStream());
-            
-            Files.copy(in, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
-                        
-        } catch (MalformedURLException ex) {
-            
-            return false;
-            
-        } catch (IOException ex) {
-            
-            return false;
-        }
-                        
-        return true;
-    }
 }
