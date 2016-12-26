@@ -16,8 +16,8 @@ public class RestClient
 {
     private static final Logger LOG = Logger.getLogger(RestClient.class);
     
-    private RestTemplate restClient;
-    private URL server;
+    private final RestTemplate restClient;
+    private final URL server;
     
     public RestClient(URL server) 
     {

@@ -15,15 +15,16 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 /**
  * Scraper especifico para Pedro Del Hierro.
  * @author Daniel Mancebo Aldea
  */
 
-public class PdHcraper implements Scraper
+public class PdHScraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger(PdHcraper.class);
+    private static final Logger LOG = Logger.getLogger(PdHScraper.class);
     
     // Lista preparada para la concurrencia donde escribiran todos los scrapers.
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
@@ -101,34 +102,66 @@ public class PdHcraper implements Scraper
      * @throws IOException 
      */
     @Nullable
-    private Product _readProductGeneralInfo(final BufferedReader br) throws IOException
+    private Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
-        String name        = br.readLine();
-        String description = br.readLine();
-        String price       = br.readLine();
-        String discount    = br.readLine();
-        String link        = br.readLine();
+        Product product = new Product();
         
-        // Podemos haber leido ya todos los productos, por lo que name puede ser null
-        if (name == null || name.contains("null") || price.contains("null"))
+        String name;
+        String description;
+        String price;
+        String discount;
+        String link;
+        
+        // Leemos el nombre.
+        name = br.readLine();        
+        // Podemos haber leido ya todos los productos, por lo que name puede ser null.
+        if (name == null || name.contains("null"))
         {
             return null;
         }
         
-        Product product = new Product();
+        // Leemos la descripcion y el precio.
+        description = br.readLine();
+        price       = br.readLine();      
         
-        discount = discount.replaceAll("Descuento: ", "");    
+        if (price.contains("null"))
+        {
+            return null;
+        }
         
-        double _price = Double.valueOf(price.replace("Precio: ", ""));
+        // Leemos el descuento y el link.
+        discount = br.readLine();
+        link     = br.readLine();
+        
+        // Eliminamos las cabeceras.
+        name        = name.replace("Nombre: ", "");
+        description = description.replace("Descripcion: ", "");
+        discount    = discount.replace("Descuento: ", "");   
+        price       = price.replace("Precio: ", "");
+        link        = link.replace("Link: ", "");
+        
+        // Eliminamos el primer '.' en caso de que el precio supere los 1000 euros.
+        if (StringUtils.countOccurrencesOf(price, ".") > 1)
+        {
+            price = price.replace(".", "");
+        }
+        
+        // Lo mismo con el descuento.
+        if (StringUtils.countOccurrencesOf(discount, ".") > 1)
+        {
+            discount = discount.replace(".", "");
+        }
+        
+        double _price = Double.valueOf(price);
         double _discount = (discount.isEmpty()) ? 0.0f : Double.valueOf(discount);
         
-        product.setName(name.replace("Nombre: ", ""));
-        product.setDescription(description.replace("Descripcion: ", ""));
+        product.setName(name);
+        product.setDescription(description);
         product.setPrice(Math.max(_price, _discount));            
         product.setDiscount(Math.min(_price, _discount));
-        product.setLink(fixURL(link.replace("Link: ", "")));
+        product.setLink(fixURL(link));
         
-        return product;        
+        return product;            
     }
     
     /**
@@ -140,17 +173,18 @@ public class PdHcraper implements Scraper
      */
     @Nullable
     private Product _readProductColors(Product product, BufferedReader br) throws IOException
-    {       
+    {        
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
         
         // Leemos los asteriscos
-        br.readLine();  
+        br.readLine();     
         while (!doneColor)
         {
             boolean correct = true;
-            ColorVariant color = new ColorVariant();
+            
             List<Image> images = new ArrayList<>();
+            ColorVariant color = new ColorVariant();
             
             String colorName = br.readLine();
             String colorIcon = br.readLine();
@@ -159,17 +193,25 @@ public class PdHcraper implements Scraper
             {
                 correct = false;
                 
-                String line = br.readLine();
-                if(!line.contains("****"))
+                String line = br.readLine();                
+                // Podemos llegar al final de fichero.
+                if (line == null)
+                {
+                    _setFinished(true);
+                    break;
+                }
+                
+                // O podemos llegar al siguiente producto.
+                if (!line.contains("******"))
                 {
                     doneColor = true;
-                }                        
+                }
             }
             
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(fixURL(colorIcon.replace("  Icono: ", ""))); 
+                color.setColorURL(null); 
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes
@@ -179,30 +221,36 @@ public class PdHcraper implements Scraper
                     String url = br.readLine();
                     if (url == null)
                     {
+                        // Si la url es null, es que hemos llegado al final del fichero.
                         doneImages = true;
                         doneColor  = true;
                         
                         _setFinished(true);
-                        
+
                     } else if (url.contains("***")) {
                         // Hemos acabado con las imágenes pero no con los colores
                         doneImages = true; 
-                        
+
                     } else if (url.contains("------") || url.length() == 0) {
+                        // Producto final == 0
                         doneImages = true;
                         doneColor = true;
-                        
+
                     } else {
-                        Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
-                        images.add(image);
-                    }                    
+                        if (!url.replace("     Imagen: ", "").isEmpty() && !url.contains("null"))
+                        {
+                            Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
+                            images.add(image);
+                        }  
+                    }
                 }
-                
+
                 color.setImages(images);
-                colors.add(color);
+                colors.add(color); 
             }
         }
         
+        // Nos aseguramos de que no insertamos productos sin ningun color.
         if (colors.isEmpty()) 
         {
             return null;
@@ -211,7 +259,7 @@ public class PdHcraper implements Scraper
         product.setColors(colors);
         
         return product;
-    }   
+    }  
     
     /**
      * Metodo que corrige una url si es incorrecta. Codifica los espacios y añade la cabecera HTTP.

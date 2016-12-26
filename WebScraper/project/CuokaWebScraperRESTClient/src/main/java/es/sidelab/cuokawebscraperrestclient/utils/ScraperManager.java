@@ -132,9 +132,7 @@ public class ScraperManager
                     } catch (IOException ex) {
                         LOG.error("Error leyendo el fichero 'url.txt' o formando la URL");
 
-                    } finally {
-                    }     
-
+                    } 
                 }
             }
             

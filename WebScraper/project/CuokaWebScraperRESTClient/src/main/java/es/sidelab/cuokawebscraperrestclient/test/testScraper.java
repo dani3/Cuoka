@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
+import org.springframework.util.StringUtils;
 
 public class testScraper 
 {
@@ -23,14 +24,14 @@ public class testScraper
         
         /***************** HyM *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\", false);
-        Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
+        //Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
         
         /***************** Pedro Del Hierro *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Pedro Del Hierro_true\\false\\", false);
-        //Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\", false);
+        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Runtime.getRuntime().exec(new String[] {"python"
+        /*Runtime.getRuntime().exec(new String[] {"python"
                     , section.getPath() + "renderProducts.py"
                     , Properties.CHROME_DRIVER
                     , section.getName()
@@ -43,7 +44,7 @@ public class testScraper
             file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();
+        file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
@@ -58,7 +59,7 @@ public class testScraper
             {
                 product = _readProductColors(product, br);
                 if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
-                {
+                {                       
                     productList.add(product);                                            
                 }
             }
@@ -101,30 +102,62 @@ public class testScraper
     @Nullable
     private static Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
-        String name        = br.readLine();
-        String description = br.readLine();
-        String price       = br.readLine();
-        String discount    = br.readLine();
-        String link        = br.readLine();
+        Product product = new Product();
         
-        // Podemos haber leido ya todos los productos, por lo que name puede ser null
-        if (name == null || name.contains("null") || price.contains("null"))
+        String name;
+        String description;
+        String price;
+        String discount;
+        String link;
+        
+        // Leemos el nombre.
+        name = br.readLine();        
+        // Podemos haber leido ya todos los productos, por lo que name puede ser null.
+        if (name == null || name.contains("null"))
         {
             return null;
         }
         
-        Product product = new Product();
+        // Leemos la descripcion y el precio.
+        description = br.readLine();
+        price       = br.readLine();      
         
-        discount = discount.replaceAll("Descuento: ", "");    
+        if (price.contains("null"))
+        {
+            return null;
+        }
         
-        double _price = Double.valueOf(price.replace("Precio: ", ""));
+        // Leemos el descuento y el link.
+        discount = br.readLine();
+        link     = br.readLine();
+        
+        // Eliminamos las cabeceras.
+        name        = name.replace("Nombre: ", "");
+        description = description.replace("Descripcion: ", "");
+        discount    = discount.replace("Descuento: ", "");   
+        price       = price.replace("Precio: ", "");
+        link        = link.replace("Link: ", "");
+        
+        // Eliminamos el primer '.' en caso de que el precio supere los 1000 euros.
+        if (StringUtils.countOccurrencesOf(price, ".") > 1)
+        {
+            price = price.replace(".", "");
+        }
+        
+        // Lo mismo con el descuento.
+        if (StringUtils.countOccurrencesOf(discount, ".") > 1)
+        {
+            discount = discount.replace(".", "");
+        }
+        
+        double _price = Double.valueOf(price);
         double _discount = (discount.isEmpty()) ? 0.0f : Double.valueOf(discount);
         
-        product.setName(name.replace("Nombre: ", ""));
-        product.setDescription(description.replace("Descripcion: ", ""));
+        product.setName(name);
+        product.setDescription(description);
         product.setPrice(Math.max(_price, _discount));            
         product.setDiscount(Math.min(_price, _discount));
-        product.setLink(fixURL(link.replace("Link: ", "")));
+        product.setLink(fixURL(link));
         
         return product;            
     }
@@ -154,11 +187,19 @@ public class testScraper
             String colorName = br.readLine();
             String colorIcon = br.readLine();
             String reference = br.readLine();
-            if(colorName.contains("null") || reference.contains("null"))
+            if (colorName.contains("null") || reference.contains("null"))
             {
                 correct = false;
                 
-                String line = br.readLine();
+                String line = br.readLine();                
+                // Podemos llegar al final de fichero.
+                if (line == null)
+                {
+                    finished = true;
+                    break;
+                }
+                
+                // O podemos llegar al siguiente producto.
                 if (!line.contains("******"))
                 {
                     doneColor = true;
@@ -190,11 +231,14 @@ public class testScraper
                     } else if (url.contains("------") || url.length() == 0) {
                         // Producto final == 0
                         doneImages = true;
-                        doneColor = true;
+                        doneColor  = true;
 
                     } else {
-                        Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
-                        images.add(image);
+                        if (!url.replace("     Imagen: ", "").isEmpty() && !url.contains("null"))
+                        {
+                            Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
+                            images.add(image);
+                        }  
                     }
                 }
 
