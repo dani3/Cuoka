@@ -157,8 +157,8 @@ public class PdHScraper implements Scraper
         
         product.setName(name);
         product.setDescription(description);
-        product.setPrice(Math.max(_price, _discount));            
-        product.setDiscount(Math.min(_price, _discount));
+        product.setPrice(Math.min(_price, _discount));            
+        product.setDiscount(Math.max(_price, _discount));
         product.setLink(fixURL(link));
         
         return product;            

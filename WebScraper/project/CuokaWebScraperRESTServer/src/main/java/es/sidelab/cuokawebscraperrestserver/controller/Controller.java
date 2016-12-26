@@ -520,7 +520,6 @@ public class Controller
      * @param gender: sexo de la tienda.
      * @return lista de tiendas de hombre o de mujer.
      */
-    @Cacheable(value = "products")
     @RequestMapping(value = "/shops/{gender}", method = RequestMethod.GET)
     public List<Shop> getShops(@PathVariable boolean gender)
     {
