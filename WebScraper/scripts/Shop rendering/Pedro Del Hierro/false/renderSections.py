@@ -12,22 +12,22 @@ path_to_chromedriver = sys.argv[1]
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Camisetas", "http://www2.hm.com/es_es/hombre/compra-por-producto/camisetas-de-manga-corta-y-sin-mangas.html"),
-        ("Camisas","http://www2.hm.com/es_es/hombre/compra-por-producto/camisas.html"),
-        ("Sudaderas", "http://www2.hm.com/es_es/hombre/compra-por-producto/sudaderas-con-y-sin-capucha.html"),
-        ("Jerseys", "http://www2.hm.com/es_es/hombre/compra-por-producto/cardigans-y-jerseis.html"),
-        ("Americanas", "http://www2.hm.com/es_es/hombre/compra-por-producto/americanas-y-trajes.html"),
-        ("Chaquetas", "http://www2.hm.com/es_es/hombre/compra-por-producto/chaquetas-y-abrigos.html"),
-        ("Pantalones", "http://www2.hm.com/es_es/hombre/compra-por-producto/pantalones-y-chinos.html"),
-        ("Vaqueros", "http://www2.hm.com/es_es/hombre/compra-por-producto/vaqueros.html"),
-        ("Shorts", "http://www2.hm.com/es_es/hombre/compra-por-producto/pantalones-cortos.html"),
-        ("Sport", "http://www2.hm.com/es_es/hombre/compra-por-producto/sport.html"),
-        ("Calzado", "http://www2.hm.com/es_es/hombre/compra-por-producto/calzado.html")]
-   
+urls = [("Blusas", "http://pedrodelhierro.com/es/es/mujer/blusas"),
+        ("Abrigos","http://pedrodelhierro.com/es/es/mujer/abrigos"),
+        ("Piel", "http://pedrodelhierro.com/es/es/mujer/piel"),
+        ("Vestidos", "http://pedrodelhierro.com/es/es/mujer/vestidos"),
+        ("Pantalones", "http://pedrodelhierro.com/es/es/mujer/pantalones"),
+        ("Faldas", "http://pedrodelhierro.com/es/es/mujer/faldas"),
+        ("Punto", "http://pedrodelhierro.com/es/es/mujer/punto"),
+        ("Camisetas", "http://pedrodelhierro.com/es/es/mujer/camisetas"),
+        ("Jeans", "http://pedrodelhierro.com/es/es/mujer/jeans"),
+        ("Sport", "http://pedrodelhierro.com/es/es/mujer/activewear"),
+        ("Zapatos", "http://pedrodelhierro.com/es/es/mujer/zapatos")]
+    
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
 chrome_options.add_argument("--start-maximized")
@@ -43,7 +43,7 @@ for k,v in urls:
 
         # Esperamos a que aparezcan los productos un maximo de 60 segundos.
         element = WebDriverWait(dr, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "product-item-image"))
+            EC.presence_of_element_located((By.CLASS_NAME, "c05__thumb-link"))
         )
 
         # Sacamos el tamano del html.
@@ -59,9 +59,9 @@ for k,v in urls:
             lastHeight = newHeight
 
         links = []
-        products = dr.find_elements_by_class_name("product-item-headline")
+        products = dr.find_elements_by_class_name("c05__thumb-link")
         for product in products:
-            links.append(product.find_element_by_xpath(".//a").get_attribute("href"))
+            links.append(product.get_attribute("href"))
 
         # Escribimos los links de cada producto en fichero.
         file = open(path + k + ".txt", 'w')

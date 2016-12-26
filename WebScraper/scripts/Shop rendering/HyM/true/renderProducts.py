@@ -73,7 +73,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C R I P T I O N ****** #
-        description = dr.find_element_by_class_name("product-detail-description-text").text.rstrip()[:255]
+        description = "".join(dr.find_element_by_class_name("c02__product-description").text.splitlines())[:255]
         result.write("Descripcion: " + description + "\n")
         
     except:
@@ -105,6 +105,10 @@ for link in listOfLinks:
         colors = dr.find_element_by_class_name("inputlist").find_elements_by_xpath(".//li")
         
     except:
+        result.write("*********************************************************\n")
+        result.write("  Color: null\n")
+        result.write("  Icono: null\n")
+        result.write("  Referencia: null\n")
         file_error.write("Colores no encontrados en: " + link + "\n")
         continue
 
@@ -165,7 +169,7 @@ for link in listOfLinks:
             file_error.write("Imagenes no encontradas en: " + link + "\n")
             continue
 
-        # ****** I M G A E N E S ****** #
+        # ****** I M A G E N E S ****** #
         for thumbnail in thumbnails:
             try:
                 thumbnail.click()
@@ -179,7 +183,7 @@ for link in listOfLinks:
                 result.write("     Imagen: " + image.find_element_by_xpath(".//img").get_attribute("src") + "\n")
 
             except:
-                result.write("     Imagen: null")
+                result.write("     Imagen: null" + "\n")
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + section + '_done.dat', 'w')
