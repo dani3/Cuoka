@@ -13,7 +13,7 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Blusas"
+#section = "Punto"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
@@ -102,7 +102,7 @@ for link in listOfLinks:
     # Colores
     try:
         # ****** C O L O R E S ****** #
-        colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li")
+        colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li.selected")
         
     except:
         result.write("*********************************************************\n")
@@ -113,14 +113,13 @@ for link in listOfLinks:
         continue
 
     for color in colors:
-        try:
-            if (len(colors) > 1):                
-                # Hacemos click en cada icono
-                color.find_element_by_xpath(".//a").click()
+        try:              
+            # Hacemos click en cada icono
+            color.find_element_by_xpath(".//a").click()
 
-                element = WebDriverWait(dr, 60).until(
-                    EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
-                )
+            element = WebDriverWait(dr, 60).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
+            )
             
         except:
             result.write("*********************************************************\n")
@@ -137,6 +136,7 @@ for link in listOfLinks:
             result.write("  Color: " + colorName + "\n")
             
         except:
+            result.write("*********************************************************\n")
             result.write("  Color: null\n")
             result.write("  Icono: null\n")
             result.write("  Referencia: null\n")

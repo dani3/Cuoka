@@ -102,7 +102,7 @@ for link in listOfLinks:
     # Colores
     try:
         # ****** C O L O R E S ****** #
-        colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li")
+        colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li.selected")
         
     except:
         result.write("*********************************************************\n")
@@ -137,6 +137,7 @@ for link in listOfLinks:
             result.write("  Color: " + colorName + "\n")
             
         except:
+            result.write("*********************************************************\n")
             result.write("  Color: null\n")
             result.write("  Icono: null\n")
             result.write("  Referencia: null\n")
