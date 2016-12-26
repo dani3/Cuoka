@@ -87,7 +87,7 @@ public class ScraperManager
                     File[] subFolders = new File(Properties.SHOPS_PATH + "\\" + folderName).listFiles();
                     List<Section> sectionsList = new ArrayList<>();
 
-                    for(File subFolder : subFolders)
+                    for (File subFolder : subFolders)
                     {
                         if (subFolder.isDirectory())
                         {

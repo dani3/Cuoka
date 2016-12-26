@@ -736,15 +736,17 @@ public class Controller
     }
     
     /**
-     * Metodo que devuelve una lista de productos de una tienda.
-     * @param shop: Tienda de la que se quieren los productos.
-     * @return Lista de productos.
+     * Metodo que borra los productos de una tienda.
+     * @param shop: tienda.
+     * @return codigo con el resultado de la operacion.
      */
-    @RequestMapping(value = "/products/{shop}", method = RequestMethod.GET)
-    public List<Product> getProducts(@PathVariable String shop)
+    @RequestMapping(value = "/products/{shop}", method = RequestMethod.DELETE)
+    public ResponseEntity<Boolean> deleteProducts(@PathVariable String shop)
     {
-        LOG.info("[PRODUCTS] Peticion GET para obtener todos los productos de " + shop);
-        return productsRepository.findByShop(shop);
+        LOG.info("[PRODUCTS] Peticion DELETE para borrar todos los productos de " + shop);
+        productsRepository.deleteByShop(shop);
+        
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     /**
@@ -799,20 +801,6 @@ public class Controller
         }
         
         return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
-    }
-    
-    /**
-     * Metodo que devuelve una lista de productos de una seccion de una tienda.
-     * @param shop: Tienda a la que pertenece la seccion.
-     * @param section: Seccion de la que se quieren los productos.
-     * @return Lista de productos.
-     */
-    @RequestMapping(value = "/products/{shop}/{section}", method = RequestMethod.GET)
-    public List<Product> getProductsBySection(@PathVariable String shop
-                                , @PathVariable String section)
-    {
-        LOG.info("[PRODUCTS] Peticion GET para obtener los productos de la seccion de " + section + " de la tienda " + shop);
-        return productsRepository.findBySectionAndShop(section, shop) ;
     }
     
     /**
