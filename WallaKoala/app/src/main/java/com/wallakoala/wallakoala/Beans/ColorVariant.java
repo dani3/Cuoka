@@ -15,9 +15,9 @@ public class ColorVariant implements Serializable
     private short numberOfImages;
     
     public ColorVariant(String reference
-    		, String colorName
-    		, String colorPath
-    		, short numberOfImages)
+                , String colorName
+                , String colorPath
+                , short numberOfImages)
     {
 		this.reference = reference;
 		this.colorName = colorName;
@@ -33,16 +33,24 @@ public class ColorVariant implements Serializable
     public boolean isOkay()
     {
         if ((this.reference == null) || (this.reference.isEmpty()))
+        {
             return false;
+        }
 
         if ((this.colorName == null) || (this.colorName.isEmpty()))
+        {
             return false;
+        }
 
         if ((this.colorPath == null) || (this.colorPath.isEmpty()))
+        {
             return false;
+        }
 
         if (this.numberOfImages <= 0)
+        {
             return false;
+        }
 
         return true;
     }

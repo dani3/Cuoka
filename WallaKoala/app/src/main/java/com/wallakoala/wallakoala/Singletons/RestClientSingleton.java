@@ -508,8 +508,7 @@ public class RestClientSingleton
             try
             {
                 content = future.get(20, TimeUnit.SECONDS);
-                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta recibida del servidor" +
-                        "");
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Respuesta recibida del servidor");
 
             } catch (InterruptedException e) {
                 ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);

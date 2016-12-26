@@ -22,6 +22,7 @@ import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
@@ -266,14 +267,12 @@ public class RecommendedFragment extends Fragment
 
             try
             {
-                Log.d(Properties.TAG, "Tamano en bytes: " + (content.toString().getBytes().length / 1000) + "kB");
-
                 mProductList = JSONParser.convertJSONsToProducts(content);
 
             } catch (Exception e) {
-                error = e.getMessage();
+                ExceptionPrinter.printException("RECOMMENDED_FRAGMENT", e);
 
-                Log.d(Properties.TAG, error);
+                error = e.getMessage();
             }
 
             return null;

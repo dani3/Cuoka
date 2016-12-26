@@ -64,25 +64,39 @@ public class Product implements Serializable, Comparable<Product>
 	public boolean isOkay()
 	{
 		if ((this.name == null) || (this.name.isEmpty()))
+		{
 			return false;
+		}
 
 		if ((this.shop == null) || (this.shop.isEmpty()))
+		{
 			return false;
+		}
 
 		if ((this.section == null) || (this.section.isEmpty()))
+		{
 			return false;
+		}
 
 		if (this.price <= 0.0f)
+		{
 			return false;
+		}
 
 		if ((this.link == null) || (this.link.isEmpty()))
+		{
 			return false;
+		}
 
 		if ((this.colors == null) || (this.colors.isEmpty()))
+		{
 			return false;
+		}
 
 		if (!this.colors.get(0).isOkay())
+		{
 			return false;
+		}
 
 		return true;
 	}

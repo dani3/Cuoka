@@ -257,11 +257,10 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
 
                 // Obtenemos la url del icono del color.
                 String url = Utils.getColorUrl(colorVariant, product.getShop(), product.getSection());
-                Log.d(Properties.TAG, url);
 
                 Picasso.with(mContext)
-                        .load(url)
-                        .into(mIconViews[i]);
+                       .load(url)
+                       .into(mIconViews[i]);
 
                 // Eliminamos el padre de la vista del icono.
                 ((ViewGroup)mIconViews[i].getParent()).removeView(mIconViews[i]);
