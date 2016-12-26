@@ -136,7 +136,7 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             boolean emptyDescription = (mProduct.getDescription() == null ||
                     mProduct.getDescription().isEmpty() ||
                     mProduct.getDescription().equalsIgnoreCase("null"));
-            
+
             String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
             description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
             description = "<b>Descripción: </b>" + description;
