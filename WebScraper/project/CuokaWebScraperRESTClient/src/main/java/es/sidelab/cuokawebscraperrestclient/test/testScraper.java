@@ -155,8 +155,16 @@ public class testScraper
         
         product.setName(name);
         product.setDescription(description);
-        product.setPrice(Math.min(_price, _discount));            
-        product.setDiscount(Math.max(_price, _discount));
+        
+        if (_discount > 0.0f)
+        {
+            product.setPrice(Math.min(_price, _discount));            
+            product.setDiscount(Math.max(_price, _discount));
+        } else {
+            product.setPrice(_price);            
+            product.setDiscount(_discount);
+        }
+        
         product.setLink(fixURL(link));
         
         return product;            

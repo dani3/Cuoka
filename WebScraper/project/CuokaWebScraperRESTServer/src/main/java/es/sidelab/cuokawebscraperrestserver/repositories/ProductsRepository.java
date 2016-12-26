@@ -20,6 +20,9 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
     @Query("DELETE FROM Product WHERE shop = ?1")
     void deleteByShop(String shop);
     
+    @Query("FROM Product WHERE man = ?1 AND obsolete = false ORDER BY insert_date DESC")
+    List<Product> findByMan(boolean man);
+    
     @Query("FROM Product WHERE shop = ?1 AND obsolete = false ORDER BY insert_date DESC")
     List<Product> findByShop(String shop);
     

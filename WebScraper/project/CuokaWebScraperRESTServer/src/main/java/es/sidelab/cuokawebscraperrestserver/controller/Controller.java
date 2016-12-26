@@ -757,14 +757,16 @@ public class Controller
     {
         LOG.info("[PRODUCTS] Peticion GET para obtener todos los productos recomendados del usuario (ID: " + id + ")");
         
-        List<Product> aux = productsRepository.findByManAndShop(false, "Blanco");
+        User user = usersRepository.findOne(id);
+        
+        List<Product> aux = productsRepository.findByMan(user.getMan());
         
         List<Product> recommendedProducts = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             Random rand = new Random();
 
-            int randomNum = rand.nextInt((50 - 1) + 1) + 1;
+            int randomNum = rand.nextInt((600 - 1) + 1) + 1;
 
             recommendedProducts.add(aux.get(randomNum));
         }

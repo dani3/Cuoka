@@ -132,8 +132,14 @@ public class RecommendedListAdapter extends RecyclerView.Adapter<RecommendedList
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
 
-            boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
-            String description = "<b>Descripción: " +  (emptyDescription ? "No disponible" : mProduct.getDescription() + "</b>");
+            // Inicializamos la info del producto
+            boolean emptyDescription = (mProduct.getDescription() == null ||
+                    mProduct.getDescription().isEmpty() ||
+                    mProduct.getDescription().equalsIgnoreCase("null"));
+            
+            String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
+            description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
+            description = "<b>Descripción: </b>" + description;
 
             // Inicializamos los TextViews
             mNameTextView.setText(product.getName().toUpperCase());
