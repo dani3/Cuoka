@@ -10,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -195,8 +194,14 @@ public class FavoritesSectionedAdapter extends StatelessSection
             // Reinicializamos el bitmap de la imagen
             mProductImageView.setImageBitmap(null);
 
-            boolean emptyDescription = (mProduct.getDescription() == null || mProduct.getDescription().isEmpty());
-            String description = "<b>Descripción: " +  (emptyDescription ? "No disponible" : mProduct.getDescription() + "</b>");
+            // Inicializamos la info del producto
+            boolean emptyDescription = (mProduct.getDescription() == null ||
+                    mProduct.getDescription().isEmpty() ||
+                    mProduct.getDescription().equalsIgnoreCase("null"));
+
+            String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
+            description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
+            description = "<b>Descripción: </b>" + description;
 
             // Inicializamos los TextViews
             mNameTextView.setText(product.getName().toUpperCase());

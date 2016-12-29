@@ -130,6 +130,7 @@ public class Product implements Comparator
     public void update(Product product, boolean equal)
     {
         this.price = product.price;
+        this.discount = product.discount;
         this.link = product.link;
         this.description = product.description;
         this.colors = product.colors;
