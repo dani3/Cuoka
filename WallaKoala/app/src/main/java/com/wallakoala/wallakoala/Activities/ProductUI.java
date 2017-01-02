@@ -532,16 +532,29 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                         mFloatingActionButtonPlus.setVisibility(View.VISIBLE);
                                         mFloatingActionButtonPlus.startAnimation(mExplodeAnimation);
 
-                                        // Una vez cargado, nos quedamos con las coordenadas del FAB
-                                        mFloatingButtonX = (mFloatingActionButtonPlus.getLeft()
-                                                + mFloatingActionButtonPlus.getRight()) / 2;
+                                        mExplodeAnimation.setAnimationListener(new Animation.AnimationListener()
+                                        {
+                                            @Override
+                                            public void onAnimationStart(Animation animation) {}
 
-                                        mFloatingButtonY = ((int) mFloatingActionButtonPlus.getY()
-                                                + mFloatingActionButtonPlus.getHeight()) / 2;
+                                            @Override
+                                            public void onAnimationEnd(Animation animation)
+                                            {
+                                                // Una vez cargado, nos quedamos con las coordenadas del FAB
+                                                mFloatingButtonX = (mFloatingActionButtonPlus.getLeft()
+                                                        + mFloatingActionButtonPlus.getRight()) / 2;
 
-                                        int[] screenLocation = new int[2];
-                                        mFloatingActionButtonPlus.getLocationOnScreen(screenLocation);
-                                        mFloatingButtonTop = screenLocation[1];
+                                                mFloatingButtonY = ((int) mFloatingActionButtonPlus.getY()
+                                                        + mFloatingActionButtonPlus.getHeight()) / 2;
+
+                                                int[] screenLocation = new int[2];
+                                                mFloatingActionButtonPlus.getLocationOnScreen(screenLocation);
+                                                mFloatingButtonTop = screenLocation[1];
+                                            }
+
+                                            @Override
+                                            public void onAnimationRepeat(Animation animation) {}
+                                        });
 
                                         mRadiusReveal = Math.max(mProductInfoLayout.getWidth()
                                                             , mProductInfoLayout.getHeight());
@@ -655,6 +668,15 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButtonPlus.getHeight() / 2));
         int offset = mProductInfoLayout.getHeight() - bottomHalf;
+
+        Log.d(Properties.TAG, "SCREEN_HEIGHT: " + screenHeight);
+        Log.d(Properties.TAG, "FAB_TOP: " + mFloatingButtonTop);
+        Log.d(Properties.TAG, "FAB_HEIGHT: " + mFloatingActionButtonPlus.getHeight());
+        Log.d(Properties.TAG, "FAB_X: " + mFloatingButtonX);
+        Log.d(Properties.TAG, "FAB_Y: " + mFloatingButtonY);
+        Log.d(Properties.TAG, "BOTTOM_HALF: " + bottomHalf);
+        Log.d(Properties.TAG, "INFO_HEIGHT: " + mProductInfoLayout.getHeight());
+        Log.d(Properties.TAG, "OFFSET: " + offset);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
