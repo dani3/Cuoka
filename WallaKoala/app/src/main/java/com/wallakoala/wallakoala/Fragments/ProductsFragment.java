@@ -23,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.wallakoala.wallakoala.Activities.MainScreenUI;
 import com.wallakoala.wallakoala.Adapters.ProductsGridAdapter;
-import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
@@ -32,13 +31,13 @@ import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
+import com.wallakoala.wallakoala.Utils.JSONParser;
 import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 import com.wallakoala.wallakoala.Views.StaggeredRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -427,7 +426,10 @@ public class ProductsFragment extends Fragment
         {
             try
             {
-                convertJSONtoProduct(mJsonArray);
+                List<Product> productsList = JSONParser.convertJSONsToProducts(mJsonArray);
+                String key = (productsList.isEmpty()) ? null : productsList.get(0).getShop();
+
+                mProductsListMap.get(mProductsListMap.size()-1).put(key, productsList);
 
             } catch (Exception e) {
                 ExceptionPrinter.printException("PRODUCTS_FRAGMENT", e);
@@ -438,64 +440,6 @@ public class ProductsFragment extends Fragment
             return true;
         }
     } /* [END ConversionTask] */
-
-    /**
-     * Metodo que convierte la lista de JSON en productos y los inserta en las distintas ED's.
-     * @param jsonArray: lista de JSON a convertir.
-     * @throws JSONException
-     */
-    private void convertJSONtoProduct(final JSONArray jsonArray) throws JSONException
-    {
-        List<Product> productsList = new ArrayList<>();
-        List<JSONObject> jsonList = new ArrayList<>();
-        String key = null;
-
-        for (int j = 0; j < jsonArray.length(); j++)
-        {
-            JSONObject js = jsonArray.getJSONObject(j);
-
-            jsonList.add(js);
-        }
-
-        for (JSONObject jsonObject : jsonList)
-        {
-            double price       = jsonObject.getDouble("1");
-            String name        = jsonObject.getString("2");
-            String shop = key  = jsonObject.getString("3");
-            String section     = jsonObject.getString("4");
-            String link        = jsonObject.getString("5");
-            String description = jsonObject.getString("7");
-            long id            = jsonObject.getLong("8");
-            float aspectRatio  = (float) jsonObject.getDouble("9");
-            double discount    = jsonObject.getDouble("10");
-
-            JSONArray jsColors = jsonObject.getJSONArray("6");
-            List<ColorVariant> colors = new ArrayList<>();
-            for(int i = 0; i < jsColors.length(); i++)
-            {
-                JSONObject jsColor = jsColors.getJSONObject(i);
-
-                String reference = jsColor.getString("1");
-                String colorName = jsColor.getString("2");
-                String colorPath = jsColor.getString("4");
-                short numerOfImages = (short)jsColor.getInt("3");
-
-                colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
-            }
-
-            Product product = new Product(id, name, shop
-                                    , section, price, discount
-                                    , aspectRatio, link
-                                    , description, colors);
-
-            if (product.isOkay())
-            {
-                productsList.add(product);
-            }
-        }
-
-        mProductsListMap.get(mProductsListMap.size()-1).put(key, productsList);
-    }
 
     /**
      * Tarea en segundo plano que descargara la lista de JSON del servidor en paralelo.

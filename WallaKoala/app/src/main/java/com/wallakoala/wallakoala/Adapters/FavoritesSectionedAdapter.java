@@ -195,19 +195,11 @@ public class FavoritesSectionedAdapter extends StatelessSection
             mProductImageView.setImageBitmap(null);
 
             // Inicializamos la info del producto
-            boolean emptyDescription = (mProduct.getDescription() == null ||
-                    mProduct.getDescription().isEmpty() ||
-                    mProduct.getDescription().equalsIgnoreCase("null"));
-
-            String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
-            description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
-            description = "<b>Descripción: </b>" + description;
-
             // Inicializamos los TextViews
             mNameTextView.setText(product.getName().toUpperCase());
             mShopTextView.setText(product.getShop().toUpperCase());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
-            mDescriptionTextView.setText(Html.fromHtml(description));
+            mDescriptionTextView.setText(Html.fromHtml(product.getDescription()));
 
             // Inicializamos el boton de favorito
             mProductFavoriteImageButton.changeIcon(

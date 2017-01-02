@@ -210,6 +210,14 @@ public class JSONParser
                 colors.add(new ColorVariant(reference, colorName, colorPath, numerOfImages));
             }
 
+            boolean emptyDescription = (description == null ||
+                                        description.isEmpty() ||
+                                        description.equalsIgnoreCase("null"));
+
+            description = emptyDescription ? name.toLowerCase() : description;
+            description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
+            description = "<b>Descripción: </b>" + description;
+
             Product product = new Product(id, name, shop
                                     , section, price, discount
                                     , aspectRation, link

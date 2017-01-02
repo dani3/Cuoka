@@ -70,7 +70,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private View mProductFooterView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mPriceTextView;
 
-        private Animation scaleUp, scaleDownFooter;
+        private Animation scaleDownFooter;
 
         public ProductHolder(View itemView)
         {
@@ -89,7 +89,6 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mProductFooterView.setOnClickListener(this);
             mProductImageView.setOnClickListener(this);
 
-            scaleUp         = AnimationUtils.loadAnimation(mContext, R.anim.scale_up_animation);
             scaleDownFooter = AnimationUtils.loadAnimation(mContext, R.anim.scale_down_animation);
 
             mProductFavoriteImageButton.setOnClickListener(new View.OnClickListener()
@@ -290,7 +289,8 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             mProductFooterView.setVisibility(View.VISIBLE);
 
-            mProductFooterView.startAnimation(scaleUp);
+            mProductFooterView.startAnimation(
+                    AnimationUtils.loadAnimation(mContext, R.anim.scale_up_animation));
         }
 
         /**

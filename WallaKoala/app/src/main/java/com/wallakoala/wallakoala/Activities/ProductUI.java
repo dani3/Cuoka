@@ -232,15 +232,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         ImageButton redirectImageButton = (ImageButton) findViewById(R.id.product_redirect);
 
         // Inicializamos la info del producto
-        boolean emptyDescription = (mProduct.getDescription() == null ||
-                mProduct.getDescription().isEmpty() ||
-                mProduct.getDescription().equalsIgnoreCase("null"));
-
         String name = "<b>" + mProduct.getName() + "</b>";
         String reference = "<b>Referencia: </b>" +  mProduct.getColors().get(0).getReference();
-        String description = emptyDescription ? mProduct.getName().toLowerCase() : mProduct.getDescription();
-        description = Character.toUpperCase(description.charAt(0)) + description.substring(1);
-        description = "<b>Descripción: </b>" + description;
         SpannableString price = Utils.priceToString(mProduct.getPrice());
 
         if (mProduct.getDiscount() != 0.0f)
@@ -254,7 +247,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         mProductNameTextView.setText(Html.fromHtml(name));
         mProductShopTextView.setText(mProduct.getShop());
-        mProductDescriptionTextView.setText(Html.fromHtml(description));
+        mProductDescriptionTextView.setText(Html.fromHtml(mProduct.getDescription()));
         mProductReferenceTextView.setText(Html.fromHtml(reference));
         mProductPriceTextView.setText(price);
 
