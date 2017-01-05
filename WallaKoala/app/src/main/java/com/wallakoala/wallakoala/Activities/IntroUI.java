@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
@@ -140,14 +142,32 @@ public class IntroUI extends AppCompatActivity
             {
                 Log.d(Properties.TAG, "[INTRO] Todo correcto -> MainScreenUI");
 
-                Intent intent = new Intent(context, MainScreenUI.class);
+                ImageView logoImageView = (ImageView) ((Activity) context).findViewById(R.id.intro_logo);
+                logoImageView.animate()
+                             .setDuration(250)
+                             .scaleY(0.0f)
+                             .scaleX(0.0f).setListener(new Animator.AnimatorListener()
+                            {
+                                @Override
+                                public void onAnimationStart(Animator animator) {}
 
-                context.startActivity(intent);
+                                @Override
+                                public void onAnimationEnd(Animator animator)
+                                {
+                                    // Creamos el intent
+                                    Intent intent = new Intent(context, MainScreenUI.class);
 
-                ((Activity)context).finish();
+                                    context.startActivity(intent);
 
-                // Animacion de transicion para pasar de una activity a otra.
-                ((Activity)context).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                                    ((Activity)context).finish();
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animator) {}
+
+                                @Override
+                                public void onAnimationRepeat(Animator animator) {}
+                            });
 
             } else {
                 Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout)

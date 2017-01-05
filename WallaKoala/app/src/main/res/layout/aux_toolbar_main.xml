@@ -9,6 +9,7 @@
     app:layout_scrollFlags="scroll|enterAlways">
 
     <ImageView
+        android:id="@+id/toolbar_logo"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/action_bar_height"
         android:layout_gravity="center"

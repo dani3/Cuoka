@@ -29,6 +29,8 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Beans.User;
@@ -122,6 +124,27 @@ public class MainScreenUI extends AppCompatActivity
         {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        final View appbar = findViewById(R.id.main_appbar);
+        final ViewTreeObserver observer = appbar.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+        {
+            @Override
+            public boolean onPreDraw()
+            {
+                appbar.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                appbar.setPivotY(0.0f);
+                appbar.setScaleY(0.0f);
+
+                appbar.animate().setDuration(500)
+                                .scaleY(1.0f)
+                                .setInterpolator(new OvershootInterpolator())
+                                .setStartDelay(75);
+
+                return true;
+            }
+        });
     }
 
     /**

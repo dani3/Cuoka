@@ -8,6 +8,7 @@
     tools:context=".Activities.IntroUI">
 
     <ImageView
+        android:id="@+id/intro_logo"
         android:layout_width="178dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
