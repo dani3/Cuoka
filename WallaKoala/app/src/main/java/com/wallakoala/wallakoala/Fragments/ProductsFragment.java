@@ -363,7 +363,7 @@ public class ProductsFragment extends Fragment
                                     Log.d(Properties.TAG
                                             , "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                                    Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_SHORT).show();
+                                    Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_SHORT).show();
 
                                     mLoadingServerView.setVisibility(View.GONE);
                                     mLoadingView.setVisibility(View.GONE);
@@ -715,7 +715,7 @@ public class ProductsFragment extends Fragment
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                        Snackbar.make(mFrameLayout, "No hay mas novedades", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG).show();
 
                         mState = STATE.OK;
 

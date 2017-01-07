@@ -137,7 +137,7 @@ public class MainScreenUI extends AppCompatActivity
                 appbar.setPivotY(0.0f);
                 appbar.setScaleY(0.0f);
 
-                appbar.animate().setDuration(500)
+                appbar.animate().setDuration(300)
                                 .scaleY(1.0f)
                                 .setInterpolator(new OvershootInterpolator())
                                 .setStartDelay(75);

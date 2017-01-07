@@ -145,29 +145,31 @@ public class IntroUI extends AppCompatActivity
                 ImageView logoImageView = (ImageView) ((Activity) context).findViewById(R.id.intro_logo);
                 logoImageView.animate()
                              .setDuration(250)
-                             .scaleY(0.0f)
-                             .scaleX(0.0f).setListener(new Animator.AnimatorListener()
-                            {
-                                @Override
-                                public void onAnimationStart(Animator animator) {}
+                             .alpha(0.0f)
+                             .setListener(new Animator.AnimatorListener()
+                             {
+                                 @Override
+                                 public void onAnimationStart(Animator animator) {}
 
-                                @Override
-                                public void onAnimationEnd(Animator animator)
-                                {
-                                    // Creamos el intent
-                                    Intent intent = new Intent(context, MainScreenUI.class);
+                                 @Override
+                                 public void onAnimationEnd(Animator animator)
+                                 {
+                                     // Creamos el intent
+                                     Intent intent = new Intent(context, MainScreenUI.class);
 
-                                    context.startActivity(intent);
+                                     context.startActivity(intent);
 
-                                    ((Activity)context).finish();
-                                }
+                                     ((Activity) context).finish();
 
-                                @Override
-                                public void onAnimationCancel(Animator animator) {}
+                                     ((Activity) context).overridePendingTransition(0, 0);
+                                 }
 
-                                @Override
-                                public void onAnimationRepeat(Animator animator) {}
-                            });
+                                 @Override
+                                 public void onAnimationCancel(Animator animator) {}
+
+                                 @Override
+                                 public void onAnimationRepeat(Animator animator) {}
+                             });
 
             } else {
                 Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout)
