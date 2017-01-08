@@ -1,11 +1,10 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
-import es.sidelab.cuokawebscraperrestclient.beans.Section;
-import java.io.BufferedWriter;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import javax.annotation.Nullable;
 import org.apache.log4j.Logger;
 
 /**
@@ -16,59 +15,6 @@ import org.apache.log4j.Logger;
 public class FileManager 
 {
     private static final Logger LOG = Logger.getLogger(FileManager.class);  
-    
-    /**
-     * Metodo que crea un fichero de texto con todos los links recibidos.
-     * @param listOfLinks: lista de links a escribir.
-     * @param section: seccion a la que pertenecen los productos.
-     */
-    public static void writeLinksToFile(List<String> listOfLinks, Section section)
-    {
-        BufferedWriter bw = null;
-        
-        try {            
-            File file = new File(section.getPath() + section.getName() + "_LINKS.txt");
-            
-            LOG.info("Escribiendo fichero de links: '" + section.getPath() + section.getName() + "_LINKS.txt'");
-            
-            if(! file.exists())
-                file.createNewFile();
-            
-            // El segundo parametro debe estar a false para que se sobreescriba el contenido
-            FileWriter fw = new FileWriter(file, false);
-            bw = new BufferedWriter(fw);
-            for(int i = 0; i < listOfLinks.size(); i++)
-            {
-                // Comprobamos que no escribimos repetido el link (NECESARIO para los colores)
-                if((i == 0) || (! listOfLinks.get(i - 1).equals(listOfLinks.get(i))))
-                {
-                    bw.write(listOfLinks.get(i));
-                    
-                    // Evitamos escribir un salto de linea si es el ultimo producto
-                    if(i != (listOfLinks.size() - 1))
-                        bw.write("\n");
-                }              
-                
-            }
-            
-            LOG.info("Fichero de links: '" + section.getPath() + section.getName() + "_LINKS.txt" 
-                    + "' escrito correctamente");
-            
-        } catch (IOException ex) {
-            LOG.error("Error escribiendo el fichero '" + section.getPath() + section.getName() + "_LINKS.txt'");
-            LOG.error(ex.getMessage());
-            
-        } finally {
-            try {
-                if(bw != null)
-                    bw.close();
-                
-            } catch (IOException ex) {
-                LOG.error("Error cerrando el fichero '" + section.getPath() + section.getName() + "_LINKS.txt'");
-                LOG.error(ex.getMessage());
-            }
-        }
-    }
     
     /**
      * Metodo que elimina un fichero dado.
@@ -89,5 +35,35 @@ public class FileManager
         LOG.error("No ha sido posible borrar el fichero: " + path);
         
         return false;
+    }
+    
+    /**
+     * Metodo que crea el fichero de resultados.
+     * @param shop: tienda.
+     * @param day: dia del mes.
+     * @param month: mes del año.
+     * @param year: año.
+     * @return File si se ha creado correctamente, null EOC.
+     */
+    @Nullable
+    public static File createResultsFile(Shop shop, int day, int month, int year)
+    {
+        File file = new File(Properties.SCRAPING_RESULT_PATH + shop.getName() + "_" + day + "_" + month + "_" + year + ".txt");
+        if (!file.exists())
+        {
+            try 
+            {
+                file.createNewFile();
+                
+            } catch (IOException ex) {
+                LOG.error("Error creando el fichero '" 
+                    + Properties.SCRAPING_RESULT_PATH + shop.getName() + "_" + day + "_" + month + "_" + year + ".txt");
+                LOG.error(ex.getMessage());
+                
+                return null;
+            }
+        } 
+        
+        return file;
     }
 }

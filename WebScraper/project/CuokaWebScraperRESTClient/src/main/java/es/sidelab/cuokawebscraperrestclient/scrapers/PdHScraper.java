@@ -6,6 +6,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.ScrapingAnalyzer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,9 +41,22 @@ public class PdHScraper implements Scraper
                 }
             };
     
+    // Analizador que almacena los resultados del proceso de scraping.
+    private ThreadLocal<ScrapingAnalyzer> scrapingAnalyzer;
+    
     @Override
     public List<Product> scrap(Shop shop, Section section) throws IOException
     {        
+        scrapingAnalyzer = 
+            new ThreadLocal<ScrapingAnalyzer>() 
+            {
+                @Override 
+                protected ScrapingAnalyzer initialValue() 
+                {
+                    return new ScrapingAnalyzer(shop, section);
+                }
+            };
+        
         threadFinished.set(false);
         
         LOG.info("Se inicia el scraping de la seccion " + section.getName() + " de la tienda " + shop.getName());
@@ -89,6 +103,8 @@ public class PdHScraper implements Scraper
             }
         }
         
+        scrapingAnalyzer.get().printResults();
+        
         LOG.info("El scraping de la seccion " + section.getName() + " de la tienda " + shop.getName() + " ha terminado");
         LOG.info("Ha sacado " + productList.size() + " productos");
         
@@ -117,6 +133,11 @@ public class PdHScraper implements Scraper
         // Podemos haber leido ya todos los productos, por lo que name puede ser null.
         if (name == null || name.contains("null"))
         {
+            if (name.contains("null"))
+            {
+                scrapingAnalyzer.get().saveError(Properties.NAME_NOT_FOUND);
+            }
+            
             return null;
         }
         
@@ -126,6 +147,8 @@ public class PdHScraper implements Scraper
         
         if (price.contains("null"))
         {
+            scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
+            
             return null;
         }
         
@@ -139,6 +162,11 @@ public class PdHScraper implements Scraper
         discount    = discount.replace("Descuento: ", "");   
         price       = price.replace("Precio: ", "");
         link        = link.replace("Link: ", "");
+        
+        if (description.isEmpty())
+        {
+            scrapingAnalyzer.get().saveError(Properties.DESCRIPTION_NOT_FOUND);
+        }
         
         // Eliminamos el primer '.' en caso de que el precio supere los 1000 euros.
         if (StringUtils.countOccurrencesOf(price, ".") > 1)
@@ -201,6 +229,16 @@ public class PdHScraper implements Scraper
             {
                 correct = false;
                 
+                if (colorName.contains("null"))
+                {
+                    scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
+                }
+                
+                if (reference.contains("null"))
+                {
+                    scrapingAnalyzer.get().saveError(Properties.REFERENCE_NOT_FOUND);
+                }
+                
                 String line = br.readLine();                
                 // Podemos llegar al final de fichero.
                 if (line == null)
@@ -249,7 +287,10 @@ public class PdHScraper implements Scraper
                         {
                             Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                             images.add(image);
-                        }  
+                            
+                        } else {
+                            scrapingAnalyzer.get().saveError(Properties.IMAGE_NOT_FOUND);
+                        } 
                     }
                 }
 
@@ -261,6 +302,8 @@ public class PdHScraper implements Scraper
         // Nos aseguramos de que no insertamos productos sin ningun color.
         if (colors.isEmpty()) 
         {
+            scrapingAnalyzer.get().saveError(Properties.NO_COLORS);
+            
             return null;
         }
         

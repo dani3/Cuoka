@@ -359,7 +359,8 @@ public class MainScreenUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                {
                     Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se cierra el NavigationDrawer");
                     mDrawerLayout.closeDrawer(GravityCompat.START);
 
