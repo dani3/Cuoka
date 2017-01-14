@@ -466,11 +466,11 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "¡Mira lo que he encontrado en Cuoka!");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "¡Mira lo que he encontrado en Cuoka!");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_subject));
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_message));
             shareIntent.setType("*/*");
 
-            startActivity(Intent.createChooser(shareIntent, "Compartir imagen"));
+            startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_action)));
         }
     }
 
@@ -518,8 +518,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                             .setListener(new Animator.AnimatorListener()
                             {
                                 @Override
-                                public void onAnimationStart(Animator animation) {
-                                }
+                                public void onAnimationStart(Animator animation) {}
 
                                 @Override
                                 public void onAnimationEnd(Animator animation)
@@ -654,6 +653,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     public void finish()
     {
         super.finish();
+
+        Uri uri = mImagesAdapter.getFirstImageUri();
+
+        Utils.deleteImage(this, uri);
 
         overridePendingTransition(0, 0);
     }

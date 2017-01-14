@@ -2,11 +2,13 @@ package com.wallakoala.wallakoala.Utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -20,6 +22,7 @@ import com.wallakoala.wallakoala.Beans.Product;
 import com.wallakoala.wallakoala.Properties.Properties;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -268,6 +271,16 @@ public class Utils
 
         Log.d(Properties.TAG, "[UTILS] Imagen guardada correctamente");
         return fileName;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void deleteImage(final Context context, Uri uri)
+    {
+        File file = new File(uri.toString());
+        file.delete();
+
+        context.sendBroadcast(
+                new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(uri.toString()))));
     }
 
     public static double mapValueFromRangeToRange(double value

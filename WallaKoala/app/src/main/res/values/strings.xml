@@ -161,4 +161,8 @@
     <string name="notification_recommended_header">Nueva recomendación</string>
     <string name="notification_recommended_body">¡Tenemos nuevas recomendaciones para ti! Creemos que te gustará Pepito Grillo por su originalidad y aire fresco ¿Por qué no le echas un vistazo?.</string>
     <string name="notification_recommended_action">Ir a Descubre</string>
+
+    <string name="share_action">Compartir con</string>
+    <string name="share_message">¡Mira lo que he encontrado en Cuoka!</string>
+    <string name="share_subject">¡Mira lo que he encontrado en Cuoka!</string>
 </resources>
