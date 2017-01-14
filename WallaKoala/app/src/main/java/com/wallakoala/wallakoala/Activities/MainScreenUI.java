@@ -30,9 +30,12 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
@@ -137,9 +140,9 @@ public class MainScreenUI extends AppCompatActivity
                 appbar.setPivotY(0.0f);
                 appbar.setScaleY(0.0f);
 
-                appbar.animate().setDuration(300)
+                appbar.animate().setDuration(150)
                                 .scaleY(1.0f)
-                                .setInterpolator(new OvershootInterpolator())
+                                .setInterpolator(new DecelerateInterpolator())
                                 .setStartDelay(75);
 
                 return true;

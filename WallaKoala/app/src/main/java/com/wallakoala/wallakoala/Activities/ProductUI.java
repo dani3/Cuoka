@@ -669,15 +669,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         int bottomHalf = screenHeight - (mFloatingButtonTop + (mFloatingActionButtonPlus.getHeight() / 2));
         int offset = mProductInfoLayout.getHeight() - bottomHalf;
 
-        Log.d(Properties.TAG, "SCREEN_HEIGHT: " + screenHeight);
-        Log.d(Properties.TAG, "FAB_TOP: " + mFloatingButtonTop);
-        Log.d(Properties.TAG, "FAB_HEIGHT: " + mFloatingActionButtonPlus.getHeight());
-        Log.d(Properties.TAG, "FAB_X: " + mFloatingButtonX);
-        Log.d(Properties.TAG, "FAB_Y: " + mFloatingButtonY);
-        Log.d(Properties.TAG, "BOTTOM_HALF: " + bottomHalf);
-        Log.d(Properties.TAG, "INFO_HEIGHT: " + mProductInfoLayout.getHeight());
-        Log.d(Properties.TAG, "OFFSET: " + offset);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             mFloatingActionButtonPlus.setImageDrawable(

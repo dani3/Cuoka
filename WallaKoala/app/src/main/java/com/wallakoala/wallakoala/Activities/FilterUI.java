@@ -34,6 +34,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
 import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
@@ -340,8 +342,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                             OK = false;
 
-                            mFilterShopMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
+                            YoYo.with(Techniques.Shake)
+                                .duration(400)
+                                .playOn(mFilterShopMenuLayout);
                         }
                     }
 
@@ -371,8 +374,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                             OK = false;
 
-                            mFilterColorMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
+                            YoYo.with(Techniques.Shake)
+                                .duration(400)
+                                .playOn(mFilterColorMenuLayout);
                         }
                     }
 
@@ -402,8 +406,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                             OK = false;
 
-                            mFilterSectionMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
+                            YoYo.with(Techniques.Shake)
+                                .duration(400)
+                                .playOn(mFilterSectionMenuLayout);
                         }
                     }
 
@@ -421,8 +426,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         {
                             OK = false;
 
-                            mFilterPriceMenuLayout.startAnimation(
-                                    AnimationUtils.loadAnimation(FilterUI.this, R.anim.shake_animation));
+                            YoYo.with(Techniques.Shake)
+                                .duration(400)
+                                .playOn(mFilterPriceMenuLayout);
                         } else {
                             Log.d(Properties.TAG, "[FILTER_UI] - A partir de " + from + "€ hasta " + to + "€");
                         }
@@ -688,7 +694,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializa el menu de precios.
      */
-    @SuppressWarnings({"unchecked", "deprecaction"})
+    @SuppressWarnings("unchecked, deprecaction")
     protected void _initFilterPrice()
     {
         mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
