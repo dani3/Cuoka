@@ -10,6 +10,26 @@ public class Properties
     public static final String TAG     = "CUOKA";
     public static final String PACKAGE = "com.wallakoala.wallakoala";
 
+    public static enum STATE
+    {
+        ERROR
+                { @Override
+                public String toString() { return "ERROR"; }
+                },
+        LOADING
+                { @Override
+                public String toString() { return "CARGANDO"; }
+                },
+        NODATA
+                { @Override
+                public String toString() { return "SIN DATOS"; }
+                },
+        OK
+                { @Override
+                public String toString() { return "OK"; }
+                },
+    }
+
     public static final int CACHED_PRODUCTS_MIN = 10;
     public static final int CACHED_PRODUCTS_MAX = 20;
     public static final int CACHED_SHOPS        = 20;

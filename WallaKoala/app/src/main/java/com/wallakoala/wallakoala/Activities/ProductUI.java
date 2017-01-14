@@ -654,10 +654,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     {
         super.finish();
 
-        Uri uri = mImagesAdapter.getFirstImageUri();
-
-        Utils.deleteImage(this, uri);
-
         overridePendingTransition(0, 0);
     }
 

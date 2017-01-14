@@ -40,40 +40,27 @@ import java.util.List;
 public class RecommendedFragment extends Fragment
 {
     /* Constants */
-    protected static boolean HAS_BEEN_SELECTED;
+    private static boolean HAS_BEEN_SELECTED;
 
     /* Container Views */
-    protected StaggeredRecyclerView mProductsRecyclerView;
+    private StaggeredRecyclerView mProductsRecyclerView;
 
     /* Views */
-    protected View mLoadingView;
+    private View mLoadingView;
 
     /* Layouts */
-    protected FrameLayout mFrameLayout;
-
-    /* LayoutManagers */
-    protected StaggeredGridLayoutManager mGridLayoutManager;
+    private FrameLayout mFrameLayout;
 
     /* Adapters */
-    protected RecommendedListAdapter mProductAdapter;
-
-    /* SharedPreferenceManager */
-    protected SharedPreferencesManager mSharedPreferences;
+    private RecommendedListAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation mMoveAndFadeAnimation;
-    protected Animation mShowFromDown, mHideFromUp;
-
-    /* Snackbar */
-    protected Snackbar mSnackbar;
-
-    /* AsynTasks */
-    protected AsyncTask mConnectToServer;
+    private Animation mMoveAndFadeAnimation;
 
     /* Data */
-    protected User mUser;
-    protected ProductsFragment.STATE mState;
-    protected List<Product> mProductList;
+    private User mUser;
+    private Properties.STATE mState;
+    private List<Product> mProductList;
 
     /* Constructor por defecto NECESARIO */
     public RecommendedFragment() {}
@@ -143,9 +130,9 @@ public class RecommendedFragment extends Fragment
      */
     protected void _initData()
     {
-        mSharedPreferences = new SharedPreferencesManager(getActivity());
+        SharedPreferencesManager sharedPreferences = new SharedPreferencesManager(getActivity());
 
-        mUser = mSharedPreferences.retrieveUser();
+        mUser = sharedPreferences.retrieveUser();
 
         mProductList = new ArrayList<>();
 
@@ -159,12 +146,6 @@ public class RecommendedFragment extends Fragment
     {
         mMoveAndFadeAnimation = AnimationUtils.loadAnimation(getActivity()
                 , R.anim.translate_and_fade_animation);
-
-        mHideFromUp = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.hide_to_down_animation);
-
-        mShowFromDown = AnimationUtils.loadAnimation(getActivity()
-                , R.anim.show_from_down_animation);
     }
 
     /**
@@ -175,13 +156,13 @@ public class RecommendedFragment extends Fragment
     {
         mProductsRecyclerView.setVisibility(View.VISIBLE);
 
-        mGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new RecommendedListAdapter(getActivity()
                 , mProductList
                 , mFrameLayout);
 
         mProductsRecyclerView.setItemViewCacheSize(Properties.CACHED_PRODUCTS_MAX);
-        mProductsRecyclerView.setLayoutManager(mGridLayoutManager);
+        mProductsRecyclerView.setLayoutManager(gridLayoutManager);
         mProductsRecyclerView.setAdapter(mProductAdapter);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -206,7 +187,7 @@ public class RecommendedFragment extends Fragment
     /**
      * Tarea en segundo plano que se conecta al servidor para traer las recomendaciones
      */
-    private class ConnectToServer extends AsyncTask<String, Void, Void>
+    private class RetrieveRecommendationsTask extends AsyncTask<String, Void, Void>
     {
         private JSONArray content = null;
         private String error = null;
@@ -214,12 +195,11 @@ public class RecommendedFragment extends Fragment
         @Override
         protected void onPreExecute()
         {
-            if (mState != ProductsFragment.STATE.LOADING)
+            if (mState != Properties.STATE.LOADING)
             {
                 _loading(true, true);
             }
-
-        } // onPreExecute
+        }
 
         @Override
         protected Void doInBackground(String... unused)
@@ -234,8 +214,7 @@ public class RecommendedFragment extends Fragment
             }
 
             return null;
-
-        } // doInBackground
+        }
 
         @Override
         protected void onPostExecute(Void unused)
@@ -248,10 +227,9 @@ public class RecommendedFragment extends Fragment
             } else {
                 new JSONConversion().execute(content);
             }
+        }
 
-        } // onPostExecute
-
-    } /* [END ConnectToServer] */
+    } /* [END RetrieveRecommendationsTask] */
 
     /**
      * Tarea en segundo plano que convertira el array de JSONs.
@@ -325,7 +303,7 @@ public class RecommendedFragment extends Fragment
 
                 mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
-                mState = ProductsFragment.STATE.OK;
+                mState = Properties.STATE.OK;
 
             } else {
                 mLoadingView.setVisibility(View.GONE);
@@ -335,7 +313,7 @@ public class RecommendedFragment extends Fragment
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
 
-            mState = ProductsFragment.STATE.LOADING;
+            mState = Properties.STATE.LOADING;
         }
 
         Log.d(Properties.TAG, "[RECOMMENDED_FRAGMENT] Estado = " + mState.toString());
@@ -346,20 +324,18 @@ public class RecommendedFragment extends Fragment
      */
     private void _errorConnectingToServer()
     {
-        mSnackbar = Snackbar.make(mFrameLayout
-                        , getResources().getString(R.string.error_message)
-                        , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+        Snackbar.make(mFrameLayout
+                    , getResources().getString(R.string.error_message)
+                    , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
                         {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                mConnectToServer = new ConnectToServer().execute();
-                            }
-                        });
+                            new RetrieveRecommendationsTask().execute();
+                        }
+                    }).show();
 
-        mSnackbar.show();
-
-        mState = ProductsFragment.STATE.ERROR;
+        mState = Properties.STATE.ERROR;
 
         Log.d(Properties.TAG, "Estado = " + mState.toString());
     }
@@ -373,7 +349,7 @@ public class RecommendedFragment extends Fragment
         {
             HAS_BEEN_SELECTED = true;
 
-            mConnectToServer = new ConnectToServer().execute();
+            new RetrieveRecommendationsTask().execute();
 
         } else if (mUser.getShops().isEmpty()) {
             final AlertDialog dialog = _createDialog();

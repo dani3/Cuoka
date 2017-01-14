@@ -63,85 +63,59 @@ import java.util.concurrent.TimeUnit;
 public class ProductsFragment extends Fragment
 {
     /* Constants */
-    protected static final String ALL = "All";
-    protected static final int NUM_PRODUCTS_DISPLAYED = 100;
-    protected static final int MIN_PRODUCTS = 8;
-    protected static final int MAX_OFFSET = 20;
-    protected static boolean MAN;
-    protected static boolean FIRST_CONNECTION;
-    protected static int NUMBER_OF_CORES;
-    protected static int DAYS_WITH_NOTHING;
-    protected static int DAYS_OFFSET;
-    protected static String SEARCH_QUERY;
-    protected enum STATE
-    {
-        ERROR
-                { @Override
-                  public String toString() { return "ERROR"; }
-                },
-        LOADING
-                { @Override
-                  public String toString() { return "CARGANDO"; }
-                },
-        NODATA
-                { @Override
-                  public String toString() { return "SIN DATOS"; }
-                },
-        OK
-                { @Override
-                  public String toString() { return "OK"; }
-                },
-    }
+    private static final String ALL = "All";
+    private static final int NUM_PRODUCTS_DISPLAYED = 100;
+    private static final int MIN_PRODUCTS = 8;
+    private static final int MAX_OFFSET = 20;
+    private static boolean MAN;
+    private static boolean FIRST_CONNECTION;
+    private static int NUMBER_OF_CORES;
+    private static int DAYS_WITH_NOTHING;
+    private static int DAYS_OFFSET;
+    private static String SEARCH_QUERY;
 
     /* Data */
-    protected List<ConcurrentMap<String, List<Product>>> mProductsListMap;
-    protected Map<String, Object> mFilterMap;
-    protected Deque<Product> mProductsCandidatesDeque;
-    protected List<Product> mProductsDisplayedList;
-    protected List<String> mShopsList;
+    private List<ConcurrentMap<String, List<Product>>> mProductsListMap;
+    private Map<String, Object> mFilterMap;
+    private Deque<Product> mProductsCandidatesDeque;
+    private List<Product> mProductsDisplayedList;
+    private List<String> mShopsList;
 
     /* Container Views */
-    protected StaggeredRecyclerView mProductsRecyclerView;
+    private StaggeredRecyclerView mProductsRecyclerView;
 
     /* Layouts */
-    protected FrameLayout mFrameLayout;
+    private FrameLayout mFrameLayout;
 
     /* LayoutManagers */
-    protected StaggeredGridLayoutManager mStaggeredGridLayoutManager;
+    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
     /* Views */
-    protected TextView mNoDataTextView;
+    private TextView mNoDataTextView;
 
-    protected View mLoadingView;
-    protected View mLoadingServerView;
-    protected View mNoShopsView;
+    private View mLoadingView;
+    private View mLoadingServerView;
+    private View mNoShopsView;
 
     /* Buttons */
     protected Button mAddShopsButton;
 
     /* Adapters */
-    protected ProductsGridAdapter mProductAdapter;
+    private ProductsGridAdapter mProductAdapter;
 
     /* Animations */
-    protected Animation mMoveAndFadeAnimation;
-    protected Animation mShowFromDown, mHideFromUp;
-
-    /* Snackbar */
-    protected Snackbar mSnackbar;
-
-    /* SharedPreferences */
-    protected SharedPreferencesManager mSharedPreferences;
+    private Animation mMoveAndFadeAnimation;
+    private Animation mShowFromDown, mHideFromUp;
 
     /* AsynTasks */
-    protected AsyncTask mConnectToServer, mRetreiveProductsTask;
+    private AsyncTask mRetrieveNewProductsTask, mRetreiveProductsTask;
 
     /* User */
-    protected User mUser;
+    private User mUser;
 
     /* Others */
-    protected STATE mState;
-    protected int mProductsInsertedPreviously, start, count;
-    protected long mBackPressed;
+    private Properties.STATE mState;
+    private int mProductsInsertedPreviously, start, count;
 
     /* Constructor por defecto NECESARIO */
     public ProductsFragment() {}
@@ -215,7 +189,7 @@ public class ProductsFragment extends Fragment
 
             mNoShopsView.setVisibility(View.GONE);
 
-            mConnectToServer = new ConnectToServer().execute();
+            mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
         }
     }
 
@@ -224,7 +198,7 @@ public class ProductsFragment extends Fragment
      */
     private void _initData()
     {
-        mSharedPreferences = new SharedPreferencesManager(getActivity());
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(getActivity());
 
         mProductsListMap         = new ArrayList<>();
         mFilterMap               = new HashMap<>();
@@ -232,25 +206,24 @@ public class ProductsFragment extends Fragment
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
 
-        for (String shop : mSharedPreferences.retrieveUser().getShops())
+        for (String shop : sharedPreferencesManager.retrieveUser().getShops())
         {
             mShopsList.add(shop);
         }
 
         start = count = 0;
-        mBackPressed = 0;
 
         SEARCH_QUERY = null;
 
         DAYS_OFFSET = 0;
         DAYS_WITH_NOTHING = 0;
-        MAN = mSharedPreferences.retrieveUser().getMan();
+        MAN = sharedPreferencesManager.retrieveUser().getMan();
 
         NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
         FIRST_CONNECTION = true;
 
-        mUser = mSharedPreferences.retrieveUser();
+        mUser = sharedPreferencesManager.retrieveUser();
 
         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Numero de procesadores: " + NUMBER_OF_CORES);
     }
@@ -265,7 +238,6 @@ public class ProductsFragment extends Fragment
         mProductsCandidatesDeque = new ArrayDeque<>();
 
         start = count = 0;
-        mBackPressed = 0;
 
         DAYS_OFFSET = 0;
         DAYS_WITH_NOTHING = 0;
@@ -347,7 +319,7 @@ public class ProductsFragment extends Fragment
 
                         } else {
                             // Siempre que no se este cargando, o bien no estemos en los filtros
-                            if ((mState != STATE.LOADING) && (DAYS_OFFSET >= 0))
+                            if ((mState != Properties.STATE.LOADING) && (DAYS_OFFSET >= 0))
                             {
                                 Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha hecho SCROLL -> No quedan candidatos");
 
@@ -357,7 +329,7 @@ public class ProductsFragment extends Fragment
                                 {
                                     Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se traen más productos");
 
-                                    mConnectToServer = new ConnectToServer().execute();
+                                    mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
 
                                 } else {
                                     Log.d(Properties.TAG
@@ -400,13 +372,21 @@ public class ProductsFragment extends Fragment
         super.onDestroy();
 
         // Cancelamos cualquier conexion que se este haciendo.
-        if (mConnectToServer != null)
-            if (!mConnectToServer.isCancelled())
-                mConnectToServer.cancel(true);
+        if (mRetrieveNewProductsTask != null)
+        {
+            if (!mRetrieveNewProductsTask.isCancelled())
+            {
+                mRetrieveNewProductsTask.cancel(true);
+            }
+        }
 
         if (mRetreiveProductsTask != null)
+        {
             if (!mRetreiveProductsTask.isCancelled())
+            {
                 mRetreiveProductsTask.cancel(true);
+            }
+        }
     }
 
     /**
@@ -446,7 +426,7 @@ public class ProductsFragment extends Fragment
      * Si falla alguna conexion no pasa nada ya que se ignora, sin embargo, si fallan
      * todas las conexiones, se muestra la SnackBar para reintentar.
      */
-    private class ConnectToServer extends AsyncTask<String, Void, Void>
+    private class RetrieveNewProductsTask extends AsyncTask<String, Void, Void>
     {
         private List<JSONArray> content = new ArrayList<>();
         private String error = null;
@@ -454,12 +434,11 @@ public class ProductsFragment extends Fragment
         @Override
         protected void onPreExecute()
         {
-            if (mState != STATE.LOADING)
+            if (mState != Properties.STATE.LOADING)
             {
                 _loading(true, true);
             }
-
-        } // onPreExecute
+        }
 
         @Override
         protected Void doInBackground(String... unused)
@@ -474,8 +453,7 @@ public class ProductsFragment extends Fragment
             }
 
             return null;
-
-        } // doInBackground
+        }
 
         @Override
         @SuppressWarnings("unchecked")
@@ -488,18 +466,17 @@ public class ProductsFragment extends Fragment
                 _errorConnectingToServer(false);
 
             } else {
-                new MultithreadConversion().execute(content);
+                new ParallelConversionTask().execute(content);
             }
+        }
 
-        } // onPostExecute
-
-    } /* [END ConnectToServer] */
+    } /* [END RetrieveNewProductsTask] */
 
     /**
      * Tarea en segundo plano que contacta con el servidor para traer nuevos productos
      * que cumplan los filtros establecidos.
      */
-    private class RetreiveProductsTask extends AsyncTask<String, Void, Void>
+    private class RetrieveProductsTask extends AsyncTask<String, Void, Void>
     {
         private List<JSONArray> content;
         private String error = null;
@@ -507,7 +484,7 @@ public class ProductsFragment extends Fragment
         @Override
         protected void onPreExecute()
         {
-            if (mState != STATE.LOADING)
+            if (mState != Properties.STATE.LOADING)
             {
                 _loading(true, true);
             }
@@ -556,17 +533,17 @@ public class ProductsFragment extends Fragment
             } else {
                 if (!content.isEmpty())
                 {
-                    new MultithreadConversion().execute(content);
+                    new ParallelConversionTask().execute(content);
                 }
             }
         }
 
-    } /* [END RetreiveProductsTask] */
+    } /* [END RetrieveProductsTask] */
 
     /**
      * Tarea en segundo plano que convertira concurrentemente el array de JSONs.
      */
-    private class MultithreadConversion extends AsyncTask<List<JSONArray>, Void, Void>
+    private class ParallelConversionTask extends AsyncTask<List<JSONArray>, Void, Void>
     {
         private ThreadPoolExecutor executor;
         private CompletionService<Boolean> completionService;
@@ -684,14 +661,14 @@ public class ProductsFragment extends Fragment
                     {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se vuelve a conectar con el servidor para traer más productos");
 
-                        mConnectToServer = new ConnectToServer().execute();
+                        mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
 
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
                         Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG).show();
 
-                        mState = STATE.OK;
+                        mState = Properties.STATE.OK;
 
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
@@ -710,14 +687,14 @@ public class ProductsFragment extends Fragment
                     {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se vuelve a conectar con el servidor para traer más productos");
 
-                        mConnectToServer = new ConnectToServer().execute();
+                        mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
 
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
                         Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG).show();
 
-                        mState = STATE.OK;
+                        mState = Properties.STATE.OK;
 
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
 
@@ -743,7 +720,7 @@ public class ProductsFragment extends Fragment
             }
         }
 
-    } /* [END MultithreadConversion] */
+    } /* [END ParallelConversionTask] */
 
     /**
      * Metodo que maneja la interfaz en funcion de si esta cargando o no los productos.
@@ -779,7 +756,7 @@ public class ProductsFragment extends Fragment
 
                     mLoadingView.startAnimation(mMoveAndFadeAnimation);
 
-                    mState = STATE.OK;
+                    mState = Properties.STATE.OK;
 
                     FIRST_CONNECTION = false;
 
@@ -801,7 +778,7 @@ public class ProductsFragment extends Fragment
 
                     mLoadingServerView.startAnimation(mHideFromUp);
 
-                    mState = STATE.OK;
+                    mState = Properties.STATE.OK;
                 }
 
             } else {
@@ -817,14 +794,14 @@ public class ProductsFragment extends Fragment
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
 
-            mState = STATE.LOADING;
+            mState = Properties.STATE.LOADING;
 
         } else {
             // Icono de carga
             mLoadingServerView.startAnimation(mShowFromDown);
             mLoadingServerView.setVisibility(View.VISIBLE);
 
-            mState = STATE.LOADING;
+            mState = Properties.STATE.LOADING;
         }
 
         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
@@ -840,13 +817,13 @@ public class ProductsFragment extends Fragment
         {
             mNoDataTextView.setVisibility(View.GONE);
 
-            mState = STATE.OK;
+            mState = Properties.STATE.OK;
 
         } else {
             mNoDataTextView.setVisibility(View.VISIBLE);
             mLoadingView.setVisibility(View.GONE);
 
-            mState = STATE.NODATA;
+            mState = Properties.STATE.NODATA;
         }
 
         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
@@ -860,33 +837,31 @@ public class ProductsFragment extends Fragment
     {
         if (!isFiltering)
         {
-            mSnackbar = Snackbar.make(mFrameLayout
-                            , getResources().getString(R.string.error_message)
-                            , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+            Snackbar.make(mFrameLayout
+                        , getResources().getString(R.string.error_message)
+                        , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
             {
-                @Override
-                public void onClick(View view)
-                {
-                    mConnectToServer = new ConnectToServer().execute();
+                mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
                 }
-            });
+            }).show();
 
         } else {
-            mSnackbar = Snackbar.make(mFrameLayout
-                            , getResources().getString( R.string.error_message )
-                            , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+            Snackbar.make(mFrameLayout
+                        , getResources().getString( R.string.error_message )
+                        , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
             {
-                @Override
-                public void onClick(View view)
-                {
-                    mRetreiveProductsTask = new RetreiveProductsTask().execute();
+                mRetreiveProductsTask = new RetrieveProductsTask().execute();
                 }
-            });
+            }).show();
         }
 
-        mSnackbar.show();
-
-        mState = STATE.ERROR;
+        mState = Properties.STATE.ERROR;
 
         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Estado: " + mState.toString());
     }
@@ -1002,7 +977,7 @@ public class ProductsFragment extends Fragment
         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se comprueba si se puede filtrar");
 
         return ((mShopsList != null) && (!mShopsList.isEmpty()) &&
-                (mState != STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
+                (mState != Properties.STATE.LOADING) && (mLoadingView.getVisibility() == View.GONE));
     }
 
     /**
@@ -1058,7 +1033,7 @@ public class ProductsFragment extends Fragment
             // Reiniciamos el mapa de filtros.
             mFilterMap = new HashMap<>();
 
-            mConnectToServer = new ConnectToServer().execute();
+            mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
 
         } else {
             // Lo ponemos a -1 para detectar cuando estamos en los filtros.
@@ -1101,9 +1076,7 @@ public class ProductsFragment extends Fragment
 
                                 mFilterMap.put("shops", shops);
 
-                                _loading(true, true);
-
-                                mRetreiveProductsTask = new RetreiveProductsTask().execute();
+                                mRetreiveProductsTask = new RetrieveProductsTask().execute();
                             }
                         }
                         , new Response.ErrorListener()
@@ -1129,7 +1102,7 @@ public class ProductsFragment extends Fragment
                 Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Petición creada y enviada");
 
             } else {
-                mRetreiveProductsTask = new RetreiveProductsTask().execute();
+                mRetreiveProductsTask = new RetrieveProductsTask().execute();
             }
         }
     }
@@ -1157,7 +1130,7 @@ public class ProductsFragment extends Fragment
         // Lo ponemos a -1 para detectar cuando estamos en los filtros
         DAYS_OFFSET = -1;
 
-        mRetreiveProductsTask = new RetreiveProductsTask().execute();
+        mRetreiveProductsTask = new RetrieveProductsTask().execute();
     }
 
     /**
@@ -1208,7 +1181,7 @@ public class ProductsFragment extends Fragment
         } else {
             mNoShopsView.setVisibility(View.GONE);
 
-            mConnectToServer = new ConnectToServer().execute();
+            mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
         }
     }
 
