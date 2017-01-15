@@ -270,17 +270,17 @@ public class Controller
     public String registerUser(@RequestBody User user)
     {     
         LOG.info("[LOGIN] Peticion POST para anadir un nuevo usuario:");
-        LOG.info("[LOGIN] - Email" + user.getEmail());
-        LOG.info("[LOGIN] - Nombre" + user.getName());
-        LOG.info("[LOGIN] - Edad" + user.getAge());
-        LOG.info("[LOGIN] - CP" + user.getPostalCode());
+        LOG.info("[LOGIN] - Email: " + user.getEmail());
+        LOG.info("[LOGIN] - Nombre: " + user.getName());
+        LOG.info("[LOGIN] - Edad: " + user.getAge());
+        LOG.info("[LOGIN] - CP: " + user.getPostalCode());
         LOG.info("[LOGIN] - Sexo: " + ((user.getMan()) ? "Hombre" : "Mujer"));
         LOG.info("[LOGIN] Comprobando que no exista...");
         
         // Comprobamos que no existe el usuario. Si existe, se devuelve 'USER_ALREADY_EXISTS'
         if (usersRepository.findByEmail(user.getEmail()) != null)
         {
-            LOG.warn("[LOGIN] El usuario con email (" + user.getEmail() + ") ya existe");
+            LOG.warn("[LOGIN] El usuario ya existe");
         
             return Properties.ALREADY_EXISTS;
         }

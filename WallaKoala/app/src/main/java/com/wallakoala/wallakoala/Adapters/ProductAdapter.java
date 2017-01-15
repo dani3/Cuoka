@@ -161,7 +161,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                     (Activity) mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 
         } else if (mLoaded) {
-
             Log.d(Properties.TAG, "[PRODUCT_ADAPTER] Sí se tienen permisos de escritura, se guarda la imagen temporalmente");
             String path = MediaStore.Images.Media.insertImage(
                     mContext.getContentResolver(), mFirstImageBitmap, "Image compartida", null);

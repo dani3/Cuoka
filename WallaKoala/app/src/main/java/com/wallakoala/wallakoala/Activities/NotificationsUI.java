@@ -95,13 +95,13 @@ public class NotificationsUI extends AppCompatActivity
      */
     private void _getNotificationsFromServer()
     {
-        new RetrieveNotificationsFromServer().execute();
+        new RetrieveNotificationsTask().execute();
     }
 
     /**
      * Tarea en segundo plano que trae la lista de notificaciones.
      */
-    private class RetrieveNotificationsFromServer extends AsyncTask<String, Void, Void>
+    private class RetrieveNotificationsTask extends AsyncTask<String, Void, Void>
     {
         private JSONArray content;
         private String error = null;
@@ -178,7 +178,7 @@ public class NotificationsUI extends AppCompatActivity
                             @Override
                             public void onClick(View v)
                             {
-                                new RetrieveNotificationsFromServer().execute();
+                                new RetrieveNotificationsTask().execute();
                             }
                         }).show();
             }

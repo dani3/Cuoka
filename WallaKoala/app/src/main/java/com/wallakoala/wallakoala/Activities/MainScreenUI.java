@@ -31,11 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Fragments.ProductsFragment;
 import com.wallakoala.wallakoala.Fragments.RecommendedFragment;
@@ -216,9 +213,9 @@ public class MainScreenUI extends AppCompatActivity
     private void _initNavigationDrawer()
     {
         // Obtenemos las vistas del navigation drawer
-        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
-        mNavigationVew     = (NavigationView)findViewById(R.id.nav_view);
-        mDrawerLayout      = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        mNavigationVew     = (NavigationView) findViewById(R.id.nav_view);
+        mDrawerLayout      = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         // Obtenemos el usuario para inicializar la cabecera
         User user = mSharedPreferencesManager.retrieveUser();
