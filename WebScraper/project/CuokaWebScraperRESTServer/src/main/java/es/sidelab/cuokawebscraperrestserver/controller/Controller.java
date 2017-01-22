@@ -29,6 +29,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +59,9 @@ public class Controller
     
     @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
+    
+    @Autowired
+    private JavaMailSender javaMailSender;
     
     @Autowired
     private ProductsRepository productsRepository;
@@ -81,6 +89,25 @@ public class Controller
     
     @Autowired
     private ShopManager shopManager;
+    
+    @RequestMapping(value = "/email", method = RequestMethod.GET)
+    public void email()
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        try 
+        {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            helper.setTo(InternetAddress.parse("dani.mancebo_3@hotmail.com,ele.fdz@gmail.com,ana.f.guzman@gmail.com,lucia.fdz.guz@gmail.com"));
+            helper.setFrom("cuoka@hotmail.com");
+            helper.setSubject("Bienvenido a CUOKA");
+            helper.setText("Mensaje automático");
+            
+        } catch (MessagingException e) {
+            LOG.error("Error enviando email (" + e.getMessage() + ")");
+        }
+        
+        javaMailSender.send(mail);
+    }
     
     /**
      * Metodo que añade una nueva notificacion.
@@ -773,7 +800,7 @@ public class Controller
         {
             Random rand = new Random();
 
-            int randomNum = rand.nextInt((600 - 1) + 1) + 1;
+            int randomNum = rand.nextInt((aux.size() - 1) + 1) + 1;
 
             recommendedProducts.add(aux.get(randomNum));
         }
@@ -805,7 +832,7 @@ public class Controller
             }
         }
         
-        return productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
+        return productList;
     }
     
     /**
