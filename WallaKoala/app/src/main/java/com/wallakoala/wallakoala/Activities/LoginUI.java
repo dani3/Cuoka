@@ -1,6 +1,7 @@
 package com.wallakoala.wallakoala.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -32,6 +33,7 @@ import com.dd.CircularProgressButton;
 import com.wallakoala.wallakoala.Beans.User;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Singletons.RestClientSingleton;
 import com.wallakoala.wallakoala.Singletons.TypeFaceSingleton;
 import com.wallakoala.wallakoala.Singletons.VolleySingleton;
 import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
@@ -85,6 +87,7 @@ public class LoginUI extends AppCompatActivity
 
     /* AlertDialog */
     private AlertDialog mAlertDialog;
+    private AlertDialog mRecoverPasswordAlertDialog;
 
     /* AlertDialog View */
     private View mAlertDialogView;
@@ -347,9 +350,34 @@ public class LoginUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
+                mRecoverPasswordAlertDialog = _createDialog();
 
+                mRecoverPasswordAlertDialog.show();
+
+                RestClientSingleton.requestForgottenPassword(LoginUI.this);
             }
         });
+    }
+
+    /**
+     * Metodo que crea un dialogo para mostrar un mensaje.
+     */
+    private AlertDialog _createDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginUI.this, R.style.MyDialogTheme);
+
+        builder.setTitle(getResources().getString(R.string.password_forgotten));
+
+        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                mRecoverPasswordAlertDialog.dismiss();
+            }
+        });
+
+        return builder.create();
     }
 
     /**

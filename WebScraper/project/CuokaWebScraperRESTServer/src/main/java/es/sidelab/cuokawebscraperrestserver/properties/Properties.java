@@ -69,4 +69,9 @@ public class Properties
     public static final short SHOP_DISCOUNT_NOTIFICATION = 2;
     public static final short UPDATE_NOTIFICATION        = 3;
     public static final short RECOMMENDED_NOTIFICATION   = 4;
+    
+    /* Configuracion email */
+    public static final String WELCOME_EMAIL_SUBJECT = "Bienvenido a CUOKA";
+    public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
+    public static final String WELCOME_EMAIL_FROM = "bienvenido@cuoka.es";
 }

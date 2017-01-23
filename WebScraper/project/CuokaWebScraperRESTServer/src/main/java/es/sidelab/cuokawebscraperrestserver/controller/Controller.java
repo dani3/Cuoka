@@ -39,6 +39,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,25 +90,6 @@ public class Controller
     
     @Autowired
     private ShopManager shopManager;
-    
-    @RequestMapping(value = "/email", method = RequestMethod.GET)
-    public void email()
-    {
-        MimeMessage mail = javaMailSender.createMimeMessage();
-        try 
-        {
-            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-            helper.setTo(InternetAddress.parse("dani.mancebo_3@hotmail.com,ele.fdz@gmail.com,ana.f.guzman@gmail.com,lucia.fdz.guz@gmail.com"));
-            helper.setFrom("cuoka@hotmail.com");
-            helper.setSubject("Bienvenido a CUOKA");
-            helper.setText("Mensaje automático");
-            
-        } catch (MessagingException e) {
-            LOG.error("Error enviando email (" + e.getMessage() + ")");
-        }
-        
-        javaMailSender.send(mail);
-    }
     
     /**
      * Metodo que añade una nueva notificacion.
@@ -289,6 +271,31 @@ public class Controller
     }
     
     /**
+     * Metodo que envia un correo con la contraseña.
+     * @param id: id del usuario.
+     * @return resultado de la operacion.
+     */
+    @RequestMapping(value = "/users/password/{id}", method = RequestMethod.GET)
+    public String recoverPassword(@PathVariable long id)
+    { 
+        LOG.info("[PASSWORD] Peticion GET para recuperar la contraseña del usuario con id (" + id + ")");
+        
+        User user = usersRepository.findOne(id);
+        if (user == null)
+        {
+            LOG.warn("[PASSWORD] Usuario con ID (" + id + ") no encontrado");
+            return Properties.USER_NOT_FOUND;
+            
+        } else {
+            LOG.info("[UPDATE] Usuario con ID (" + id + ") encontrado, se envia el correo con su contraseña");
+            
+            sendPasswordEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getPassword());
+        }    
+        
+        return Properties.ACCEPTED;
+    }
+    
+    /**
      * Metodo que anade un usuario a la BD.
      * @param user: usuario a anadir.
      * @return String con el resultado de la operacion.
@@ -322,6 +329,9 @@ public class Controller
         // Sacamos el ID que se le ha asignado al guardarlo, y se devuelve.
         long id = usersRepository.findByEmail(user.getEmail()).getId();        
         LOG.info("[LOGIN] Usuario guardado correctamente (ID: " + id + ")");
+        
+        LOG.info("[EMAIL] Se envia correo de bienvenida");
+        sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName());
         
         return String.valueOf(id);
     }
@@ -823,7 +833,7 @@ public class Controller
     {
         LOG.info("[PRODUCTS] Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
         
-        List<Product> productList = productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
+        List<Product> productList = productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 10);
         for (Product product : productList)
         {
             if (product.getName().equalsIgnoreCase(product.getDescription()))
@@ -1448,5 +1458,59 @@ public class Controller
         }
         
         return false;
+    }
+    
+    /**
+     * Metodo que envia un correo al destinatario especificado.
+     * @param to: destinatario.
+     * @param from: emisor.
+     */
+    private void sendWelcomeEmail(String to, String from, String name)
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        
+        try 
+        {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            
+            helper.setTo(to);
+            helper.setFrom(from);
+            helper.setSubject(Properties.WELCOME_EMAIL_SUBJECT);
+            helper.setText("Bienvenido " + name + ":\n\n - Mensaje automático");
+        
+            javaMailSender.send(mail);
+            
+            LOG.info("[EMAIL] Email enviado correctamente");
+            
+        } catch (MessagingException | MailException e) {
+            LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
+        }
+    }
+    
+    /**
+     * Metodo que envia un correo al destinatario especificado.
+     * @param to: destinatario.
+     * @param from: emisor.
+     */
+    private void sendPasswordEmail(String to, String from, String password)
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        
+        try 
+        {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            
+            helper.setTo(to);
+            helper.setFrom(from);
+            helper.setSubject(Properties.RECOVER_PASSWORD_EMAIL_SUBJECT);
+            helper.setText("Tu contraseña es: " + password + "\n\n - Mensaje automático");
+        
+            javaMailSender.send(mail);
+            
+            LOG.info("[EMAIL] Email enviado correctamente");
+            
+        } catch (MessagingException | MailException e) {
+            LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
+        }
     }
 }

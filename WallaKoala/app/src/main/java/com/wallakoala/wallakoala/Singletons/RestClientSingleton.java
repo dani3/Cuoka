@@ -1209,4 +1209,37 @@ public class RestClientSingleton
 
         return content;
     }
+
+    /**
+     * Metodo que envia una peticion al servidor para recuperar la contraseña.
+     * @param context: contexto.
+     */
+    public static void requestForgottenPassword(final Context context)
+    {
+        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+
+        User user = mSharedPreferencesManager.retrieveUser();
+
+        String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                + "/users/password/" + user.getId());
+
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " + para recuperar la contraseña");
+
+        // Creamos una peticion
+        StringRequest stringRequest = new StringRequest(Request.Method.GET
+                , fixedURL
+                , new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {}
+                }
+                , new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {}
+                });
+
+        // La mandamos a la cola de peticiones
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
 }
