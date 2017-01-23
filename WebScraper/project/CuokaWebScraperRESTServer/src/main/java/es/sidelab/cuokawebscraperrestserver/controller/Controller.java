@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -833,7 +832,7 @@ public class Controller
     {
         LOG.info("[PRODUCTS] Peticion GET para obtener los productos de " + shop + " de hace " + offset + " dias");
         
-        List<Product> productList = productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 10);
+        List<Product> productList = productsRepository.findByShopAndDate(shop, Boolean.valueOf(man), Integer.valueOf(offset) + 0);
         for (Product product : productList)
         {
             if (product.getName().equalsIgnoreCase(product.getDescription()))
