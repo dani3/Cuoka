@@ -17,6 +17,7 @@ import es.sidelab.cuokawebscraperrestserver.repositories.ShopSuggestedRepository
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
 import es.sidelab.cuokawebscraperrestserver.utils.ColorManager;
+import es.sidelab.cuokawebscraperrestserver.utils.FileManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ImageManager;
 import es.sidelab.cuokawebscraperrestserver.utils.SectionManager;
 import es.sidelab.cuokawebscraperrestserver.utils.ShopManager;
@@ -330,7 +331,7 @@ public class Controller
         LOG.info("[LOGIN] Usuario guardado correctamente (ID: " + id + ")");
         
         LOG.info("[EMAIL] Se envia correo de bienvenida");
-        sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName());
+        sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
         
         return String.valueOf(id);
     }
@@ -1463,8 +1464,10 @@ public class Controller
      * Metodo que envia un correo al destinatario especificado.
      * @param to: destinatario.
      * @param from: emisor.
+     * @param name: nombre del usuario.
+     * @param man: hombre o mujer.
      */
-    private void sendWelcomeEmail(String to, String from, String name)
+    private void sendWelcomeEmail(String to, String from, String name, boolean man)
     {
         MimeMessage mail = javaMailSender.createMimeMessage();
         
@@ -1472,10 +1475,17 @@ public class Controller
         {
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);
             
+            String message = FileManager.getHTMLFromFile(Properties.MAIL_PATH + Properties.WELCOME_EMAIL_NAME);
+            if (message != null)
+            {
+                message = message.replace("?1", (man ? "o" : "a"));
+                message = message.replace("?2", name);
+            }
+                
             helper.setTo(to);
             helper.setFrom(from);
             helper.setSubject(Properties.WELCOME_EMAIL_SUBJECT);
-            helper.setText("Bienvenido " + name + ":\n\n - Mensaje automático");
+            helper.setText(message, true);
         
             javaMailSender.send(mail);
             

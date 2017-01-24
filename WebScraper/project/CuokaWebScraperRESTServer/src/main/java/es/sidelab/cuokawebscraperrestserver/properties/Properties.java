@@ -27,7 +27,11 @@ public class Properties
     public static final String PREDEFINED_COLORS      = "/images/colors/";
     public static final String IMAGE_PATH             = "/var/www/html/images/products/";
     public static final String COLOR_PATH             = "/var/www/html/images/products/";
-    public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";
+    public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";    
+    public static final String MAIL_PATH              = "/root/cuoka_01/mail/";
+    
+    /* Files */
+    public static final String WELCOME_EMAIL_NAME = "bienvenida.html";
     
     /* Tamaños de las imagenes en HQ y SQ */
     public static final int IMAGE_HEIGHT_S = 400;  
@@ -71,7 +75,7 @@ public class Properties
     public static final short RECOMMENDED_NOTIFICATION   = 4;
     
     /* Configuracion email */
-    public static final String WELCOME_EMAIL_SUBJECT = "Bienvenido a CUOKA";
+    public static final String WELCOME_EMAIL_SUBJECT = "CUOKA te da la bienvenida a la nueva red de moda";
     public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
     public static final String WELCOME_EMAIL_FROM = "bienvenido@cuoka.es";
 }
