@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +18,8 @@ import org.apache.commons.logging.LogFactory;
 public class FileManager 
 {
     private static final Log LOG = LogFactory.getLog(FileManager.class);
+    
+    private static StringBuilder welcomeMessage = new StringBuilder();
     
     /**
      * Metodo que crea el directorio de una tienda si no existe.
@@ -62,7 +62,11 @@ public class FileManager
     @Nullable
     public static String getHTMLFromFile(String filename)
     {
-        StringBuilder html = new StringBuilder();
+        if (welcomeMessage.length() > 0)
+        {
+            return welcomeMessage.toString();
+        }
+        
         File file = new File(filename);
         
         try 
@@ -72,10 +76,10 @@ public class FileManager
             String line;
             while ((line = br.readLine()) != null)
             {
-                html.append(line);
+                welcomeMessage.append(line);
             }
             
-            return html.toString();
+            return welcomeMessage.toString();
             
         } catch (FileNotFoundException ex) {
             LOG.error("Error con el fichero: " + filename + "(" + ex.getMessage() + ")");

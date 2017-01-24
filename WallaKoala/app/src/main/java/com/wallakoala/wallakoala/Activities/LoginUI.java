@@ -366,7 +366,8 @@ public class LoginUI extends AppCompatActivity
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginUI.this, R.style.MyDialogTheme);
 
-        builder.setTitle(getResources().getString(R.string.password_forgotten));
+        builder.setTitle("");
+        builder.setMessage(getResources().getString(R.string.password_forgotten));
 
         builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener()
         {
