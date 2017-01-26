@@ -30,6 +30,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
@@ -60,6 +62,9 @@ public class Controller
     
     @Autowired
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
+    
+    @Autowired 
+    private static final ScheduledExecutorService SCHEDULED_EXECUTOR = Executors.newScheduledThreadPool(2);
     
     @Autowired
     private JavaMailSender javaMailSender;
@@ -330,8 +335,10 @@ public class Controller
         long id = usersRepository.findByEmail(user.getEmail()).getId();        
         LOG.info("[LOGIN] Usuario guardado correctamente (ID: " + id + ")");
         
-        LOG.info("[EMAIL] Se envia correo de bienvenida");
-        sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
+        SCHEDULED_EXECUTOR.schedule(() -> {
+            LOG.info("[EMAIL] Se envia correo de bienvenida");
+            sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
+        }, 1, TimeUnit.DAYS);
         
         return String.valueOf(id);
     }
