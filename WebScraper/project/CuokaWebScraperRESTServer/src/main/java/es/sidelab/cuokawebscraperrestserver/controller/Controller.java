@@ -497,7 +497,7 @@ public class Controller
      * @param id: id del usuario.
      * @return lista de productos favoritos.
      */
-    @RequestMapping(value = "/favorites/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/users/favorites/{id}", method = RequestMethod.GET)
     public List<Product> getFavoriteProducts(@PathVariable long id)
     {
         LOG.info("[PRODUCTS] Peticion GET para obtener los productos favoritos del usuario (ID: " + id + ")");
@@ -531,7 +531,7 @@ public class Controller
      * @param shops: lista de tiendas favoritas.
      * @return resultado de la operacion.
      */
-    @RequestMapping(value = "/shops/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/users/shops/{id}", method = RequestMethod.POST)
     public String addShopsToUser(@PathVariable long id, @RequestBody Set<String> shops)
     {
         LOG.info("[UPDATE] Peticion POST para anadir las tiendas del usuario (ID: " + id + ")");

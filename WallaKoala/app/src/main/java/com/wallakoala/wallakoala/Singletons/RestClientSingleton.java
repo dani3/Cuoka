@@ -679,7 +679,7 @@ public class RestClientSingleton
         final User user = mSharedPreferencesManager.retrieveUser();
 
         final String fixedURL = Utils.fixUrl(
-                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/favorites/" + user.getId());
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/favorites/" + user.getId());
 
         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para otener los productos favoritos");
 
@@ -742,7 +742,7 @@ public class RestClientSingleton
         final long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(
-                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/shops/" + id);
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/shops/" + id);
 
         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para añadir las tiendas");
 
