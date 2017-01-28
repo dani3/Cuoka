@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo java -jar CuokaRESTServer.jar &
+sudo java -jar /root/cuoka_01/CuokaRESTServer.jar &
 disown
