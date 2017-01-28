@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 /**
  * Bean que almacena las opiniones sobre la App.
- * @author Daniel Mancebo Aldea
+ * @author Daniel Mancebo Aldea.
  */
 
 @Entity

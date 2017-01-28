@@ -19,7 +19,7 @@ public class Properties
     
     public static final String NAME_NOT_FOUND = "Productos sin nombre";
     public static final String PRICE_NOT_FOUND = "Productos sin precio";
-    public static final String DESCRIPTION_NOT_FOUND = "Productos sin precio";
+    public static final String DESCRIPTION_NOT_FOUND = "Productos sin descripcion";
     public static final String COLOR_NAME_NOT_FOUND = "Colores sin nombre";
     public static final String REFERENCE_NOT_FOUND = "Colores sin referencia";
     public static final String NO_COLORS = "Productos sin ningun color";

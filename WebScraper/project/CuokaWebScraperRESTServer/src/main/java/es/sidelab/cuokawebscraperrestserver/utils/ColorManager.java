@@ -11,15 +11,19 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 /**
- * Clase que se encarga de los colores.
- * @author Daniel Mancebo Aldea
+ * Clase que se encarga de todo lo relacionado con los colores.
+ * Contiene un mapa con todos los colores equivalentes, asi como las sugerencias.
+ * @author Daniel Mancebo Aldea.
  */
 
 @Component
 public class ColorManager 
 {
+    // Mapa con todos los colores y sus equivalencias.
     private final Map<String, String[]> colorMap;
+    // Lista de los colores masculinos a sugerir.
     private final List<String> suggestedMaleColors;
+    // Lista de los colores femeninos a sugerir.
     private final List<String> suggestedFemaleColors;
     
     public ColorManager()
@@ -74,12 +78,14 @@ public class ColorManager
                                     , "rojo", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
         
         suggestedFemaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "lisa"
-                                    ,"amarilla", "dorada", "azul", "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra"
+                                    , "amarilla", "dorada", "azul", "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra"
                                     , "roja", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
     }
     
     /**
      * Metodo que averigua el nombre del color de un producto.
+     * Busca el nombre en la ruta con todos nuestros colores.
+     * Primero realiza una busqueda del color simple, y luego busca el compuesto.
      * @param color_name: nombre del color.
      * @return nombre del fichero al que pertenece el color.
      */

@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Clase que analiza el resultado del proceso de scraping de cada tienda.
+ * Contiene un mapa con todos los posibles errores que pueden ocurrir.
  * @author Daniel Mancebo Aldea
  */
 public class ScrapingAnalyzer 
@@ -15,6 +16,11 @@ public class ScrapingAnalyzer
     private final Shop shop;
     private final Section section;
     
+    /**
+     * Constructor que recibe la tienda y la seccion.
+     * @param shop: tienda.
+     * @param section: seccion.
+     */
     public ScrapingAnalyzer(Shop shop, Section section)
     {
         scrapingResults = new HashMap<>();
