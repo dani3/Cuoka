@@ -1063,7 +1063,7 @@ public class Controller
         List<String> keywords = new ArrayList<>();
         for (String keyword : aux)
         {
-            if ((keyword.length() > 2) && (!keyword.equalsIgnoreCase("con")))
+            if ((keyword.length() > 2) && (!keyword.equalsIgnoreCase("con")) && (!keyword.equalsIgnoreCase("color")))
             {
                 keywords.add(keyword);
             }
