@@ -20,7 +20,7 @@ urls = [("Camisas", "http://www2.hm.com/es_es/mujer/compra-por-producto/camisas-
         ("Vestidos", "http://www2.hm.com/es_es/mujer/compra-por-producto/vestidos.html"),
         ("Camisetas", "http://www2.hm.com/es_es/mujer/compra-por-producto/tops.html"),
         ("Punto", "http://www2.hm.com/es_es/mujer/compra-por-producto/prendas-de-punto.html"),
-        ("Jerseys", "http://www2.hm.com/content/hmonline/es_es/mujer/compra-por-producto/cardigans-y-jerseis.html"),
+        ("Jerseys", "http://www2.hm.com/es_es/mujer/compra-por-producto/cardigans-y-jerseis.html"),
         ("Chaquetas", "http://www2.hm.com/es_es/mujer/compra-por-producto/chaquetas-y-abrigos.html"),
         ("Americanas", "http://www2.hm.com/es_es/mujer/compra-por-producto/americanas-y-chalecos.html"),
         ("Pantalones", "http://www2.hm.com/es_es/mujer/compra-por-producto/pantalones.html"),
@@ -44,7 +44,7 @@ for k,v in urls:
     try:
         dr.get(v)
 
-        # Esperamos a que aparezcan los productos un maximo de 60 segundos.
+        # Esperamos a que aparezcan los productos un maximo de 10 segundos.
         element = WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-item-image"))
         )

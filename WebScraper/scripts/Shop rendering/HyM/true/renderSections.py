@@ -41,7 +41,7 @@ for k,v in urls:
     try:
         dr.get(v)
 
-        # Esperamos a que aparezcan los productos un maximo de 60 segundos.
+        # Esperamos a que aparezcan los productos un maximo de 10 segundos.
         element = WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-item-image"))
         )

@@ -135,7 +135,8 @@ for link in listOfLinks:
             result.write("*********************************************************\n")
             result.write("  Color: " + colorName + "\n")
             
-        except:            
+        except:
+            result.write("*********************************************************\n")
             result.write("  Color: null\n")
             result.write("  Icono: null\n")
             result.write("  Referencia: null\n")
@@ -174,7 +175,7 @@ for link in listOfLinks:
             try:
                 thumbnail.click()
                 
-                #Esperamos a que se cargue bien la imagen
+                # Esperamos a que se cargue bien la imagen
                 WebDriverWait(dr, 60).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
                 )
