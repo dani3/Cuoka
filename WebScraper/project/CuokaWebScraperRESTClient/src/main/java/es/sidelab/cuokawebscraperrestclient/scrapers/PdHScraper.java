@@ -28,6 +28,7 @@ public class PdHScraper implements Scraper
     private static final Logger LOG = Logger.getLogger(PdHScraper.class);
     
     // Lista preparada para la concurrencia donde escribiran todos los scrapers.
+    @SuppressWarnings("FieldMayBeFinal")
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
     
     // Atributo local para comprobar que se ha terminado.
