@@ -232,7 +232,7 @@ public class HyMScraper implements Scraper
                 
                 if (colorName.contains("null"))
                 {
-                    scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
+                    scrapingAnalyzer.get().saveError(Properties.COLOR_NAME_NOT_FOUND);
                 }
                 
                 if (reference.contains("null"))
@@ -258,7 +258,7 @@ public class HyMScraper implements Scraper
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(colorIcon); 
+                color.setColorURL(colorIcon.replace("  Icono: ", "")); 
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes

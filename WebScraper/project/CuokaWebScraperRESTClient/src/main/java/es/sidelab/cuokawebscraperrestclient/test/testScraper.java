@@ -217,7 +217,7 @@ public class testScraper
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(colorIcon); 
+                color.setColorURL(colorIcon.replace("  Icono: ", ""));
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes

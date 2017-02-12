@@ -52,7 +52,7 @@ public class ImageManager
                 {
                     for (int k = 0; k < cv.getImages().size(); k++)
                     {
-                        String path = Properties.PATH + shop + "/" + shop + "_" + product.getSection() 
+                        String path = Properties.PRODUCTS + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + ".jpg";
                         String pathSmall = Properties.IMAGE_PATH + shop + "/" + shop + "_" + product.getSection() 
                                 + "_" + cv.getReference() + "_" + cv.getName() + "_" + k + "_" + "Small.jpg";
@@ -201,9 +201,6 @@ public class ImageManager
         if (shop.equalsIgnoreCase("HyM"))
             aspectRatio = Properties.HYM_ASPECT_RATIO;
 
-        if (shop.equalsIgnoreCase("Blanco"))
-            aspectRatio = Properties.BLANCO_ASPECT_RATIO;
-
         if (shop.equalsIgnoreCase("Zara"))
             aspectRatio = Properties.ZARA_ASPECT_RATIO;
         
@@ -221,13 +218,13 @@ public class ImageManager
             double aspectRatio = getAspectRatio(shop);
             
             // El script tiene que estar en el mismo path que el jar
-            Process p = Runtime.getRuntime().exec(new String[]{"sudo"
-                                    , "/usr/bin/python"
-                                    , "resizeProducts.py"
-                                    , Properties.IMAGE_PATH + shop
-                                    , Double.toString(aspectRatio)
-                                    , Integer.toString(Properties.IMAGE_HEIGHT_L)
-                                    , Integer.toString(Properties.IMAGE_HEIGHT_S)});
+            Runtime.getRuntime().exec(new String[]{"sudo"
+                , Properties.PYTHON_PATH
+                , Properties.SCRIPTS_PATH + "resizeProducts.py"
+                , Properties.IMAGE_PATH + shop
+                , Double.toString(aspectRatio)
+                , Integer.toString(Properties.IMAGE_HEIGHT_L)
+                , Integer.toString(Properties.IMAGE_HEIGHT_S)});
             
         } catch (IOException ex) {
             LOG.error("ERROR: Error al ejecutar el script 'resizeProducts.py'");
@@ -244,12 +241,12 @@ public class ImageManager
         try 
         {      
             // El script tiene que estar en el mismo path que el jar
-            Process p = Runtime.getRuntime().exec(new String[]{"sudo"
-                                    , "/usr/bin/python"
-                                    , "resizeColors.py"
-                                    , Properties.COLOR_PATH + shop
-                                    , Integer.toString(Properties.ICON_WIDTH)
-                                    , Integer.toString(Properties.ICON_HEIGHT)});
+            Runtime.getRuntime().exec(new String[]{"sudo"
+                , Properties.PYTHON_PATH
+                , Properties.SCRIPTS_PATH + "resizeColors.py"
+                , Properties.COLOR_PATH + shop
+                , Integer.toString(Properties.ICON_WIDTH)
+                , Integer.toString(Properties.ICON_HEIGHT)});
             
         } catch (IOException ex) {
             LOG.error("ERROR: Error al ejecutar el script 'resizeColors.py'");

@@ -23,12 +23,14 @@ public class Properties
     public static final String NO_NOTIFICATIONS  = "NO_NOTIFICATIONS";
     
     /* Paths */
-    public static final String PATH                   = "/images/products/";
+    public static final String PRODUCTS               = "/images/products/";
     public static final String PREDEFINED_COLORS      = "/images/colors/";
     public static final String IMAGE_PATH             = "/var/www/html/images/products/";
     public static final String COLOR_PATH             = "/var/www/html/images/products/";
     public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";    
     public static final String MAIL_PATH              = "/root/cuoka_01/mail/";
+    public static final String SCRIPTS_PATH           = "/root/cuoka_01/scripts/";
+    public static final String PYTHON_PATH            = "/usr/bin/python";
     
     /* Files */
     public static final String WELCOME_EMAIL_NAME = "bienvenida.html";
@@ -45,7 +47,6 @@ public class Properties
     public static final float PDH_ASPECT_RATIO         = 1.5f;
     public static final float SPRINGFIELD_ASPECT_RATIO = 1.12f;
     public static final float HYM_ASPECT_RATIO         = 1.5f;
-    public static final float BLANCO_ASPECT_RATIO      = 1.28f;
     public static final float ZARA_ASPECT_RATIO        = 1.24f;
     
     /* Parametros para las busquedas */
