@@ -167,7 +167,7 @@ public class ShopsUI extends AppCompatActivity
     private class RetrieveShopsTask extends AsyncTask<String, Void, Void>
     {
         private JSONArray content = null;
-        private String error = null;
+        private boolean error = false;
 
         @Override
         protected void onPreExecute()
@@ -187,7 +187,7 @@ public class ShopsUI extends AppCompatActivity
             // Si content esta vacio, es que ha fallado la conexion.
             if (content == null)
             {
-                error = "Imposible conectar con el servidor";
+                error = true;
 
             } else {
                 try
@@ -204,6 +204,8 @@ public class ShopsUI extends AppCompatActivity
 
                 } catch (JSONException e) {
                     ExceptionPrinter.printException("SHOPS_UI", e);
+
+                    error = false;
                 }
             }
 
@@ -217,7 +219,7 @@ public class ShopsUI extends AppCompatActivity
 
             mAcceptFAB.setVisibility(View.VISIBLE);
 
-            if (error == null)
+            if (!error)
             {
                 Log.d(Properties.TAG, "[SHOPS_UI] Todo correcto -> se muestran las tiendas");
 
