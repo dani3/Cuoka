@@ -27,6 +27,7 @@ public class MailSender
      */
     public static void sendEmail(List<ScrapingAnalyzer> analyzers, Shop shop) 
     {
+        // Se obtienen las propiedades para configurar el correo.
         Properties props = System.getProperties();
         
         props.put("mail.smtp.starttls.enable", "true");
@@ -41,6 +42,7 @@ public class MailSender
 
         try 
         {     
+            // Se crea el body con los resultados.
             StringBuilder body = new StringBuilder();
             for (ScrapingAnalyzer scrapingAnalyzer : analyzers)
             {
@@ -52,7 +54,8 @@ public class MailSender
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
             
-            String subject = "[SCRAPING_ANALYZER] " 
+            // Se crea el asunto del email con el formato [SCRAPING_ANALYZER][dd/mm/yyyy] Tienda
+            String subject = "[SCRAPING_ANALYZER]" 
                 + "[" + String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year) + "] " 
                 + shop.getName();
             

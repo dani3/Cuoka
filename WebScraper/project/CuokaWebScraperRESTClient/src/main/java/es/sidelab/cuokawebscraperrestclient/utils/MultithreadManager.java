@@ -30,8 +30,9 @@ public class MultithreadManager
     
     private static CountDownLatch countDownLatch;
     
-    /*
-     * Metodo que crea los threads necesarios para cada tienda y envia los productos al servidor.
+    /**
+     * Metodo que paraleliza el proceso de scraping.
+     * @param shops: lista de tiendas a scrapear.
      */
     public static void parallelScrap(List<Shop> shops)
     {
@@ -121,10 +122,10 @@ public class MultithreadManager
             LOG.info("MAIN THREAD : Me despierto...");
             
         } catch (InterruptedException ex) {
-            LOG.error("ERROR: Se ha producido un error con el CountDownLatch");            
+            LOG.error("ERROR: Se ha producido un error con el CountDownLatch");   
+            LOG.error(ex.getMessage());
         }
-        
-        // Escribimos en fichero la info de como han ido los scrapers    
+          
         // Detenemos el executor
         executorShops.shutdown();       
     }
