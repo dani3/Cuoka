@@ -48,9 +48,10 @@ public class ScrapingAnalyzer
     
     /**
      * Metodo que escribe en fichero los resultados del proceso de scraping.
+     * @return metodo que devuelve las estadisticas en un string.
      */
-    public void printResults()
+    public String getResults()
     {
-        Printer.printResults(shop, section, scrapingResults);
+        return Printer.formatResults(shop, section, scrapingResults);
     }
 }

@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
@@ -53,14 +54,14 @@ public class MultithreadManager
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
                 ExecutorService executorSections = Executors.newFixedThreadPool(Properties.MAX_THREADS_SECTIONS);
                 // Creamos la lista donde se van a volcar todos los tasks.
-                Set<Callable<List<Product>>> listOfTasks = new HashSet<>();    
+                Set<Callable<Map<String, Object>>> listOfTasks = new HashSet<>();    
                 
                 for (int j = 0; j < shop.getSections().size(); j++)
                 {
                     final Section section = shop.getSections().get(j);
                     
                     // Tarea de cada scraper
-                    Callable<List<Product>> taskSection = () -> scraper.scrap(shop, section);
+                    Callable<Map<String, Object>> taskSection = () -> scraper.scrap(shop, section);
                     
                     listOfTasks.add(taskSection);                    
                 }
@@ -71,9 +72,12 @@ public class MultithreadManager
                 try 
                 {
                     // Creamos la lista de futures donde se van a volcar todos los resultados.
-                    List<Future<List<Product>>> listOfFutures = executorSections.invokeAll(listOfTasks);
+                    List<Future<Map<String, Object>>> listOfFutures = executorSections.invokeAll(listOfTasks);
                     // El ultimo future tendra la lista con todos los productos.
-                    List<Product> productList = listOfFutures.get(shop.getSections().size() - 1).get();
+                    List<Product> productList = 
+                        (List<Product>)listOfFutures.get(shop.getSections().size() - 1).get().get(Properties.KEY_LIST);
+                    List<ScrapingAnalyzer> analyzerList = 
+                        (List<ScrapingAnalyzer>)listOfFutures.get(shop.getSections().size() - 1).get().get(Properties.KEY_ANALYZER);
                     
                     LOG.info("Todos los threads de " + shop.getName() + " han acabado");
                     LOG.info("Han sacado un total de " + productList.size() + " productos");
@@ -84,6 +88,10 @@ public class MultithreadManager
                     // LLamamos al servidor para enviar los productos.
                     RestClient restClient = new RestClient(new URL(Properties.SERVER));                            
                     restClient.saveProducts(productList, shop);
+                    
+                    // Enviamos el correo con las estadisticas del proceso de scraping.
+                    LOG.info("Enviando el correo con las estadísticas del proceso de scraping.");
+                    MailSender.sendEmail(analyzerList, shop);
                     
                 } catch (InterruptedException | ExecutionException ex ) {
                     LOG.error("ERROR: Se ha producido un error en un thread");

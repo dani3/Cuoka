@@ -5,6 +5,7 @@ import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interfaz de la que implementaran los scrapers especificos de cada tienda.
@@ -20,7 +21,7 @@ public interface Scraper
      * @return lista con los productos scrapeados.
      * @throws IOException 
      */
-    public List<Product> scrap(Shop shop, Section section) throws IOException;  
+    public Map<String, Object> scrap(Shop shop, Section section) throws IOException;  
     
     /**
      * Metodo que corrige una url si es necesario.

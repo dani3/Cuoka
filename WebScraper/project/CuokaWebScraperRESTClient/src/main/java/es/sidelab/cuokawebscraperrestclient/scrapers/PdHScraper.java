@@ -13,7 +13,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
@@ -31,6 +33,10 @@ public class PdHScraper implements Scraper
     @SuppressWarnings("FieldMayBeFinal")
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
     
+    // Lista preparada para la concurrencia donde se guardaran las estadisticas de los scrapers.
+    @SuppressWarnings("FieldMayBeFinal")
+    private static List<ScrapingAnalyzer> scrapingAnalyzerList = Collections.synchronizedList(new ArrayList<>());
+    
     // Atributo local para comprobar que se ha terminado.
     private final ThreadLocal<Boolean> threadFinished = 
             new ThreadLocal<Boolean>() 
@@ -46,7 +52,7 @@ public class PdHScraper implements Scraper
     private ThreadLocal<ScrapingAnalyzer> scrapingAnalyzer;
     
     @Override
-    public List<Product> scrap(Shop shop, Section section) throws IOException
+    public Map<String, Object> scrap(Shop shop, Section section) throws IOException
     {        
         scrapingAnalyzer = 
             new ThreadLocal<ScrapingAnalyzer>() 
@@ -104,12 +110,17 @@ public class PdHScraper implements Scraper
             }
         }
         
-        scrapingAnalyzer.get().printResults();
+        scrapingAnalyzerList.add(scrapingAnalyzer.get());
         
         LOG.info("El scraping de la seccion " + section.getName() + " de la tienda " + shop.getName() + " ha terminado");
         LOG.info("Ha sacado " + productList.size() + " productos");
         
-        return productList;
+        Map<String, Object> map = new HashMap<>();
+        
+        map.put(Properties.KEY_LIST, productList);
+        map.put(Properties.KEY_ANALYZER, scrapingAnalyzerList);
+        
+        return map;
     }
     
     /**
@@ -134,7 +145,7 @@ public class PdHScraper implements Scraper
         // Podemos haber leido ya todos los productos, por lo que name puede ser null.
         if (name == null || name.contains("null"))
         {
-            if (name.contains("null"))
+            if ((name != null) && name.contains("null"))
             {
                 scrapingAnalyzer.get().saveError(Properties.NAME_NOT_FOUND);
             }

@@ -1,5 +1,8 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -19,10 +22,10 @@ public class MailSender
     
     /**
      * Metodo que envia el correo con las estadisticas del proceso de scraping.
-     * @param subject: asunto del correo.
-     * @param body: cuerpo del correo.
+     * @param analyzers: lista con todos los resultados del proceso de scraping de una tienda.
+     * @param shop: tienda de la que se van a enviar las estadisticas.
      */
-    public static void sendEmail(String subject, String body) 
+    public static void sendEmail(List<ScrapingAnalyzer> analyzers, Shop shop) 
     {
         Properties props = System.getProperties();
         
@@ -37,10 +40,25 @@ public class MailSender
         MimeMessage message = new MimeMessage(session);
 
         try 
-        {            
+        {     
+            StringBuilder body = new StringBuilder();
+            for (ScrapingAnalyzer scrapingAnalyzer : analyzers)
+            {
+                body.append(scrapingAnalyzer.getResults());
+            }
+            
+            Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+            
+            String subject = "[SCRAPING_ANALYZER] " 
+                + "[" + String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year) + "] " 
+                + shop.getName();
+            
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(es.sidelab.cuokawebscraperrestclient.properties.Properties.FROM));            
             message.setSubject(subject);
-            message.setText(body);
+            message.setText(body.toString());
             message.setFrom(new InternetAddress(es.sidelab.cuokawebscraperrestclient.properties.Properties.FROM));
             
             Transport transport = session.getTransport("smtp");
