@@ -51,7 +51,7 @@ public class MailSender
             
             Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH);
+            int month = calendar.get(Calendar.MONTH) + 1;
             int year = calendar.get(Calendar.YEAR);
             
             // Se crea el asunto del email con el formato [SCRAPING_ANALYZER][dd/mm/yyyy] Tienda
