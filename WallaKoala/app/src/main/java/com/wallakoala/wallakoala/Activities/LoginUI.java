@@ -262,6 +262,7 @@ public class LoginUI extends AppCompatActivity
                             , fixedURL
                             , new Response.Listener<String>()
                             {
+                                @SuppressWarnings("deprecation")
                                 @Override
                                 public void onResponse(String response)
                                 {
@@ -273,9 +274,16 @@ public class LoginUI extends AppCompatActivity
 
                                         mEnterButton.setProgress(0);
 
-                                        Snackbar.make(mAlertDialogView
+                                        Snackbar snackbar = Snackbar.make(mAlertDialogView
                                                 , "Email y/o contraseña incorectos"
-                                                , Snackbar.LENGTH_LONG).show();
+                                                , Snackbar.LENGTH_LONG);
+
+                                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                                .setTextColor(getResources().getColor(R.color.colorText));
+
+                                        snackbar.show();
 
                                     } else {
                                         final long id = Long.valueOf(response);
@@ -288,6 +296,7 @@ public class LoginUI extends AppCompatActivity
                             }
                             , new Response.ErrorListener()
                             {
+                                @SuppressWarnings("deprecation")
                                 @Override
                                 public void onErrorResponse(VolleyError error)
                                 {
@@ -295,7 +304,8 @@ public class LoginUI extends AppCompatActivity
 
                                     mEnterButton.setProgress(0);
 
-                                    Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                                    Snackbar snackbar = Snackbar
+                                            .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                             .setAction("Reintentar", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v)
@@ -303,7 +313,14 @@ public class LoginUI extends AppCompatActivity
                                                     mEnterButton.setProgress(0);
                                                     mEnterButton.performClick();
                                                 }
-                                            }).show();
+                                            });
+
+                                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                            .setTextColor(getResources().getColor(R.color.colorText));
+
+                                    snackbar.show();
                                 }
                             });
 
@@ -572,6 +589,7 @@ public class LoginUI extends AppCompatActivity
                                 , fixedURL
                                 , new Response.Listener<String>()
                                 {
+                                    @SuppressWarnings("deprecation")
                                     @Override
                                     public void onResponse(String response)
                                     {
@@ -584,7 +602,15 @@ public class LoginUI extends AppCompatActivity
                                             // X = 0 -> Idle
                                             mRegisterCircularButton.setProgress(0);
 
-                                            Snackbar.make(mAlertDialogView, "Email ya registrado", Snackbar.LENGTH_LONG).show();
+                                            Snackbar snackbar = Snackbar.make(
+                                                    mAlertDialogView, "Email ya registrado", Snackbar.LENGTH_LONG);
+
+                                            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                                    .setTextColor(getResources().getColor(R.color.colorText));
+
+                                            snackbar.show();
 
                                         } else {
                                             // Si ha ido bien, actualizamos las preferencias.
@@ -623,6 +649,7 @@ public class LoginUI extends AppCompatActivity
                                 }
                                 , new Response.ErrorListener()
                                 {
+                                    @SuppressWarnings("deprecation")
                                     @Override
                                     public void onErrorResponse(VolleyError error)
                                     {
@@ -631,7 +658,8 @@ public class LoginUI extends AppCompatActivity
 
                                         ExceptionPrinter.printException("LOGIN", error);
 
-                                        Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar snackbar = Snackbar
+                                                .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                                 .setAction("Reintentar", new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v)
@@ -642,7 +670,14 @@ public class LoginUI extends AppCompatActivity
                                                         mRegisterCircularButton.setProgress(0);
                                                         mRegisterCircularButton.performClick();
                                                     }
-                                                }).show();
+                                                });
+
+                                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                                .setTextColor(getResources().getColor(R.color.colorText));
+
+                                        snackbar.show();
                                     }
                                 })
                                 {
@@ -688,6 +723,7 @@ public class LoginUI extends AppCompatActivity
                 , null
                 , new Response.Listener<JSONObject>()
                 {
+                    @SuppressWarnings("deprecation")
                     @Override
                     public void onResponse(JSONObject response)
                     {
@@ -716,7 +752,8 @@ public class LoginUI extends AppCompatActivity
 
                             enterButton.setProgress(0);
 
-                            Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                            Snackbar snackbar = Snackbar
+                                    .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                     .setAction("Reintentar", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v)
@@ -726,12 +763,20 @@ public class LoginUI extends AppCompatActivity
                                             enterButton.setProgress(0);
                                             enterButton.performClick();
                                         }
-                                    }).show();
+                                    });
+
+                            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                    .setTextColor(getResources().getColor(R.color.colorText));
+
+                            snackbar.show();
                         }
                     }
                 }
                 , new Response.ErrorListener()
                 {
+                    @SuppressWarnings("deprecation")
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
@@ -741,7 +786,8 @@ public class LoginUI extends AppCompatActivity
 
                         error.printStackTrace();
 
-                        Snackbar.make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                        Snackbar snackbar = Snackbar
+                                .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Reintentar", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v)
@@ -751,7 +797,14 @@ public class LoginUI extends AppCompatActivity
                                         enterButton.setProgress(0);
                                         enterButton.performClick();
                                     }
-                                }).show();
+                                });
+
+                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                .setTextColor(getResources().getColor(R.color.colorText));
+
+                        snackbar.show();
                     }
                 });
 
@@ -763,6 +816,7 @@ public class LoginUI extends AppCompatActivity
      * Metodo que comprueba si se ha seleccionado algun sexo.
      * @return true si se ha seleccionado algun sexo.
      */
+    @SuppressWarnings("deprecation")
     private boolean _isGenderSelected()
     {
         Log.d(Properties.TAG, "[LOGIN] Se valida el sexo");
@@ -771,7 +825,14 @@ public class LoginUI extends AppCompatActivity
         if (!selected)
         {
             Log.d(Properties.TAG, "[LOGIN] Sexo NO elegido");
-            Snackbar.make(mAlertDialogView, "No has elegido tu sexo", Snackbar.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar.make(mAlertDialogView, "No has elegido tu sexo", Snackbar.LENGTH_LONG);
+
+            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
+            snackbar.show();
 
         } else {
             Log.d(Properties.TAG, "[LOGIN] Sexo elegido: " + ((mMaleImageButton.getAlpha() == ACTIVE_ALPHA) ? "Hombre" : "Mujer"));

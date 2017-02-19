@@ -440,7 +440,8 @@ public class ProfileUI extends AppCompatActivity
                 startActivity(intent);
 
             } else {
-                Snackbar.make(mTopLevelLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                Snackbar snackbar = Snackbar
+                        .make(mTopLevelLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -448,7 +449,14 @@ public class ProfileUI extends AppCompatActivity
                             {
                                 mDeleteFAB.performClick();
 
-                            }}).show();
+                            }});
+
+                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
         }
     }
@@ -496,6 +504,7 @@ public class ProfileUI extends AppCompatActivity
             return null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void unused)
         {
@@ -507,7 +516,8 @@ public class ProfileUI extends AppCompatActivity
                 onBackPressed();
 
             } else {
-                Snackbar.make(mTopLevelLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                Snackbar snackbar = Snackbar
+                        .make(mTopLevelLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -515,7 +525,14 @@ public class ProfileUI extends AppCompatActivity
                             {
                                 findViewById(R.id.menu_item_accept).performClick();
 
-                            }}).show();
+                            }});
+
+                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
         }
     }

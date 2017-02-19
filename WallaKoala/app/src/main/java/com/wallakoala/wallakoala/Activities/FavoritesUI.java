@@ -245,6 +245,7 @@ public class FavoritesUI extends AppCompatActivity
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         protected void onPostExecute(Void unused)
         {
             findViewById(R.id.favorites_avloadingIndicatorView).setVisibility(View.GONE);
@@ -257,7 +258,7 @@ public class FavoritesUI extends AppCompatActivity
                 findViewById(R.id.favorites_nodata).setVisibility(View.VISIBLE);
 
             } else {
-                Snackbar.make(mFrameLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                Snackbar snackbar = Snackbar.make(mFrameLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -265,7 +266,14 @@ public class FavoritesUI extends AppCompatActivity
                             {
                                 new RetrieveFavoriteProducts().execute();
                             }
-                        }).show();
+                        });
+
+                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
         }
     }

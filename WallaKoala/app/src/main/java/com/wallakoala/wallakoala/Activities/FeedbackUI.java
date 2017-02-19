@@ -105,8 +105,15 @@ public class FeedbackUI extends AppCompatActivity implements View.OnClickListene
                     });
 
                 } else {
-                    Snackbar.make(
-                            findViewById(R.id.feedback_coordinator), "La valoración es obligatoria", Snackbar.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(
+                            findViewById(R.id.feedback_coordinator), "La valoración es obligatoria", Snackbar.LENGTH_SHORT);
+
+                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                            .setTextColor(getResources().getColor(R.color.colorText));
+
+                    snackbar.show();
                 }
             }
         });

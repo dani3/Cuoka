@@ -335,7 +335,15 @@ public class ProductsFragment extends Fragment
                                     Log.d(Properties.TAG
                                             , "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                                    Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_SHORT).show();
+                                    Snackbar snackbar = Snackbar.make(
+                                            mFrameLayout, "No hay más novedades", Snackbar.LENGTH_SHORT);
+
+                                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                            .setTextColor(getResources().getColor(R.color.colorText));
+
+                                    snackbar.show();
 
                                     mLoadingServerView.setVisibility(View.GONE);
                                     mLoadingView.setVisibility(View.GONE);
@@ -639,6 +647,7 @@ public class ProductsFragment extends Fragment
             return null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void unused)
         {
@@ -666,7 +675,14 @@ public class ProductsFragment extends Fragment
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                        Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG).show();
+                        Snackbar snackbar = Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG);
+
+                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                .setTextColor(getResources().getColor(R.color.colorText));
+
+                        snackbar.show();
 
                         mState = Properties.STATE.OK;
 
@@ -692,7 +708,14 @@ public class ProductsFragment extends Fragment
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                        Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG).show();
+                        Snackbar snackbar = Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG);
+
+                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                .setTextColor(getResources().getColor(R.color.colorText));
+
+                        snackbar.show();
 
                         mState = Properties.STATE.OK;
 
@@ -833,32 +856,47 @@ public class ProductsFragment extends Fragment
      * Metodo que muestra un mensaje cuando se ha producido un error al conectar con el server.
      * @param isFiltering: true si el error se ha producido con los filtros.
      */
+    @SuppressWarnings("deprecation")
     private void _errorConnectingToServer(boolean isFiltering)
     {
         if (!isFiltering)
         {
-            Snackbar.make(mFrameLayout
-                        , getResources().getString(R.string.error_message)
-                        , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
-                }
-            }).show();
+            Snackbar snackbar = Snackbar.make(mFrameLayout
+                , getResources().getString(R.string.error_message)
+                , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        mRetrieveNewProductsTask = new RetrieveNewProductsTask().execute();
+                    }
+                });
+
+            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
+            snackbar.show();
 
         } else {
-            Snackbar.make(mFrameLayout
-                        , getResources().getString( R.string.error_message )
-                        , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mRetreiveProductsTask = new RetrieveProductsTask().execute();
-                }
-            }).show();
+            Snackbar snackbar = Snackbar.make(mFrameLayout
+                , getResources().getString( R.string.error_message )
+                , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        mRetreiveProductsTask = new RetrieveProductsTask().execute();
+                    }
+                });
+
+            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
+            snackbar.show();
         }
 
         mState = Properties.STATE.ERROR;
@@ -1081,12 +1119,14 @@ public class ProductsFragment extends Fragment
                         }
                         , new Response.ErrorListener()
                         {
+                            @SuppressWarnings("deprecation")
                             @Override
                             public void onErrorResponse(VolleyError error)
                             {
                                 _loading(false, false);
 
-                                Snackbar.make(mFrameLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                                Snackbar snackbar = Snackbar
+                                        .make(mFrameLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                         .setAction("Reintentar", new View.OnClickListener()
                                         {
                                             @Override
@@ -1094,7 +1134,14 @@ public class ProductsFragment extends Fragment
                                             {
                                                 processFilter(mFilterMap);
                                             }
-                                        }).show();
+                                        });
+
+                                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                                snackbar.show();
                             }
                         });
 

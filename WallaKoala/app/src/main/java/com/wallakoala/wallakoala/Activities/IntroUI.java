@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
@@ -87,6 +88,7 @@ public class IntroUI extends AppCompatActivity
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         protected void onPreExecute()
         {
             if (context.get() != null)
@@ -98,7 +100,7 @@ public class IntroUI extends AppCompatActivity
                 {
                     Log.d(Properties.TAG, "[INTRO] NO hay conexión a Internet");
 
-                    Snackbar.make(context.get().findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar snackbar = Snackbar.make(context.get().findViewById(R.id.intro_frame_layout), "No hay conexión a Internet", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Reintentar", new View.OnClickListener()
                             {
                                 @Override
@@ -106,7 +108,14 @@ public class IntroUI extends AppCompatActivity
                                 {
                                     new RetrieveUserTask(context.get()).execute();
                                 }
-                            }).show();
+                            });
+
+                    snackbar.getView().setBackgroundColor(context.get().getResources().getColor(android.R.color.white));
+                    snackbar.setActionTextColor(context.get().getResources().getColor(R.color.colorAccent));
+                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                            .setTextColor(context.get().getResources().getColor(R.color.colorText));
+
+                    snackbar.show();
                 }
             }
         }
@@ -128,6 +137,7 @@ public class IntroUI extends AppCompatActivity
     /**
      * Metodo que se conecta al servidor para traer los datos del usuario.
      */
+    @SuppressWarnings("deprecation")
     private static void _retrieveUser(final Context context, final IntroUI introUI)
     {
         final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
@@ -172,7 +182,7 @@ public class IntroUI extends AppCompatActivity
                              });
 
             } else {
-                Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout)
+                Snackbar snackbar = Snackbar.make(((Activity)context).findViewById(R.id.intro_frame_layout)
                         , context.getResources().getString(R.string.error_message)
                         , Snackbar.LENGTH_INDEFINITE).setAction("Reintentar", new View.OnClickListener()
                         {
@@ -187,7 +197,14 @@ public class IntroUI extends AppCompatActivity
 
                                 new RetrieveUserTask(introUI).execute();
                             }
-                        }).show();
+                        });
+
+                snackbar.getView().setBackgroundColor(context.getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(context.getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(context.getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
 
         } else {

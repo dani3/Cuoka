@@ -256,6 +256,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                    .into(mTarget);
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void onClick(final View view)
         {
@@ -275,9 +276,16 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     mProductFooterView.startAnimation(scaleDownFooter);
 
                 } else {
-                    Snackbar.make(mFrameLayout
+                    Snackbar snackbar = Snackbar.make(mFrameLayout
                             , mContext.getResources().getString(R.string.error_message)
-                            , Snackbar.LENGTH_SHORT).show();
+                            , Snackbar.LENGTH_SHORT);
+
+                    snackbar.getView().setBackgroundColor(mContext.getResources().getColor(android.R.color.white));
+                    snackbar.setActionTextColor(mContext.getResources().getColor(R.color.colorAccent));
+                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                            .setTextColor(mContext.getResources().getColor(R.color.colorText));
+
+                    snackbar.show();
                 }
             }
         }

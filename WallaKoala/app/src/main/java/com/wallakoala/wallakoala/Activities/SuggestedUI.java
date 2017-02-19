@@ -56,11 +56,27 @@ public class SuggestedUI extends AppCompatActivity
 
                 if (name.isEmpty())
                 {
-                    Snackbar.make(
-                            findViewById(R.id.suggested_coordinator), "El nombre es obligatorio", Snackbar.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(
+                            findViewById(R.id.suggested_coordinator), "El nombre es obligatorio", Snackbar.LENGTH_SHORT);
+
+                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                            .setTextColor(getResources().getColor(R.color.colorText));
+
+                    snackbar.show();
+
                 } else if (!Utils.isAlphaNumeric(name)) {
-                    Snackbar.make(
-                            findViewById(R.id.suggested_coordinator), "El nombre es incorrecto", Snackbar.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(
+                            findViewById(R.id.suggested_coordinator), "El nombre es incorrecto", Snackbar.LENGTH_SHORT);
+
+                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                            .setTextColor(getResources().getColor(R.color.colorText));
+
+                    snackbar.show();
+
                 } else {
                     ShopSuggested shopSuggested = new ShopSuggested(name, link);
 

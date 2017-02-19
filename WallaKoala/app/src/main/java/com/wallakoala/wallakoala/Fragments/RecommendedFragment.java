@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.wallakoala.wallakoala.Adapters.RecommendedListAdapter;
 import com.wallakoala.wallakoala.Beans.Product;
@@ -322,9 +323,10 @@ public class RecommendedFragment extends Fragment
     /**
      * Metodo que muestra un mensaje cuando se ha producido un error al conectar con el server.
      */
+    @SuppressWarnings("deprecation")
     private void _errorConnectingToServer()
     {
-        Snackbar.make(mFrameLayout
+        Snackbar snackbar = Snackbar.make(mFrameLayout
                     , getResources().getString(R.string.error_message)
                     , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
                     {
@@ -333,7 +335,14 @@ public class RecommendedFragment extends Fragment
                         {
                             new RetrieveRecommendationsTask().execute();
                         }
-                    }).show();
+                    });
+
+        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                .setTextColor(getResources().getColor(R.color.colorText));
+
+        snackbar.show();
 
         mState = Properties.STATE.ERROR;
 

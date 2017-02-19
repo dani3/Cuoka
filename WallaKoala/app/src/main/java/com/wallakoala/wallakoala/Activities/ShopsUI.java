@@ -212,6 +212,7 @@ public class ShopsUI extends AppCompatActivity
             return null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void unused)
         {
@@ -231,7 +232,8 @@ public class ShopsUI extends AppCompatActivity
                 _initRecyclerView();
 
             } else {
-                Snackbar.make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                Snackbar snackbar = Snackbar
+                        .make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -239,7 +241,14 @@ public class ShopsUI extends AppCompatActivity
                             {
                                 new RetrieveShopsTask().execute();
                             }
-                        }).show();
+                        });
+
+                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
         }
     }
@@ -332,6 +341,7 @@ public class ShopsUI extends AppCompatActivity
             return null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void unused)
         {
@@ -349,7 +359,8 @@ public class ShopsUI extends AppCompatActivity
                 finish();
 
             } else {
-                Snackbar.make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                Snackbar snackbar = Snackbar
+                        .make(mCoordinatorLayout, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Reintentar", new View.OnClickListener()
                         {
                             @Override
@@ -357,7 +368,14 @@ public class ShopsUI extends AppCompatActivity
                             {
                                 mAcceptFAB.performClick();
                             }
-                        }).show();
+                        });
+
+                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
         }
     }

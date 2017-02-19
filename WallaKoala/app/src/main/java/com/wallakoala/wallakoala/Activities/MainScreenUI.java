@@ -535,6 +535,7 @@ public class MainScreenUI extends AppCompatActivity
         _openActivityShops();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onBackPressed()
     {
@@ -558,9 +559,16 @@ public class MainScreenUI extends AppCompatActivity
             } else {
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se pide confirmación para salir");
 
-                Snackbar.make(mCoordinatorLayout
+                Snackbar snackbar = Snackbar.make(mCoordinatorLayout
                         , getResources().getString(R.string.exit_message)
-                        , Snackbar.LENGTH_SHORT).show();
+                        , Snackbar.LENGTH_SHORT);
+
+                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                snackbar.show();
             }
 
             mBackPressed = System.currentTimeMillis();

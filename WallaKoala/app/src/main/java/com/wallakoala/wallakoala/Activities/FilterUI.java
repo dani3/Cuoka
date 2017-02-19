@@ -297,6 +297,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                             , "No se ha establecido ningún filtro"
                             , Snackbar.LENGTH_SHORT);
 
+                    mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                    mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                    ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                            .setTextColor(getResources().getColor(R.color.colorText));
+
                     mSnackbar.show();
 
                 } else {
@@ -960,6 +965,11 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtros restablecidos", Snackbar.LENGTH_SHORT);
 
+        mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+        mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+        ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                .setTextColor(getResources().getColor(R.color.colorText));
+
         mSnackbar.show();
 
         _resetFilterShop();
@@ -1064,6 +1074,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+                mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
                 mSnackbar.show();
             }
         }
@@ -1098,6 +1114,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
 
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+                mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
                 mSnackbar.show();
             }
         }
@@ -1132,6 +1154,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
 
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+                mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
                 mSnackbar.show();
             }
         }
@@ -1166,6 +1194,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
 
                 mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+                mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
                 mSnackbar.show();
             }
         }
@@ -1184,6 +1218,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
             mSnackbar.show();
         }
 
@@ -1200,6 +1240,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
             mSnackbar.show();
         }
 
@@ -1216,6 +1262,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
             mSnackbar.show();
         }
 
@@ -1232,6 +1284,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
             mSnackbar.show();
         }
 

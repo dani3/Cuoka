@@ -277,6 +277,7 @@ public class FavoritesSectionedAdapter extends StatelessSection
             mProduct = product;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void onClick(View v)
         {
@@ -335,9 +336,16 @@ public class FavoritesSectionedAdapter extends StatelessSection
                         activity.overridePendingTransition(0, 0);
 
                     } else {
-                        Snackbar.make(mFrameLayout
+                        Snackbar snackbar = Snackbar.make(mFrameLayout
                                 , mContext.getResources().getString(R.string.error_message)
-                                , Snackbar.LENGTH_SHORT).show();
+                                , Snackbar.LENGTH_SHORT);
+
+                        snackbar.getView().setBackgroundColor(mContext.getResources().getColor(android.R.color.white));
+                        snackbar.setActionTextColor(mContext.getResources().getColor(R.color.colorAccent));
+                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                .setTextColor(mContext.getResources().getColor(R.color.colorText));
+
+                        snackbar.show();
                     }
                 }
             }
