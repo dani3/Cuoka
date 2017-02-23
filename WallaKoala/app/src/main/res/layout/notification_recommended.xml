@@ -8,107 +8,120 @@
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
     app:cardElevation="2dp">
-    
-    <LinearLayout
-        android:id="@+id/notification_background"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:baselineAligned="false"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:background="@color/colorLight">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/notification_background"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.75"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:background="@android:color/white"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@android:color/white"
+            android:baselineAligned="false"
+            android:weightSum="1">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/notification_icon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_notification_shop"/>
-
-                <com.wallakoala.wallakoala.Views.ExistenceTextView
-                    android:id="@+id/notification_title"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/notification_recommended_header"
-                    android:textColor="@color/colorText"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/notification_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_notification_shop"/>
+
+                    <com.wallakoala.wallakoala.Views.ExistenceTextView
+                        android:id="@+id/notification_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/notification_recommended_header"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp"
+                        app:customFont="Existence-StencilLight.otf"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="4dp"
+                        android:layout_height="4dp"
+                        android:src="@color/colorMediumText"/>
+
+                    <com.wallakoala.wallakoala.Views.ExistenceTextView
+                        android:id="@+id/notification_offset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="@string/notification_offset"
+                        android:textColor="@color/colorMediumText"
+                        android:textSize="14dp"
+                        android:maxLines="1"
+                        app:customFont="Existence-StencilLight.otf"/>
+
+                </LinearLayout>
+
+                <com.wallakoala.wallakoala.Views.ExistenceTextView
+                    android:id="@+id/notification_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/notification_recommended_body"
+                    android:textColor="@color/colorMediumText"
                     android:textSize="14dp"
                     app:customFont="Existence-StencilLight.otf"/>
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:src="@color/colorMediumText"/>
-
                 <com.wallakoala.wallakoala.Views.ExistenceTextView
-                    android:id="@+id/notification_offset"
+                    android:id="@+id/notification_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/notification_offset"
-                    android:textColor="@color/colorMediumText"
+                    android:padding="16dp"
+                    android:text="@string/notification_recommended_action"
+                    android:textColor="@color/colorAccent"
                     android:textSize="14dp"
-                    android:maxLines="1"
                     app:customFont="Existence-StencilLight.otf"/>
 
             </LinearLayout>
 
-            <com.wallakoala.wallakoala.Views.ExistenceTextView
-                android:id="@+id/notification_body"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/notification_recommended_body"
-                android:textColor="@color/colorMediumText"
-                android:textSize="14dp"
-                app:customFont="Existence-StencilLight.otf"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                android:gravity="center">
 
-            <com.wallakoala.wallakoala.Views.ExistenceTextView
-                android:id="@+id/notification_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@string/notification_recommended_action"
-                android:textColor="@color/colorAccent"
-                android:textSize="14dp"
-                app:customFont="Existence-StencilLight.otf"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/notification_shop_logo"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:layout_margin="16dp"
+                    android:src="@color/colorAccent"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:gravity="center">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/notification_shop_logo"
-                android:layout_width="58dp"
-                android:layout_height="58dp"
-                android:layout_margin="16dp"
-                android:src="@color/colorAccent"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>

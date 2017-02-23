@@ -1,5 +1,6 @@
 package com.wallakoala.wallakoala.Adapters;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,15 +9,19 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,6 +40,8 @@ import java.util.List;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * Adapter que muestra los distintos tipos de notificaciones.
@@ -56,7 +63,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     /**
      * Notificacion de nueva tienda.
      */
-    public class NewShopNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class NewShopNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener
     {
         private long notificationId;
         private Notification mNotification;
@@ -91,7 +98,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mOffset       = (TextView) itemView.findViewById(R.id.notification_offset);
             mActionButton = (TextView) itemView.findViewById(R.id.notification_button);
 
-            mCardView.setOnClickListener(this);
+            mCardView.setOnTouchListener(this);
             mActionButton.setOnClickListener(this);
         }
 
@@ -161,22 +168,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false, notificationId);
+                _markNotification(false, notificationId, 0, 0);
             }
         }
 
         @Override
         public void onClick(View v)
         {
-            if (v.getId() == mCardView.getId())
+            if (v.getId() == mActionButton.getId())
             {
-                if (!marked)
-                {
-                    Log.d(Properties.TAG, "[NOTIFICATIONS_ADAPTER] Se hace click -> Se marca como leída.");
-                    _markNotification(true, notificationId);
-                }
-
-            } else if (v.getId() == mActionButton.getId()) {
                 Log.d(Properties.TAG, "[NOTIFICATIONS_ADAPTER] Se hace click -> Ir a Mis Tiendas");
 
                 Intent intent = new Intent(mContext, ShopsUI.class);
@@ -189,14 +189,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 // Animacion de transicion para pasar de una activity a otra.
                 ((Activity) mContext).overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
             }
-
         }
 
         /**
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect, long id)
+        private void _markNotification(boolean connect, long id, float x, float y)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
@@ -214,7 +213,74 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
-            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            if (!connect)
+            {
+                mBackground.setVisibility(View.INVISIBLE);
+
+            } else {
+                float mRadiusReveal = Math.max(mBackground.getWidth(), mBackground.getHeight());
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
+                    SupportAnimator animator =
+                            ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new SupportAnimator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart() {}
+
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel() {}
+
+                        @Override
+                        public void onAnimationRepeat() {}
+                    });
+
+                    animator.start();
+
+                } else {
+                    Animator animator =
+                            android.view.ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+
+                    animator.start();
+                }
+            }
+
             mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_shop_bw));
 
             mCardView.setCardElevation(0.0f);
@@ -224,13 +290,27 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
+
+            marked = true;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            if (!marked)
+            {
+                Log.d(Properties.TAG, "[NOTIFICATIONS_ADAPTER] Se hace click -> Se marca como leída.");
+                _markNotification(true, notificationId, event.getX(), event.getY());
+            }
+
+            return true;
         }
     }
 
     /**
      * Notificacion de rebajas generales.
      */
-    public class SalesNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class SalesNotificationHolder extends RecyclerView.ViewHolder implements View.OnTouchListener
     {
         private long notificationId;
 
@@ -262,7 +342,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody   = (TextView) itemView.findViewById(R.id.notification_body);
             mOffset = (TextView) itemView.findViewById(R.id.notification_offset);
 
-            mCardView.setOnClickListener(this);
+            mCardView.setOnTouchListener(this);
         }
 
         @SuppressWarnings("deprecation")
@@ -330,19 +410,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false, notificationId);
-            }
-        }
-
-        @Override
-        public void onClick(View v)
-        {
-            if (!marked)
-            {
-                if (v.getId() == mCardView.getId())
-                {
-                    _markNotification(true, notificationId);
-                }
+                _markNotification(false, notificationId, 0, 0);
             }
         }
 
@@ -350,7 +418,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect, long id)
+        private void _markNotification(boolean connect, long id, float x, float y)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
@@ -368,7 +436,75 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
-            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            if (!connect)
+            {
+                mBackground.setVisibility(View.INVISIBLE);
+
+            } else {
+                float mRadiusReveal = Math.max(mBackground.getWidth(), mBackground.getHeight());
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
+                    SupportAnimator animator =
+                            ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new SupportAnimator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart() {}
+
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel() {}
+
+                        @Override
+                        public void onAnimationRepeat() {}
+                    });
+
+                    animator.start();
+
+                } else {
+                    Animator animator =
+                            android.view.ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+
+                    animator.start();
+                }
+            }
+
+            // Sombreamos la CardView y quitamos la elevacion.
             mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_sales_bw));
 
             mCardView.setCardElevation(0.0f);
@@ -377,13 +513,29 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mTitle.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
+
+            marked = true;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            if (!marked)
+            {
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId, event.getX(), event.getY());
+                }
+            }
+
+            return true;
         }
     }
 
     /**
      * Notificacion de descuentos especiales en una tienda.
      */
-    public class ShopDiscountNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class ShopDiscountNotificationHolder extends RecyclerView.ViewHolder implements View.OnTouchListener
     {
         private long notificationId;
 
@@ -415,7 +567,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody   = (TextView) itemView.findViewById(R.id.notification_body);
             mOffset = (TextView) itemView.findViewById(R.id.notification_offset);
 
-            mCardView.setOnClickListener(this);
+            mCardView.setOnTouchListener(this);
         }
 
         @SuppressWarnings("deprecation")
@@ -483,19 +635,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false, notificationId);
-            }
-        }
-
-        @Override
-        public void onClick(View v)
-        {
-            if (!marked)
-            {
-                if (v.getId() == mCardView.getId())
-                {
-                    _markNotification(true, notificationId);
-                }
+                _markNotification(false, notificationId, 0, 0);
             }
         }
 
@@ -503,7 +643,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect, long id)
+        private void _markNotification(boolean connect, long id, float x, float y)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
@@ -521,7 +661,74 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
-            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            if (!connect)
+            {
+                mBackground.setVisibility(View.INVISIBLE);
+
+            } else {
+                float mRadiusReveal = Math.max(mBackground.getWidth(), mBackground.getHeight());
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
+                    SupportAnimator animator =
+                            ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new SupportAnimator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart() {}
+
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel() {}
+
+                        @Override
+                        public void onAnimationRepeat() {}
+                    });
+
+                    animator.start();
+
+                } else {
+                    Animator animator =
+                            android.view.ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+
+                    animator.start();
+                }
+            }
+
             mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_discount_bw));
 
             mCardView.setCardElevation(0.0f);
@@ -530,13 +737,29 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mTitle.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
+
+            marked = true;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            if (!marked)
+            {
+                if (v.getId() == mCardView.getId())
+                {
+                    _markNotification(true, notificationId, event.getX(), event.getY());
+                }
+            }
+
+            return true;
         }
     }
 
     /**
      * Notificacion de nueva actualizacion.
      */
-    public class UpdateNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class UpdateNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener
     {
         private long notificationId;
 
@@ -570,7 +793,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mOffset       = (TextView) itemView.findViewById(R.id.notification_offset);
             mActionButton = (TextView) itemView.findViewById(R.id.notification_button);
 
-            mCardView.setOnClickListener(this);
+            mCardView.setOnTouchListener(this);
             mActionButton.setOnClickListener(this);
         }
 
@@ -639,7 +862,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false, notificationId);
+                _markNotification(false, notificationId, 0, 0);
             }
         }
 
@@ -648,11 +871,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (!marked)
             {
-                if (v.getId() == mCardView.getId())
+                if (v.getId() == mActionButton.getId())
                 {
-                    _markNotification(true, notificationId);
-
-                } else if (v.getId() == mActionButton.getId()) {
                     // TODO llevar al PlayStore
                 }
             }
@@ -662,7 +882,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect, long id)
+        private void _markNotification(boolean connect, long id, float x, float y)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
@@ -680,7 +900,74 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
-            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            if (!connect)
+            {
+                mBackground.setVisibility(View.INVISIBLE);
+
+            } else {
+                float mRadiusReveal = Math.max(mBackground.getWidth(), mBackground.getHeight());
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
+                    SupportAnimator animator =
+                            ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new SupportAnimator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart() {}
+
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel() {}
+
+                        @Override
+                        public void onAnimationRepeat() {}
+                    });
+
+                    animator.start();
+
+                } else {
+                    Animator animator =
+                            android.view.ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+
+                    animator.start();
+                }
+            }
+
             mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_update_bw));
 
             mCardView.setCardElevation(0.0f);
@@ -690,48 +977,26 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
-        }
-    }
 
-    /**
-     * Tarea en segundo plano que marca la notificacion como leida.
-     */
-    private class MarkNotificationAsyncTask extends AsyncTask<Long, Void, Void>
-    {
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute()
-        {
-            progressDialog = new ProgressDialog(mContext, R.style.MyDialogTheme);
-            progressDialog.setTitle("");
-            progressDialog.setMessage("Realizando cambios...");
-            progressDialog.setIndeterminate(true);
-
-            progressDialog.show();
+            marked = true;
         }
 
         @Override
-        protected Void doInBackground(Long... id)
+        public boolean onTouch(View v, MotionEvent event)
         {
-            RestClientSingleton.markNotificationAsRead(mContext, id[0]);
+            if (!marked)
+            {
+                _markNotification(true, notificationId, event.getX(), event.getY());
+            }
 
-            mNotificationsReadList.add(id[0]);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused)
-        {
-            progressDialog.dismiss();
+            return true;
         }
     }
 
     /**
      * Notificacion de nueva recomendacion.
      */
-    public class RecommendedNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class RecommendedNotificationHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener
     {
         private Notification mNotification;
         private long notificationId;
@@ -766,7 +1031,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mOffset       = (TextView) itemView.findViewById(R.id.notification_offset);
             mActionButton = (TextView) itemView.findViewById(R.id.notification_button);
 
-            mCardView.setOnClickListener(this);
+            mCardView.setOnTouchListener(this);
             mActionButton.setOnClickListener(this);
         }
 
@@ -836,7 +1101,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mNotificationsReadList.contains(notification.getId()))
             {
-                _markNotification(false, notificationId);
+                _markNotification(false, notificationId, 0, 0);
             }
         }
 
@@ -845,11 +1110,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         {
             if (!marked)
             {
-                if (v.getId() == mCardView.getId())
+                if (v.getId() == mActionButton.getId())
                 {
-                    _markNotification(true, notificationId);
-
-                } else if (v.getId() == mActionButton.getId()) {
                     Intent intent = new Intent(mContext, ShopsUI.class);
 
                     intent.putExtra("shop", mNotification.getExtraInfo());
@@ -867,7 +1129,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
          * Metodo que marca la notificacion como leida y la sombrea.
          */
         @SuppressWarnings("deprecation")
-        private void _markNotification(boolean connect, long id)
+        private void _markNotification(boolean connect, long id, float x, float y)
         {
             // Llamamos al servidor para marcar la notificacion como leida.
             if (connect)
@@ -885,7 +1147,74 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
             // Sombreamos la CardView y quitamos la elevacion.
-            mBackground.setBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
+            if (!connect)
+            {
+                mBackground.setVisibility(View.INVISIBLE);
+
+            } else {
+                float mRadiusReveal = Math.max(mBackground.getWidth(), mBackground.getHeight());
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                {
+                    SupportAnimator animator =
+                            ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new SupportAnimator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart() {}
+
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel() {}
+
+                        @Override
+                        public void onAnimationRepeat() {}
+                    });
+
+                    animator.start();
+
+                } else {
+                    Animator animator =
+                            android.view.ViewAnimationUtils.createCircularReveal(mBackground
+                                    , (int) x
+                                    , (int) y
+                                    , mRadiusReveal
+                                    , 0);
+
+                    animator.setDuration(200);
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mBackground.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+
+                    animator.start();
+                }
+            }
+
             mIconImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_notification_shop_bw));
 
             mCardView.setCardElevation(0.0f);
@@ -895,6 +1224,54 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mBody.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mOffset.setTextColor(mContext.getResources().getColor(R.color.colorText));
             mActionButton.setTextColor(mContext.getResources().getColor(R.color.colorText));
+
+            marked = true;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            if (!marked)
+            {
+                _markNotification(true, notificationId, event.getX(), event.getY());
+            }
+
+            return true;
+        }
+    }
+
+    /**
+     * Tarea en segundo plano que marca la notificacion como leida.
+     */
+    private class MarkNotificationAsyncTask extends AsyncTask<Long, Void, Void>
+    {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog = new ProgressDialog(mContext, R.style.MyDialogTheme);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Realizando cambios...");
+            progressDialog.setIndeterminate(true);
+
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Long... id)
+        {
+            RestClientSingleton.markNotificationAsRead(mContext, id[0]);
+
+            mNotificationsReadList.add(id[0]);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused)
+        {
+            progressDialog.dismiss();
         }
     }
 
