@@ -71,10 +71,10 @@ public class HyMScraper implements Scraper
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         Runtime.getRuntime().exec(new String[] {"python"
-                    , section.getPath() + "renderProducts.py"
-                    , Properties.CHROME_DRIVER
-                    , section.getName()
-                    , section.getPath()});
+            , section.getPath() + "renderProducts.py"
+            , Properties.CHROME_DRIVER
+            , section.getName()
+            , section.getPath()});
         
         // Nos quedamos esperando hasta que termine.
         File file = new File(section.getPath() + section.getName() + "_done.dat");

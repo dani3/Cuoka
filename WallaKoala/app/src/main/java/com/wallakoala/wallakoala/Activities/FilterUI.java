@@ -1215,6 +1215,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                           .alpha(ALPHA_INACTIVE_FILTER)
                                           .setInterpolator(new OvershootInterpolator());
 
+            mFilterShopTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
             mItemsMenuViewGroup.removeView(mFilterShopMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
@@ -1236,6 +1238,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                              .scaleYBy(-0.1f)
                                              .alpha(ALPHA_INACTIVE_FILTER)
                                              .setInterpolator(new OvershootInterpolator());
+
+            mFilterSectionTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
             mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
 
@@ -1259,6 +1263,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                            .alpha(ALPHA_INACTIVE_FILTER)
                                            .setInterpolator(new OvershootInterpolator());
 
+            mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
             mItemsMenuViewGroup.removeView(mFilterPriceMenuLayout);
 
             mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
@@ -1280,6 +1286,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                            .scaleYBy(-0.1f)
                                            .alpha(ALPHA_INACTIVE_FILTER)
                                            .setInterpolator(new OvershootInterpolator());
+
+            mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
             mItemsMenuViewGroup.removeView(mFilterColorMenuLayout);
 
