@@ -1,5 +1,9 @@
 package com.wallakoala.wallakoala.Activities;
 
+import android.animation.Animator;
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -270,6 +274,25 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     {
         mCoordinatorLayout  = (CoordinatorLayout)findViewById(R.id.filter_coordinator_layout);
         mItemsMenuViewGroup = (ViewGroup)findViewById(R.id.menu_items);
+
+        Animator getOut = ObjectAnimator.ofPropertyValuesHolder((Object)null
+                , PropertyValuesHolder.ofFloat("translationX", 0, 5000)
+                , PropertyValuesHolder.ofFloat("translationY", 0, 0));
+
+        getOut.setDuration(300);
+
+        Animator getIn = ObjectAnimator.ofPropertyValuesHolder((Object)null
+                , PropertyValuesHolder.ofFloat("translationX", 5000, 0)
+                , PropertyValuesHolder.ofFloat("translationY", 0, 0));
+
+        getIn.setDuration(300);
+        getIn.setStartDelay(50);
+
+        LayoutTransition itemLayoutTransition = new LayoutTransition();
+        itemLayoutTransition.setAnimator(LayoutTransition.APPEARING, getIn);
+        itemLayoutTransition.setAnimator(LayoutTransition.DISAPPEARING, getOut);
+
+        mItemsMenuViewGroup.setLayoutTransition(itemLayoutTransition);
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton);
 

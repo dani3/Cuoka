@@ -143,7 +143,7 @@
     <string name="suggested_name">Nombre de la tienda</string>
     <string name="suggested_message">¡Gracias! Vamos a estudiar tu sugerencia.</string>
 
-    <string name="notification_shop_header">Tienda ya dispnible</string>
+    <string name="notification_shop_header">Tienda ya disponible</string>
     <string name="notification_offset">Hoy</string>
     <string name="notification_shop_body">Ya puedes añadir Tienda a tus tiendas favoritas, ¡Síguela en el menú Mis Tiendas!</string>
     <string name="notification_shop_action">Ir a Mis Tiendas</string>
