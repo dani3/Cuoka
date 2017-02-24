@@ -1244,19 +1244,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private class MarkNotificationAsyncTask extends AsyncTask<Long, Void, Void>
     {
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute()
-        {
-            progressDialog = new ProgressDialog(mContext, R.style.MyDialogTheme);
-            progressDialog.setTitle("");
-            progressDialog.setMessage("Realizando cambios...");
-            progressDialog.setIndeterminate(true);
-
-            progressDialog.show();
-        }
-
         @Override
         protected Void doInBackground(Long... id)
         {
@@ -1265,12 +1252,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             mNotificationsReadList.add(id[0]);
 
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused)
-        {
-            progressDialog.dismiss();
         }
     }
 
