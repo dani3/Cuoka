@@ -39,9 +39,33 @@ public interface ProductsRepository extends JpaRepository<Product, Long>
           + "WHERE shop = :shop AND "
           + "man = :man AND "
           + "obsolete = false AND "
+          + "discount > 0 AND "
+          + "price >= :from AND price <= :to ORDER BY insert_date DESC")
+    List<Product> findByShopAndManAndPriceAndDiscount(@Param("shop") String shop
+                            , @Param("man") boolean man
+                            , @Param("from") double from
+                            , @Param("to") double to);
+    
+    @Query("FROM Product "
+          + "WHERE shop = :shop AND "
+          + "man = :man AND "
+          + "obsolete = false AND "
           + "price >= :from AND price <= :to ORDER BY insert_date DESC")
     List<Product> findByShopAndManAndPrice(@Param("shop") String shop
                             , @Param("man") boolean man
+                            , @Param("from") double from
+                            , @Param("to") double to);
+    
+    @Query("FROM Product "
+          + "WHERE shop = :shop AND "
+          + "man = :man AND "
+          + "obsolete = false AND "
+          + "discount > 0 AND "
+          + "DATEDIFF(CURDATE(), insert_date) = :offset AND "
+          + "price >= :from AND price <= :to")
+    List<Product> findByShopAndManAndNewnessAndPriceAndDiscount(@Param("shop") String shop
+                            , @Param("man") boolean man
+                            , @Param("offset") int offset
                             , @Param("from") double from
                             , @Param("to") double to);
     

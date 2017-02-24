@@ -93,7 +93,8 @@
                 android:layout_height="0dp"
                 android:orientation="horizontal"
                 android:layout_weight="0.7"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:baselineAligned="false">
 
                 <!-- Left Column -->
                 <LinearLayout
@@ -205,6 +206,23 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLight"
+                android:layout_margin="16dp"/>
+
+            <com.wallakoala.wallakoala.Views.ExistenceCheckBox
+                android:id="@+id/filter_price_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_price_discount"
+                android:textColor="@color/colorText"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:buttonTint="@color/colorAccent"
+                app:customFontCh="Existence-StencilLight.otf"/>
 
         </LinearLayout>
 

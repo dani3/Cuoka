@@ -1117,6 +1117,7 @@ public class RestClientSingleton
                 List<String> colorsList   = (ArrayList<String>)filterMap.get("colors");
 
                 jsonObject.put("newness", filterMap.get("newness"));
+                jsonObject.put("discount", filterMap.get("discount"));
                 jsonObject.put("man", user.getMan());
                 jsonObject.put("priceFrom", filterMap.get("minPrice"));
                 jsonObject.put("priceTo", filterMap.get("maxPrice"));

@@ -635,12 +635,14 @@ public class MainScreenUI extends AppCompatActivity
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("sections"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("colors"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("shops"));
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("discount"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("minPrice"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("maxPrice"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " +  mProductsFragment.getMan());
 
                 // Lo mandamos en el Intent
                 intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)filterMap.get("newness"));
+                intent.putExtra(Properties.PACKAGE + ".discount", (Boolean)filterMap.get("discount"));
                 intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)filterMap.get("sections"));
                 intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)filterMap.get("colors"));
                 intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)filterMap.get("shops"));
@@ -687,6 +689,7 @@ public class MainScreenUI extends AppCompatActivity
                     Map<String, Object> filterMap = new HashMap<>();
 
                     filterMap.put("newness", data.getBooleanExtra(Properties.PACKAGE + ".newness", false));
+                    filterMap.put("discount", data.getBooleanExtra(Properties.PACKAGE + ".discount", false));
                     filterMap.put("sections", data.getSerializableExtra(Properties.PACKAGE + ".sections"));
                     filterMap.put("colors", data.getSerializableExtra(Properties.PACKAGE + ".colors"));
                     filterMap.put("shops", data.getSerializableExtra(Properties.PACKAGE + ".shops"));

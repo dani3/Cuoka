@@ -11,6 +11,7 @@ public class Filter
 {
     private boolean man;
     private boolean newness;
+    private boolean discount;
     private int priceFrom;
     private int priceTo;
     private List<String> colors;
@@ -20,6 +21,7 @@ public class Filter
 
     public Filter(boolean man
             , boolean newness
+            , boolean discount
             , int priceFrom
             , int priceTo
             , List<String> colors
@@ -27,6 +29,7 @@ public class Filter
     {
         this.man = man;
         this.newness = newness;
+        this.discount = discount;
         this.priceFrom = priceFrom;
         this.priceTo = priceTo;
         this.colors = colors;
@@ -41,6 +44,11 @@ public class Filter
     public void setNewness(boolean newness)
     {
         this.newness = newness;
+    }
+    
+    public void setDiscount(boolean discount)
+    {
+        this.discount = discount;
     }
 
     public void setPriceFrom(int priceFrom) 
@@ -71,6 +79,11 @@ public class Filter
     public boolean isNewness() 
     {
         return newness;
+    }
+    
+    public boolean isDiscount()
+    {
+        return discount;
     }
 
     public int getPriceFrom() 
@@ -121,6 +134,7 @@ public class Filter
         
         String line = "{man:" + this.man 
             + ";newness:" + this.newness 
+            + ";discount:" + this.discount 
             + ";priceFrom:" + this.priceFrom 
             + ";priceTo:" + this.priceTo 
             + ";colors:" + _colors

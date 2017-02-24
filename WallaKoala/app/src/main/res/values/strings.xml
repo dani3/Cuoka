@@ -86,6 +86,7 @@
 
     <string name="filter_price_from">De:</string>
     <string name="filter_price_to">Hasta:</string>
+    <string name="filter_price_discount">Sólo con descuento</string>
 
     <string name="accesibility_favorite">Favorito</string>
 

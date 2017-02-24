@@ -907,24 +907,45 @@ public class Controller
         // Ponemos un valor minimo y maximo si no se reciben en el JSON.
         double from = (filter.getPriceFrom() > 0) ? filter.getPriceFrom() : -1;
         double to = (filter.getPriceTo() > 0) ? filter.getPriceTo() : 999; 
+        
+        boolean discount = filter.isDiscount();
 
         if (filter.isNewness())
         {
             LOG.info("[FILTER]  -  Solo novedades");                                 
 
-            productList = productsRepository.findByShopAndManAndNewnessAndPrice(shop
+            if (discount)
+            {
+                LOG.info("[FILTER]  -  Sólo con descuento");
+                productList = productsRepository.findByShopAndManAndNewnessAndPriceAndDiscount(shop
                                         , filter.isMan()
                                         , 0
                                         , from
                                         , to);
-
+            } else {
+                productList = productsRepository.findByShopAndManAndNewnessAndPrice(shop
+                                        , filter.isMan()
+                                        , 0
+                                        , from
+                                        , to);
+            }
+            
         } else {
             LOG.info("[FILTER]  -  Todos los productos");                                 
 
-            productList = productsRepository.findByShopAndManAndPrice(shop
+            if (discount)
+            {
+                LOG.info("[FILTER]  -  Sólo con descuento");
+                productList = productsRepository.findByShopAndManAndPriceAndDiscount(shop
                                         , filter.isMan()
                                         , from
                                         , to);
+            } else {
+                productList = productsRepository.findByShopAndManAndPrice(shop
+                                        , filter.isMan()
+                                        , from
+                                        , to);
+            }
         }       
            
         List<Product> newList = new ArrayList<>();

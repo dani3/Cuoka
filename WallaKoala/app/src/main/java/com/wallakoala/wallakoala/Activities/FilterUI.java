@@ -27,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -136,6 +135,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private List<AppCompatCheckBox> mShopsCheckBoxesList;
     private List<AppCompatCheckBox> mColorCheckBoxesList;
     private AppCompatCheckBox mAllShopsCheckBox;
+    private AppCompatCheckBox mDiscountCheckBox;
 
     private List<AppCompatCheckBox> mSectionCheckBoxesList;
 
@@ -156,6 +156,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private int mFilterMaxPrice;
 
     private boolean mFilterNewness;
+    private boolean mFilterDiscount;
     private boolean SHOP_FILTER_ACTIVE;
     private boolean SECTION_FILTER_ACTIVE;
     private boolean PRICE_FILTER_ACTIVE;
@@ -177,6 +178,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             MAN = intent.getBooleanExtra(Properties.PACKAGE + ".man", false);
 
             mFilterNewness  = intent.getBooleanExtra(Properties.PACKAGE + ".newness", false);
+            mFilterDiscount = intent.getBooleanExtra(Properties.PACKAGE + ".discount", false);
             mFilterMinPrice = intent.getIntExtra(Properties.PACKAGE + ".minPrice", -1);
             mFilterMaxPrice = intent.getIntExtra(Properties.PACKAGE + ".maxPrice", -1);
             mFilterSections = (ArrayList<String>)intent.getSerializableExtra(Properties.PACKAGE + ".sections");
@@ -304,6 +306,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
         // [BEGIN] Listener FAB OK
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressWarnings("deprecation")
             @Override
             public void onClick(View v)
             {
@@ -444,15 +447,18 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     int from = -1;
                     int to = -1;
+                    boolean withDiscount = false;
                     if (PRICE_FILTER_ACTIVE)
                     {
                         int lengthFrom = mPriceFromEditText.getText().length();
                         int lengthTo = mPriceToEditText.getText().length();
 
+                        withDiscount = mDiscountCheckBox.isChecked();
+
                         from = (lengthFrom == 0) ? from : Integer.valueOf(mPriceFromEditText.getText().toString());
                         to = (lengthTo == 0) ? to : Integer.valueOf(mPriceToEditText.getText().toString());
 
-                        if (lengthFrom == 0 && lengthTo == 0)
+                        if (lengthFrom == 0 && lengthTo == 0 && !withDiscount)
                         {
                             OK = false;
 
@@ -461,6 +467,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                                 .playOn(mFilterPriceMenuLayout);
                         } else {
                             Log.d(Properties.TAG, "[FILTER_UI] - A partir de " + from + "€ hasta " + to + "€");
+                            Log.d(Properties.TAG, "[FILTER_UI] - ¿Sólo con descuento? - " + ((withDiscount) ? " Si" : " No"));
                         }
                     }
 
@@ -476,6 +483,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         intent.putExtra(Properties.PACKAGE + ".shops", shopsList);
                         intent.putExtra(Properties.PACKAGE + ".colors", colorsList);
                         intent.putExtra(Properties.PACKAGE + ".sections", sectionsList);
+                        intent.putExtra(Properties.PACKAGE + ".discount", withDiscount);
                         intent.putExtra(Properties.PACKAGE + ".minPrice", from);
                         intent.putExtra(Properties.PACKAGE + ".maxPrice", to);
                         intent.putExtra(Properties.PACKAGE + ".newness", newness);
@@ -724,12 +732,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     /**
      * Metodo para inicializa el menu de precios.
      */
-    @SuppressWarnings("unchecked, deprecaction")
+    @SuppressWarnings({"unchecked, deprecaction", "deprecation"})
     protected void _initFilterPrice()
     {
-        mFilterPriceTextView = (TextView)findViewById(R.id.filter_text_price);
+        mFilterPriceTextView = (TextView) findViewById(R.id.filter_text_price);
+        mDiscountCheckBox    = (AppCompatCheckBox) findViewById(R.id.filter_price_discount);
 
-        mRangeSeekBar = (RangeSeekBar)findViewById(R.id.filter_price_range_seek_bar);
+        mRangeSeekBar = (RangeSeekBar) findViewById(R.id.filter_price_range_seek_bar);
         mRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener()
         {
             @Override
@@ -743,8 +752,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        mPriceFromEditText = (EditText)findViewById(R.id.filter_price_from);
-        mPriceToEditText   = (EditText)findViewById(R.id.filter_price_to);
+        mPriceFromEditText = (EditText) findViewById(R.id.filter_price_from);
+        mPriceToEditText   = (EditText) findViewById(R.id.filter_price_to);
 
         mPriceFromEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -757,7 +766,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     int to = 999;
 
                     if (mPriceToEditText.getText() != null && !mPriceToEditText.getText().toString().isEmpty())
+                    {
                         to = Integer.valueOf(mPriceToEditText.getText().toString());
+                    }
 
                     Log.d(Properties.TAG, Integer.toString(from) + "|" + Integer.toString(to));
 
@@ -788,7 +799,9 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     int to = Integer.valueOf(mPriceToEditText.getText().toString());
 
                     if (mPriceFromEditText.getText() != null && !mPriceFromEditText.getText().toString().isEmpty())
+                    {
                         from = Integer.valueOf(mPriceFromEditText.getText().toString());
+                    }
 
                     if (from > to)
                     {
@@ -826,6 +839,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 mPriceToEditText.setText(Integer.toString(mFilterMaxPrice));
                 mRangeSeekBar.setSelectedMaxValue(mFilterMaxPrice);
             }
+
+            mDiscountCheckBox.setChecked(mFilterDiscount);
 
             mItemsMenuViewGroup.addView(mFilterPriceMenuLayout, 0);
         }
