@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -258,6 +259,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         {
             SpannableString discount = Utils.priceToString(mProduct.getDiscount());
             mProductDiscountTextView.setText(discount);
+
+            mProductDiscountTextView.setPaintFlags(mProductDiscountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
             mDiscountImageView.setVisibility(View.VISIBLE);
 
