@@ -26,6 +26,16 @@
             android:scrollbars="none"
             android:visibility="gone"/>
 
+        <ImageView
+            android:id="@+id/product_discount"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="24dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|start|left"
+            android:visibility="gone"
+            android:src="@drawable/ic_discount"/>
+
         <com.wallakoala.wallakoala.Views.LikeButtonLargeView
             android:id="@+id/product_favorite"
             android:layout_width="96dp"

@@ -69,6 +69,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         private LikeButtonView mProductFavoriteImageButton;
         private View mProductFooterView, mProductFooterMainView;
         private TextView mTitleTextView, mSubtitleTextView, mPriceTextView;
+        private ImageView mDiscountImageView;
 
         private Animation scaleDownFooter;
 
@@ -76,10 +77,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
         {
             super(itemView);
 
-            mProductImageView = (ImageView)itemView.findViewById(R.id.grid_image);
-            mTitleTextView    = (TextView)itemView.findViewById(R.id.footer_title);
-            mSubtitleTextView = (TextView)itemView.findViewById(R.id.footer_subtitle);
-            mPriceTextView    = (TextView)itemView.findViewById(R.id.footer_price);
+            mProductImageView  = (ImageView) itemView.findViewById(R.id.grid_image);
+            mDiscountImageView = (ImageView) itemView.findViewById(R.id.product_discount);
+            mTitleTextView     = (TextView) itemView.findViewById(R.id.footer_title);
+            mSubtitleTextView  = (TextView) itemView.findViewById(R.id.footer_subtitle);
+            mPriceTextView     = (TextView) itemView.findViewById(R.id.footer_price);
 
             mProductFavoriteImageButton = (LikeButtonView)itemView.findViewById(R.id.product_item_favorite);
 
@@ -121,7 +123,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
                     Activity activity = (Activity) mContext;
 
-                    // Sacamos las coordenadas de la imagen y del corazon
+                    // Sacamos las coordenadas de la imagen, del corazon y del descuento si hay.
                     int[] imageScreenLocation = new int[2];
                     mProductImageView.getLocationInWindow(imageScreenLocation);
 
@@ -142,6 +144,17 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                           .putExtra(Properties.PACKAGE + ".top", imageScreenLocation[1])
                           .putExtra(Properties.PACKAGE + ".width", mProductImageView.getWidth())
                           .putExtra(Properties.PACKAGE + ".height", mProductImageView.getHeight());
+
+                    if (mProduct.getDiscount() > 0.0f)
+                    {
+                        int[] discountScreenLocation = new int[2];
+                        mDiscountImageView.getLocationOnScreen(discountScreenLocation);
+
+                        intent.putExtra(Properties.PACKAGE + ".widthDis", mDiscountImageView.getWidth())
+                              .putExtra(Properties.PACKAGE + ".heightDis", mDiscountImageView.getHeight())
+                              .putExtra(Properties.PACKAGE + ".leftDis", discountScreenLocation[0])
+                              .putExtra(Properties.PACKAGE + ".topDis", discountScreenLocation[1]);
+                    }
 
                     // Reseteamos el nombre del fichero
                     mBitmapFileName = null;
@@ -175,9 +188,10 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
             mSubtitleTextView.setText(product.getShop());
             mPriceTextView.setText(Utils.priceToString(product.getPrice()));
 
-            // Ocultamos la info, IMPORTANTE. Cosas malas pasan si no se pone.
+            // Ocultamos la info y el descuento, IMPORTANTE. Cosas malas pasan si no se pone.
             mProductFooterMainView.setVisibility(View.GONE);
             mProductFavoriteImageButton.setVisibility(View.GONE);
+            mDiscountImageView.setVisibility(View.GONE);
 
             // Inicializamos el boton de favorito.
             mProductFavoriteImageButton.changeIcon(
@@ -194,6 +208,11 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
                     // Mostramos el pie de foto y el boton de favorito
                     mProductFooterMainView.setVisibility(View.VISIBLE);
                     mProductFavoriteImageButton.setVisibility(View.VISIBLE);
+
+                    if (product.getDiscount() > 0.0f)
+                    {
+                        mDiscountImageView.setVisibility(View.VISIBLE);
+                    }
 
                     // Guardamos el bitmap, para asi pasarlo a ProductUI.
                     mBitmap = bitmap;

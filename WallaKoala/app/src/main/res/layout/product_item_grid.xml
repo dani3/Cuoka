@@ -25,6 +25,16 @@
             app:riv_corner_radius_top_left="4dp"
             app:riv_corner_radius_top_right="4dp"/>
 
+        <ImageView
+            android:id="@+id/product_discount"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="16dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|start|left"
+            android:visibility="gone"
+            android:src="@drawable/ic_discount"/>
+
         <com.wallakoala.wallakoala.Views.LikeButtonView
             android:id="@+id/product_item_favorite"
             android:layout_width="56dp"

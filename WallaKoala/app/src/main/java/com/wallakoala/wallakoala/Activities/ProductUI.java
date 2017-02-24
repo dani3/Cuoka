@@ -82,6 +82,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
     /* Views */
     private ImageView mImageView;
+    private ImageView mDiscountImageView;
     private LikeButtonLargeView mFavoriteImageButton;
 
     /* TextViews */
@@ -103,14 +104,14 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     private SharedPreferencesManager mSharedPreferencesManager;
 
     /* Others */
-    private int mLeftDeltaImage, mLeftDeltaFav;
-    private int mTopDeltaImage, mTopDeltaFav;
-    private float mWidthScaleImage, mWidthScaleFav;
-    private float mHeightScaleImage, mHeightScaleFav;
-    private int mThumbnailLeft, mThumbnailLeftFav;
-    private int mThumbnailTop, mThumbnailTopFav;
-    private float mThumbnailWidth, mThumbnailWidthFav;
-    private float mThumbnailHeight, mThumbnailHeightFav;
+    private int mLeftDeltaImage, mLeftDeltaFav, mLeftDeltaDis;
+    private int mTopDeltaImage, mTopDeltaFav, mTopDeltaDis;
+    private float mWidthScaleImage, mWidthScaleFav, mWidthScaleDis;
+    private float mHeightScaleImage, mHeightScaleFav, mHeightScaleDis;
+    private int mThumbnailLeft, mThumbnailLeftFav, mThumbnailLeftDis;
+    private int mThumbnailTop, mThumbnailTopFav, mThumbnailTopDis;
+    private float mThumbnailWidth, mThumbnailWidthFav, mThumbnailWidthDis;
+    private float mThumbnailHeight, mThumbnailHeightFav, mThumbnailHeightDis;
     private float mTopOffset;
     private int mFloatingButtonX;
     private int mFloatingButtonY;
@@ -168,6 +169,18 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                         mHeightScaleFav = mThumbnailHeightFav / mFavoriteImageButton.getHeight();
                     }
 
+                    // Lo mismo para la imagen de descuento
+                    if (mThumbnailWidthDis != 0)
+                    {
+                        int[] disScreenLocation = new int[2];
+                        mDiscountImageView.getLocationOnScreen(disScreenLocation);
+                        mLeftDeltaDis = mThumbnailLeftDis - disScreenLocation[0];
+                        mTopDeltaDis  = mThumbnailTopDis - disScreenLocation[1];
+
+                        mWidthScaleDis  = mThumbnailWidthDis / mDiscountImageView.getWidth();
+                        mHeightScaleDis = mThumbnailHeightDis / mDiscountImageView.getHeight();
+                    }
+
                     _runEnterAnimation();
 
                     return true;
@@ -193,6 +206,10 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
         Bundle bundle = getIntent().getExtras();
 
+        mThumbnailTopDis    = bundle.getInt(Properties.PACKAGE + ".topDis");
+        mThumbnailLeftDis   = bundle.getInt(Properties.PACKAGE + ".leftDis");
+        mThumbnailWidthDis  = bundle.getInt(Properties.PACKAGE + ".widthDis");
+        mThumbnailHeightDis = bundle.getInt(Properties.PACKAGE + ".heightDis");
         mThumbnailTopFav    = bundle.getInt(Properties.PACKAGE + ".topFav");
         mThumbnailLeftFav   = bundle.getInt(Properties.PACKAGE + ".leftFav");
         mThumbnailWidthFav  = bundle.getInt(Properties.PACKAGE + ".widthFav");
@@ -223,6 +240,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         TextView mProductDiscountTextView    = (TextView) findViewById(R.id.product_info_discount);
 
         mImageView                = (ImageView) findViewById(R.id.imageView);
+        mDiscountImageView        = (ImageView) findViewById(R.id.product_discount);
         mFloatingActionButtonPlus = (FloatingActionButton) findViewById(R.id.floatingButton);
         mProductInfoLayout        = (LinearLayout) findViewById(R.id.product_info);
         mProductReferenceTextView = (TextView) findViewById(R.id.product_info_reference);
@@ -240,6 +258,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         {
             SpannableString discount = Utils.priceToString(mProduct.getDiscount());
             mProductDiscountTextView.setText(discount);
+
+            mDiscountImageView.setVisibility(View.VISIBLE);
 
         } else {
             mProductDiscountTextView.setVisibility(View.GONE);
@@ -500,12 +520,31 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             mFavoriteImageButton.setTranslationY(mTopDeltaFav);
 
             // Animacion de escalado y desplazamiento hasta el tamaño grande
-            mFavoriteImageButton.animate().setDuration(ANIM_DURATION)
-                    .scaleX(1).scaleY(1)
-                    .translationX(0).translationY(0)
-                    .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
+            mFavoriteImageButton.animate()
+                                .setDuration(ANIM_DURATION)
+                                .scaleX(1).scaleY(1)
+                                .translationX(0).translationY(0)
+                                .setStartDelay(35)
+                                .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
         } else {
             mFavoriteImageButton.setVisibility(View.GONE);
+        }
+
+        if (mThumbnailWidthDis != 0)
+        {
+            mDiscountImageView.setPivotX(0);
+            mDiscountImageView.setPivotY(0);
+            mDiscountImageView.setScaleX(mWidthScaleDis);
+            mDiscountImageView.setScaleY(mHeightScaleDis);
+            mDiscountImageView.setTranslationX(mLeftDeltaDis);
+            mDiscountImageView.setTranslationY(mTopDeltaDis);
+
+            // Animacion de escalado y desplazamiento hasta el tamaño grande
+            mDiscountImageView.animate()
+                              .setDuration(ANIM_DURATION)
+                              .scaleX(1).scaleY(1)
+                              .translationX(0).translationY(0)
+                              .setInterpolator(ACCELERATE_DECELERATE_INTERPOLATOR);
         }
 
         // Animacion de escalado y desplazamiento hasta el tamaño grande (HARDWARE_LAYERED)
@@ -606,10 +645,20 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         {
             mFavoriteImageButton.animate()
                                 .setDuration(ANIM_DURATION)
-                                .setStartDelay(75)
+                                .setStartDelay(35)
                                 .scaleX(mWidthScaleFav).scaleY(mHeightScaleFav)
                                 .translationX(mLeftDeltaFav).translationY(mTopDeltaFav)
                                 .withEndAction(endAction);
+        }
+
+        if (mThumbnailWidthDis != 0)
+        {
+            mDiscountImageView.animate()
+                              .setDuration(ANIM_DURATION)
+                              .setStartDelay(75)
+                              .scaleX(mWidthScaleDis).scaleY(mHeightScaleDis)
+                              .translationX(mLeftDeltaDis).translationY(mTopDeltaDis)
+                              .withEndAction(endAction);
         }
 
         mFavoriteImageButton.changeIcon(
