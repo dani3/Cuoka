@@ -27,8 +27,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -276,17 +278,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mItemsMenuViewGroup = (ViewGroup)findViewById(R.id.menu_items);
 
         Animator getOut = ObjectAnimator.ofPropertyValuesHolder((Object)null
-                , PropertyValuesHolder.ofFloat("translationX", 0, 5000)
+                , PropertyValuesHolder.ofFloat("translationX", 0, 3000)
                 , PropertyValuesHolder.ofFloat("translationY", 0, 0));
 
-        getOut.setDuration(300);
+        getOut.setDuration(500);
 
         Animator getIn = ObjectAnimator.ofPropertyValuesHolder((Object)null
-                , PropertyValuesHolder.ofFloat("translationX", 5000, 0)
+                , PropertyValuesHolder.ofFloat("translationX", -3000, 0)
                 , PropertyValuesHolder.ofFloat("translationY", 0, 0));
 
-        getIn.setDuration(300);
-        getIn.setStartDelay(50);
+        getIn.setDuration(500);
+        getIn.setInterpolator(new DecelerateInterpolator());
 
         LayoutTransition itemLayoutTransition = new LayoutTransition();
         itemLayoutTransition.setAnimator(LayoutTransition.APPEARING, getIn);
