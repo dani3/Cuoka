@@ -25,9 +25,9 @@ import org.springframework.util.StringUtils;
  * @author Daniel Mancebo Aldea
  */
 
-public class PdHScraper implements Scraper
+public class BershkaScraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger(PdHScraper.class);
+    private static final Logger LOG = Logger.getLogger(BershkaScraper.class);
     
     // Lista preparada para la concurrencia donde escribiran todos los scrapers.
     @SuppressWarnings("FieldMayBeFinal")
@@ -269,7 +269,7 @@ public class PdHScraper implements Scraper
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(null); 
+                color.setColorURL(colorIcon.replace("  Icono: ", ""));  
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes

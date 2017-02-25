@@ -48,6 +48,7 @@ public class Properties
     public static final float SPRINGFIELD_ASPECT_RATIO = 1.12f;
     public static final float HYM_ASPECT_RATIO         = 1.5f;
     public static final float ZARA_ASPECT_RATIO        = 1.24f;
+    public static final float BERSHKA_ASPECT_RATIO     = 1.28f;
     
     /* Parametros para las busquedas */
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;

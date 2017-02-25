@@ -203,6 +203,9 @@ public class ImageManager
 
         if (shop.equalsIgnoreCase("Zara"))
             aspectRatio = Properties.ZARA_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Bershka"))
+            aspectRatio = Properties.BERSHKA_ASPECT_RATIO;
         
         return aspectRatio;
     }

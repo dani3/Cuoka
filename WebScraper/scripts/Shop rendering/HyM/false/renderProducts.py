@@ -13,12 +13,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Vestidos"
+#section = "Camisas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -51,7 +51,7 @@ for link in listOfLinks:
         file_error.write("No se ha podido abrir el link: " + link + "\n")
         continue
 
-    try:
+    try:        
         # Esperamos a que aparezca la imagen un maximo de 60 segundos.
         element = WebDriverWait(dr, 60).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
