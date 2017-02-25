@@ -202,7 +202,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         SHOP_FILTER_ACTIVE = (mFilterShops != null);
         SECTION_FILTER_ACTIVE = (mFilterSections != null);
         COLOR_FILTER_ACTIVE = (mFilterColors != null);
-        PRICE_FILTER_ACTIVE = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1);
+        PRICE_FILTER_ACTIVE = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1 || mFilterDiscount);
         NEWNESS_FILTER_ACTIVE = true;
 
         mColorCheckBoxesList   = new ArrayList<>();

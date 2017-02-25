@@ -44,6 +44,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -294,7 +295,7 @@ public class Controller
         } else {
             LOG.info("[UPDATE] Usuario con ID (" + id + ") encontrado, se envia el correo con su contraseña");
             
-            sendPasswordEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getPassword());
+            _sendPasswordEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getPassword());
         }    
         
         return Properties.ACCEPTED;
@@ -337,7 +338,7 @@ public class Controller
         
         SCHEDULED_EXECUTOR.schedule(() -> {
             LOG.info("[EMAIL] Se envia correo de bienvenida");
-            sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
+            _sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
         }, 1, TimeUnit.DAYS);
         
         return String.valueOf(id);
@@ -1495,7 +1496,7 @@ public class Controller
      * @param name: nombre del usuario.
      * @param man: hombre o mujer.
      */
-    private void sendWelcomeEmail(String to, String from, String name, boolean man)
+    private void _sendWelcomeEmail(String to, String from, String name, boolean man)
     {
         MimeMessage mail = javaMailSender.createMimeMessage();
         
@@ -1529,7 +1530,7 @@ public class Controller
      * @param to: destinatario.
      * @param from: emisor.
      */
-    private void sendPasswordEmail(String to, String from, String password)
+    private void _sendPasswordEmail(String to, String from, String password)
     {
         MimeMessage mail = javaMailSender.createMimeMessage();
         
@@ -1549,5 +1550,15 @@ public class Controller
         } catch (MessagingException | MailException e) {
             LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
         }
+    }
+    
+    @Scheduled(cron = "0 0 8 * * ?")
+    private void _generateStatistics()
+    {
+        // Se obtiene el total de usuarios distinguiendo por sexo.
+        int maleUsers   = usersRepository.findByMan(true).size();
+        int femaleUsers = usersRepository.findByMan(false).size();
+        
+        
     }
 }
