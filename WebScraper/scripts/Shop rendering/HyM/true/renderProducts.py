@@ -7,18 +7,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
-path_to_chromedriver = sys.argv[1]
+#path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
-#path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
+path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
 
 # Nombre de la seccion
-section = sys.argv[2]
-#section = "Camisetas"
+#section = sys.argv[2]
+section = "Camisetas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
-path = sys.argv[3]
+#path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\"
+path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -52,8 +52,8 @@ for link in listOfLinks:
         continue
 
     try:
-        # Esperamos a que aparezca la imagen un maximo de 60 segundos.
-        element = WebDriverWait(dr, 60).until(
+        # Esperamos a que aparezca la imagen un maximo de 10 segundos.
+        element = WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
         )
         
@@ -72,7 +72,7 @@ for link in listOfLinks:
         continue 
 
     try:
-        # ****** D E S C R I P T I O N ****** #
+        # ****** D E S C R I P C I O N ****** #
         description = "".join(dr.find_element_by_class_name("c02__product-description").text.splitlines())[:255]
         result.write("Descripcion: " + description + "\n")
         
@@ -114,12 +114,13 @@ for link in listOfLinks:
 
     for color in colors:
         try:
-            # Hacemos click en cada icono
-            color.find_element_by_class_name("detailbox-pattern").click()
+            if (len(colors) > 1):   
+                # Hacemos click en cada icono
+                color.find_element_by_class_name("detailbox-pattern").click()
 
-            element = WebDriverWait(dr, 60).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
-            )
+                element = WebDriverWait(dr, 10).until(
+                    EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
+                )
             
         except:
             result.write("*********************************************************\n")
@@ -176,7 +177,7 @@ for link in listOfLinks:
                 thumbnail.click()
                 
                 # Esperamos a que se cargue bien la imagen
-                WebDriverWait(dr, 60).until(
+                WebDriverWait(dr, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
                 )
                 

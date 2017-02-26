@@ -33,7 +33,7 @@
             android:scaleType="centerCrop"
             android:layout_gravity="top|start|left"
             android:visibility="gone"
-            android:src="@drawable/ic_discount"/>
+            android:src="@drawable/ic_discount_small"/>
 
         <com.wallakoala.wallakoala.Views.LikeButtonView
             android:id="@+id/product_item_favorite"

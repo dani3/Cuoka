@@ -7,7 +7,7 @@ package es.sidelab.cuokawebscraperrestclient.properties;
 
 public class Properties 
 {    
-    public static final int MAX_THREADS_SHOP = 4;
+    public static final int MAX_THREADS_SHOP = 2;
     public static final int MAX_THREADS_SECTIONS = 2;
     
     public static final String SERVER = "http://46.183.117.22:8080";

@@ -38,7 +38,7 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k,v in urls:
+for k, v in urls:
     file_error = open(path + k + "_links_error.txt", 'w')
     
     try:
@@ -54,7 +54,7 @@ for k,v in urls:
         # Hacemos scroll hasta abajo hasta que el tamano del html no cambie.
         while True:
             dr.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            time.sleep(1)
             newHeight = dr.execute_script("return document.body.scrollHeight")
             if newHeight == lastHeight:
                 break
@@ -62,6 +62,11 @@ for k,v in urls:
 
         links = []
         products = dr.find_elements_by_class_name("image")
+
+        # Si no se encuentra ningun producto lanzamos una excepcion
+        if (len(products) == 0):
+            raise Exception("Ningun elemento encontrado")
+        
         for product in products:
             links.append(product.find_element_by_xpath(".//a").get_attribute("href"))
 
@@ -73,9 +78,9 @@ for k,v in urls:
 
         file.close()
         
-    except:
-        #Escribimos el link de la seccion que falla
-        file_error.write(v)
+    except Exception as e:
+        # Escribimos la sección que ha fallado
+        file_error.write(k + " (" + str(e) + ")")
         
     finally:
         file_error.close()

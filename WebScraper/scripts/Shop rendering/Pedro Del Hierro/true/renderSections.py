@@ -33,13 +33,13 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k,v in urls:
+for k, v in urls:
     file_error = open(path + k + "_links_error.txt", 'w')
     
     try:
         dr.get(v)
 
-        # Esperamos a que aparezcan los productos un maximo de 60 segundos.
+        # Esperamos a que aparezcan los productos un maximo de 10 segundos.
         element = WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "c05__thumb-link"))
         )
@@ -58,6 +58,11 @@ for k,v in urls:
 
         links = []
         products = dr.find_elements_by_class_name("c05__thumb-link")
+
+        # Si no se encuentra ningun producto lanzamos una excepcion
+        if (len(products) == 0):
+            raise Exception("Ningun elemento encontrado")
+        
         for product in products:
             links.append(product.get_attribute("href"))
 
@@ -69,9 +74,9 @@ for k,v in urls:
 
         file.close()
         
-    except:
-        #Escribimos el link de la seccion que falla
-        file_error.write(v)
+    except Exception as e:
+        # Escribimos la sección que ha fallado
+        file_error.write(k + " (" + str(e) + ")")
         
     finally:
         file_error.close()

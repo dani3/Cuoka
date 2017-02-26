@@ -17,15 +17,13 @@ path = sys.argv[2]
 
 # Lista de secciones con sus URL's
 urls = [("Blusas", "http://pedrodelhierro.com/es/es/mujer/blusas"),
-        ("Abrigos","http://pedrodelhierro.com/es/es/mujer/abrigos"),
-        ("Piel", "http://pedrodelhierro.com/es/es/mujer/piel"),
+        ("Chaquetas","http://pedrodelhierro.com/es/es/mujer/chaquetas"),
         ("Vestidos", "http://pedrodelhierro.com/es/es/mujer/vestidos"),
         ("Pantalones", "http://pedrodelhierro.com/es/es/mujer/pantalones"),
         ("Faldas", "http://pedrodelhierro.com/es/es/mujer/faldas"),
         ("Punto", "http://pedrodelhierro.com/es/es/mujer/punto"),
         ("Camisetas", "http://pedrodelhierro.com/es/es/mujer/camisetas"),
         ("Jeans", "http://pedrodelhierro.com/es/es/mujer/jeans"),
-        ("Sport", "http://pedrodelhierro.com/es/es/mujer/activewear"),
         ("Zapatos", "http://pedrodelhierro.com/es/es/mujer/zapatos")]
     
 chrome_options = Options()
@@ -35,13 +33,13 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k,v in urls:
+for k, v in urls:
     file_error = open(path + k + "_links_error.txt", 'w')
     
     try:
         dr.get(v)
 
-        # Esperamos a que aparezcan los productos un maximo de 60 segundos.
+        # Esperamos a que aparezcan los productos un maximo de 10 segundos.
         element = WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "c05__thumb-link"))
         )
@@ -52,7 +50,7 @@ for k,v in urls:
         # Hacemos scroll hasta abajo hasta que el tamano del html no cambie.
         while True:
             dr.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            time.sleep(1)
             newHeight = dr.execute_script("return document.body.scrollHeight")
             if newHeight == lastHeight:
                 break
@@ -60,6 +58,11 @@ for k,v in urls:
 
         links = []
         products = dr.find_elements_by_class_name("c05__thumb-link")
+
+        # Si no se encuentra ningun producto lanzamos una excepcion
+        if (len(products) == 0):
+            raise Exception("Ningun elemento encontrado")
+        
         for product in products:
             links.append(product.get_attribute("href"))
 
@@ -71,9 +74,9 @@ for k,v in urls:
 
         file.close()
         
-    except:
-        #Escribimos el link de la seccion que falla
-        file_error.write(v)
+    except Exception as e:
+        # Escribimos la sección que ha fallado
+        file_error.write(k + " (" + str(e) + ")")
         
     finally:
         file_error.close()
