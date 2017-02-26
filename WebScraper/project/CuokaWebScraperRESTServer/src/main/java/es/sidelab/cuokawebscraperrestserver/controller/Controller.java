@@ -1309,7 +1309,7 @@ public class Controller
             int pos = 0;
             for (ColorVariant cv : product.getColors())
             {
-                String[] decomposedColor = cv.getName().split(" ");
+                String[] decomposedColor = cv.getName().split("[\\s-]");
                 
                 for (String single : decomposedColor)
                 {
