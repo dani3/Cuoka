@@ -148,6 +148,9 @@ public class BershkaScraper implements Scraper
             if ((name != null) && name.contains("null"))
             {
                 scrapingAnalyzer.get().saveError(Properties.NAME_NOT_FOUND);
+                
+                // Leemos la linea de guiones
+                br.readLine();
             }
             
             return null;
@@ -160,6 +163,9 @@ public class BershkaScraper implements Scraper
         if (price.contains("null"))
         {
             scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
+            
+            // Leemos la linea de guiones
+            br.readLine();
             
             return null;
         }

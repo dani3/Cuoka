@@ -119,6 +119,11 @@ public class testScraper
         // Podemos haber leido ya todos los productos, por lo que name puede ser null.
         if (name == null || name.contains("null"))
         {
+            if ((name != null) && name.contains("null"))
+            {
+                br.readLine();
+            }
+            
             return null;
         }
         
@@ -128,6 +133,11 @@ public class testScraper
         
         if (price.contains("null"))
         {
+            if (price.contains("null"))
+            {
+                br.readLine();
+            }
+            
             return null;
         }
         

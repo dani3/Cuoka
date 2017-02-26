@@ -12,7 +12,7 @@ path_to_chromedriver = sys.argv[1]
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\"
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_false\\false\\"
 
 # Lista de secciones con sus URL's

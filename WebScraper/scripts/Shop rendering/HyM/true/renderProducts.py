@@ -7,18 +7,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
-#path_to_chromedriver = sys.argv[1]
+path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
-path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
+#path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
 
 # Nombre de la seccion
-#section = sys.argv[2]
-section = "Camisetas"
+section = sys.argv[2]
+#section = "Camisetas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
-#path = sys.argv[3]
+path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -64,6 +64,9 @@ for link in listOfLinks:
     try:
         # ****** N O M B R E ****** #
         name = dr.find_element_by_class_name('product-item-headline').text
+        if (len(name) == 0):
+            raise Exception("Nombre vacio")
+        
         result.write("Nombre: " + name + "\n")
         
     except:
@@ -73,7 +76,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C R I P C I O N ****** #
-        description = "".join(dr.find_element_by_class_name("c02__product-description").text.splitlines())[:255]
+        description = "".join(dr.find_element_by_class_name("product-detail-description-text").text.splitlines())[:255]
         result.write("Descripcion: " + description + "\n")
         
     except:
@@ -82,6 +85,9 @@ for link in listOfLinks:
     try:
         # ****** P R E C I O ****** #
         price = dr.find_element_by_class_name("price-value").text.replace(",", ".").replace("€", "")
+        if (len(price) == 0):
+            raise Exception("Precio vacio")
+
         result.write("Precio: " + price + "\n")
         
     except:
@@ -102,7 +108,9 @@ for link in listOfLinks:
     # Colores
     try:
         # ****** C O L O R E S ****** #
-        colors = dr.find_element_by_class_name("inputlist").find_elements_by_xpath(".//li")
+        colors = dr.find_element_by_css_selector("div.product-colors > ul.inputlist").find_elements_by_xpath(".//li")
+        if (len(colors) == 0):
+            raise Exception("Colores no encontrados")
         
     except:
         result.write("*********************************************************\n")
@@ -116,7 +124,7 @@ for link in listOfLinks:
         try:
             if (len(colors) > 1):   
                 # Hacemos click en cada icono
-                color.find_element_by_class_name("detailbox-pattern").click()
+                color.find_element_by_css_selector("img.pattern").click()
 
                 element = WebDriverWait(dr, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
@@ -132,7 +140,10 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   N O M B R E ****** #
-            colorName = dr.find_element_by_class_name("product-input-label").find_element_by_xpath(".//span").text.upper().replace("/","-")
+            colorName = dr.find_element_by_css_selector("div.product-colors > div.product-input-label > span").text.upper().replace("/","-")
+            if (len(colorName) == 0):
+                raise Exception("Nombre del color vacio")
+
             result.write("*********************************************************\n")
             result.write("  Color: " + colorName + "\n")
             
@@ -146,7 +157,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   I C O N O ****** #
-            colorIcon = color.find_element_by_xpath(".//img").get_attribute("src")
+            colorIcon = color.find_element_by_css_selector("img").get_attribute("src")
             result.write("  Icono: " + colorIcon + "\n")
             
         except:
@@ -154,8 +165,11 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
-            dr.find_element_by_css_selector("section > div.product-detail-details > div.parbase.details > div > ul > li:nth-child(2) > a").click()
+            dr.find_element_by_css_selector("section > div.product-detail-details > div.details > div > ul > li:nth-child(2) > a").click()
             reference = dr.find_element_by_class_name("product-detail-article-code").text
+            if (len(reference) == 0):
+                raise Exception("Referencia vacia")
+    
             result.write("  Referencia: " + reference + "\n")
             
         except:
@@ -166,6 +180,8 @@ for link in listOfLinks:
         # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande
         try:
             thumbnails = dr.find_elements_by_class_name("product-detail-thumbnail")
+            if (len(thumbnails) == 0):
+                raise Exception("Imagenes no encontradas")
 
         except:
             file_error.write("Imagenes no encontradas en: " + link + "\n")
@@ -181,8 +197,8 @@ for link in listOfLinks:
                     EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
                 )
                 
-                image = dr.find_element_by_class_name("product-detail-main-image-container")
-                result.write("     Imagen: " + image.find_element_by_xpath(".//img").get_attribute("src") + "\n")
+                image = dr.find_element_by_css_selector("div.product-detail-main-image-container > img")
+                result.write("     Imagen: " + image.get_attribute("src") + "\n")
 
             except:
                 result.write("     Imagen: null" + "\n")

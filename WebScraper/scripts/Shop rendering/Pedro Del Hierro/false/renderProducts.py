@@ -64,6 +64,9 @@ for link in listOfLinks:
     try:
         # ****** N O M B R E ****** #
         name = dr.find_element_by_css_selector('div.c02__product.large-only > h1').text
+        if (len(name) == 0):
+            raise Exception("Nombre vacio")
+
         result.write("Nombre: " + name + "\n")
         
     except:
@@ -82,6 +85,9 @@ for link in listOfLinks:
     try:
         # ****** P R E C I O ****** #
         price = dr.find_element_by_css_selector("div.c02__pricing.large-only > span").text.replace(",", ".").replace("€", "")
+        if (len(price) == 0):
+            raise Exception("Precio vacio")
+
         result.write("Precio: " + price + "\n")
         
     except:
@@ -92,6 +98,9 @@ for link in listOfLinks:
     try:
         # ****** D E S C U E N T O ****** #
         discount = dr.find_element_by_css_selector("div.c02__pricing.large-only > span.c02__pricing-item.c02__standard-price").text.replace(",", ".").replace("€", "")
+        if (len(colors) == 0):
+            raise Exception("Colores no encontrados")
+
         result.write("Descuento: " + discount + "\n")
         
     except:
@@ -103,6 +112,8 @@ for link in listOfLinks:
     try:
         # ****** C O L O R E S ****** #
         colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li.selected")
+        if (len(colors) == 0):
+            raise Exception("Colores no encontrados")
         
     except:
         result.write("*********************************************************\n")
@@ -133,6 +144,9 @@ for link in listOfLinks:
         try:
             # ****** C O L O R   N O M B R E ****** #
             colorName = color.find_element_by_xpath(".//a").get_attribute("title").upper().replace("/", "-")
+            if (len(colorName) == 0):
+                raise Exception("Nombre del color vacio")
+
             result.write("*********************************************************\n")
             result.write("  Color: " + colorName + "\n")
             
@@ -155,6 +169,9 @@ for link in listOfLinks:
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
             reference = dr.find_element_by_css_selector("div.c02__article-description.large-only > div.c02__article-number").text.replace("REF. ", "").rstrip()
+            if (len(reference) == 0):
+                raise Exception("Referencia vacia")
+
             result.write("  Referencia: " + reference + "\n")
             
         except:
@@ -165,6 +182,8 @@ for link in listOfLinks:
         # Sacamos las imagenes
         try:
             images = dr.find_elements_by_css_selector("div.c01__media.background-image > img.c01__zoomImg")
+            if (len(images) == 0):
+                raise Exception("Imagenes no encontradas")
 
         except:
             file_error.write("Imagenes no encontradas en: " + link + "\n")

@@ -40,14 +40,14 @@ public class HyMScraper implements Scraper
     
     // Atributo local para comprobar que se ha terminado.
     private final ThreadLocal<Boolean> threadFinished = 
-            new ThreadLocal<Boolean>() 
+        new ThreadLocal<Boolean>() 
+        {
+            @Override 
+            protected Boolean initialValue() 
             {
-                @Override 
-                protected Boolean initialValue() 
-                {
-                    return false;
-                }
-            };
+                return false;
+            }
+        };
     
     // Analizador que almacena los resultados del proceso de scraping.
     private ThreadLocal<ScrapingAnalyzer> scrapingAnalyzer;
@@ -149,6 +149,9 @@ public class HyMScraper implements Scraper
             if ((name != null) && name.contains("null"))
             {
                 scrapingAnalyzer.get().saveError(Properties.NAME_NOT_FOUND);
+                
+                // Leemos la linea de guiones
+                br.readLine();
             }
             
             return null;
@@ -161,6 +164,9 @@ public class HyMScraper implements Scraper
         if (price.contains("null"))
         {
             scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
+            
+            // Leemos la linea de guiones
+            br.readLine();
             
             return null;
         }
