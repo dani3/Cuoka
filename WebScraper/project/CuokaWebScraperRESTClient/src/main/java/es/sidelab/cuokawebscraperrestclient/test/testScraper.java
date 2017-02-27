@@ -31,7 +31,7 @@ public class testScraper
         //Section section = new Section("Abrigos", "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\true\\", false);
         
         /***************** Bershka *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Pedro Del Hierro_true\\false\\", false);
+        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
         Section section = new Section("Abrigos", "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\true\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
