@@ -56,7 +56,7 @@ public class SectionManager
         sectionsMap.put("Faldas", new String[]{ "Falda", "Faldas", "Shorts", "Short", "Bermuda", "Bermudas" });
         
         sectionsMap.put("Ponchos y Monos", new String[]{ "Mono", "Monos", "Kimono", "Kimonos", "Quimono", "Quimonos"
-                                        , "Peto", "Petos", "Poncho", "Poncho" });
+                                        , "Peto", "Petos", "Poncho", "Poncho", "Body" });
         
         sectionsMap.put("Sudaderas", new String[]{ "Sudadera", "Sudaderas", "Jersey", "Jerseys", "Jersei", "Jerseis", "Jerséy", "Jerséys", "Jerséi", "Jerséis"});
         

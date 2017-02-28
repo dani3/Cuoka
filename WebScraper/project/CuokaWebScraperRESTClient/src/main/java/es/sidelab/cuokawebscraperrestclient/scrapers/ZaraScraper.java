@@ -25,9 +25,9 @@ import org.springframework.util.StringUtils;
  * @author Daniel Mancebo Aldea
  */
 
-public class BershkaScraper implements Scraper
+public class ZaraScraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger(BershkaScraper.class);
+    private static final Logger LOG = Logger.getLogger(ZaraScraper.class);
     
     // Lista preparada para la concurrencia donde escribiran todos los scrapers.
     @SuppressWarnings("FieldMayBeFinal")

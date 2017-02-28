@@ -178,8 +178,8 @@ public class HyMScraper implements Scraper
         // Eliminamos las cabeceras.
         name        = name.replace("Nombre: ", "");
         description = description.replace("Descripcion: ", "");
-        discount    = discount.replace("Descuento: ", "");   
-        price       = price.replace("Precio: ", "");
+        discount    = discount.replace("Descuento: ", "").trim();   
+        price       = price.replace("Precio: ", "").trim();
         link        = link.replace("Link: ", "");
         
         if (description.isEmpty())

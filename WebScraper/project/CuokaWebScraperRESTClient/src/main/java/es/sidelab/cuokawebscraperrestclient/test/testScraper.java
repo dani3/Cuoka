@@ -32,7 +32,11 @@ public class testScraper
         
         /***************** Bershka *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
-        Section section = new Section("Abrigos", "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\true\\", false);
+        //Section section = new Section("Abrigos", "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\true\\", false);
+        
+        /***************** Zara *****************/
+        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
+        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         Runtime.getRuntime().exec(new String[] {"python"
@@ -85,7 +89,7 @@ public class testScraper
             for (ColorVariant cv : p.getColors())
             {
                 System.out.println(" - Color: " + cv.getName());
-                System.out.println(cv.getColorURL());
+                System.out.println(" - Icono: " + cv.getColorURL());
                 System.out.println(" - Referencia: " + cv.getReference());
                 for (Image image : cv.getImages())
                 {
@@ -148,8 +152,8 @@ public class testScraper
         // Eliminamos las cabeceras.
         name        = name.replace("Nombre: ", "");
         description = description.replace("Descripcion: ", "");
-        discount    = discount.replace("Descuento: ", "");   
-        price       = price.replace("Precio: ", "");
+        discount    = discount.replace("Descuento: ", "").trim();   
+        price       = price.replace("Precio: ", "").trim();
         link        = link.replace("Link: ", "");
         
         // Eliminamos el primer '.' en caso de que el precio supere los 1000 euros.
