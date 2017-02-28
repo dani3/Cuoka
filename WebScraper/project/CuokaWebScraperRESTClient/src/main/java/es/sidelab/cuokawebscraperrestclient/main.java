@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestclient;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import es.sidelab.cuokawebscraperrestclient.utils.MultithreadManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import es.sidelab.cuokawebscraperrestclient.utils.ScraperManager;
@@ -41,19 +42,25 @@ public class main
             } catch(IOException | InterruptedException e) {}
         };
         
-        ZoneId currentZone = ZoneId.of("Europe/Madrid");
-        ZonedDateTime zonedNow = ZonedDateTime.of(LocalDateTime.now(), currentZone);
-        ZonedDateTime zonedNext = zonedNow.withHour(00).withMinute(10).withSecond(0);
-        
-        if(zonedNow.compareTo(zonedNext) > 0)
+        if (Properties.DEBUG)
         {
-            zonedNext = zonedNext.plusDays(1);
-        }
-            
-        Duration duration = Duration.between(zonedNow, zonedNext);
-        long initalDelay = duration.getSeconds();
+            ZoneId currentZone = ZoneId.of("Europe/Madrid");
+            ZonedDateTime zonedNow = ZonedDateTime.of(LocalDateTime.now(), currentZone);
+            ZonedDateTime zonedNext = zonedNow.withHour(00).withMinute(10).withSecond(0);
 
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);            
-        scheduler.scheduleAtFixedRate(runnable, initalDelay, 24*60*60, TimeUnit.SECONDS);
+            if(zonedNow.compareTo(zonedNext) > 0)
+            {
+                zonedNext = zonedNext.plusDays(1);
+            }
+
+            Duration duration = Duration.between(zonedNow, zonedNext);
+            long initalDelay = duration.getSeconds();
+
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);            
+            scheduler.scheduleAtFixedRate(runnable, initalDelay, 24*60*60, TimeUnit.SECONDS);
+            
+        } else {
+            runnable.run();            
+        }
     }    
 }
