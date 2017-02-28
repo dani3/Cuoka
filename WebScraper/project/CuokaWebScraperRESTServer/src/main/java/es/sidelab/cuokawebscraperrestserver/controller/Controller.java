@@ -300,7 +300,7 @@ public class Controller
             String newPassword = RandomStringUtils.random(8, true, true);
             // Se guarda en el usuario.
             user.setPassword(newPassword);
-            
+            // Se guarda el usuario en BD.
             usersRepository.save(user);
             
             _sendPasswordEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, newPassword);
