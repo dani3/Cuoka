@@ -19,8 +19,6 @@ public class FileManager
 {
     private static final Log LOG = LogFactory.getLog(FileManager.class);
     
-    private static StringBuilder welcomeMessage = new StringBuilder();
-    
     /**
      * Metodo que crea el directorio de una tienda si no existe.
      * @param shop: nombre de la tienda.
@@ -59,13 +57,15 @@ public class FileManager
         return (new File(file).delete());
     }
     
+    /**
+     * Metodo que lee un fichero HTML y lo devuelve como string.
+     * @param filename: nombre del fichero HTML.
+     * @return string con el contenido del fichero HTML.
+     */
     @Nullable
     public static String getHTMLFromFile(String filename)
-    {
-        if (welcomeMessage.length() > 0)
-        {
-            return welcomeMessage.toString();
-        }
+    {   
+        StringBuilder email = new StringBuilder();
         
         File file = new File(filename);
         
@@ -76,10 +76,10 @@ public class FileManager
             String line;
             while ((line = br.readLine()) != null)
             {
-                welcomeMessage.append(line);
+                email.append(line);
             }
             
-            return welcomeMessage.toString();
+            return email.toString();
             
         } catch (FileNotFoundException ex) {
             LOG.error("Error con el fichero: " + filename + "(" + ex.getMessage() + ")");

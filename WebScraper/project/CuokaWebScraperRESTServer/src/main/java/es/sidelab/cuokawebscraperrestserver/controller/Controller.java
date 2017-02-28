@@ -34,6 +34,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,7 +296,14 @@ public class Controller
         } else {
             LOG.info("[UPDATE] Usuario con ID (" + id + ") encontrado, se envia el correo con su contraseña");
             
-            _sendPasswordEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getPassword());
+            // Se genera una contraseña aleatoria.
+            String newPassword = RandomStringUtils.random(8, true, true);
+            // Se guarda en el usuario.
+            user.setPassword(newPassword);
+            
+            usersRepository.save(user);
+            
+            _sendPasswordEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, newPassword);
         }    
         
         return Properties.ACCEPTED;
@@ -1538,10 +1546,16 @@ public class Controller
         {
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);
             
+            String message = FileManager.getHTMLFromFile(Properties.MAIL_PATH + Properties.REMEMBER_PWD_EMAIL_NAME);
+            if (message != null)
+            {
+                message = message.replace("?1", password);
+            }
+                
             helper.setTo(to);
             helper.setFrom(from);
             helper.setSubject(Properties.RECOVER_PASSWORD_EMAIL_SUBJECT);
-            helper.setText("Tu contraseña es: " + password + "\n\n - Mensaje automático");
+            helper.setText(message, true);
         
             javaMailSender.send(mail);
             

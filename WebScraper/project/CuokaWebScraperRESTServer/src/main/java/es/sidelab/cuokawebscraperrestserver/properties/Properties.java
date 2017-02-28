@@ -6,12 +6,7 @@ package es.sidelab.cuokawebscraperrestserver.properties;
  */
 
 public class Properties 
-{    
-    /* Parametros de cifrado */
-    public static final int IV_LENGTH = 16;
-    public static final String KEY = "10485mvJdb3/8wmc";    
-    public static final String HASH_ALGORITHM = "MD5";
-    
+{        
     /* Posibles respuestas del servidor */
     public static final String ALREADY_EXISTS    = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN   = "USER_INCORRECT_LOGIN";
@@ -33,7 +28,8 @@ public class Properties
     public static final String PYTHON_PATH            = "/usr/bin/python";
     
     /* Files */
-    public static final String WELCOME_EMAIL_NAME = "bienvenida.html";
+    public static final String WELCOME_EMAIL_NAME      = "bienvenida.html";
+    public static final String REMEMBER_PWD_EMAIL_NAME = "remember_password.html";
     
     /* Tamaños de las imagenes en HQ y SQ */
     public static final int IMAGE_HEIGHT_S = 400;  

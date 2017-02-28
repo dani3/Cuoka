@@ -46,7 +46,7 @@ public class main
         {
             ZoneId currentZone = ZoneId.of("Europe/Madrid");
             ZonedDateTime zonedNow = ZonedDateTime.of(LocalDateTime.now(), currentZone);
-            ZonedDateTime zonedNext = zonedNow.withHour(00).withMinute(00).withSecond(00);
+            ZonedDateTime zonedNext = zonedNow.withHour(23).withMinute(00).withSecond(00);
 
             if(zonedNow.compareTo(zonedNext) > 0)
             {
