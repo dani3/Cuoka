@@ -42,11 +42,11 @@ public class main
             } catch(IOException | InterruptedException e) {}
         };
         
-        if (Properties.DEBUG)
+        if (!Properties.DEBUG)
         {
             ZoneId currentZone = ZoneId.of("Europe/Madrid");
             ZonedDateTime zonedNow = ZonedDateTime.of(LocalDateTime.now(), currentZone);
-            ZonedDateTime zonedNext = zonedNow.withHour(00).withMinute(10).withSecond(0);
+            ZonedDateTime zonedNext = zonedNow.withHour(00).withMinute(00).withSecond(00);
 
             if(zonedNow.compareTo(zonedNext) > 0)
             {

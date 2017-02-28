@@ -17,7 +17,6 @@ public class Properties
     
     public static final String SHOPS_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
     public static final String CHROME_DRIVER = "C:\\Users\\Dani\\Documents\\chromedriver";
-    public static final String SCRAPING_RESULT_PATH = "C:\\Users\\Dani\\Dropbox\\Cuoka\\Scraping\\Results\\";
     
     public static final String NAME_NOT_FOUND = "Productos sin nombre";
     public static final String PRICE_NOT_FOUND = "Productos sin precio";

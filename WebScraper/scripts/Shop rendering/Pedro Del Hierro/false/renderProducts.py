@@ -2,6 +2,7 @@ import sys, time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
@@ -13,12 +14,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Zapatos"
+#section = "Blusas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_false\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -111,7 +112,7 @@ for link in listOfLinks:
     # Colores
     try:
         # ****** C O L O R E S ****** #
-        colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li.selected")
+        colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li")
         if (len(colors) == 0):
             raise Exception("Colores no encontrados")
         
@@ -123,27 +124,35 @@ for link in listOfLinks:
         file_error.write("Colores no encontrados en: " + link + "\n")
         continue
 
-    for color in colors:
-        try:
-            if (len(colors) > 1):                
-                # Hacemos click en cada icono
-                color.find_element_by_xpath(".//a").click()
+    for i in range(len(colors)):
+        if (len(colors) > 1):
+            ok = False
+            while not ok:
+                try:
+                    # Hacemos click en cada icono
+                    colors[i].find_element_by_css_selector("a").click()
+                    
+                    time.sleep(1)
 
-                element = WebDriverWait(dr, 60).until(
-                    EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
-                )
-            
-        except:
-            result.write("*********************************************************\n")
-            result.write("  Color: null\n")
-            result.write("  Icono: null\n")
-            result.write("  Referencia: null\n")
-            file_error.write("Color no encontrado en (click): " + link + "\n")
-            continue
+                    WebDriverWait(dr, 60).until(
+                        EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
+                    )
+
+                    colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li")
+
+                    ok = True
+                    
+                except StaleElementReferenceException as e:
+                    colors = dr.find_elements_by_css_selector("div.c02__colors > ul > li")
+                    continue
+
+        WebDriverWait(dr, 60).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
+        )
 
         try:
             # ****** C O L O R   N O M B R E ****** #
-            colorName = color.find_element_by_xpath(".//a").get_attribute("title").upper().replace("/", "-")
+            colorName = colors[i].find_element_by_css_selector("a").get_attribute("title").upper().replace("/", "-")
             if (len(colorName) == 0):
                 raise Exception("Nombre del color vacio")
 
@@ -160,7 +169,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   I C O N O ****** #
-            colorIcon = color.find_element_by_xpath(".//a").get_attribute("href")
+            colorIcon = colors[i].find_element_by_xpath(".//a").get_attribute("href")
             result.write("  Icono: " + colorIcon + "\n")
             
         except:
