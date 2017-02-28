@@ -198,9 +198,25 @@ public class PdHScraper implements Scraper
             discount = discount.replace(".", "");
         }
         
-        double _price = Double.valueOf(price);
-        double _discount = (discount.isEmpty()) ? 0.0f : Double.valueOf(discount);
+        double _price;
+        double _discount;
         
+        try
+        {
+            _price = Double.valueOf(price);
+            
+        } catch (Exception e) {
+            return null;
+        }
+        
+        try
+        {
+            _discount = (discount.isEmpty()) ? 0.0f : Double.valueOf(discount);
+            
+        } catch (Exception e) {
+            _discount = 0.0f;
+        }
+            
         product.setName(name);
         product.setDescription(description);
         
