@@ -23,19 +23,11 @@ public class ShopManager
     @Autowired
     private ShopsRepository shopsRepository;
     
-    private List<Shop> shopMaleList;
-    private List<Shop> shopFemaleList;
-    private List<Shop> shopList;
-    
     private Map<String, Map<String, Integer>> recommendationsMatrix;
     
     @PostConstruct
     private void init()
     {
-        shopMaleList   = shopsRepository.findByMan();
-        shopFemaleList = shopsRepository.findByWoman();
-        shopList       = shopsRepository.findAll();
-        
         recommendationsMatrix = new HashMap<>();
         
         // TODO inicializar mapa de recomendaciones.
@@ -64,6 +56,9 @@ public class ShopManager
      */
     public Shop getShop(String keyword, boolean man)
     {        
+        List<Shop> shopMaleList   = shopsRepository.findByMan();
+        List<Shop> shopFemaleList = shopsRepository.findByWoman();
+        
         // Buscamos primero tiendas con poca tolerancia.
         for (Shop shop : ((man) ? shopMaleList : shopFemaleList))
         {
@@ -98,6 +93,9 @@ public class ShopManager
     public List<Shop> getShopsStartingWith(String keyword, boolean man)
     {
         List<Shop> shops = new ArrayList<>();
+        
+        List<Shop> shopMaleList   = shopsRepository.findByMan();
+        List<Shop> shopFemaleList = shopsRepository.findByWoman();
         
         // Primero buscamos tiendas que empiecen por la palabra recibida.
         for (Shop shop : ((man) ? shopMaleList : shopFemaleList))
@@ -141,6 +139,9 @@ public class ShopManager
      */
     public Shop getShopStartingWith(String keyword, boolean man)
     {        
+        List<Shop> shopMaleList   = shopsRepository.findByMan();
+        List<Shop> shopFemaleList = shopsRepository.findByWoman();
+        
         // Buscamos tiendas que empiecen por la palabra recibida.
         for (Shop shop : ((man) ? shopMaleList : shopFemaleList))
         {
