@@ -14,9 +14,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 import es.sidelab.cuokawebscraperrestclient.scrapers.Scraper;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -55,7 +54,7 @@ public class MultithreadManager
                 // Creamos un executor que creara tantos threads como secciones tenga la tienda
                 ExecutorService executorSections = Executors.newFixedThreadPool(Properties.MAX_THREADS_SECTIONS);
                 // Creamos la lista donde se van a volcar todos los tasks.
-                Set<Callable<Map<String, Object>>> listOfTasks = new HashSet<>();    
+                List<Callable<Map<String, Object>>> listOfTasks = new ArrayList<>();    
                 
                 for (int j = 0; j < shop.getSections().size(); j++)
                 {
