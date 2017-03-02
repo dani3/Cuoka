@@ -76,7 +76,7 @@
                         android:text="@string/notification_offset"
                         android:textColor="@color/colorMediumText"
                         android:textSize="14dp"
-                        android:maxLines="1"
+                        android:maxLines="2"
                         app:customFont="Existence-StencilLight.otf"/>
 
                 </LinearLayout>
