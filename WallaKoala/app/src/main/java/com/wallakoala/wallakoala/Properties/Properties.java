@@ -10,7 +10,7 @@ public class Properties
     public static final String TAG     = "CUOKA";
     public static final String PACKAGE = "com.wallakoala.wallakoala";
 
-    public static enum STATE
+    public enum STATE
     {
         ERROR
                 { @Override

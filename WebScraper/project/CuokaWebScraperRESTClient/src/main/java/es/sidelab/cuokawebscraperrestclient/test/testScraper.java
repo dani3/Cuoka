@@ -32,14 +32,14 @@ public class testScraper
         
         /***************** Bershka *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
-        //Section section = new Section("Abrigos", "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\true\\", false);
+        Section section = new Section("Scraping_validation", "C:\\Users\\Dani\\Documents\\shops\\Bershka_false\\false\\", false);
         
         /***************** Zara *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
-        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\", false);
+        //Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Runtime.getRuntime().exec(new String[] {"python"
+        /*Runtime.getRuntime().exec(new String[] {"python"
             , section.getPath() + "renderProducts.py"
             , Properties.CHROME_DRIVER
             , section.getName()
@@ -52,7 +52,7 @@ public class testScraper
             file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();
+        file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
@@ -120,12 +120,26 @@ public class testScraper
         
         // Leemos el nombre.
         name = br.readLine();        
-        // Podemos haber leido ya todos los productos, por lo que name puede ser null.
-        if (name == null || name.contains("null"))
+        // Podemos haber leido ya todos los productos, por lo que name puede ser null
+        // o podemos leer la linea de guiones si la conexion ha fallado.
+        if (name == null || name.contains("null") || name.contains("---------"))
         {
             if ((name != null) && name.contains("null"))
-            {
+            {                
+                // Leemos la linea de guiones
                 br.readLine();
+            }
+            
+            if ((name != null) && name.contains("---------"))
+            {
+                // Leemos la linea de guiones
+                br.readLine();
+            }
+            
+            // Si leemos el EOF marcamos finished a true.
+            if (name == null)
+            {
+                finished = true;
             }
             
             return null;

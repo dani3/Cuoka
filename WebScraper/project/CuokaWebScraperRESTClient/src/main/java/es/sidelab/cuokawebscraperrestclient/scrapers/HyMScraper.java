@@ -143,8 +143,9 @@ public class HyMScraper implements Scraper
         
         // Leemos el nombre.
         name = br.readLine();        
-        // Podemos haber leido ya todos los productos, por lo que name puede ser null.
-        if (name == null || name.contains("null"))
+        // Podemos haber leido ya todos los productos, por lo que name puede ser null
+        // o podemos leer la linea de guiones si la conexion ha fallado.
+        if (name == null || name.contains("null") || name.contains("---------"))
         {
             if ((name != null) && name.contains("null"))
             {
@@ -152,6 +153,18 @@ public class HyMScraper implements Scraper
                 
                 // Leemos la linea de guiones
                 br.readLine();
+            }
+            
+            if ((name != null) && name.contains("---------"))
+            {
+                // Leemos la linea de guiones
+                br.readLine();
+            }
+            
+            // Si leemos el EOF marcamos finished a true.
+            if (name == null)
+            {
+                _setFinished(true);
             }
             
             return null;
