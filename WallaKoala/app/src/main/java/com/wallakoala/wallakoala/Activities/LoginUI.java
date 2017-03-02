@@ -3,6 +3,7 @@ package com.wallakoala.wallakoala.Activities;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -404,11 +405,25 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initSignUpEditTexts(View parent)
     {
-        mEmailInputLayout      = (TextInputLayout)parent.findViewById(R.id.email_input_layout);
-        mPasswordInputLayout   = (TextInputLayout)parent.findViewById(R.id.password_input_layout);
-        mAgeInputLayout        = (TextInputLayout)parent.findViewById(R.id.age_input_layout);
-        mPostalCodeInputLayout = (TextInputLayout)parent.findViewById(R.id.postal_code_input_layout);
-        mNameInputLayout       = (TextInputLayout)parent.findViewById(R.id.name_input_layout);
+        TextView termsAndConditions = (TextView) parent.findViewById(R.id.terms_and_conditions);
+        termsAndConditions.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                intent.setData(Uri.parse(Properties.TERMS_AND_CONDITIONS_URL));
+
+                startActivity(intent);
+            }
+        });
+
+        mEmailInputLayout      = (TextInputLayout) parent.findViewById(R.id.email_input_layout);
+        mPasswordInputLayout   = (TextInputLayout) parent.findViewById(R.id.password_input_layout);
+        mAgeInputLayout        = (TextInputLayout) parent.findViewById(R.id.age_input_layout);
+        mPostalCodeInputLayout = (TextInputLayout) parent.findViewById(R.id.postal_code_input_layout);
+        mNameInputLayout       = (TextInputLayout) parent.findViewById(R.id.name_input_layout);
 
         mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
@@ -416,11 +431,11 @@ public class LoginUI extends AppCompatActivity
         mPostalCodeInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mNameInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
-        mPasswordEdittext   = (EditText)parent.findViewById(R.id.password_edittext);
-        mEmailEdittext      = (EditText)parent.findViewById(R.id.email_edittext);
-        mAgeEdittext        = (EditText)parent.findViewById(R.id.age_edittext);
-        mPostalCodeEdittext = (EditText)parent.findViewById(R.id.postal_code_edittext);
-        mNameEdittext       = (EditText)parent.findViewById(R.id.name_edittext);
+        mPasswordEdittext   = (EditText) parent.findViewById(R.id.password_edittext);
+        mEmailEdittext      = (EditText) parent.findViewById(R.id.email_edittext);
+        mAgeEdittext        = (EditText) parent.findViewById(R.id.age_edittext);
+        mPostalCodeEdittext = (EditText) parent.findViewById(R.id.postal_code_edittext);
+        mNameEdittext       = (EditText) parent.findViewById(R.id.name_edittext);
 
         mPasswordEdittext.addTextChangedListener(new MyTextWatcher(mPasswordEdittext));
         mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));

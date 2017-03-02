@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -298,6 +299,10 @@ public class MainScreenUI extends AppCompatActivity
                     case (R.id.nav_notifications):
                         _openActivityNotifications();
                         break;
+
+                    case (R.id.nav_terms):
+                        _redirectToTerms();
+                        break;
                 }
 
                 return true;
@@ -423,6 +428,18 @@ public class MainScreenUI extends AppCompatActivity
 
         // Animacion de transicion para pasar de una activity a otra.
         overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+    }
+
+    /**
+     * Metodo que redirige a la pagina con los Términos y Condiciones.
+     */
+    private void _redirectToTerms()
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+
+        intent.setData(Uri.parse(Properties.TERMS_AND_CONDITIONS_URL));
+
+        startActivity(intent);
     }
 
     /**

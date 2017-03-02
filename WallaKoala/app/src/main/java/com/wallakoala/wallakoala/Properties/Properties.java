@@ -37,6 +37,8 @@ public class Properties
     public static final String SERVER_URL         = "http://46.183.117.22";
     public static final String SERVER_SPRING_PORT = "8080";
 
+    public static final String TERMS_AND_CONDITIONS_URL = "https://cuoka.es/legal/";
+
     public static final String IMAGES_PATH           = "/images/products/";
     public static final String PREDEFINED_ICONS_PATH = "/images/colors/";
     public static final String ICONS_PATH            = "/images/products/";
