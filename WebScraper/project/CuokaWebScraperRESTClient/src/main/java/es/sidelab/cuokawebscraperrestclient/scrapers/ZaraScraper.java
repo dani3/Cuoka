@@ -66,7 +66,8 @@ public class ZaraScraper implements Scraper
         
         threadFinished.set(false);
         
-        LOG.info("Se inicia el scraping de la seccion " + section.getName() + " de la tienda " + shop.getName());
+        LOG.info("Se inicia el scraping de la seccion " + section.getName() + "(" 
+            + ((section.isMan()) ? "Hombre)" : "Mujer)") + " de la tienda " + shop.getName());
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         Runtime.getRuntime().exec(new String[] {"python"
@@ -89,31 +90,44 @@ public class ZaraScraper implements Scraper
             new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
                
         br.readLine();
+        int count = 0;
         while (!_isFinished())
         {               
-            // Empezamos nuevo producto
-            Product product = _readProductGeneralInfo(br);
-            if (product != null) 
+            try
             {
-                // Si todo ha ido bien, seguimos
-                product = _readProductColors(product, br);
-                
-                // Si todo ha ido bien, añadimos a la lista
-                if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
+                // Empezamos nuevo producto
+                Product product = _readProductGeneralInfo(br);
+                if (product != null) 
                 {
-                    product.setShop(shop.getName());
-                    product.setSection(section.getName());
-                    product.setMan(section.isMan());
-                    
-                    productList.add(product);
+                    // Si todo ha ido bien, seguimos
+                    product = _readProductColors(product, br);
+
+                    // Si todo ha ido bien, añadimos a la lista
+                    if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
+                    {
+                        product.setShop(shop.getName());
+                        product.setSection(section.getName());
+                        product.setMan(section.isMan());
+
+                        productList.add(product);
+
+                        count++;
+                    }
                 }
+                
+            } catch (Exception e) {
+                LOG.error("Excepcion producida en el scraping de la seccion " + section.getName() + "(" 
+                        + ((section.isMan()) ? "Hombre)" : "Mujer)") + " de la tienda " + shop.getName());
+                
+                e.printStackTrace();
             }
         }
         
         scrapingAnalyzerList.add(scrapingAnalyzer.get());
         
-        LOG.info("El scraping de la seccion " + section.getName() + " de la tienda " + shop.getName() + " ha terminado");
-        LOG.info("Ha sacado " + productList.size() + " productos");
+        LOG.info("El scraping de la seccion " + section.getName() + "(" 
+            + ((section.isMan()) ? "Hombre)" : "Mujer)") + " de la tienda " + shop.getName() + " ha terminado");
+        LOG.info("Ha sacado " + count + " productos");
         
         Map<String, Object> map = new HashMap<>();
         
