@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shops_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include android:id="@+id/shops_toolbar"
+            layout="@layout/aux_toolbar_filter"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.cuoka.cuoka.Views.StaggeredRecyclerView
+        android:id="@+id/shops_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="108dp"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:layoutAnimation="@anim/grid_enter_animation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <!-- Loading View -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/shops_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/shops_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="24dp"
+        app:borderWidth="0dp"/>
+
+</android.support.design.widget.CoordinatorLayout>

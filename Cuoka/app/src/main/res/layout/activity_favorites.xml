@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/favorites_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include android:id="@+id/favorites_appbar"
+            layout="@layout/aux_toolbar_favorites"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.cuoka.cuoka.Views.StaggeredRecyclerView
+        android:id="@+id/favorites_grid_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/grid_enter_animation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <!-- Loading View -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/favorites_avloadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
+    <!-- Texto de no productos -->
+    <com.cuoka.cuoka.Views.ExistenceTextView
+        android:id="@+id/favorites_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:paddingTop="@dimen/action_bar_height"
+        android:text="@string/nofav_message"
+        android:textSize="18dp"
+        android:textColor="@color/colorText"
+        app:customFont="Existence-StencilLight.otf"/>
+
+</android.support.design.widget.CoordinatorLayout>

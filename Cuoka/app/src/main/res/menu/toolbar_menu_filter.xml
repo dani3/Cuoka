@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FilterUI">
+
+    <item android:id="@+id/menu_item_search"
+        android:title="Buscar"
+        android:icon="@drawable/ic_search_menu"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:id="@+id/menu_item_options"
+        android:icon="@drawable/ic_clear_all"
+        app:showAsAction="ifRoom"
+        android:title="@string/filter_default"/>
+
+</menu>

@@ -1,0 +1,171 @@
+<resources>
+    <string name="app_name">Cuoka</string>
+
+    <string name="toolbar_filter">Filtros</string>
+    <string name="toolbar_shops">Mis tiendas</string>
+    <string name="toolbar_notifications">Notificaciones</string>
+    <string name="toolbar_favorites">Mis favoritos</string>
+    <string name="toolbar_feedback">Feedback</string>
+    <string name="toolbar_suggested">Más tiendas</string>
+
+    <string name="open_drawer">Menu Abierto</string>
+    <string name="close_drawer">Menu Cerrado</string>
+    <string name="left_drawer_title">Preferencias</string>
+
+    <string name="profile_item">Mi cuenta</string>
+    <string name="shops_item">Mis tiendas</string>
+    <string name="favorites_item">Mis favoritos</string>
+    <string name="feedback_item">Danos tu opinión</string>
+    <string name="notification_item">Notificaciones</string>
+    <string name="more_shops_item">¿Más tiendas?</string>
+    <string name="about_us_item">Sobre Cuoka</string>
+    <string name="terms_item">Términos y condiciones</string>
+    <string name="logout_item">Cerrar sesión</string>
+
+    <string name="footer_shop">TIENDA</string>
+    <string name="footer_section">SECCION</string>
+
+    <string name="product_info_name"><b>NOMBRE DEL PRODUCTO</b></string>
+    <string name="product_info_price">29.99€</string>
+    <string name="product_info_discount">35.99€</string>
+    <string name="product_info_description">Camisa de manga larga entallada con cuello inglés y pinzas que moldean la espalda. Planchado fácil. Corte ajustado.</string>
+    <string name="product_info_reference"><b>Referencia:</b> 123456789</string>
+
+    <string name="error_message">¡Ops! Algo ha ido mal</string>
+    <string name="nodata_message">No hay ningún resultado…</string>
+    <string name="nofav_message">Todavía no tienes ningún favorito</string>
+    <string name="nonotification_message">No tienes ninguna notificación nueva</string>
+    <string name="exit_message">Pulsa otra vez para SALIR</string>
+    <string name="product_deleted_message">Producto eliminado</string>
+
+    <string name="filter_newness">newness</string>
+    <string name="filter_sizes">sizes</string>
+    <string name="filter_colors">colors</string>
+    <string name="filter_sections">sections</string>
+
+    <string name="filter_all_shops">Todas las tiendas</string>
+    <string name="filter_item_shops">Tiendas</string>
+    <string name="filter_item_sections">Secciones</string>
+    <string name="filter_item_price">Precio</string>
+    <string name="filter_item_colors">Colores</string>
+    <string name="filter_item_newness">Novedades</string>
+
+    <string name="filter_default">Reestablecer filtros</string>
+
+    <string name="filter_newness_1">Sólo novedades</string>
+    <string name="filter_newness_2">Todos los productos</string>
+
+    <string name="filter_color_yellow">Amarillos</string>
+    <string name="filter_color_blue">Azules</string>
+    <string name="filter_color_beige">Beiges</string>
+    <string name="filter_color_white">Blancos</string>
+    <string name="filter_color_grey">Grises</string>
+    <string name="filter_color_khaki">Khakis</string>
+    <string name="filter_color_brown">Marrones</string>
+    <string name="filter_color_purple">Morados</string>
+    <string name="filter_color_black">Negros</string>
+    <string name="filter_color_red">Rojos</string>
+    <string name="filter_color_pink">Rosas</string>
+    <string name="filter_color_green">Verdes</string>
+
+    <string name="filter_section_camisas">Camisas</string>
+    <string name="filter_section_camisetas">Camisetas</string>
+    <string name="filter_section_trajes">Trajes</string>
+    <string name="filter_section_americanas">Americanas</string>
+    <string name="filter_section_pantalones">Pantalones</string>
+    <string name="filter_section_abrigos">Abrigos</string>
+    <string name="filter_section_sudaderas">Sudaderas</string>
+    <string name="filter_section_faldas">Faldas</string>
+    <string name="filter_section_vestidos">Vestidos</string>
+    <string name="filter_section_shorts">Shorts</string>
+    <string name="filter_section_jerseis">Jerseis</string>
+    <string name="filter_section_polos">Polos</string>
+    <string name="filter_section_monos">Ponchos y Monos</string>
+    <string name="filter_section_sport">Sport</string>
+    <string name="filter_section_zapatos">Zapatos</string>
+
+    <string name="filter_price_from">De:</string>
+    <string name="filter_price_to">Hasta:</string>
+    <string name="filter_price_discount">Sólo con descuento</string>
+
+    <string name="accesibility_favorite">Favorito</string>
+
+    <string name="search_hint">¿Qué buscas?</string>
+    <string name="search_hint_shops">¿Qué tienda buscas?</string>
+
+    <string name="sign_up">Registro</string>
+    <string name="gender_election">Elige tu sexo</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="age_hint">Edad</string>
+    <string name="postal_code_hint">Código postal</string>
+    <string name="name_hint">Nombre</string>
+
+    <string name="morph_idle">Hecho</string>
+
+    <string name="accept"><b>Aceptar</b></string>
+    <string name="cancel"><b>Cancelar</b></string>
+
+    <string name="login_login">Iniciar sesión</string>
+    <string name="login_sign_up">Registrarse</string>
+    <string name="login_sign_in">Entrar</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="remember_me">Recordarme</string>
+    <string name="forget_password"><u>¿Has olvidado la contraseña?</u></string>
+    <string name="existing_email">El correo ya ha sido registrado</string>
+
+    <string name="sign_in_info">Necesitas tener creada una cuenta para entrar en la aplicación</string>
+
+    <string name="progress_authenticating">Iniciando sesión</string>
+
+    <string name="terms_and_conditions">Al continuar aceptas también los <u><b>Términos del Servicio</b></u> y la <u><b>Política de Privacidad</b></u> de Cuoka</string>
+
+    <string name="no_shops">Parece que no has añadido ninguna tienda</string>
+    <string name="add_shops"><b>Añade tus tiendas</b></string>
+
+    <string name="colors"><b>Colores: </b></string>
+
+    <string name="profile_name">Nombre:</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_password">Contraseña:</string>
+    <string name="profile_age">Edad:</string>
+    <string name="profile_cp">Codigo postal:</string>
+
+    <string name="feedback_header">¡Tu opinión nos importa!</string>
+    <string name="feedback">Cuéntanos tu experiencia (Opcional)</string>
+    <string name="feedback_message_1">Cuéntanos qué es lo que no te gusta, ¡Queremos mejorar!</string>
+    <string name="feedback_message_2">Cuéntanos qué es lo que no te gusta, ¡Queremos mejorar!</string>
+    <string name="feedback_message_3">¡Gracias! Día a día Cuoka está mejorando.</string>
+    <string name="feedback_message_4">¡Gracias por tu valoración! ¡Seguiremos trabajando!</string>
+    <string name="feedback_message_5">¡Cinco estrellas, gracias! Cuoka no te defraudará.</string>
+
+    <string name="suggested_header">¿Te falta alguna tienda?\n Háznoslo saber</string>
+    <string name="suggested_link">Link de la tienda (Opcional)</string>
+    <string name="suggested_name">Nombre de la tienda</string>
+    <string name="suggested_message">¡Gracias! Vamos a estudiar tu sugerencia.</string>
+
+    <string name="notification_shop_header">Tienda ya disponible</string>
+    <string name="notification_offset">Hoy</string>
+    <string name="notification_shop_body">Ya puedes añadir Tienda a tus tiendas favoritas, ¡Síguela en el menú Mis Tiendas!</string>
+    <string name="notification_shop_action">Ir a Mis Tiendas</string>
+
+    <string name="notification_sales_header">¡Rebajas!</string>
+    <string name="notification_sales_body">Han empezado las rebajas, ¡Corre que se acaban!</string>
+
+    <string name="notification_shop_discount_header">Descuentos en Tienda</string>
+    <string name="notification_shop_discount_body">Hay descuentos especiales en Tienda, ¡Échale un vistazo!</string>
+
+    <string name="notification_update_header">Actualización</string>
+    <string name="notification_update_body">¡Hemos actualizado Cuoka! Puedes ir al PlayStore para tener la última versión o para ver los detalles.</string>
+    <string name="notification_update_action">Ir al PlayStore</string>
+
+    <string name="notification_recommended_header">Nueva recomendación</string>
+    <string name="notification_recommended_body">¡Tenemos nuevas recomendaciones para ti! Creemos que te gustará Pepito Grillo por su originalidad y aire fresco ¿Por qué no le echas un vistazo?.</string>
+    <string name="notification_recommended_action">Ir a Descubre</string>
+
+    <string name="share_action">Compartir con</string>
+    <string name="share_message">¡Mira lo que he encontrado en Cuoka!</string>
+    <string name="share_subject">¡Mira lo que he encontrado en Cuoka!</string>
+
+    <string name="password_forgotten">Te hemos enviado un correo con tu contraseña</string>
+</resources>

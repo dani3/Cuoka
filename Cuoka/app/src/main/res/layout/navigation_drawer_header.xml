@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_header"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/header_height"
+    android:background="@drawable/filter_bottom_border"
+    android:gravity="center|left">
+
+    <!-- Imagen de perfil -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/image_profile"
+        android:layout_height="@dimen/image_profile"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="24dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/male_icon"/>
+
+    <com.cuoka.cuoka.Views.ExistenceTextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Daniel Mancebo"
+        android:textSize="16dp"
+        android:textColor="@color/colorDarkerText"
+        android:layout_alignTop="@id/profile_pic"
+        android:layout_toRightOf="@id/profile_pic"
+        android:layout_toEndOf="@id/profile_pic"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:customFont="Existence-StencilLight.otf"/>
+
+    <com.cuoka.cuoka.Views.ExistenceTextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dani.mancebo_3@hotmail.com"
+        android:textSize="12dp"
+        android:ellipsize="end"
+        android:textColor="@color/colorDarkerText"
+        android:layout_below="@+id/username"
+        android:layout_alignLeft="@+id/username"
+        android:layout_marginTop="8dp"
+        app:customFont="Existence-StencilLight.otf"/>
+
+</RelativeLayout>

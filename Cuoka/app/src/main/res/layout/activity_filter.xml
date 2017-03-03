@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/filter_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Toolbar -->
+    <include android:id="@+id/filter_appbar"
+        layout="@layout/aux_toolbar_filter"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:background="@android:color/white">
+
+        <!-- Lista de filtros -->
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/white">
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal"
+                android:background="@android:color/white">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <RelativeLayout
+                        android:id="@+id/filter_shop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/filter_image_shop"
+                            android:layout_width="58dp"
+                            android:layout_height="58dp"
+                            android:layout_marginBottom="24dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/icono_tienda_color"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:id="@+id/filter_text_shop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_item_shops"
+                            android:textSize="14dp"
+                            android:textColor="@color/colorLightText"
+                            android:layout_below="@+id/filter_image_shop"
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/filter_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/filter_image_section"
+                            android:layout_width="58dp"
+                            android:layout_height="58dp"
+                            android:layout_marginBottom="24dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/icono_secciones_color"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:id="@+id/filter_text_section"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_item_sections"
+                            android:textSize="14dp"
+                            android:textColor="@color/colorLightText"
+                            android:layout_below="@+id/filter_image_section"
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/filter_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/filter_image_price"
+                            android:layout_width="58dp"
+                            android:layout_height="58dp"
+                            android:layout_marginBottom="24dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/icono_dinero_color"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:id="@+id/filter_text_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_item_price"
+                            android:textSize="14dp"
+                            android:textColor="@color/colorLightText"
+                            android:layout_below="@+id/filter_image_price"
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/filter_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/filter_image_color"
+                            android:layout_width="58dp"
+                            android:layout_height="58dp"
+                            android:layout_marginBottom="24dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/icono_color_color"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:id="@+id/filter_text_color"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_item_colors"
+                            android:textSize="14dp"
+                            android:textColor="@color/colorLightText"
+                            android:layout_below="@+id/filter_image_color"
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/filter_newness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/filter_image_newness"
+                            android:layout_width="58dp"
+                            android:layout_height="58dp"
+                            android:layout_marginBottom="24dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/icono_novedades_color"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:id="@+id/filter_text_newness"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_item_newness"
+                            android:textSize="14dp"
+                            android:textColor="@color/colorMediumText"
+                            android:layout_below="@+id/filter_image_newness"
+                            android:layout_centerHorizontal="true"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/menu_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="95dp"
+                android:orientation="vertical"
+                android:animateLayoutChanges="true">
+
+                <include android:id="@+id/filter_item_shop_menu"
+                    layout="@layout/filter_item_shop"/>
+
+                <include android:id="@+id/filter_item_section_menu"
+                    layout="@layout/filter_item_sections"/>
+
+                <include android:id="@+id/filter_item_price_menu"
+                    layout="@layout/filter_item_price"/>
+
+                <include android:id="@+id/filter_item_color_menu"
+                    layout="@layout/filter_item_colors"/>
+
+                <include android:id="@+id/filter_item_newness_menu"
+                    layout="@layout/filter_item_newness"/>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white"
+        android:layout_gravity="bottom|right|end"
+        android:layout_margin="24dp"
+        app:borderWidth="0dp"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cuoka.cuoka.Fragments.ProductsFragment">
+
+    <!-- Recylcer Grid -->
+    <com.cuoka.cuoka.Views.StaggeredRecyclerView
+        android:id="@+id/grid_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/grid_enter_animation"/>
+
+    <!-- Sin tiendas -->
+    <LinearLayout
+        android:id="@+id/no_shops"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:src="@drawable/ic_shop_medium"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"/>
+
+        <com.cuoka.cuoka.Views.ExistenceTextView
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="@string/no_shops"
+            android:textSize="16dp"
+            android:textColor="@color/colorText"
+            app:customFont="Existence-StencilLight.otf"/>
+
+        <Button
+            android:id="@+id/add_shops_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_shops"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+
+    </LinearLayout>
+
+    <!-- Loading View -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/avloadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.Large.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
+    <!-- Texto de no productos -->
+    <com.cuoka.cuoka.Views.ExistenceTextView
+        android:id="@+id/nodata_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:paddingTop="@dimen/action_bar_height"
+        android:text="@string/nodata_message"
+        android:textSize="20dp"
+        android:textColor="@color/colorText"
+        app:customFont="Existence-StencilLight.otf"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|center"
+        android:alpha="0.75"
+        style="@style/SpinKitView.ChasingDots"
+        app:SpinKit_Color="@color/colorAccent"/>
+
+</FrameLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#F5F5F5</color>
+    <color name="colorPrimaryDark">#E7E7E7</color>
+    <color name="colorAccent">#6C1E34</color>
+    <color name="colorBackground">#E7E7E7</color>
+
+    <color name="colorTextView">#FBFDF9</color>
+    <color name="colorText">#5D5D5D</color>
+    <color name="colorDarkerText">#393939</color>
+    <color name="colorMediumText">#939393</color>
+    <color name="colorLightText">#CACACA</color>
+    <color name="colorLight">#EAEAEA</color>
+
+    <color name="colorItemChecked">#F5F5F5</color>
+
+    <color name="colorBackgroundNavigationView">#F5F5F5</color>
+    <color name="colorDividerList">#FFA4A4A4</color>
+
+    <color name="mb_white">#ffffff</color>
+    <color name="mb_blue">#ff0099cc</color>
+    <color name="mb_blue_dark">#ff00719b</color>
+    <color name="mb_purple">#ffaa66cc</color>
+    <color name="mb_purple_dark">#ff8855aa</color>
+    <color name="mb_green">#ff99cc00</color>
+    <color name="mb_green_dark">#ff6d9b00</color>
+    <color name="mb_red">#ffff4444</color>
+    <color name="mb_red_dark">#ffcd3a3a</color>
+    <color name="mb_gray">#ffdedede</color>
+
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <color name="holo_green_light">#ff99cc00</color>
+    <color name="holo_orange_light">#ffffbb33</color>
+    <color name="holo_red_light">#ffff4444</color>
+
+    <color name="tour_select_shops">#6ECDBA</color>
+</resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="2dp"
+    android:background="@android:color/white"
+    android:weightSum="1">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/shops_logo"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_margin="16dp"
+        android:layout_gravity="center"
+        android:src="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:background="@drawable/bottom_border">
+
+        <com.cuoka.cuoka.Views.ExistenceTextView
+            android:id="@+id/shops_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/footer_shop"
+            android:textColor="@color/colorText"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:customFont="Existence-StencilLight.otf"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/shops_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:padding="2dp"
+                android:scaleType="centerCrop"
+                android:tint="@color/colorText"
+                android:src="@drawable/ic_favorite_grey"/>
+
+            <com.cuoka.cuoka.Views.ExistenceTextView
+                android:id="@+id/shops_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:padding="2dp"
+                android:text="12"
+                android:textColor="@color/colorText"
+                app:customFont="Existence-StencilLight.otf"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right|center_vertical"
+        android:background="@drawable/bottom_border">
+
+        <Button
+            android:id="@+id/shops_action_button"
+            android:layout_width="114dp"
+            android:layout_height="34dp"
+            android:layout_marginRight="16dp"
+            android:text="Siguiendo"
+            android:textSize="11dp"
+            android:textColor="@color/colorAccent"
+            android:background="@drawable/rounded_button"/>
+
+    </LinearLayout>
+
+</LinearLayout>

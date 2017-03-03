@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="false"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Imagen -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/grid_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            app:riv_corner_radius_bottom_left="4dp"
+            app:riv_corner_radius_bottom_right="4dp"
+            app:riv_corner_radius_top_left="4dp"
+            app:riv_corner_radius_top_right="4dp"/>
+
+        <ImageView
+            android:id="@+id/product_discount"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="16dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|start|left"
+            android:visibility="gone"
+            android:src="@drawable/ic_discount_small"/>
+
+        <com.cuoka.cuoka.Views.LikeButtonView
+            android:id="@+id/product_item_favorite"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|right|end"/>
+
+        <!-- Pie de foto -->
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:alpha="0.85">
+
+            <!-- Info principal -->
+            <include android:id="@+id/mainFooter"
+                layout="@layout/product_footer"
+                android:layout_height="@dimen/footer_height"
+                android:layout_width="match_parent"/>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</android.support.v7.widget.CardView>

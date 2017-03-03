@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="2dp"
+    android:layout_marginLeft="2dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardPreventCornerOverlap="false"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Header -->
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <ImageButton
+                android:id="@+id/filter_item_price_clear"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:alpha="0.2"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_clear_black"/>
+
+            <com.cuoka.cuoka.Views.ExistenceTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="42dp"
+                android:layout_marginEnd="42dp"
+                android:layout_marginTop="8dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/filter_item_price"
+                android:textSize="14dp"
+                android:textColor="@color/colorMediumText"
+                android:background="@drawable/filter_bottom_border"
+                app:customFont="Existence-StencilLight.otf"/>
+
+        </RelativeLayout>
+
+        <!-- Body -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3">
+
+                <com.cuoka.cuoka.Views.RangeSeekBar
+                    android:id="@+id/filter_price_range_seek_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:absoluteMinValue="0"
+                    app:absoluteMaxValue="100"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="0.7"
+                android:weightSum="1"
+                android:baselineAligned="false">
+
+                <!-- Left Column -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <com.cuoka.cuoka.Views.ExistenceTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="22dp"
+                        android:text="@string/filter_price_from"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorText"
+                        app:customFont="Existence-StencilLight.otf"/>
+
+                    <com.cuoka.cuoka.Views.ExistenceTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_price_to"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorText"
+                        app:customFont="Existence-StencilLight.otf"/>
+
+                </LinearLayout>
+
+                <!-- Center Column -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <com.cuoka.cuoka.Views.ExistenceEditText
+                            android:id="@+id/filter_price_from"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:textSize="18dp"
+                            android:padding="6dp"
+                            android:layout_marginBottom="8dp"
+                            android:textColor="@color/colorMediumText"
+                            android:maxLines="1"
+                            android:background="@drawable/rounded_edittext"
+                            app:customFontEd="Existence-StencilLight.otf"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
+                            android:text="€"
+                            android:textSize="16dp"
+                            android:textColor="@color/colorText"
+                            android:layout_alignBottom="@id/filter_price_from"
+                            android:layout_toRightOf="@id/filter_price_from"
+                            android:layout_toEndOf="@id/filter_price_from"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <com.cuoka.cuoka.Views.ExistenceEditText
+                            android:id="@+id/filter_price_to"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:textSize="18dp"
+                            android:padding="6dp"
+                            android:layout_marginBottom="8dp"
+                            android:textColor="@color/colorMediumText"
+                            android:maxLines="1"
+                            android:background="@drawable/rounded_edittext"
+                            app:customFontEd="Existence-StencilLight.otf"/>
+
+                        <com.cuoka.cuoka.Views.ExistenceTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
+                            android:text="€"
+                            android:textSize="16dp"
+                            android:textColor="@color/colorText"
+                            android:layout_alignBottom="@id/filter_price_to"
+                            android:layout_toRightOf="@id/filter_price_to"
+                            android:layout_toEndOf="@id/filter_price_to"
+                            app:customFont="Existence-StencilLight.otf"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLight"
+                android:layout_margin="16dp"/>
+
+            <com.cuoka.cuoka.Views.ExistenceCheckBox
+                android:id="@+id/filter_price_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_price_discount"
+                android:textColor="@color/colorText"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:buttonTint="@color/colorAccent"
+                app:customFontCh="Existence-StencilLight.otf"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
