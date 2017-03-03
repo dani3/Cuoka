@@ -45,11 +45,21 @@ for link in listOfLinks:
     # Linea de guiones para separar cada producto
     result.write("-----------------------------------------------------------" + "\n")
     
-    try:
-        # Nos conectamos
-        dr.get(link)
-        
-    except:
+    connected = False
+    retries = 3
+    while not connected and retries > 0:
+        try:
+            # Nos conectamos
+            dr.get(link)
+            
+            connected = True
+
+        except:
+            retries -= 1
+            time.sleep(2)
+            continue
+
+    if not connected:
         file_error.write("No se ha podido abrir el link: " + link + "\n")
         continue
 

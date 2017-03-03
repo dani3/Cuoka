@@ -1,0 +1,90 @@
+-----------------------------------------------------------
+-----------------------------------------------------------
+-----------------------------------------------------------
+Nombre: Jeans super skinny
+Descripcion: Jeans super skinny
+Precio: 15.99 
+Descuento: 
+Link: https://www.bershka.com/es/hombre/ropa/jeans/jeans-super-skinny-c1010193238p100902525.html?colorId=800
+*********************************************************
+  Color: AZUL OSCURO
+  Icono: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_3_1_5.jpg?t=1486052366837
+  Referencia: 0284043
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_1_1_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_2_1_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_2_2_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_2_3_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_2_4_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/407/0284043407_2_5_3.jpg?t=1486052366837
+*********************************************************
+  Color: null
+  Icono: null
+  Referencia: null
+*********************************************************
+  Color: AZUL CLARO
+  Icono: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_3_1_5.jpg?t=1486052366837
+  Referencia: 0284043
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_1_1_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_2_1_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_2_2_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_2_3_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_2_4_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/433/0284043433_2_5_3.jpg?t=1486052366837
+*********************************************************
+  Color: NEGRO
+  Icono: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_3_1_5.jpg?t=1486052366837
+  Referencia: 0284043
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_1_1_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_2_1_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_2_2_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_2_3_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_2_4_3.jpg?t=1486052366837
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0284/043/800/0284043800_2_5_3.jpg?t=1486052366837
+-----------------------------------------------------------
+-----------------------------------------------------------
+Nombre: null
+-----------------------------------------------------------
+-----------------------------------------------------------
+Nombre: Jeans super skinny
+Descripcion: Jeans super skinny
+Precio: null
+-----------------------------------------------------------
+Nombre: Jeans super skinny
+Descripcion: Jeans super skinny
+Precio: 15.99  
+Descuento:
+Link: https://www.bershka.com/es/hombre/ropa/jeans/jeans-super-skinny-c1010193238p100902525.html?colorId=800
+*********************************************************
+	Color: null
+ 	Icono: null
+    Referencia: null
+-----------------------------------------------------------
+Nombre: Jeans SuperSkinny rotos y cremalleras
+Descripcion: Jeans SuperSkinny rotos y cremalleras
+Precio: 29.99 
+Descuento: 
+Link: https://www.bershka.com/es/hombre/ropa/jeans/jeans-superskinny-rotos-y-cremalleras-c1010193238p100935055.html?colorId=428
+*********************************************************
+  Color: AZUL LAVADO
+  Icono: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_3_1_5.jpg?t=1486638999691
+  Referencia: 0294211
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_1_1_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_2_1_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_2_2_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_2_3_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_2_4_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/428/0294211428_2_5_3.jpg?t=1486638999691
+*********************************************************
+  Color: GRIS
+  Icono: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_3_1_5.jpg?t=1486638999691
+  Referencia: 0294211
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_1_1_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_2_1_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_2_2_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_2_3_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_2_4_3.jpg?t=1486638999691
+     Imagen: https://static.bershka.net/4/photos2/2017/V/0/2/p/0294/211/809/0294211809_2_5_3.jpg?t=1486638999691
+-----------------------------------------------------------
+-----------------------------------------------------------
+Nombre: null
+-----------------------------------------------------------
