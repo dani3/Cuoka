@@ -1,10 +1,8 @@
 package es.sidelab.cuokawebscraperrestclient.scrapers;
 
-import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**

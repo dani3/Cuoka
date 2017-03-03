@@ -21,13 +21,13 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 /**
- * Scraper especifico para Pedro Del Hierro.
+ * Scraper especifico para Massimo Dutti.
  * @author Daniel Mancebo Aldea
  */
 
-public class ZaraScraper implements Scraper
+public class MassimoDuttiScraper implements Scraper
 {
-    private static final Logger LOG = Logger.getLogger(ZaraScraper.class);
+    private static final Logger LOG = Logger.getLogger(MassimoDuttiScraper.class);
     
     // Lista preparada para la concurrencia donde escribiran todos los scrapers.
     @SuppressWarnings("FieldMayBeFinal")
@@ -39,14 +39,14 @@ public class ZaraScraper implements Scraper
     
     // Atributo local para comprobar que se ha terminado.
     private final ThreadLocal<Boolean> threadFinished = 
-            new ThreadLocal<Boolean>() 
+        new ThreadLocal<Boolean>() 
+        {
+            @Override 
+            protected Boolean initialValue() 
             {
-                @Override 
-                protected Boolean initialValue() 
-                {
-                    return false;
-                }
-            };
+                return false;
+            }
+        };
     
     // Analizador que almacena los resultados del proceso de scraping.
     private ThreadLocal<ScrapingAnalyzer> scrapingAnalyzer;

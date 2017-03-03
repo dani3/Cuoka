@@ -206,6 +206,9 @@ public class ImageManager
 
         if (shop.equalsIgnoreCase("Bershka"))
             aspectRatio = Properties.BERSHKA_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Massimo Dutti"))
+            aspectRatio = Properties.MASSIMO_DUTTI_ASPECT_RATIO;
         
         return aspectRatio;
     }

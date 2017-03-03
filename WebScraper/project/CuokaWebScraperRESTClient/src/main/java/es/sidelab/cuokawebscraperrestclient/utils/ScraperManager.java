@@ -37,6 +37,8 @@ public class ScraperManager
             if (shop.getName().equalsIgnoreCase("Pedro Del Hierro"))
             {
                 className = "PdH";
+            } else if (shop.getName().equalsIgnoreCase("Massimo Dutti")) {
+                className = "Massimo Dutti";                
             } else {
                 className = shop.getName();
             }
