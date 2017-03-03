@@ -30,8 +30,8 @@ public class SectionManager
     {
         sectionsMap = new HashMap<>();
         
-        sectionsMap.put("Abrigos", new String[]{ "Cazadora", "Cazadoras", "Capa", "Capas", "Bomber", "Bombers", "Parka", "Parkas"
-                                            , "Chaqueta", "Chaquetas", "Chaqueton", "Chaquetón", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cárdigan", "Cardigans" });
+        sectionsMap.put("Abrigos", new String[]{ "Cazadora", "Cazadoras", "Bomber", "Bombers", "Parka", "Parkas", "Chaqueta", "Chaquetas"
+                                            , "Chaqueton", "Chaquetón", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cárdigan", "Cardigans" });
         
         sectionsMap.put("Americanas", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Chaleco", "Chalecos"
                                             , "Cazadora", "Cazadoras", "Bomber", "Bombers", "Americana", "Americanas" });
