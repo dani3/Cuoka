@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -116,14 +117,14 @@ public class ColorManager
         // Buscamos primero en los colores simples
         for (String color : colors_simple)
         {
-            if (color_name.contains(color))
+            if (StringUtils.containsIgnoreCase(color_name, color))
             {
                 String color_found = color;
                 
                 // Si lo encontramos, buscamos en los colores compuestos
                 for (String color_compound : colors_compound)
                 {
-                    if (color_compound.contains(color_name))
+                    if (StringUtils.containsIgnoreCase(color_compound, color_name))
                     {
                         color_found = color_compound;
                     }

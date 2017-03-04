@@ -318,7 +318,7 @@ public class MassimoDuttiScraper implements Scraper
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(null);  
+                color.setColorURL(colorIcon.replace("  Icono: ", ""));  
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes
