@@ -780,12 +780,12 @@ public class MainScreenUI extends AppCompatActivity
         }
     }
 
-    class ViewPagerAdapter extends FragmentStatePagerAdapter
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter
     {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager)
+        ViewPagerAdapter(FragmentManager manager)
         {
             super(manager);
         }
@@ -802,7 +802,7 @@ public class MainScreenUI extends AppCompatActivity
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title)
+        void addFragment(Fragment fragment, String title)
         {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);

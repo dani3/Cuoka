@@ -20,7 +20,7 @@ urls = [("Abrigos", "https://www.massimodutti.com/es/hombre/abrigos-y-chaquetas-
         ("Plumas", "https://www.massimodutti.com/es/hombre/chaquetas-acolchadas-y-plum%C3%ADferos-c1748426.html"),
         ("Cazadoras", "https://www.massimodutti.com/es/hombre/cazadoras-de-piel-c1748166.html"),
         ("Jerseis","https://www.massimodutti.com/es/hombre/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c1748171.html"),
-        ("Camisas casual", "https://www.massimodutti.com/es/hombre/camisas-casual/ver-todo-c1748193.html")
+        ("Camisas casual", "https://www.massimodutti.com/es/hombre/camisas-casual/ver-todo-c1748193.html"),
         ("Camisas vestir", "https://www.massimodutti.com/es/hombre/camisas-vestir/ver-todo-c1748201.html"),
         ("Polos", "https://www.massimodutti.com/es/hombre/polos-y-camisetas/ver-todo-c1748197.html"),
         ("Pantalones", "https://www.massimodutti.com/es/hombre/pantalones/ver-todo-c1748220.html"),

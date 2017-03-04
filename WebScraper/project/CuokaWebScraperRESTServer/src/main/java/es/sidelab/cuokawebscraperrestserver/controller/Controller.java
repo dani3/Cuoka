@@ -675,13 +675,13 @@ public class Controller
                                         , @PathVariable String shop)
     {
         LOG.info("[SCRAPER] Peticion POST para anadir productos de " + shop + " recibida");
-        
-        Runnable task = () -> {                 
-            // Obtenemos los productos que ya tenemos en base de datos.
-            List<Product> productsInDB = productsRepository.findByShop(shop);
             
-            LOG.info("[SCRAPER] Llamando a ImageManager para descargar las imagenes que no existan");
-            List<Product> productsScraped = ImageManager.downloadImages(products, shop);
+        LOG.info("[SCRAPER] Llamando a ImageManager para descargar las imagenes que no existan");
+        List<Product> productsScraped = ImageManager.downloadImages(products, shop);
+          
+        Runnable task = () -> {                        
+            // Obtenemos los productos que ya tenemos en base de datos.
+            List<Product> productsInDB = productsRepository.findByShop(shop);  
             
             if (!productsInDB.isEmpty())
             {

@@ -40,7 +40,7 @@ public class testScraper
         
         /***************** Massimo Dutti *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
-        Section section = new Section("Rebajas", "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\", false);
+        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         /*Runtime.getRuntime().exec(new String[] {"python"
