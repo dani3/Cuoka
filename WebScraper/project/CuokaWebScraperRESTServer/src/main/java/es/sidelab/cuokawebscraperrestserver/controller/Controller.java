@@ -1584,7 +1584,7 @@ public class Controller
             helper.setTo(Properties.FEEDBACK_EMAIL_FROM);
             helper.setFrom(Properties.FEEDBACK_EMAIL_FROM);
             helper.setSubject(Properties.FEEDBACK_EMAIL_SUBJECT.replace("?1", Integer.toString(stars)));
-            helper.setText(((message == null) ? "No se ha recibido ningún comentario" : message));
+            helper.setText(((message == null || message.isEmpty()) ? "No se ha recibido ningún comentario" : message));
         
             javaMailSender.send(mail);
             
