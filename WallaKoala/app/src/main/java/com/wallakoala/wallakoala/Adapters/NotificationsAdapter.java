@@ -788,16 +788,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @Override
         public void onClick(View v)
         {
-            if (!marked)
+            if (v.getId() == mActionButton.getId())
             {
-                if (v.getId() == mActionButton.getId())
-                {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
 
-                    intent.setData(Uri.parse(Properties.PLAYSTORE_URL));
+                intent.setData(Uri.parse(Properties.PLAYSTORE_URL));
 
-                    mContext.startActivity(intent);
-                }
+                mContext.startActivity(intent);
             }
         }
 
