@@ -92,6 +92,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
@@ -100,7 +101,6 @@
     <orderEntry type="library" exported="" name="RippleEffect-52ea2a0ab6" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="design-25.2.0" level="project" />
-    <orderEntry type="library" exported="" name="arcnavigationview-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="transition-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="sectionedrecyclerviewadapter-1.0.4" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-25.2.0" level="project" />

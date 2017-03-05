@@ -368,11 +368,14 @@ public class LoginUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                mRecoverPasswordAlertDialog = _createDialog();
+                if (mSharedPreferencesManager.retrieveUser() != null)
+                {
+                    mRecoverPasswordAlertDialog = _createDialog();
 
-                mRecoverPasswordAlertDialog.show();
+                    mRecoverPasswordAlertDialog.show();
 
-                RestClientSingleton.requestForgottenPassword(LoginUI.this);
+                    RestClientSingleton.requestForgottenPassword(LoginUI.this);
+                }
             }
         });
     }
