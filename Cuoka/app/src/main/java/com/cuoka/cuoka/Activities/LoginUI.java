@@ -368,11 +368,14 @@ public class LoginUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                mRecoverPasswordAlertDialog = _createDialog();
+                if (mSharedPreferencesManager.retrieveUser() != null)
+                {
+                    mRecoverPasswordAlertDialog = _createDialog();
 
-                mRecoverPasswordAlertDialog.show();
+                    mRecoverPasswordAlertDialog.show();
 
-                RestClientSingleton.requestForgottenPassword(LoginUI.this);
+                    RestClientSingleton.requestForgottenPassword(LoginUI.this);
+                }
             }
         });
     }
@@ -655,6 +658,7 @@ public class LoginUI extends AppCompatActivity
                                             user.setAge(age);
                                             user.setEmail(email);
                                             user.setFavoriteProducts(new HashSet<Long>());
+                                            user.setNotificationsRead(new HashSet<Long>());
                                             user.setShops(new HashSet<String>());
 
                                             mSharedPreferencesManager.insertUser(user);

@@ -2,12 +2,12 @@ package com.wallakoala.wallakoala.Adapters;
 
 import android.animation.Animator;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.CardView;
@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * Adapter que muestra los distintos tipos de notificaciones.
@@ -794,7 +792,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             {
                 if (v.getId() == mActionButton.getId())
                 {
-                    // TODO llevar al PlayStore
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                    intent.setData(Uri.parse(Properties.PLAYSTORE_URL));
+
+                    mContext.startActivity(intent);
                 }
             }
         }

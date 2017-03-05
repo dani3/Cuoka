@@ -755,6 +755,14 @@ public class MainScreenUI extends AppCompatActivity
             } else if (requestCode == NOTIFICATION_REQUEST) {
                 // Si venimos de la pantalla de Notificaciones con OK, es que todas las notificaciones se han leido.
 
+                if (data.getBooleanExtra("shops", false))
+                {
+                    mViewPager.setCurrentItem(1);
+
+                    mProductsFragment.restart();
+                    mRecommendedFragment.restart();
+                }
+
                 // Cambiamos el Hamburger Icon
                 mToolbar.setNavigationIcon(R.drawable.ic_menu);
 
@@ -780,12 +788,12 @@ public class MainScreenUI extends AppCompatActivity
         }
     }
 
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter
+    class ViewPagerAdapter extends FragmentStatePagerAdapter
     {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        ViewPagerAdapter(FragmentManager manager)
+        public ViewPagerAdapter(FragmentManager manager)
         {
             super(manager);
         }
@@ -802,7 +810,7 @@ public class MainScreenUI extends AppCompatActivity
             return mFragmentList.size();
         }
 
-        void addFragment(Fragment fragment, String title)
+        public void addFragment(Fragment fragment, String title)
         {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);

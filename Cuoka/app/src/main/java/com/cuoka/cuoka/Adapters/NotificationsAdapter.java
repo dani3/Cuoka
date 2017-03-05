@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.CardView;
@@ -38,8 +39,6 @@ import java.util.List;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * Adapter que muestra los distintos tipos de notificaciones.
@@ -220,33 +219,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 {
-                    SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mBackground
-                                    , (int) x
-                                    , (int) y
-                                    , mRadiusReveal
-                                    , 0);
-
-                    animator.setDuration(200);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.addListener(new SupportAnimator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart() {}
-
-                        @Override
-                        public void onAnimationEnd()
-                        {
-                            mBackground.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationCancel() {}
-
-                        @Override
-                        public void onAnimationRepeat() {}
-                    });
-
-                    animator.start();
+                    mBackground.setVisibility(View.INVISIBLE);
 
                 } else {
                     Animator animator =
@@ -443,33 +416,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 {
-                    SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mBackground
-                                    , (int) x
-                                    , (int) y
-                                    , mRadiusReveal
-                                    , 0);
-
-                    animator.setDuration(200);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.addListener(new SupportAnimator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart() {}
-
-                        @Override
-                        public void onAnimationEnd()
-                        {
-                            mBackground.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationCancel() {}
-
-                        @Override
-                        public void onAnimationRepeat() {}
-                    });
-
-                    animator.start();
+                    mBackground.setVisibility(View.INVISIBLE);
 
                 } else {
                     Animator animator =
@@ -668,33 +615,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 {
-                    SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mBackground
-                                    , (int) x
-                                    , (int) y
-                                    , mRadiusReveal
-                                    , 0);
-
-                    animator.setDuration(200);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.addListener(new SupportAnimator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart() {}
-
-                        @Override
-                        public void onAnimationEnd()
-                        {
-                            mBackground.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationCancel() {}
-
-                        @Override
-                        public void onAnimationRepeat() {}
-                    });
-
-                    animator.start();
+                    mBackground.setVisibility(View.INVISIBLE);
 
                 } else {
                     Animator animator =
@@ -871,7 +792,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             {
                 if (v.getId() == mActionButton.getId())
                 {
-                    // TODO llevar al PlayStore
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                    intent.setData(Uri.parse(Properties.PLAYSTORE_URL));
+
+                    mContext.startActivity(intent);
                 }
             }
         }
@@ -907,33 +832,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 {
-                    SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mBackground
-                                    , (int) x
-                                    , (int) y
-                                    , mRadiusReveal
-                                    , 0);
-
-                    animator.setDuration(200);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.addListener(new SupportAnimator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart() {}
-
-                        @Override
-                        public void onAnimationEnd()
-                        {
-                            mBackground.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationCancel() {}
-
-                        @Override
-                        public void onAnimationRepeat() {}
-                    });
-
-                    animator.start();
+                    mBackground.setVisibility(View.INVISIBLE);
 
                 } else {
                     Animator animator =
@@ -1154,33 +1053,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 {
-                    SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mBackground
-                                    , (int) x
-                                    , (int) y
-                                    , mRadiusReveal
-                                    , 0);
-
-                    animator.setDuration(200);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.addListener(new SupportAnimator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart() {}
-
-                        @Override
-                        public void onAnimationEnd()
-                        {
-                            mBackground.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationCancel() {}
-
-                        @Override
-                        public void onAnimationRepeat() {}
-                    });
-
-                    animator.start();
+                    mBackground.setVisibility(View.INVISIBLE);
 
                 } else {
                     Animator animator =
