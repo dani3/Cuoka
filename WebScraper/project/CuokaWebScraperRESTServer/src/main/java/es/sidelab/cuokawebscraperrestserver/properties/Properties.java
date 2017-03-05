@@ -7,6 +7,9 @@ package es.sidelab.cuokawebscraperrestserver.properties;
 
 public class Properties 
 {        
+    /* Version */
+    public static final String VERSION = "1.0.1";
+    
     /* Posibles respuestas del servidor */
     public static final String ALREADY_EXISTS    = "USER_ALREADY_EXISTS";
     public static final String INCORRECT_LOGIN   = "USER_INCORRECT_LOGIN";
@@ -77,4 +80,6 @@ public class Properties
     public static final String WELCOME_EMAIL_SUBJECT = "CUOKA te da la bienvenida a la nueva red de moda";
     public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
     public static final String WELCOME_EMAIL_FROM = "bienvenido@cuoka.es";
+    public static final String FEEDBACK_EMAIL_SUBJECT = "Nueva valoración de ?1 estrallas";
+    public static final String FEEDBACK_EMAIL_FROM = "elena.fernandez.guzman@cuoka.es";
 }

@@ -274,6 +274,8 @@ public class Controller
     {
         feedbackRepository.save(feedback);
         
+        _sendFeedbackEmail(feedback.getStars(), feedback.getOpinion());
+        
         return Properties.ACCEPTED;
     }
     
@@ -1560,6 +1562,26 @@ public class Controller
             javaMailSender.send(mail);
             
             LOG.info("[EMAIL] Email enviado correctamente");
+            
+        } catch (MessagingException | MailException e) {
+            LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
+        }
+    }
+    
+    private void _sendFeedbackEmail(int stars, String message)
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        
+        try 
+        {
+            MimeMessageHelper helper = new MimeMessageHelper(mail);
+                
+            helper.setTo(Properties.FEEDBACK_EMAIL_FROM);
+            helper.setFrom(Properties.FEEDBACK_EMAIL_FROM);
+            helper.setSubject(Properties.FEEDBACK_EMAIL_SUBJECT.replace("?1", Integer.toString(stars)));
+            helper.setText(((message == null) ? "No se ha recibido ningún comentario" : message));
+        
+            javaMailSender.send(mail);
             
         } catch (MessagingException | MailException e) {
             LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
