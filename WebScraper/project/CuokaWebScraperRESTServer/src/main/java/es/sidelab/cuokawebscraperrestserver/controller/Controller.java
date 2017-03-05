@@ -1568,6 +1568,11 @@ public class Controller
         }
     }
     
+    /**
+     * Metodo que envia un email con el feedback recibido.
+     * @param stars: numero de estrellas.
+     * @param message: mensaje.
+     */
     private void _sendFeedbackEmail(int stars, String message)
     {
         MimeMessage mail = javaMailSender.createMimeMessage();
