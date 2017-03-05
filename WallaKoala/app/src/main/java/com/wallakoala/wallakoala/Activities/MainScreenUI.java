@@ -755,6 +755,14 @@ public class MainScreenUI extends AppCompatActivity
             } else if (requestCode == NOTIFICATION_REQUEST) {
                 // Si venimos de la pantalla de Notificaciones con OK, es que todas las notificaciones se han leido.
 
+                if (data.getBooleanExtra("shops", false))
+                {
+                    mViewPager.setCurrentItem(1);
+
+                    mProductsFragment.restart();
+                    mRecommendedFragment.restart();
+                }
+
                 // Cambiamos el Hamburger Icon
                 mToolbar.setNavigationIcon(R.drawable.ic_menu);
 
