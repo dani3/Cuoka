@@ -201,7 +201,7 @@ public class ProfileUI extends AppCompatActivity
         User user = sharedPreferencesManager.retrieveUser();
 
         Bitmap profile = (user.getMan() ?
-                BitmapFactory.decodeResource(getResources(), R.drawable.male_icon): BitmapFactory.decodeResource(getResources(), R.drawable.female_icon));
+                BitmapFactory.decodeResource(getResources(), R.drawable.ic_male_thumbnail_hq): BitmapFactory.decodeResource(getResources(), R.drawable.ic_female_thumbnail_hq));
         mProfileFAB.setImageBitmap(profile);
 
         mDeleteFAB.setOnClickListener(new View.OnClickListener()
@@ -426,6 +426,7 @@ public class ProfileUI extends AppCompatActivity
             return null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected void onPostExecute(Void unused)
         {
@@ -448,7 +449,6 @@ public class ProfileUI extends AppCompatActivity
                             public void onClick(View v)
                             {
                                 mDeleteFAB.performClick();
-
                             }});
 
                 snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
