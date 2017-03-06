@@ -20,15 +20,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="24dp"
-                android:paddingBottom="6dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"
-                android:paddingRight="0dp"
                 android:text="@string/sign_up"
-                android:textSize="18dp"
+                android:textSize="20dp"
                 android:textColor="@color/colorMediumText"
-                android:background="@drawable/filter_bottom_border"
                 app:customFont="Existence-StencilLight.otf"/>
 
             <!-- Dummy layout para prevenir el autofocus -->
