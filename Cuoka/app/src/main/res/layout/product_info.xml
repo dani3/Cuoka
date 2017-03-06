@@ -161,6 +161,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:scrollbars="vertical"
+                android:fadeScrollbars="false"
                 android:smoothScrollbar="true"
                 android:cacheColorHint="#00000000"
                 android:divider="@android:color/transparent"
