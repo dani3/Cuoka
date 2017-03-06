@@ -22,9 +22,9 @@ import com.cuoka.cuoka.Views.StaggeredRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
@@ -69,7 +69,7 @@ public class FavoritesUI extends AppCompatActivity
     protected void _initData()
     {
         mFavoriteList = new ArrayList<>();
-        mProductMap   = new HashMap<>();
+        mProductMap   = new TreeMap<>();
     }
 
     /**
