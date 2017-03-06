@@ -118,7 +118,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     private int mFloatingButtonY;
     private int mFloatingButtonTop;
     private int mRadiusReveal;
-    private double mRatio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -331,9 +330,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromPath(filePath.toString());
         mImageView.setImageDrawable(bitmapDrawable);
 
-        // Calculamos el aspect ratio de la imagen.
-        mRatio = (double) bitmapDrawable.getIntrinsicHeight() / (double) bitmapDrawable.getIntrinsicWidth();
-
         // Background.
         mBackground = new ColorDrawable(Color.WHITE);
         frameLayout.setBackground(mBackground);
@@ -367,7 +363,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
                     mImagesAdapter = new ProductAdapter(ProductUI.this
                             , mProduct.getColors().get(position)
-                            , mRatio
+                            , mProduct.getAspectRatio()
                             , mProduct.getShop()
                             , mProduct.getSection()
                             , mImageView);
@@ -395,7 +391,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mImagesAdapter = new ProductAdapter(this
                                 , mProduct.getColors().get(mCurrentColor)
-                                , mRatio
+                                , mProduct.getAspectRatio()
                                 , mProduct.getShop()
                                 , mProduct.getSection()
                                 , mImageView);
