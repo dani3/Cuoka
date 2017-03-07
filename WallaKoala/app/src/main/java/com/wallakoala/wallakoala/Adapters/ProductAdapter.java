@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -24,6 +25,7 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.ColorVariant;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.ExceptionPrinter;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 /**
@@ -98,7 +100,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                 public void onBitmapFailed(Drawable errorDrawable) {}
 
                 @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                public void onPrepareLoad(Drawable placeHolderDrawable)
+                {
+                    // Con esto se evita que las imagenes se superpongan si la primera imagen tarda en cargar.
+                    if (getAdapterPosition() == 0)
+                    {
+                        try
+                        {
+                            mProductImageView.setImageBitmap(((BitmapDrawable) mImageView.getDrawable()).getBitmap());
+
+                        } catch (ClassCastException | NullPointerException e) {
+                            ExceptionPrinter.printException("PRODUCT_ADAPTER", e);
+                        }
+                    }
+                }
             };
 
             final String imageFile = mShop + "_" + mSection + "_"
