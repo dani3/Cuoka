@@ -36,7 +36,6 @@
     <string name="nofav_message">Todavía no tienes ningún favorito</string>
     <string name="nonotification_message">No tienes ninguna notificación nueva</string>
     <string name="exit_message">Pulsa otra vez para SALIR</string>
-    <string name="product_deleted_message">Producto eliminado</string>
 
     <string name="filter_newness">newness</string>
     <string name="filter_sizes">sizes</string>

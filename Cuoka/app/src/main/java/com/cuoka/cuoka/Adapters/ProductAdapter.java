@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.cuoka.cuoka.Utils.ExceptionPrinter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.cuoka.cuoka.Beans.ColorVariant;
