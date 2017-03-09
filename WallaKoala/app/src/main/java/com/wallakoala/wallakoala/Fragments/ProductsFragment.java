@@ -596,12 +596,15 @@ public class ProductsFragment extends Fragment
                 // Creamos un callable por cada tienda
                 for (int i = 0; i < content.size(); i++)
                 {
-                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se crea un ConversionTask para parsear el primer JSONArray ("
-                            + (content.get(i).toString().getBytes().length / 1000) + "kB)");
+                    if (content.get(i).length() > 0)
+                    {
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se crea un ConversionTask para parsear el primer JSONArray ("
+                                + (content.get(i).toString().getBytes().length / 1000) + "kB)");
 
-                    ConversionTask task = new ConversionTask(content.get(i));
+                        ConversionTask task = new ConversionTask(content.get(i));
 
-                    completionService.submit(task);
+                        completionService.submit(task);
+                    }
                 }
 
                 // Nos quedamos esperando a que terminen los threads
