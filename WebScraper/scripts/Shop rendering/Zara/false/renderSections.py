@@ -7,18 +7,30 @@ from selenium.webdriver.chrome.options import Options
 
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
 path_to_chromedriver = sys.argv[1]
-#path_to_chromedriver = "D:\\Documentos\\1. Cuoka\\Scraping\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bershka_true\\false\\"
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Zara_true\\false\\"
 #path = "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Camisetas", "http://www.zara.com/es/es/mujer/camisetas/ver-todo-c719014.html")]
+urls = [("Camisetas", "http://www.zara.com/es/es/mujer/camisetas/ver-todo-c719014.html"),
+        ("Abrigos", "http://www.zara.com/es/es/mujer/abrigos/ver-todo-c719012.html"),
+        ("Chaquetas","http://www.zara.com/es/es/mujer/chaquetas-c358002.html"),
+        ("Blazers","http://www.zara.com/es/es/mujer/blazers-c797504.html"),
+        ("Vestidos","http://www.zara.com/es/es/mujer/vestidos-c358003.html"),
+        ("Monos","http://www.zara.com/es/es/mujer/monos-c399001.html"),
+        ("Camisas","http://www.zara.com/es/es/mujer/camisas/ver-todo-c719021.html"),
+        ("Body","http://www.zara.com/es/es/mujer/body-c602501.html"),
+        ("Pantalones","http://www.zara.com/es/es/mujer/pantalones/ver-todo-c719022.html"),
+        ("Jeans","http://www.zara.com/es/es/mujer/jeans/ver-todo-c719019.html"),
+        ("Faldas","http://www.zara.com/es/es/mujer/faldas/ver-todo-c719016.html"),
+        ("Punto","http://www.zara.com/es/es/mujer/punto/ver-todo-c719015.html"),
+        ("Camisetas","http://www.zara.com/es/es/mujer/camisetas/ver-todo-c719014.html"),
+        ("Sudaderas","http://www.zara.com/es/es/mujer/sudaderas-c364001.html"),
+        ("Zapatos","http://www.zara.com/es/es/mujer/zapatos/ver-todo-c719531.html")]
 
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
