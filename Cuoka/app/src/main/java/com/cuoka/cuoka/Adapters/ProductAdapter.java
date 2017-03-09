@@ -88,7 +88,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
                         mImageView.setVisibility(View.GONE);
 
-                        mLoaded = true;
+                        mLoaded = (bitmap != null);
                     }
 
                     mProductImageView.setImageBitmap(bitmap);
