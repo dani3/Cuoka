@@ -41,6 +41,7 @@ import org.json.JSONException;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -416,6 +417,8 @@ public class ProductsFragment extends Fragment
             {
                 List<Product> productsList = JSONParser.convertJSONsToProducts(mJsonArray);
                 String key = (productsList.isEmpty()) ? null : productsList.get(0).getShop();
+
+                Collections.shuffle(productsList);
 
                 mProductsListMap.get(mProductsListMap.size()-1).put(key, productsList);
 
