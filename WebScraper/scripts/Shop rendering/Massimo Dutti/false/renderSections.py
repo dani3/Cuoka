@@ -16,19 +16,20 @@ path = sys.argv[2]
 #path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Rebajas", "https://www.massimodutti.com/es/%C3%BAltimos-d%C3%ADas/ver-todo-c1748390.html"),
-        ("Abrigos", "https://www.massimodutti.com/es/mujer/abrigos-c1748068.html"),
-        ("Chaquetas", "https://www.massimodutti.com/es/mujer/chaquetas/ver-todo-c1751018.html"),
-        ("Americanas", "https://www.massimodutti.com/es/mujer/americanas/ver-todo-c1757511.html"),
-        ("Bombers", "https://www.massimodutti.com/es/mujer/bombers-c1753575.html"),
-        ("Vestidos y monos", "https://www.massimodutti.com/es/mujer/vestidos-y-monos-c1748100.html"),
-        ("Faldas", "https://www.massimodutti.com/es/mujer/faldas-c1748085.html"),
-        ("Jerseis", "https://www.massimodutti.com/es/mujer/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c1748089.html"),
-        ("Camisas", "https://www.massimodutti.com/es/mujer/camisas-y-blusas/ver-todo-c1751026.html"),
-        ("Camisetas", "https://www.massimodutti.com/es/mujer/camisetas/ver-todo-c1751027.html"),
-        ("Pantalones", "https://www.massimodutti.com/es/mujer/pantalones/ver-todo-c1748126.html"),
-        ("Jeans", "https://www.massimodutti.com/es/mujer/denim-c1748115.html"),
-        ("Zapatos", "https://www.massimodutti.com/es/mujer/zapatos/ver-todo-c1748137.html")]
+urls = [("Abrigos", "https://www.massimodutti.com/es/mujer/abrigos-c680658.html"),
+        ("Chaquetas", "https://www.massimodutti.com/es/mujer/chaquetas/ver-todo-c911123.html"),
+        ("Piel", "https://www.massimodutti.com/es/mujer/piel-c675010.html"),
+        ("Americanas", "https://www.massimodutti.com/es/mujer/americanas/ver-todo-c911146.html"),
+        ("Trajes", "https://www.massimodutti.com/es/mujer/trajes-c1383007.html"),
+        ("Vestidos", "https://www.massimodutti.com/es/mujer/vestidos-y-monos-c1472056.html"),
+        ("Faldas", "https://www.massimodutti.com/es/mujer/faldas-c675013.html"),
+        ("Jerseis", "https://www.massimodutti.com/es/mujer/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c911188.html"),
+        ("Camisas", "https://www.massimodutti.com/es/mujer/camisas-y-blusas/ver-todo-c911173.html"),
+        ("Camisetas", "https://www.massimodutti.com/es/mujer/camisetas/ver-todo-c911194.html"),
+        ("Pantalones", "https://www.massimodutti.com/es/mujer/pantalones/ver-todo-c911198.html"),
+        ("Jeans", "https://www.massimodutti.com/es/mujer/denim-c675012.html"),
+        ("Bolsos", "https://www.massimodutti.com/es/mujer/bolsos-y-monederos/ver-todo-c914508.html"),
+        ("Zapatos", "https://www.massimodutti.com/es/mujer/zapatos/ver-todo-c1475029.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

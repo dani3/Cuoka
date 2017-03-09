@@ -16,17 +16,21 @@ path = sys.argv[2]
 #path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Abrigos", "https://www.massimodutti.com/es/hombre/abrigos-y-chaquetas-c1748165.html"),
-        ("Plumas", "https://www.massimodutti.com/es/hombre/chaquetas-acolchadas-y-plum%C3%ADferos-c1748426.html"),
-        ("Cazadoras", "https://www.massimodutti.com/es/hombre/cazadoras-de-piel-c1748166.html"),
-        ("Jerseis","https://www.massimodutti.com/es/hombre/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c1748171.html"),
-        ("Camisas casual", "https://www.massimodutti.com/es/hombre/camisas-casual/ver-todo-c1748193.html"),
-        ("Camisas vestir", "https://www.massimodutti.com/es/hombre/camisas-vestir/ver-todo-c1748201.html"),
-        ("Polos", "https://www.massimodutti.com/es/hombre/polos-y-camisetas/ver-todo-c1748197.html"),
+urls = [("Abrigos", "https://www.massimodutti.com/es/hombre/abrigos-y-chaquetas-c680512.html"),
+        ("Plumas", "https://www.massimodutti.com/es/hombre/chaquetas-acolchadas-y-plum%C3%ADferos-c1748425.html"),
+        ("Cazadoras", "https://www.massimodutti.com/es/hombre/cazadoras-de-piel-c680513.html"),
+        ("Americanas","https://www.massimodutti.com/es/hombre/americanas-c680503.html"),
+        ("Chalecos", "https://www.massimodutti.com/es/hombre/chalecos-c1543502.html"),
+        ("Trajes", "https://www.massimodutti.com/es/hombre/trajes/ver-todo-c1547001.html"),
+        ("Jerseys", "https://www.massimodutti.com/es/hombre/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c911154.html"),
+        ("Camisas casual", "https://www.massimodutti.com/es/hombre/camisas-casual/ver-todo-c911139.html"),
+        ("Camisas vestir", "https://www.massimodutti.com/es/hombre/camisas-vestir/ver-todo-c1510002.html"),
+        ("Polos", "https://www.massimodutti.com/es/hombre/polos-y-camisetas/ver-todo-c911160.html"),
+        ("Pantalones", "https://www.massimodutti.com/es/hombre/pantalones/ver-todo-c911166.html"),
+        ("Vaqueros", "https://www.massimodutti.com/es/hombre/denim-c680509.html"),
+        ("Zapatos", "https://www.massimodutti.com/es/hombre/zapatos/ver-todo-c1313029.html"),
         ("Pantalones", "https://www.massimodutti.com/es/hombre/pantalones/ver-todo-c1748220.html"),
-        ("Jeans", "https://www.massimodutti.com/es/hombre/denim-c1748211.html"),
-        ("Zapatos", "https://www.massimodutti.com/es/hombre/zapatos/ver-todo-c1748233.html"),
-        ("Corbatas y pañuelos", "https://www.massimodutti.com/es/hombre/corbatas-y-pa%C3%B1uelos-c1748244.html")]
+        ("Corbatas", "https://www.massimodutti.com/es/hombre/corbatas-c1660501.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
