@@ -610,8 +610,11 @@ public class ProductsFragment extends Fragment
                 // Nos quedamos esperando a que terminen los threads
                 for (int i = 0; i < content.size(); i++)
                 {
-                    completionService.take();
-                    Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Productos parseados correctamente");
+                    if (content.get(i).length() > 0)
+                    {
+                        completionService.take();
+                        Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Productos parseados correctamente");
+                    }
                 }
 
                 Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Todos los productos parseados correctamente");
