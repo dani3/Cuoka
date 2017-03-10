@@ -687,6 +687,9 @@ public class Controller
             // Obtenemos los productos que ya tenemos en base de datos.
             List<Product> productsInDB = productsRepository.findByShop(shop);  
             
+            int newProducts = 0;
+            int obsoleteProducts = 0;
+            int sameProducts = 0;
             if (!productsInDB.isEmpty())
             {
                 Shop s = shopsRepository.findByName(shop);                
@@ -711,7 +714,7 @@ public class Controller
 
                         // Si es el mismo producto.
                         if (comparison >= 0)
-                        {
+                        {                            
                             // Actualizamos el producto.
                             LOG.info("[SCRAPER] Producto encontrado, se actualiza" + ((comparison == 0) ? "" : " y se anade como novedad"));
                             productInDB.update(productScraped, (comparison == 0));
@@ -720,6 +723,7 @@ public class Controller
                             productsRepository.save(productInDB);
 
                             found = true;
+                            sameProducts++;
                         }
                     }
                     
@@ -729,6 +733,8 @@ public class Controller
                         productScraped.setInsertDate(Calendar.getInstance());
 
                         productsRepository.save(productScraped);  
+                        
+                        newProducts++;
                     }                        
                 }
                 
@@ -750,8 +756,12 @@ public class Controller
                         LOG.info("[SCRAPER] Producto NO encontrado, se marca como OBSOLETO");
                         productInDB.setObsolete(true);
                         productsRepository.save(productInDB);
+                        
+                        obsoleteProducts++;
                     }
-                } 
+                }
+                
+                _sendScrapingStatsEmail(s.getName(), s.getProducts(), newProducts, sameProducts, obsoleteProducts);
                 
             } else {         
                 boolean woman = false;
@@ -1620,6 +1630,42 @@ public class Controller
                 Properties.SHOP_SUGGESTION_EMAIL_SUBJECT);
             helper.setText(
                 " - Nombre de la tienda: " + shop.toUpperCase() + "\n - Link: " + ((link == null || link.isEmpty()) ? "No especificado" : link));
+        
+            javaMailSender.send(mail);
+            
+        } catch (MessagingException | MailException e) {
+            LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
+        }
+    }
+    
+    /**
+     * Metodo que envía un correo con las estadísticas del scraping.
+     * @param shop: nombre de la tienda.
+     * @param total: total de productos.
+     * @param newProducts: numero de productos nuevos.
+     * @param sameProducts: numero de productos iguales.
+     * @param obsoleteProducts: numero de productos obsoletos.
+     */
+    private void _sendScrapingStatsEmail(String shop, int total, int newProducts, int sameProducts, int obsoleteProducts)
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        
+        try 
+        {
+            MimeMessageHelper helper = new MimeMessageHelper(mail);
+                
+            String message = " - Total de productos recibidos: " + total + "\n"
+                + " - Productos nuevos: " + newProducts + "\n"
+                + " - Productos iguales: " + sameProducts + "\n"
+                + " - Productos obsoletos: " + obsoleteProducts + "\n";
+            
+            helper.setTo(
+                Properties.SCRAPING_STATS_EMAIL_FROM);
+            helper.setFrom(
+                Properties.SCRAPING_STATS_EMAIL_FROM);
+            helper.setSubject(
+                Properties.SCRAPING_STATS_EMAIL_SUBJECT.replace("?1", shop));
+            helper.setText(message);
         
             javaMailSender.send(mail);
             
