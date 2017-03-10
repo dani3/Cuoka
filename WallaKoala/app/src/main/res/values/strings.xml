@@ -167,4 +167,5 @@
     <string name="share_subject">¡Mira lo que he encontrado en Cuoka!</string>
 
     <string name="password_forgotten">Te hemos enviado un correo con tu contraseña</string>
+    <string name="get_email">Introduce tu correo</string>
 </resources>

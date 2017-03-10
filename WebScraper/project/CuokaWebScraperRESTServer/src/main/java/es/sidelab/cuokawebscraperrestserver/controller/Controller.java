@@ -261,6 +261,8 @@ public class Controller
     {
         shopSuggestedRepository.save(shopSuggested);
         
+        _sendShopSuggestion(shopSuggested.getShop(), shopSuggested.getLink());
+        
         return Properties.ACCEPTED;
     }
     
@@ -1581,10 +1583,43 @@ public class Controller
         {
             MimeMessageHelper helper = new MimeMessageHelper(mail);
                 
-            helper.setTo(Properties.FEEDBACK_EMAIL_FROM);
-            helper.setFrom(Properties.FEEDBACK_EMAIL_FROM);
-            helper.setSubject(Properties.FEEDBACK_EMAIL_SUBJECT.replace("?1", Integer.toString(stars)));
-            helper.setText(((message == null || message.isEmpty()) ? "No se ha recibido ningún comentario" : message));
+            helper.setTo(
+                Properties.FEEDBACK_EMAIL_FROM);
+            helper.setFrom(
+                Properties.FEEDBACK_EMAIL_FROM);
+            helper.setSubject(
+                Properties.FEEDBACK_EMAIL_SUBJECT.replace("?1", Integer.toString(stars)));
+            helper.setText(
+                ((message == null || message.isEmpty()) ? "No se ha recibido ningún comentario" : message));
+        
+            javaMailSender.send(mail);
+            
+        } catch (MessagingException | MailException e) {
+            LOG.error("[EMAIL] Error enviando email (" + e.getMessage() + ")");
+        }
+    }
+    
+    /**
+     * Metodo que envia un email con la tienda sugerida.
+     * @param shop: nombre de la tienda sugerida.
+     * @param link: link de la tienda.
+     */
+    private void _sendShopSuggestion(String shop, String link)
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        
+        try 
+        {
+            MimeMessageHelper helper = new MimeMessageHelper(mail);
+                
+            helper.setTo(
+                Properties.SHOP_SUGGESTION_EMAIL_FROM);
+            helper.setFrom(
+                Properties.SHOP_SUGGESTION_EMAIL_FROM);
+            helper.setSubject(
+                Properties.SHOP_SUGGESTION_EMAIL_SUBJECT);
+            helper.setText(
+                " - Nombre de la tienda: " + shop.toUpperCase() + "\n - Link: " + ((link == null || link.isEmpty()) ? "No especificado" : link));
         
             javaMailSender.send(mail);
             

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.wallakoala.wallakoala.Views.TextInputLayout
+        android:id="@+id/email_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp"
+        android:textColorHint="@color/colorMediumText"
+        android:theme="@style/TextLabel">
+
+        <com.wallakoala.wallakoala.Views.ExistenceEditText
+            android:id="@+id/email_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:maxLength="64"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorDarkerText"
+            android:hint="@string/email_hint"
+            android:nextFocusUp="@id/email_edittext"
+            android:nextFocusLeft="@id/email_edittext"
+            app:customFontEd="Existence-StencilLight.otf"/>
+
+    </com.wallakoala.wallakoala.Views.TextInputLayout>
+
+</LinearLayout>

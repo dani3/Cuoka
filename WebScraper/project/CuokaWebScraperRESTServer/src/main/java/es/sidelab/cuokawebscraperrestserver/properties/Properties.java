@@ -78,8 +78,10 @@ public class Properties
     
     /* Configuracion email */
     public static final String WELCOME_EMAIL_SUBJECT = "CUOKA te da la bienvenida a la nueva red de moda";
-    public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
     public static final String WELCOME_EMAIL_FROM = "bienvenido@cuoka.es";
+    public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
     public static final String FEEDBACK_EMAIL_SUBJECT = "Nueva valoración de ?1 estrallas";
     public static final String FEEDBACK_EMAIL_FROM = "elena.fernandez.guzman@cuoka.es";
+    public static final String SHOP_SUGGESTION_EMAIL_SUBJECT = "Nueva tienda sugerida";
+    public static final String SHOP_SUGGESTION_EMAIL_FROM = "elena.fernandez.guzman@cuoka.es";
 }
