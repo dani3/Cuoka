@@ -8,7 +8,7 @@ package es.sidelab.cuokawebscraperrestserver.properties;
 public class Properties 
 {        
     /* Version */
-    public static final String VERSION = "1.0.1";
+    public static final String VERSION = "1.0.4";
     
     /* Posibles respuestas del servidor */
     public static final String ALREADY_EXISTS    = "USER_ALREADY_EXISTS";
@@ -77,13 +77,13 @@ public class Properties
     public static final short RECOMMENDED_NOTIFICATION   = 4;
     
     /* Configuracion email */
-    public static final String WELCOME_EMAIL_SUBJECT = "CUOKA te da la bienvenida a la nueva red de moda";
-    public static final String WELCOME_EMAIL_FROM = "bienvenido@cuoka.es";
+    public static final String WELCOME_EMAIL_SUBJECT          = "CUOKA te da la bienvenida a la nueva red de moda";
+    public static final String WELCOME_EMAIL_FROM             = "bienvenido@cuoka.es";
     public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
-    public static final String FEEDBACK_EMAIL_SUBJECT = "Nueva valoración de ?1 estrallas";
-    public static final String FEEDBACK_EMAIL_FROM = "elena.fernandez.guzman@cuoka.es";
-    public static final String SHOP_SUGGESTION_EMAIL_SUBJECT = "Nueva tienda sugerida";
-    public static final String SHOP_SUGGESTION_EMAIL_FROM = "elena.fernandez.guzman@cuoka.es";
-    public static final String SCRAPING_STATS_EMAIL_SUBJECT = "[SCRAPER_STATS] ?1";
-    public static final String SCRAPING_STATS_EMAIL_FROM = "elena.fernandez.guzman@cuoka.es";
+    public static final String FEEDBACK_EMAIL_SUBJECT         = "Nueva valoración de ?1 estrallas";
+    public static final String FEEDBACK_EMAIL_FROM            = "elena.fernandez.guzman@cuoka.es";
+    public static final String SHOP_SUGGESTION_EMAIL_SUBJECT  = "Nueva tienda sugerida";
+    public static final String SHOP_SUGGESTION_EMAIL_FROM     = "elena.fernandez.guzman@cuoka.es";
+    public static final String SCRAPING_STATS_EMAIL_SUBJECT   = "[SCRAPER_STATS] ?1";
+    public static final String SCRAPING_STATS_EMAIL_FROM      = "elena.fernandez.guzman@cuoka.es";
 }

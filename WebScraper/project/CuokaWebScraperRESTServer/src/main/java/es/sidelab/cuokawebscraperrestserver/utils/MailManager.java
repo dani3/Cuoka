@@ -63,6 +63,7 @@ public class MailManager
      * Metodo que envia un correo al destinatario especificado.
      * @param to: destinatario.
      * @param from: emisor.
+     * @param password: contraseña a enviar.
      */
     public void sendPasswordEmail(String to, String from, String password)
     {
