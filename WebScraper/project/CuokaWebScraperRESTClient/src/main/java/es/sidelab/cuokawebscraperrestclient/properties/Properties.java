@@ -7,10 +7,10 @@ package es.sidelab.cuokawebscraperrestclient.properties;
 
 public class Properties 
 {    
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     public static final int MAX_THREADS_SHOP = 2;
-    public static final int MAX_THREADS_SECTIONS = 2;
+    public static final int MAX_THREADS_SECTIONS = 1;
     
     public static final String SERVER = "http://46.183.117.22:8080";
     public static final int TIMEOUT = 60000;   

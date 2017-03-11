@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  * Clase que gestiona el envío de correos.
  * @author Daniel Mancebo Aldea
  */
+
 @Component
 public class MailManager 
 {   
