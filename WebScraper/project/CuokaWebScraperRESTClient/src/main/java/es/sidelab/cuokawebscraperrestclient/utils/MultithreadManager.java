@@ -86,10 +86,10 @@ public class MultithreadManager
                         LOG.info("Han sacado un total de " + productList.size() + " productos");
 
                         LOG.info("Llamando al servidor REST para almacenar los productos!");
-                        LOG.info("URL del servidor REST: " + Properties.SERVER);
+                        LOG.info("URL del servidor REST: " + ((Properties.DEV) ? Properties.SERVER_DEV : Properties.SERVER_PROD));
 
                         // LLamamos al servidor para enviar los productos.
-                        RestClient restClient = new RestClient(new URL(Properties.SERVER));                            
+                        RestClient restClient = new RestClient(new URL(((Properties.DEV) ? Properties.SERVER_DEV : Properties.SERVER_PROD)));                            
                         restClient.saveProducts(productList, shop);
 
                         // Enviamos el correo con las estadisticas del proceso de scraping.
