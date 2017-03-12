@@ -1,6 +1,10 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
+import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import es.sidelab.cuokawebscraperrestserver.repositories.UsersRepository;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
@@ -23,6 +27,25 @@ public class MailManager
     
     @Autowired
     private JavaMailSender javaMailSender;    
+    
+    @Autowired
+    private UsersRepository usersRepository;
+    
+    @PostConstruct
+    public void sendPendingEmails()
+    {
+        List<User> users = usersRepository.findByEmailSent(false);
+        
+        for (User user : users)
+        {
+            LOG.info("[EMAIL] Se envia correo de bienvenida");
+            sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
+            
+            user.setEmailSent(true);
+            
+            usersRepository.save(user);
+        }
+    }
     
     /**
      * Metodo que envia un correo al destinatario especificado.

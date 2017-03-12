@@ -335,6 +335,7 @@ public class Controller
         // Asignamos la fecha de registro.
         LOG.info("[LOGIN] El usuario no existe, se registra");
         user.setRegistrationDate(Calendar.getInstance());
+        user.setEmailSent(false);
         
         // Guardamos el usuario en BD.
         usersRepository.save(user);
@@ -346,6 +347,11 @@ public class Controller
         SCHEDULED_EXECUTOR.schedule(() -> {
             LOG.info("[EMAIL] Se envia correo de bienvenida");
             mailManager.sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
+            
+            user.setEmailSent(true);
+            
+            usersRepository.save(user);
+            
         }, 1, TimeUnit.DAYS);
         
         return String.valueOf(id);

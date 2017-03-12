@@ -45,6 +45,10 @@ public class User
     private int postalCode;
     
     @JsonIgnore
+    @Column(name = "EMAIL_SENT")
+    private boolean emailSent;
+    
+    @JsonIgnore
     @Column(name = "DATE")
     private Calendar registrationDate;
     
@@ -119,7 +123,9 @@ public class User
     public boolean getMan()     { return this.man; }
     public int getPostalCode()  { return this.postalCode; }  
     @JsonProperty
-    public Set<Long> getNotificationsRead()  { return this.notificationsRead; }      
+    public Set<Long> getNotificationsRead()  { return this.notificationsRead; }    
+    @JsonIgnore
+    public boolean getEmailSent() { return this.emailSent; }      
     @JsonIgnore
     public Calendar getRegistrationDate() { return this.registrationDate; }    
     @JsonProperty
@@ -160,7 +166,9 @@ public class User
     @JsonIgnore
     public void setShops(Set<String> shops)   { this.shops = shops; } 
     @JsonIgnore
-    public void setNotificationsRead(Set<Long> lastNotification) { this.notificationsRead = notificationsRead; }
+    public void setEmailSent(boolean emailSent) { this.emailSent = emailSent; }
+    @JsonIgnore
+    public void setNotificationsRead(Set<Long> lastNotification) { this.notificationsRead = lastNotification; }
     public void setName(String name)          { this.name = name; }   
     public void setEmail(String email)        { this.email = email; }
     public void setPassword(String password)  { this.password = password; }
