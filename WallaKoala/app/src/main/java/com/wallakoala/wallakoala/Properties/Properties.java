@@ -34,7 +34,7 @@ public class Properties
     public static final int CACHED_PRODUCTS_MAX = 20;
     public static final int CACHED_SHOPS        = 20;
 
-    public static final String SERVER_URL         = "http://46.183.117.22";
+    public static final String SERVER_URL         = "http://46.183.116.208";
     public static final String SERVER_SPRING_PORT = "8080";
 
     public static final String TERMS_AND_CONDITIONS_URL = "https://cuoka.es/legal/";
