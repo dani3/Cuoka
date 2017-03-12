@@ -86,8 +86,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                     {
                         mFirstImageBitmap = bitmap;
 
-                        mImageView.setVisibility(View.GONE);
-
                         mLoaded = (bitmap != null);
                     }
 
@@ -108,6 +106,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                         try
                         {
                             mProductImageView.setImageBitmap(((BitmapDrawable) mImageView.getDrawable()).getBitmap());
+
+                            mImageView.setVisibility(View.GONE);
 
                         } catch (ClassCastException | NullPointerException e) {
                             ExceptionPrinter.printException("PRODUCT_ADAPTER", e);
