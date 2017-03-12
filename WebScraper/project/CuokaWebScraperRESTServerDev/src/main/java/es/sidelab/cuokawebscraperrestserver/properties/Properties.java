@@ -28,7 +28,11 @@ public class Properties
     public static final String PREDEFINED_COLORS_PATH = "/var/www/html/images/colors/";    
     public static final String MAIL_PATH              = "/root/cuoka_01/mail/";
     public static final String SCRIPTS_PATH           = "/root/cuoka_01/scripts/";
+    public static final String PROPERTIES_PATH        = "/root/cuoka_01/properties/";
     public static final String PYTHON_PATH            = "/usr/bin/python";
+    
+    public static final String SECTIONS_FILE = "secciones.txt";
+    public static final String COLORS_FILE   = "colores.txt";
     
     /* Files */
     public static final String WELCOME_EMAIL_NAME      = "bienvenida.html";

@@ -1,7 +1,11 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,8 +26,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ColorManager 
 {
+    private static final Log LOG = LogFactory.getLog(ColorManager.class);
+    
     // Mapa con todos los colores y sus equivalencias.
-    private final Map<String, String[]> colorMap;
+    private final Map<String, String[]> colorsMap;
     // Lista de los colores masculinos a sugerir.
     private final List<String> suggestedMaleColors;
     // Lista de los colores femeninos a sugerir.
@@ -29,49 +37,28 @@ public class ColorManager
     
     public ColorManager()
     {
-        colorMap = new HashMap<>();
+        colorsMap = new HashMap<>();
         
-        colorMap.put("Amarillos", new String[]{ "Amarillo", "Amarillos", "Amarilla", "Amarillas", "Dorado", "Dorados", "Dorada", "Doradas"
-                                        , "Oro", "Oros", "Arena", "Arenas", "Beige", "Beiges", "Beis", "Camel", "Nude", "Maquillaje"
-                                        , "Mostaza", "Mostazas", "Limón", "Limon", "Lima", "Ámbar", "Ambar", "Indio" });
-        
-        colorMap.put("Azules", new String[]{ "Azul", "Azules", "Azulada", "Celeste", "Celestes", "Agua", "Aguas", "Turquí", "Turqui", "Klein"
-                                        , "Turquesa", "Turquesas", "Navy", "Marino", "Marinos", "Añil", "Cobalto", "Zafiro", "Índigo", "Indigo" });
-         
-        colorMap.put("Beiges", new String[]{ "Beige", "Beiges", "Arena", "Arenas", "Beis", "Camel", "Nude", "Maquillaje"
-                                        , "Crudo", "Crudos", "Cruda", "Crudas" });
-        
-        colorMap.put("Blancos", new String[]{ "Blanco", "Blancos", "Blanca", "Blancas", "Perla", "Perlas", "Hielo", "Crudo", "Crudos"
-                                        , "Cruda", "Crudas", "Marfil", "Nieve" });
-        
-        colorMap.put("Grises", new String[]{ "Gris", "Grises", "Plata", "Platas", "Plateado", "Plateados", "Marengo", "Marengos" });
-        
-        colorMap.put("Marrones", new String[]{ "Marron", "Marrones", "Marrón", "Pardo", "Café", "Chocolate", "Castaño", "Borgoña", "Ocre", "Siena" });
-        
-        colorMap.put("Morados", new String[]{ "Morado", "Morados", "Morada", "Moradas", "Purpura", "Purpuras", "Púrpura", "Púrpuras"
-                                        , "Berenjena", "Berenjenas", "Lavanda", "Lavandas", "Fucsia", "Fucsias", "Lila", "Lilas", "Malva" });
-        
-        colorMap.put("Negros", new String[]{ "Negro", "Negros", "Negra", "Negras", "Petroleo", "Petroleos", "Petróleo", "Petróleos" });
-        
-        colorMap.put("Rojos", new String[]{ "Rojo", "Rojos", "Roja", "Rojas", "Granate", "Granates", "Burdeos", "Terracota", "Terracotas", "Escarlata"
-                                        , "Teja", "Tejas", "Naranja", "Naranjas", "Coral", "Corales", "Colorado", "Bermellon", "Bermellón", "Carmín", "Carmin" });
-        
-        colorMap.put("Rosas", new String[]{ "Rosa", "Rosas", "Fresa", "Fresas", "Frambuesa", "Frambuesas", "Salmón", "Salmon" });
-        
-        colorMap.put("Verdes", new String[]{ "Verde", "Verdes", "Caza", "Cazas", "Caqui", "Caquis", "Khaki", "Khakis", "Esmeralda", "Jade", "Veronés"
-                                        , "Oliva", "Arlequín", "Arlequin", "Esparrago", "Espárrago" });
-        
-        colorMap.put("Cuadros", new String[]{ "Cuadro", "Cuadros" });
-        
-        colorMap.put("Rayas", new String[]{ "Raya", "Rayas" });
-        
-        colorMap.put("Lunares", new String[]{ "Lunares", "Moteado", "Moteados" });
-        
-        colorMap.put("Flores", new String[]{ "Flor", "Flores", "Floral" });
-        
-        colorMap.put("Estampado", new String[]{ "Estampado", "Estampados" });
-        
-        colorMap.put("Cuero", new String[]{ "Cuero", "Leather", "Piel", "Pieles" });
+        try 
+        {
+            BufferedReader br = new BufferedReader(
+                new FileReader(
+                    new File(Properties.PROPERTIES_PATH + Properties.COLORS_FILE)));
+            
+            String line;
+            while((line = br.readLine()) != null)
+            {
+                String key = line.split(":")[0];
+                String[] values = line.split(":")[1].split(",");
+                
+                colorsMap.put(key, values);
+            }
+            
+        } catch (FileNotFoundException ex) {
+            LOG.error("[COLOR_MANAGER] Error abriendo el fichero de colores (" + ex.getMessage() + ")");
+        } catch (IOException ex) {
+            LOG.error("[COLOR_MANAGER] Error leyendo el fichero de colores (" + ex.getMessage() + ")");
+        }
         
         /* Lista de colores sugeridos tanto en masculino como en femenino (IMPORTANTE que estén en el mismo orden y posición */
         suggestedMaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
@@ -148,7 +135,7 @@ public class ColorManager
         
         for (String color : colors)
         {
-            colorList.addAll(Arrays.asList(colorMap.get(color)));
+            colorList.addAll(Arrays.asList(colorsMap.get(color)));
         }
         
         return colorList;
@@ -161,7 +148,7 @@ public class ColorManager
      */
     public String getColor(String keyword)
     {
-        Set<Map.Entry<String, String[]>> entrySet = colorMap.entrySet();
+        Set<Map.Entry<String, String[]>> entrySet = colorsMap.entrySet();
         
         // Buscamos primero colores con poca tolerancia
         for (Map.Entry<String, String[]> entry : entrySet)

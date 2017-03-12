@@ -1,6 +1,11 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,42 +35,26 @@ public class SectionManager
     {
         sectionsMap = new HashMap<>();
         
-        sectionsMap.put("Abrigos", new String[]{ "Cazadora", "Cazadoras", "Bomber", "Bombers", "Parka", "Parkas", "Chaqueta", "Chaquetas"
-                                            , "Chaqueton", "Chaquetón", "Chaquetones", "Abrigo", "Abrigos", "Cardigan", "Cárdigan", "Cardigans" });
-        
-        sectionsMap.put("Americanas", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Chaleco", "Chalecos"
-                                            , "Cazadora", "Cazadoras", "Bomber", "Bombers", "Americana", "Americanas" });
-        
-        sectionsMap.put("Camisas", new String[]{ "Blusa", "Blusas", "Camisola", "Camisolas"
-                                            , "Bluson","Blusón" , "Blusones", "Camisa", "Camisas" });
-        
-        sectionsMap.put("Polos", new String[]{ "Polo", "Polos" });
-        
-        sectionsMap.put("Camisetas", new String[]{ "Top", "Tops", "Bodies", "Camiseta", "Camisetas", "Henley", "T-Shirt" });
-        
-        sectionsMap.put("Jerseis", new String[]{ "Jersey", "Jerseys", "Jerséy", "Jerséis", "Sudadera", "Sudaderas", "Cardigan", "Cardigans", "Jersei", "Jerseis", "Jerséi", "Jerséis"  });
-        
-        sectionsMap.put("Pantalones", new String[]{ "Vaqueros", "Vaquero", "Jeans", "Jean", "Chinos", "Chinos", "Pantalon", "Pantalones", "Leggins", "Leggin" });
-        
-        sectionsMap.put("Shorts", new String[]{ "Shorts", "Short" , "Pantalones cortos", "Pantalon corto", "Bermuda", "Bermudas", "Pantalón" });
-        
-        sectionsMap.put("Trajes", new String[]{ "Chaqueta", "Chaquetas", "Blazer", "Blazers", "Americana", "Americanas", "Traje", "Trajes" });
-        
-        sectionsMap.put("Vestidos", new String[]{ "Vestido", "Vestidos" });
-        
-        sectionsMap.put("Faldas", new String[]{ "Falda", "Faldas", "Shorts", "Short", "Bermuda", "Bermudas" });
-        
-        sectionsMap.put("Ponchos y Monos", new String[]{ "Mono", "Monos", "Kimono", "Kimonos", "Quimono", "Quimonos"
-                                        , "Peto", "Petos", "Poncho", "Poncho", "Body" });
-        
-        sectionsMap.put("Sudaderas", new String[]{ "Sudadera", "Sudaderas", "Jersey", "Jerseys", "Jersei", "Jerseis", "Jerséy", "Jerséys", "Jerséi", "Jerséis"});
-        
-        sectionsMap.put("Sport", new String[]{ "Leggin", "Leggins", "Sport", "Gym", "Gimnasia", "Jogging", "Easywear"
-                                        , "Deportivo", "Deportivos", "Sportwear", "Beachwear" });
-        
-        sectionsMap.put("Zapatos", new String[]{ "Zapato", "Zapatos", "Calzado", "Bota", "Botas", "Botin", "Botines", "Sandalia", "Sandalias"
-                                        , "Manoletina", "Manoletinas", "Bailarina", "Zapatilla", "Zapatillas", "Zueco", "Zuecos", "Cuñas"
-                                        , "Chancla", "Chanclas", "Chancleta", "Chancletas" });
+        try 
+        {
+            BufferedReader br = new BufferedReader(
+                new FileReader(
+                    new File(Properties.PROPERTIES_PATH + Properties.SECTIONS_FILE)));
+            
+            String line;
+            while((line = br.readLine()) != null)
+            {
+                String key = line.split(":")[0];
+                String[] values = line.split(":")[1].split(",");
+                
+                sectionsMap.put(key, values);
+            }
+            
+        } catch (FileNotFoundException ex) {
+            LOG.error("[SECTION_MANAGER] Error abriendo el fichero de secciones (" + ex.getMessage() + ")");
+        } catch (IOException ex) {
+            LOG.error("[SECTION_MANAGER] Error leyendo el fichero de secciones (" + ex.getMessage() + ")");
+        }
         
         suggestedSections = Arrays.asList(new String[] { "Cazadora", "Bomber", "Chaqueta", "Chaquetón", "Abrigo", "Blazer"
                                         , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"

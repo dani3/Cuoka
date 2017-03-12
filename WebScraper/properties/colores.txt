@@ -1,0 +1,17 @@
+Amarillos:Amarillo,Amarillos,Amarilla,Amarillas,Dorado,Dorados,Dorada,Doradas,Oro,Oros,Arena,Arenas,Beige,Beiges,Beis,Camel,Nude,Maquillaje,Mostaza,Mostazas,Limón,Limon,Lima,Ámbar,Ambar,Indio
+Azules:Azul,Azules,Azulada,Celeste,Celestes,Agua,Aguas,Turquí,Turqui,Klein,Turquesa,Turquesas,Navy,Marino,Marinos,Añil,Cobalto,Zafiro,Índigo,Indigo
+Beiges:Beige,Beiges,Arena,Arenas,Beis,Camel,Nude,Maquillaje,Crudo,Crudos,Cruda,Crudas
+Blancos:Blanco,Blancos,Blanca,Blancas,Perla,Perlas,Hielo,Crudo,Crudos,Cruda,Crudas,Marfil,Nieve
+Grises:Gris,Grises,Plata,Platas,Plateado,Plateados,Marengo,Marengos
+Marrones:Marron,Marrones,Marrón,Pardo,Café,Chocolate,Castaño,Borgoña,Ocre,Siena
+Morados:Morado,Morados,Morada,Moradas,Purpura,Purpuras,Púrpura,Púrpuras,Berenjena,Berenjenas,Lavanda,Lavandas,Fucsia,Fucsias,Lila,Lilas,Malva
+Negros:Negro,Negros,Negra,Negras,Petroleo,Petroleos,Petróleo,Petróleos
+Rojos:Rojo,Rojos,Roja,Rojas,Granate,Granates,Burdeos,Terracota,Terracotas,Escarlata,Teja,Tejas,Naranja,Naranjas,Coral,Corales,Colorado,Bermellon,Bermellón,Carmín,Carmin
+Rosas:Rosa,Rosas,Fresa,Fresas,Frambuesa,Frambuesas,Salmón,Salmon
+Verdes:Verde,Verdes,Caza,Cazas,Caqui,Caquis,Khaki,Khakis,Esmeralda,Jade,Veronés,Oliva,Arlequín,Arlequin,Esparrago,Espárrago
+Cuadros:Cuadro,Cuadros
+Raya:Raya,Rayas
+Lunares:Lunares,Moteado,Moteados
+Flores:Flor,Flores,Floral
+Estampado:Estampado,Estampados
+Cuero:Cuero,Leather,Piel,Pieles
