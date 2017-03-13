@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.wallakoala.wallakoala.Views.ExistenceTextView
+        <com.cuoka.cuoka.Views.ExistenceTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorText"
@@ -21,7 +21,7 @@
             android:layout_marginBottom="16dp"
             app:customFont="Existence-StencilLight.otf"/>
 
-        <com.wallakoala.wallakoala.Views.TextInputLayout
+        <com.cuoka.cuoka.Views.TextInputLayout
             android:id="@+id/email_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textColorHint="@color/colorMediumText"
             android:theme="@style/TextLabel">
 
-            <com.wallakoala.wallakoala.Views.ExistenceEditText
+            <com.cuoka.cuoka.Views.ExistenceEditText
                 android:id="@+id/email_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 android:nextFocusLeft="@id/email_edittext"
                 app:customFontEd="Existence-StencilLight.otf"/>
 
-        </com.wallakoala.wallakoala.Views.TextInputLayout>
+        </com.cuoka.cuoka.Views.TextInputLayout>
 
         <com.dd.CircularProgressButton
             android:id="@+id/done"
@@ -84,7 +84,7 @@
             android:src="@drawable/ic_done_hq"
             android:layout_marginBottom="16dp"/>
 
-        <com.wallakoala.wallakoala.Views.ExistenceTextView
+        <com.cuoka.cuoka.Views.ExistenceTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
