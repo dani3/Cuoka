@@ -1,138 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:layout_height="wrap_content">
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Cabecera -->
+            <com.cuoka.cuoka.Views.ExistenceTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="32dp"
+                android:paddingRight="48dp"
+                android:paddingLeft="48dp"
+                android:paddingBottom="20dp"
+                android:gravity="center"
+                android:textColor="@color/colorText"
+                android:text="@string/sign_in_info"
+                app:customFont="Existence-StencilLight.otf"/>
+
+            <!-- Crear cuenta -->
+            <Button
+                android:id="@+id/create_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:text="@string/create_account"
+                android:textColor="@android:color/white"
+                style="@style/Base.Widget.AppCompat.Button.Colored"/>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="24dp"
+                android:background="#C8C9CB"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+
+            <!-- Email -->
+            <com.cuoka.cuoka.Views.TextInputLayout
+                android:id="@+id/email_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:textColorHint="@color/colorMediumText"
+                android:theme="@style/TextLabel">
+
+                <com.cuoka.cuoka.Views.ExistenceEditText
+                    android:id="@+id/email_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:maxLength="64"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorDarkerText"
+                    android:hint="@string/email_hint"
+                    android:nextFocusUp="@id/email_edittext"
+                    android:nextFocusLeft="@id/email_edittext"
+                    app:customFontEd="Existence-StencilLight.otf"/>
+
+            </com.cuoka.cuoka.Views.TextInputLayout>
+
+            <!-- Contraseña -->
+            <com.cuoka.cuoka.Views.TextInputLayout
+                android:id="@+id/password_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="12dp"
+                android:textColorHint="@color/colorMediumText"
+                android:theme="@style/TextLabel">
+
+                <com.cuoka.cuoka.Views.ExistenceEditText
+                    android:id="@+id/password_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:maxLength="64"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorDarkerText"
+                    android:hint="@string/password_hint"
+                    app:customFontEd="Existence-StencilLight.otf"/>
+
+            </com.cuoka.cuoka.Views.TextInputLayout>
+
+            <!-- Recordarme -->
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/remember_me_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remember_me"
+                android:textColor="@color/colorText"
+                android:layout_margin="24dp"
+                app:buttonTint="@color/colorAccent"/>
+
+            <com.dd.CircularProgressButton
+                android:id="@+id/enter"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:textColor="@android:color/white"
+                android:textSize="15dp"
+                app:cpb_cornerRadius="1dp"
+                app:cpb_textIdle="@string/login_sign_in"
+                app:cpb_iconComplete="@drawable/ic_done_mini"
+                app:cpb_selectorIdle="@color/morph_button_idle_colors"
+                app:cpb_selectorComplete="@color/morph_button_complete_colors"
+                app:cpb_colorIndicator="@color/colorAccent"
+                app:cpb_colorIndicatorBackground="@android:color/transparent"
+                app:cpb_colorProgress="@android:color/transparent"/>
+
+            <!-- Olvidar contraseña -->
+            <com.cuoka.cuoka.Views.ExistenceTextView
+                android:id="@+id/password_forgotten"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/forget_password"
+                android:textColor="@color/colorText"
+                android:layout_margin="24dp"
+                android:gravity="right"
+                app:customFont="Existence-StencilLight.otf"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/sign_in_dialog_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/colorAccent">
 
-        <!-- Cabecera -->
+        <ImageView
+            android:layout_width="74dp"
+            android:layout_height="74dp"
+            android:src="@drawable/ic_done_hq"
+            android:layout_marginBottom="42dp"/>
+
         <com.cuoka.cuoka.Views.ExistenceTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:paddingRight="48dp"
-            android:paddingLeft="48dp"
-            android:paddingBottom="20dp"
             android:gravity="center"
-            android:textColor="@color/colorText"
-            android:text="@string/sign_in_info"
-            app:customFont="Existence-StencilLight.otf"/>
-
-        <!-- Crear cuenta -->
-        <Button
-            android:id="@+id/create_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:text="@string/create_account"
+            android:textSize="18dp"
             android:textColor="@android:color/white"
-            style="@style/Base.Widget.AppCompat.Button.Colored"/>
-
-        <!-- Separador -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="24dp"
-            android:background="#C8C9CB"
-            android:focusable="true"
-            android:focusableInTouchMode="true"/>
-
-        <!-- Email -->
-        <com.cuoka.cuoka.Views.TextInputLayout
-            android:id="@+id/email_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="24dp"
-            android:layout_marginLeft="24dp"
-            android:textColorHint="@color/colorMediumText"
-            android:theme="@style/TextLabel">
-
-            <com.cuoka.cuoka.Views.ExistenceEditText
-                android:id="@+id/email_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:maxLength="64"
-                android:textColor="@color/colorText"
-                android:textColorHint="@color/colorDarkerText"
-                android:hint="@string/email_hint"
-                android:nextFocusUp="@id/email_edittext"
-                android:nextFocusLeft="@id/email_edittext"
-                app:customFontEd="Existence-StencilLight.otf"/>
-
-        </com.cuoka.cuoka.Views.TextInputLayout>
-
-        <!-- Contraseña -->
-        <com.cuoka.cuoka.Views.TextInputLayout
-            android:id="@+id/password_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="12dp"
-            android:textColorHint="@color/colorMediumText"
-            android:theme="@style/TextLabel">
-
-            <com.cuoka.cuoka.Views.ExistenceEditText
-                android:id="@+id/password_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:maxLength="64"
-                android:textColor="@color/colorText"
-                android:textColorHint="@color/colorDarkerText"
-                android:hint="@string/password_hint"
-                app:customFontEd="Existence-StencilLight.otf"/>
-
-        </com.cuoka.cuoka.Views.TextInputLayout>
-
-        <!-- Recordarme -->
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/remember_me_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/remember_me"
-            android:textColor="@color/colorText"
-            android:layout_margin="24dp"
-            app:buttonTint="@color/colorAccent"/>
-
-        <com.dd.CircularProgressButton
-            android:id="@+id/enter"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginLeft="24dp"
-            android:textColor="@android:color/white"
-            android:textSize="15dp"
-            app:cpb_cornerRadius="1dp"
-            app:cpb_textIdle="@string/login_sign_in"
-            app:cpb_iconComplete="@drawable/ic_done_mini"
-            app:cpb_selectorIdle="@color/morph_button_idle_colors"
-            app:cpb_selectorComplete="@color/morph_button_complete_colors"
-            app:cpb_colorIndicator="@color/colorAccent"
-            app:cpb_colorIndicatorBackground="@android:color/transparent"
-            app:cpb_colorProgress="@android:color/transparent"/>
-
-        <!-- Olvidar contraseña -->
-        <com.cuoka.cuoka.Views.ExistenceTextView
-            android:id="@+id/password_forgotten"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/forget_password"
-            android:textColor="@color/colorText"
-            android:layout_margin="24dp"
-            android:gravity="right"
+            android:text="@string/login_ok"
             app:customFont="Existence-StencilLight.otf"/>
 
     </LinearLayout>
 
-</ScrollView>
+</FrameLayout>
+
+

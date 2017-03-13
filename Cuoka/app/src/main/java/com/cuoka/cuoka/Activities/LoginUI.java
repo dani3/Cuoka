@@ -695,22 +695,6 @@ public class LoginUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // Si se hace click cuando se ha completado el registro se llama a la siguiente pantalla
-                if (mRegisterCircularButton.getProgress() == 100)
-                {
-                    Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Tick");
-                    Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> MainScreenUI");
-
-                    Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
-
-                    startActivity(intent);
-
-                    finish();
-
-                    // Animacion de transicion para pasar de una activity a otra.
-                    overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
-                }
-
                 // Validamos los datos introducidos y comprobamos que no estemos ya cargando.
                 if (mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100 &&
                     _validateEmail(mEmailEdittext, mEmailInputLayout) && _validatePassword() && _validateAge() && _validatePostalCode() && _validateName() && _isGenderSelected())
@@ -774,9 +758,6 @@ public class LoginUI extends AppCompatActivity
                                             Log.d(Properties.TAG, "[LOGIN] Usuario registrado correctamente (ID: " + id + ")");
                                             Log.d(Properties.TAG, "[LOGIN] Se guarda el usuario en las SharedPreferences");
 
-                                            // X = 100 -> Complete
-                                            mRegisterCircularButton.setProgress(100);
-
                                             // Actualizamos el fichero de SharedPreferences.
                                             boolean man     = (mMaleImageButton.getAlpha() == ACTIVE_ALPHA);
                                             int age         = Integer.valueOf(mAgeEdittext.getText().toString());
@@ -800,6 +781,64 @@ public class LoginUI extends AppCompatActivity
 
                                             mSharedPreferencesManager.insertUser(user);
                                             mSharedPreferencesManager.insertLoggedIn(true);
+
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                            {
+                                                int enterButtonX = (mRegisterCircularButton.getLeft()
+                                                        + mRegisterCircularButton.getRight()) / 2;
+
+                                                int enterButtonY = ((int) mRegisterCircularButton.getY()
+                                                        + mRegisterCircularButton.getHeight()) / 2;
+
+                                                View background = mAlertDialogView.findViewById(R.id.sign_up_dialog_background);
+
+                                                int radiusReveal = Math.max(background.getWidth()
+                                                        , background.getHeight());
+
+                                                background.setVisibility(View.VISIBLE);
+
+                                                Animator animator =
+                                                        android.view.ViewAnimationUtils.createCircularReveal(background
+                                                                , enterButtonX
+                                                                , enterButtonY
+                                                                , 0
+                                                                , radiusReveal);
+
+                                                animator.setDuration(200);
+                                                animator.setInterpolator(new AccelerateInterpolator());
+
+                                                animator.start();
+
+                                                background.setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
+                                                        Log.d(Properties.TAG, "[LOGIN] Se avanza a la pantalla -> MainScreenUI");
+                                                        // Avanzamos automaticamente a la siguiente pantalla.
+                                                        Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+
+                                                        startActivity(intent);
+
+                                                        finish();
+
+                                                        // Animacion de transicion para pasar de una activity a otra.
+                                                        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                                                    }
+                                                });
+
+                                            } else {
+                                                Log.d(Properties.TAG, "[LOGIN] Se avanza a la pantalla -> MainScreenUI");
+                                                // Avanzamos automaticamente a la siguiente pantalla.
+                                                Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+
+                                                startActivity(intent);
+
+                                                finish();
+
+                                                // Animacion de transicion para pasar de una activity a otra.
+                                                overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                                            }
                                         }
                                     }
                                 }
@@ -892,16 +931,63 @@ public class LoginUI extends AppCompatActivity
                             mSharedPreferencesManager.insertUser(user);
                             mSharedPreferencesManager.insertLoggedIn(rememberMe);
 
-                            Log.d(Properties.TAG, "[LOGIN] Se avanza a la pantalla -> MainScreenUI");
-                            // Avanzamos automaticamente a la siguiente pantalla.
-                            Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            {
+                                int enterButtonX = (enterButton.getLeft()
+                                        + enterButton.getRight()) / 2;
 
-                            startActivity(intent);
+                                int enterButtonY = ((int) enterButton.getY()
+                                        + enterButton.getHeight()) / 2;
 
-                            finish();
+                                View background = mAlertDialogView.findViewById(R.id.sign_in_dialog_background);
 
-                            // Animacion de transicion para pasar de una activity a otra.
-                            overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                                int radiusReveal = Math.max(background.getWidth()
+                                        , background.getHeight());
+
+                                background.setVisibility(View.VISIBLE);
+
+                                Animator animator =
+                                        android.view.ViewAnimationUtils.createCircularReveal(background
+                                                , enterButtonX
+                                                , enterButtonY
+                                                , 0
+                                                , radiusReveal);
+
+                                animator.setDuration(200);
+                                animator.setInterpolator(new AccelerateInterpolator());
+
+                                animator.start();
+
+                                background.setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        Log.d(Properties.TAG, "[LOGIN] Se avanza a la pantalla -> MainScreenUI");
+                                        // Avanzamos automaticamente a la siguiente pantalla.
+                                        Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+
+                                        startActivity(intent);
+
+                                        finish();
+
+                                        // Animacion de transicion para pasar de una activity a otra.
+                                        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                                    }
+                                });
+
+                            } else {
+                                Log.d(Properties.TAG, "[LOGIN] Se avanza a la pantalla -> MainScreenUI");
+                                // Avanzamos automaticamente a la siguiente pantalla.
+                                Intent intent = new Intent(LoginUI.this, MainScreenUI.class);
+
+                                startActivity(intent);
+
+                                finish();
+
+                                // Animacion de transicion para pasar de una activity a otra.
+                                overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+                            }
 
                         } catch (JSONException e) {
                             ExceptionPrinter.printException("LOGIN", e);
