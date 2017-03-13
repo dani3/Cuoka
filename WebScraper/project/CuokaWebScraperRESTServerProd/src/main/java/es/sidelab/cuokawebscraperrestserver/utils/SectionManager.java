@@ -27,11 +27,29 @@ public class SectionManager
 {
     private static final Log LOG = LogFactory.getLog(SectionManager.class);
     
-    private final Map<String, String[]> sectionsMap;
+    private Map<String, String[]> sectionsMap;
     private final List<String> suggestedSections;
     private final List<String> maleSections;
     
     public SectionManager()
+    {
+        refreshProperties();
+        
+        suggestedSections = Arrays.asList(new String[] { "Cazadora", "Bomber", "Chaqueta", "Chaquetón", "Abrigo", "Blazer"
+                                        , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"
+                                        , "Sudadera", "Cardigan", "Chinos", "Pantalones", "Pantalones cortos", "Bermuda", "Shorts", "Traje" 
+                                        , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"
+                                        , "Poncho", "Parka", "Zapatos", "Botas", "Sandalias", "Zapatillas" });
+    
+        maleSections = Arrays.asList(new String[] { "Chaquetón", "Abrigo", "Polo", "Top", "Vaqueros", "Jeans", "Jersey", "Cardigan"
+                                  , "Chinos", "Pantalones", "Pantalones cortos", "Shorts", "Traje", "Vestido", "Chaleco", "Mono"
+                                  , "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Poncho", "Zapatos" });
+    }
+    
+    /**
+     * Metodo que actualiza el mapa.
+     */
+    public final void refreshProperties()
     {
         sectionsMap = new HashMap<>();
         
@@ -55,16 +73,6 @@ public class SectionManager
         } catch (IOException ex) {
             LOG.error("[SECTION_MANAGER] Error leyendo el fichero de secciones (" + ex.getMessage() + ")");
         }
-        
-        suggestedSections = Arrays.asList(new String[] { "Cazadora", "Bomber", "Chaqueta", "Chaquetón", "Abrigo", "Blazer"
-                                        , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"
-                                        , "Sudadera", "Cardigan", "Chinos", "Pantalones", "Pantalones cortos", "Bermuda", "Shorts", "Traje" 
-                                        , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"
-                                        , "Poncho", "Parka", "Zapatos", "Botas", "Sandalias", "Zapatillas" });
-    
-        maleSections = Arrays.asList(new String[] { "Chaquetón", "Abrigo", "Polo", "Top", "Vaqueros", "Jeans", "Jersey", "Cardigan"
-                                  , "Chinos", "Pantalones", "Pantalones cortos", "Shorts", "Traje", "Vestido", "Chaleco", "Mono"
-                                  , "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Poncho", "Zapatos" });
     }
     
     /**

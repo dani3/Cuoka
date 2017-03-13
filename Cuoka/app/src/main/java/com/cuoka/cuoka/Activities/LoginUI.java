@@ -1,9 +1,10 @@
 package com.cuoka.cuoka.Activities;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
@@ -88,7 +90,7 @@ public class LoginUI extends AppCompatActivity
 
     /* AlertDialog */
     private AlertDialog mAlertDialog;
-    private AlertDialog mRecoverPasswordAlertDialog;
+    private AlertDialog mGetEmailAlertDialog;
 
     /* AlertDialog View */
     private View mAlertDialogView;
@@ -210,21 +212,21 @@ public class LoginUI extends AppCompatActivity
      */
     private void _initSignInButtons(View parent)
     {
-        final Button mCreateAccountButton         = (Button) parent.findViewById(R.id.create_account);
-        final CircularProgressButton mEnterButton = (CircularProgressButton) parent.findViewById(R.id.enter);
+        final Button createAccountButton         = (Button) parent.findViewById(R.id.create_account);
+        final CircularProgressButton enterButton = (CircularProgressButton) parent.findViewById(R.id.enter);
 
-        mEnterButton.setIndeterminateProgressMode(true);
+        enterButton.setIndeterminateProgressMode(true);
 
-        mCreateAccountButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mEnterButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        createAccountButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        enterButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
-        mCreateAccountButton.setOnClickListener(new View.OnClickListener()
+        createAccountButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 // Se permite cambiar de pantalla siempre que no se este cargando.
-                if (mEnterButton.getProgress() == 0)
+                if (enterButton.getProgress() == 0)
                 {
                     mAlertDialog.dismiss();
 
@@ -235,12 +237,12 @@ public class LoginUI extends AppCompatActivity
             }
         });
 
-        mEnterButton.setOnClickListener(new View.OnClickListener()
+        enterButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (_validateEmail() && _validatePassword() && (mEnterButton.getProgress() == 0))
+                if (_validateEmail(mEmailEdittext, mEmailInputLayout) && _validatePassword() && (enterButton.getProgress() == 0))
                 {
                     Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Entrar");
 
@@ -252,7 +254,7 @@ public class LoginUI extends AppCompatActivity
                     Log.d(Properties.TAG, "[LOGIN] El check Recuérdame " + (rememberMe ? "" : "NO ") + "está marcado");
                     Log.d(Properties.TAG, "[LOGIN] El email es: " + email);
 
-                    mEnterButton.setProgress(50);
+                    enterButton.setProgress(50);
 
                     final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                             + "/users" + "/" + email + "/" + password);
@@ -273,7 +275,7 @@ public class LoginUI extends AppCompatActivity
                                     {
                                         Log.d(Properties.TAG, "[LOGIN] Los datos son incorrectos");
 
-                                        mEnterButton.setProgress(0);
+                                        enterButton.setProgress(0);
 
                                         Snackbar snackbar = Snackbar.make(mAlertDialogView
                                                 , "Email y/o contraseña incorectos"
@@ -290,9 +292,8 @@ public class LoginUI extends AppCompatActivity
                                         final long id = Long.valueOf(response);
 
                                         Log.d(Properties.TAG, "[LOGIN] Usuario logueado correctamente (ID: " + id + ")");
-                                        _getUserInfo(id, mEnterButton, rememberMe);
+                                        _getUserInfo(id, enterButton, rememberMe);
                                     }
-
                                 }
                             }
                             , new Response.ErrorListener()
@@ -303,7 +304,7 @@ public class LoginUI extends AppCompatActivity
                                 {
                                     ExceptionPrinter.printException("LOGIN", error);
 
-                                    mEnterButton.setProgress(0);
+                                    enterButton.setProgress(0);
 
                                     Snackbar snackbar = Snackbar
                                             .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
@@ -311,8 +312,8 @@ public class LoginUI extends AppCompatActivity
                                                 @Override
                                                 public void onClick(View v)
                                                 {
-                                                    mEnterButton.setProgress(0);
-                                                    mEnterButton.performClick();
+                                                    enterButton.setProgress(0);
+                                                    enterButton.performClick();
                                                 }
                                             });
 
@@ -370,11 +371,9 @@ public class LoginUI extends AppCompatActivity
             {
                 if (mSharedPreferencesManager.retrieveUser() != null)
                 {
-                    mRecoverPasswordAlertDialog = _createDialog();
+                    mGetEmailAlertDialog = _getEmailDialog();
 
-                    mRecoverPasswordAlertDialog.show();
-
-                    RestClientSingleton.requestForgottenPassword(LoginUI.this);
+                    mGetEmailAlertDialog.show();
                 }
             }
         });
@@ -383,19 +382,157 @@ public class LoginUI extends AppCompatActivity
     /**
      * Metodo que crea un dialogo para mostrar un mensaje.
      */
-    private AlertDialog _createDialog()
+    @SuppressLint("InflateParams")
+    private AlertDialog _getEmailDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginUI.this, R.style.MyDialogTheme);
 
-        builder.setTitle("");
-        builder.setMessage(getResources().getString(R.string.password_forgotten));
+        LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener()
+        mAlertDialogView = inflater.inflate(R.layout.aux_email_dialog, null);
+
+        builder.setView(mAlertDialogView);
+
+        mEmailEdittext = (EditText) mAlertDialogView.findViewById(R.id.email_edittext);
+        mEmailInputLayout = (TextInputLayout) mAlertDialogView.findViewById(R.id.email_input_layout);
+
+        mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+
+        mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
+
+        if (mSharedPreferencesManager.retrieveUser() != null)
+        {
+            mEmailEdittext.setText(mSharedPreferencesManager.retrieveUser().getEmail());
+        }
+
+        final CircularProgressButton enterButton = (CircularProgressButton) mAlertDialogView.findViewById(R.id.done);
+        enterButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        enterButton.setIndeterminateProgressMode(true);
+
+        enterButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(DialogInterface dialog, int which)
+            public void onClick(View v)
             {
-                mRecoverPasswordAlertDialog.dismiss();
+                if (_validateEmail(mEmailEdittext, mEmailInputLayout) && (enterButton.getProgress() == 0))
+                {
+                    enterButton.setProgress(50);
+
+                    final String email = mEmailEdittext.getText().toString();
+
+                    final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
+                            + "/users/email/" + email + "/");
+
+                    Log.d(Properties.TAG, "[LOGIN] Conectando con: " + fixedURL + " para comprobar el usuario");
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET
+                        , fixedURL
+                        , new Response.Listener<String>()
+                        {
+                            @SuppressWarnings("deprecation")
+                            @Override
+                            public void onResponse(String response)
+                            {
+                                Log.d(Properties.TAG, "[LOGIN] Respuesta del servidor: " + response);
+
+                                if (response.equals(Properties.USER_NOT_FOUND))
+                                {
+                                    Log.d(Properties.TAG, "[LOGIN] Los datos son incorrectos");
+
+                                    enterButton.setProgress(0);
+
+                                    Snackbar snackbar = Snackbar.make(mAlertDialogView
+                                            , "El email no existe"
+                                            , Snackbar.LENGTH_LONG);
+
+                                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                            .setTextColor(getResources().getColor(R.color.colorText));
+
+                                    snackbar.show();
+
+                                } else {
+                                    Log.d(Properties.TAG, "[LOGIN] Los datos son correctos");
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                    {
+                                        int enterButtonX = (enterButton.getLeft()
+                                                + enterButton.getRight()) / 2;
+
+                                        int enterButtonY = ((int) enterButton.getY()
+                                                + enterButton.getHeight()) / 2;
+
+                                        View background = mAlertDialogView.findViewById(R.id.email_dialog_background);
+
+                                        int radiusReveal = Math.max(background.getWidth()
+                                                , background.getHeight());
+
+                                        background.setVisibility(View.VISIBLE);
+
+                                        Animator animator =
+                                                android.view.ViewAnimationUtils.createCircularReveal(background
+                                                        , enterButtonX
+                                                        , enterButtonY
+                                                        , 0
+                                                        , radiusReveal);
+
+                                        animator.setDuration(200);
+                                        animator.setInterpolator(new AccelerateInterpolator());
+
+                                        animator.start();
+
+                                        background.setOnClickListener(new View.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(View v)
+                                            {
+                                                mGetEmailAlertDialog.dismiss();
+                                            }
+                                        });
+
+                                    } else {
+                                        enterButton.setProgress(100);
+                                    }
+
+                                    RestClientSingleton.requestForgottenPassword(LoginUI.this);
+                                }
+                            }
+                        }
+                        , new Response.ErrorListener()
+                        {
+                            @SuppressWarnings("deprecation")
+                            @Override
+                            public void onErrorResponse(VolleyError error)
+                            {
+                                ExceptionPrinter.printException("LOGIN", error);
+
+                                enterButton.setProgress(0);
+
+                                Snackbar snackbar = Snackbar
+                                        .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                                        .setAction("Reintentar", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v)
+                                            {
+                                                enterButton.setProgress(0);
+                                                enterButton.performClick();
+                                            }
+                                        });
+
+                                snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                                snackbar.show();
+                            }
+                        });
+
+                    Log.d(Properties.TAG, "[LOGIN] Se envía la petición la servidor");
+                    VolleySingleton.getInstance(LoginUI.this).addToRequestQueue(stringRequest);
+                }
             }
         });
 
@@ -576,7 +713,7 @@ public class LoginUI extends AppCompatActivity
 
                 // Validamos los datos introducidos y comprobamos que no estemos ya cargando.
                 if (mRegisterCircularButton.getProgress() != 50 && mRegisterCircularButton.getProgress() != 100 &&
-                    _validateEmail() && _validatePassword() && _validateAge() && _validatePostalCode() && _validateName() && _isGenderSelected())
+                    _validateEmail(mEmailEdittext, mEmailInputLayout) && _validatePassword() && _validateAge() && _validatePostalCode() && _validateName() && _isGenderSelected())
                 {
                     Log.d(Properties.TAG, "[LOGIN] El usuario hace CLICK -> Hecho");
                     Log.d(Properties.TAG, "[LOGIN] Los datos son correctos");
@@ -864,27 +1001,27 @@ public class LoginUI extends AppCompatActivity
      * Metodo que valida el email y muestra un error si es necesario.
      * @return true si el email es correcto.
      */
-    private boolean _validateEmail()
+    private boolean _validateEmail(EditText editText, TextInputLayout textInputLayout)
     {
-        String email = mEmailEdittext.getText().toString().trim();
+        String email = editText.getText().toString().trim();
         Log.d(Properties.TAG, "[LOGIN] Se valida el email: " + email);
 
         if (!Utils.isValidEmail(email))
         {
             Log.d(Properties.TAG, "[LOGIN] Email incorrecto");
 
-            mEmailInputLayout.setErrorEnabled(true);
-            mEmailInputLayout.setError("Email incorrecto");
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError("Email incorrecto");
 
-            _requestFocus(mEmailEdittext);
+            _requestFocus(editText);
 
             return false;
 
         } else {
             Log.d(Properties.TAG, "[LOGIN] Email correcto");
 
-            mEmailInputLayout.setError(null);
-            mEmailInputLayout.setErrorEnabled(false);
+            textInputLayout.setError(null);
+            textInputLayout.setErrorEnabled(false);
         }
 
         return true;
@@ -1031,7 +1168,7 @@ public class LoginUI extends AppCompatActivity
             switch (view.getId())
             {
                 case R.id.email_edittext:
-                    _validateEmail();
+                    _validateEmail(mEmailEdittext, mEmailInputLayout);
                     break;
 
                 case R.id.password_edittext:

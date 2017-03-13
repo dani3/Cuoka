@@ -112,6 +112,7 @@
     <string name="remember_me">Recordarme</string>
     <string name="forget_password"><u>¿Has olvidado la contraseña?</u></string>
     <string name="existing_email">El correo ya ha sido registrado</string>
+    <string name="email_sent">Hemos enviado tu contraseña a tu correo</string>
 
     <string name="sign_in_info">Necesitas tener creada una cuenta para entrar en la aplicación</string>
 

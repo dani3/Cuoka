@@ -277,6 +277,24 @@ public class Controller
     }
     
     /**
+     * Metodo que comprueba si un usuario existe.
+     * @param email: email del usuario.
+     * @return resultado de la operacion.
+     */
+    @RequestMapping(value = "/users/email/{email}/", method = RequestMethod.GET)
+    public String checkEmail(@PathVariable String email)
+    {
+        LOG.info("[CHECK] Email recibido: " + email);
+        if (usersRepository.findByEmail(email) == null)
+        {
+            LOG.info("[CHECK] Email no encontrado");
+            return Properties.USER_NOT_FOUND;
+        }
+        
+        return Properties.ALREADY_EXISTS;
+    }
+    
+    /**
      * Metodo que envia un correo con la contraseña.
      * @param id: id del usuario.
      * @return resultado de la operacion.
@@ -293,7 +311,7 @@ public class Controller
             return Properties.USER_NOT_FOUND;
             
         } else {
-            LOG.info("[UPDATE] Usuario con ID (" + id + ") encontrado, se envia el correo con su contraseña");
+            LOG.info("[PASSWORD] Usuario con ID (" + id + ") encontrado, se envia el correo con su contraseña");
             
             // Se genera una contraseña aleatoria.
             String newPassword = RandomStringUtils.random(8, true, true);
@@ -874,6 +892,19 @@ public class Controller
         }
         
         return productList;
+    }
+    
+    /**
+     * Metodo que actualiza los properties.
+     * @return ACCEPTED si todo ha ido bien.
+     */
+    @RequestMapping(value = "/properties", method = RequestMethod.GET)
+    public String refreshProperties()
+    {
+        sectionManager.refreshProperties();
+        colorManager.refreshProperties();
+        
+        return Properties.ACCEPTED;
     }
     
     /**

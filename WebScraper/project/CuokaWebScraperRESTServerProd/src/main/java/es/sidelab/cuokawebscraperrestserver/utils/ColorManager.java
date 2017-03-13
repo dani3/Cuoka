@@ -29,13 +29,27 @@ public class ColorManager
     private static final Log LOG = LogFactory.getLog(ColorManager.class);
     
     // Mapa con todos los colores y sus equivalencias.
-    private final Map<String, String[]> colorsMap;
+    private Map<String, String[]> colorsMap;
     // Lista de los colores masculinos a sugerir.
     private final List<String> suggestedMaleColors;
     // Lista de los colores femeninos a sugerir.
     private final List<String> suggestedFemaleColors;
     
     public ColorManager()
+    {       
+        refreshProperties();
+        
+        /* Lista de colores sugeridos tanto en masculino como en femenino (IMPORTANTE que estén en el mismo orden y posición */
+        suggestedMaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
+                                    , "amarillo", "dorado", "azul", "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro"
+                                    , "rojo", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
+        
+        suggestedFemaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "lisa"
+                                    , "amarilla", "dorada", "azul", "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra"
+                                    , "roja", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
+    }
+    
+    public final void refreshProperties()
     {
         colorsMap = new HashMap<>();
         
@@ -59,15 +73,6 @@ public class ColorManager
         } catch (IOException ex) {
             LOG.error("[COLOR_MANAGER] Error leyendo el fichero de colores (" + ex.getMessage() + ")");
         }
-        
-        /* Lista de colores sugeridos tanto en masculino como en femenino (IMPORTANTE que estén en el mismo orden y posición */
-        suggestedMaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "liso"
-                                    , "amarillo", "dorado", "azul", "celeste", "blanco", "gris", "plateado", "marrón", "morado", "negro"
-                                    , "rojo", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
-        
-        suggestedFemaleColors = Arrays.asList(new String[] { "a cuadros", "de cuadros", "de rayas", "a rayas", "de cuero", "de piel", "lisa"
-                                    , "amarilla", "dorada", "azul", "celeste", "blanca", "gris", "plateada", "marrón", "morada", "negra"
-                                    , "roja", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
     }
     
     /**
