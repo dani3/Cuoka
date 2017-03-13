@@ -94,6 +94,7 @@ public class LoginUI extends AppCompatActivity
 
     /* AlertDialog View */
     private View mAlertDialogView;
+    private View mGetEmailDialogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -389,12 +390,12 @@ public class LoginUI extends AppCompatActivity
 
         LayoutInflater inflater = this.getLayoutInflater();
 
-        mAlertDialogView = inflater.inflate(R.layout.aux_email_dialog, null);
+        mGetEmailDialogView = inflater.inflate(R.layout.aux_email_dialog, null);
 
-        builder.setView(mAlertDialogView);
+        builder.setView(mGetEmailDialogView);
 
-        mEmailEdittext = (EditText) mAlertDialogView.findViewById(R.id.email_edittext);
-        mEmailInputLayout = (TextInputLayout) mAlertDialogView.findViewById(R.id.email_input_layout);
+        mEmailEdittext = (EditText) mGetEmailDialogView.findViewById(R.id.email_edittext);
+        mEmailInputLayout = (TextInputLayout) mGetEmailDialogView.findViewById(R.id.email_input_layout);
 
         mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
@@ -406,7 +407,7 @@ public class LoginUI extends AppCompatActivity
             mEmailEdittext.setText(mSharedPreferencesManager.retrieveUser().getEmail());
         }
 
-        final CircularProgressButton enterButton = (CircularProgressButton) mAlertDialogView.findViewById(R.id.done);
+        final CircularProgressButton enterButton = (CircularProgressButton) mGetEmailDialogView.findViewById(R.id.done);
         enterButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
         enterButton.setIndeterminateProgressMode(true);
 
@@ -442,7 +443,7 @@ public class LoginUI extends AppCompatActivity
 
                                     enterButton.setProgress(0);
 
-                                    Snackbar snackbar = Snackbar.make(mAlertDialogView
+                                    Snackbar snackbar = Snackbar.make(mGetEmailDialogView
                                             , "El email no existe"
                                             , Snackbar.LENGTH_LONG);
 
@@ -464,7 +465,7 @@ public class LoginUI extends AppCompatActivity
                                         int enterButtonY = ((int) enterButton.getY()
                                                 + enterButton.getHeight()) / 2;
 
-                                        View background = mAlertDialogView.findViewById(R.id.email_dialog_background);
+                                        View background = mGetEmailDialogView.findViewById(R.id.email_dialog_background);
 
                                         int radiusReveal = Math.max(background.getWidth()
                                                 , background.getHeight());
@@ -511,7 +512,7 @@ public class LoginUI extends AppCompatActivity
                                 enterButton.setProgress(0);
 
                                 Snackbar snackbar = Snackbar
-                                        .make(mAlertDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                                        .make(mGetEmailDialogView, getResources().getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                                         .setAction("Reintentar", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v)
