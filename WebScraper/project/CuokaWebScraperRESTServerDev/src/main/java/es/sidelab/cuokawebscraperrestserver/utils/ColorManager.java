@@ -49,6 +49,9 @@ public class ColorManager
                                     , "roja", "rosa", "granate", "naranja", "verde", "de lunares", "de flores" });
     }
     
+    /**
+     * Metodo que actualiza el mapa de colores.
+     */
     public final void refreshProperties()
     {
         colorsMap = new HashMap<>();

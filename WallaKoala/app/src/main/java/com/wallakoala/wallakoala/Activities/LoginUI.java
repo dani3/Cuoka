@@ -481,8 +481,9 @@ public class LoginUI extends AppCompatActivity
                                                         , 0
                                                         , radiusReveal);
 
-                                        animator.setDuration(200);
-                                        animator.setInterpolator(new AccelerateInterpolator());
+                                        animator.setDuration(500);
+                                        animator.setInterpolator(
+                                                AnimationUtils.loadInterpolator(LoginUI.this, R.anim.accelerator_interpolator));
 
                                         animator.start();
 
@@ -807,8 +808,9 @@ public class LoginUI extends AppCompatActivity
                                                                 , 0
                                                                 , radiusReveal);
 
-                                                animator.setDuration(200);
-                                                animator.setInterpolator(new AccelerateInterpolator());
+                                                animator.setDuration(500);
+                                                animator.setInterpolator(
+                                                        AnimationUtils.loadInterpolator(LoginUI.this, R.anim.accelerator_interpolator));
 
                                                 animator.start();
 
@@ -956,8 +958,9 @@ public class LoginUI extends AppCompatActivity
                                                 , 0
                                                 , radiusReveal);
 
-                                animator.setDuration(200);
-                                animator.setInterpolator(new AccelerateInterpolator());
+                                animator.setDuration(500);
+                                animator.setInterpolator(
+                                        AnimationUtils.loadInterpolator(LoginUI.this, R.anim.accelerator_interpolator));
 
                                 animator.start();
 
