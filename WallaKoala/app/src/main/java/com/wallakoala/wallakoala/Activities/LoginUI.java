@@ -716,9 +716,9 @@ public class LoginUI extends AppCompatActivity
                         // Creamos el JSON con los datos del usuario
                         final JSONObject jsonObject = new JSONObject();
 
-                        jsonObject.put("name", mNameEdittext.getText().toString());
+                        jsonObject.put("name", mNameEdittext.getText().toString().trim());
                         jsonObject.put("age", Short.valueOf(mAgeEdittext.getText().toString()));
-                        jsonObject.put("email", mEmailEdittext.getText().toString());
+                        jsonObject.put("email", mEmailEdittext.getText().toString().trim());
                         jsonObject.put("password", mPasswordEdittext.getText().toString());
                         jsonObject.put("man", (mMaleImageButton.getAlpha() == ACTIVE_ALPHA));
                         jsonObject.put("postalCode", Integer.valueOf(mPostalCodeEdittext.getText().toString()));
