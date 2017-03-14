@@ -36,15 +36,27 @@ public class MailManager
     {
         List<User> users = usersRepository.findByEmailSent(false);
         
-        for (User user : users)
+        Thread thread = new Thread()
         {
-            LOG.info("[EMAIL] Se envia correo de bienvenida");
-            sendWelcomeEmail(user.getEmail(), Properties.WELCOME_EMAIL_FROM, user.getName(), user.getMan());
-            
-            user.setEmailSent(true);
-            
-            usersRepository.save(user);
-        }
+            @Override
+            public void run()
+            {
+                for (User user : users)
+                {
+                    LOG.info("[EMAIL] Se envia correo de bienvenida");
+                    sendWelcomeEmail(user.getEmail()
+                        , Properties.WELCOME_EMAIL_FROM
+                        , user.getName()
+                        , user.getMan());
+
+                    user.setEmailSent(true);
+
+                    usersRepository.save(user);
+                }
+            }
+        };
+        
+        thread.start();
     }
     
     /**
