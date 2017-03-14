@@ -68,6 +68,7 @@ public class LoginUI extends AppCompatActivity
 
     /* TextInputLayouts */
     private TextInputLayout mEmailInputLayout;
+    private TextInputLayout mRecoverPasswordEmailInputLayout;
     private TextInputLayout mPasswordInputLayout;
     private TextInputLayout mAgeInputLayout;
     private TextInputLayout mPostalCodeInputLayout;
@@ -75,6 +76,7 @@ public class LoginUI extends AppCompatActivity
 
     /* EditTexts */
     private EditText mEmailEdittext;
+    private EditText mRecoverPasswordEmailEdittext;
     private EditText mPasswordEdittext;
     private EditText mAgeEdittext;
     private EditText mPostalCodeEdittext;
@@ -394,17 +396,17 @@ public class LoginUI extends AppCompatActivity
 
         builder.setView(mGetEmailDialogView);
 
-        mEmailEdittext = (EditText) mGetEmailDialogView.findViewById(R.id.email_edittext);
-        mEmailInputLayout = (TextInputLayout) mGetEmailDialogView.findViewById(R.id.email_input_layout);
+        mRecoverPasswordEmailEdittext = (EditText) mGetEmailDialogView.findViewById(R.id.email_edittext);
+        mRecoverPasswordEmailInputLayout = (TextInputLayout) mGetEmailDialogView.findViewById(R.id.email_input_layout);
 
-        mEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        mPasswordInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mRecoverPasswordEmailEdittext.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mRecoverPasswordEmailInputLayout.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
-        mEmailEdittext.addTextChangedListener(new MyTextWatcher(mEmailEdittext));
+        mRecoverPasswordEmailEdittext.addTextChangedListener(new MyTextWatcher(mRecoverPasswordEmailEdittext));
 
         if (mSharedPreferencesManager.retrieveUser() != null)
         {
-            mEmailEdittext.setText(mSharedPreferencesManager.retrieveUser().getEmail());
+            mRecoverPasswordEmailEdittext.setText(mSharedPreferencesManager.retrieveUser().getEmail());
         }
 
         final CircularProgressButton enterButton = (CircularProgressButton) mGetEmailDialogView.findViewById(R.id.done);
@@ -416,11 +418,11 @@ public class LoginUI extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                if (_validateEmail(mEmailEdittext, mEmailInputLayout) && (enterButton.getProgress() == 0))
+                if (_validateEmail(mRecoverPasswordEmailEdittext, mRecoverPasswordEmailInputLayout) && (enterButton.getProgress() == 0))
                 {
                     enterButton.setProgress(50);
 
-                    final String email = mEmailEdittext.getText().toString();
+                    final String email = mRecoverPasswordEmailEdittext.getText().toString();
 
                     final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                             + "/users/email/" + email + "/");
@@ -1255,7 +1257,7 @@ public class LoginUI extends AppCompatActivity
             switch (view.getId())
             {
                 case R.id.email_edittext:
-                    _validateEmail(mEmailEdittext, mEmailInputLayout);
+                    _validateEmail((EditText) view, mEmailInputLayout);
                     break;
 
                 case R.id.password_edittext:
