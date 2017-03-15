@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
@@ -464,8 +463,8 @@ public class LoginUI extends AppCompatActivity
                                         int enterButtonX = (enterButton.getLeft()
                                                 + enterButton.getRight()) / 2;
 
-                                        int enterButtonY = ((int) enterButton.getY()
-                                                + enterButton.getHeight()) / 2;
+                                        int enterButtonY = (enterButton.getTop()
+                                                + enterButton.getBottom()) / 2;
 
                                         View background = mGetEmailDialogView.findViewById(R.id.email_dialog_background);
 
@@ -791,8 +790,8 @@ public class LoginUI extends AppCompatActivity
                                                 int enterButtonX = (mRegisterCircularButton.getLeft()
                                                         + mRegisterCircularButton.getRight()) / 2;
 
-                                                int enterButtonY = ((int) mRegisterCircularButton.getY()
-                                                        + mRegisterCircularButton.getHeight()) / 2;
+                                                int enterButtonY = (mRegisterCircularButton.getTop()
+                                                        + mRegisterCircularButton.getBottom()) / 2;
 
                                                 View background = mAlertDialogView.findViewById(R.id.sign_up_dialog_background);
 
@@ -941,8 +940,8 @@ public class LoginUI extends AppCompatActivity
                                 int enterButtonX = (enterButton.getLeft()
                                         + enterButton.getRight()) / 2;
 
-                                int enterButtonY = ((int) enterButton.getY()
-                                        + enterButton.getHeight()) / 2;
+                                int enterButtonY = (enterButton.getTop()
+                                        + enterButton.getBottom()) / 2;
 
                                 View background = mAlertDialogView.findViewById(R.id.sign_in_dialog_background);
 
@@ -1019,6 +1018,7 @@ public class LoginUI extends AppCompatActivity
                                     .setTextColor(getResources().getColor(R.color.colorText));
 
                             snackbar.show();
+
                         }
                     }
                 }
