@@ -166,8 +166,7 @@
     <string name="notification_recommended_action">Ir a Descubre</string>
 
     <string name="share_action">Compartir con</string>
-    <string name="share_message">¡Mira lo que he encontrado en Cuoka!</string>
-    <string name="share_subject">¡Mira lo que he encontrado en Cuoka!</string>
+    <string name="share_subject">¡Mira lo que he encontrado en ?1 por ?2€ gracias a CUOKA!</string>
 
     <string name="password_forgotten">Te hemos enviado un correo con tu contraseña</string>
     <string name="get_email">Introduce tu correo</string>

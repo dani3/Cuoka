@@ -62,6 +62,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                                     , GestureDetector.OnDoubleTapListener
 {
     /* Constants */
+    private static final int SHARE_REQUEST_CODE = 0;
     private static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     private static final int ANIM_DURATION = 250;
     private static boolean EXITING;
@@ -100,6 +101,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
     private String mBitmapUri;
     private ColorDrawable mBackground;
     private int mCurrentColor;
+    private Uri mImageSharedUri;
 
     /* SharedPreferences */
     private SharedPreferencesManager mSharedPreferencesManager;
@@ -200,6 +202,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         mSharedPreferencesManager = new SharedPreferencesManager(this);
 
         mContext = this;
+
+        mImageSharedUri = null;
 
         mGestureDetector = new GestureDetectorCompat(this, this);
         mGestureDetector.setOnDoubleTapListener(this);
@@ -477,19 +481,26 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
      */
     private void _shareProduct()
     {
-        Uri uri = mImagesAdapter.getFirstImageUri();
+        mImageSharedUri = mImagesAdapter.getFirstImageUri();
 
-        if (mImagesAdapter != null && uri != null)
+        if (mImagesAdapter != null && mImageSharedUri != null)
         {
+            String subject = getResources().getString(R.string.share_subject);
+            subject = subject.replace("?1", mProduct.getShop()).replace("?2", Double.toString(mProduct.getPrice()));
+
+            String message = subject
+                    + "\n" + mProduct.getName()
+                    + "\nRef: " + mProduct.getColors().get(mCurrentColor).getReference();
+
             Intent shareIntent = new Intent();
 
             shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_subject));
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_message));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, mImageSharedUri);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
             shareIntent.setType("*/*");
 
-            startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_action)));
+            startActivityForResult(Intent.createChooser(shareIntent, getResources().getString(R.string.share_action)), SHARE_REQUEST_CODE);
         }
     }
 
@@ -703,6 +714,12 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         super.finish();
 
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
     }
 
     /**
