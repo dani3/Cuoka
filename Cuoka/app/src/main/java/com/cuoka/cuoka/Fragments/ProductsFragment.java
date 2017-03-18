@@ -47,6 +47,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +57,9 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
  * Fragmento con la pestaña de Novedades.
@@ -68,6 +73,7 @@ public class ProductsFragment extends Fragment
     private static final int NUM_PRODUCTS_DISPLAYED = 100;
     private static final int MIN_PRODUCTS = 8;
     private static final int MAX_OFFSET = 20;
+    private static final int OFFSET_TIME = 750;
     private static boolean MAN;
     private static boolean FIRST_CONNECTION;
     private static int NUMBER_OF_CORES;
@@ -82,6 +88,8 @@ public class ProductsFragment extends Fragment
     private List<Product> mProductsDisplayedList;
     private List<String> mShopsList;
 
+    private int mCurrentDay;
+
     /* Container Views */
     private StaggeredRecyclerView mProductsRecyclerView;
 
@@ -93,10 +101,12 @@ public class ProductsFragment extends Fragment
 
     /* Views */
     private TextView mNoDataTextView;
+    private TextView mDaysOffsetTextView;
 
     private View mLoadingView;
     private View mLoadingServerView;
     private View mNoShopsView;
+    private View mDaysOffsetView;
 
     /* Buttons */
     protected Button mAddShopsButton;
@@ -149,6 +159,11 @@ public class ProductsFragment extends Fragment
 
         // RecyclerView
         mProductsRecyclerView = (StaggeredRecyclerView) getView().findViewById(R.id.grid_recycler);
+
+        // Offset footer
+        mDaysOffsetTextView = (TextView) getView().findViewById(R.id.newness_offset);
+        mDaysOffsetView = getView().findViewById(R.id.newness_offset_container);
+        mDaysOffsetView.setVisibility(View.GONE);
 
         // LoaderView
         mLoadingView       = getView().findViewById(R.id.avloadingIndicatorView);
@@ -216,6 +231,7 @@ public class ProductsFragment extends Fragment
 
         SEARCH_QUERY = null;
 
+        mCurrentDay = 0;
         DAYS_OFFSET = 0;
         DAYS_WITH_NOTHING = 0;
         MAN = sharedPreferencesManager.retrieveUser().getMan();
@@ -272,7 +288,8 @@ public class ProductsFragment extends Fragment
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mProductAdapter = new ProductsGridAdapter(getActivity()
                                     , mProductsDisplayedList
-                                    , mFrameLayout);
+                                    , mFrameLayout
+                                    , DAYS_OFFSET);
 
         mProductsRecyclerView.setHasFixedSize(true);
         mProductsRecyclerView.setItemViewCacheSize(Properties.CACHED_PRODUCTS_MIN);
@@ -280,15 +297,98 @@ public class ProductsFragment extends Fragment
         mProductsRecyclerView.setAdapter(mProductAdapter);
         mProductsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
-            boolean scrollingUp;
+            boolean scrollingUp = false;
+            boolean hasStopped = false;
+            boolean hasStarted = false;
+
+            Timer timer = new Timer();
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {}
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                hasStopped = newState == SCROLL_STATE_IDLE;
+                hasStarted = newState == SCROLL_STATE_DRAGGING;
+
+                // Si se inicia el scroll paramos el contador.
+                if (hasStarted && (DAYS_OFFSET != -1))
+                {
+                    timer.cancel();
+                }
+
+                // Si se para, ponemos en marcha el contador.
+                if (hasStopped && (DAYS_OFFSET != -1))
+                {
+                    try
+                    {
+                        timer = new Timer();
+
+                        timer.schedule(new TimerTask()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                getActivity().runOnUiThread(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        Animation hide = AnimationUtils.loadAnimation(getActivity()
+                                                , R.anim.hide_to_down_animation);
+
+                                        hide.setDuration(100);
+
+                                        hide.setAnimationListener(new Animation.AnimationListener()
+                                        {
+                                            @Override
+                                            public void onAnimationStart(Animation animation) {}
+
+                                            @Override
+                                            public void onAnimationEnd(Animation animation)
+                                            {
+                                                mDaysOffsetView.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onAnimationRepeat(Animation animation) {}
+                                        });
+
+                                        mDaysOffsetView.startAnimation(hide);
+                                    }
+                                });
+                            }
+                        }, OFFSET_TIME);
+
+                    } catch (IllegalStateException ignored) {}
+                }
+            }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 scrollingUp = dy > 0;
+
+                // Mostramos el día siempre que no estemos en los filtros
+                if (DAYS_OFFSET != -1)
+                {
+                    int[] firstItemsPosition = new int[2];
+                    mStaggeredGridLayoutManager.findFirstVisibleItemPositions(firstItemsPosition);
+
+                    mCurrentDay = mProductAdapter.getDayOfProductsAt(firstItemsPosition);
+                    mDaysOffsetTextView.setText(Utils.getMessageFromDaysOffset((short) mCurrentDay));
+
+                    // Solo si no esta ya visible realizamos la animacion.
+                    if (mDaysOffsetView.getVisibility() != View.VISIBLE)
+                    {
+                        Animation showFromBotton = AnimationUtils.loadAnimation(getActivity()
+                                , R.anim.show_from_down_animation);
+
+                        showFromBotton.setDuration(100);
+
+                        mDaysOffsetView.setVisibility(View.VISIBLE);
+
+                        mDaysOffsetView.startAnimation(showFromBotton);
+                    }
+                }
 
                 if (scrollingUp)
                 {
@@ -313,7 +413,7 @@ public class ProductsFragment extends Fragment
                             count = mProductsInsertedPreviously;
 
                             // Actualizamos la lista de productos del adapter
-                            mProductAdapter.updateProductList(mProductsDisplayedList);
+                            mProductAdapter.updateProductList(mProductsDisplayedList, DAYS_OFFSET);
 
                             // Notificamos el cambio
                             mProductAdapter.notifyItemRangeInserted(start, count);
@@ -641,7 +741,7 @@ public class ProductsFragment extends Fragment
                     count = mProductsInsertedPreviously;
 
                     // Actualizamos la lista de productos del adapter
-                    mProductAdapter.updateProductList(mProductsDisplayedList);
+                    mProductAdapter.updateProductList(mProductsDisplayedList, DAYS_OFFSET);
 
                     // Notificamos el cambio
                     mProductAdapter.notifyItemRangeInserted(start, count);

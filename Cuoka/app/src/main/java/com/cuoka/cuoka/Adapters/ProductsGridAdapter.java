@@ -30,6 +30,7 @@ import com.cuoka.cuoka.Utils.SharedPreferencesManager;
 import com.cuoka.cuoka.Utils.Utils;
 import com.cuoka.cuoka.Views.LikeButtonView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +48,7 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
 
     /* Data */
     private List<Product> mProductList;
+    private List<Integer> mDaysList;
     private ProductHolder mProductClicked;
 
     /* SharedPreferences */
@@ -339,10 +341,17 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
      */
     public ProductsGridAdapter(Context context
                         , List<Product> productList
-                        , FrameLayout frameLayout)
+                        , FrameLayout frameLayout
+                        , int initialDay)
     {
         mContext = context;
         mProductList = productList;
+
+        mDaysList = new ArrayList<>();
+        for (int i = 0; i < mProductList.size(); ++i)
+        {
+            mDaysList.add(initialDay);
+        }
 
         mFrameLayout = frameLayout;
 
@@ -352,12 +361,26 @@ public class ProductsGridAdapter extends RecyclerView.Adapter<ProductsGridAdapte
     }
 
     /**
+     * Metodo que devuelve el dia al que pertenecen los productos.
+     * @param items: posiciones que ocupan los productos
+     * @return dia del producto.
+     */
+    public int getDayOfProductsAt(int[] items)
+    {
+        return mDaysList.get(items[0]);
+    }
+
+    /**
      * Metodo que actualiza la lista de productos del adapter
      * @param productList: lista con todos los productos
      */
-    public void updateProductList(final List<Product> productList)
+    public void updateProductList(final List<Product> productList, int dayOffset)
     {
         mProductList = productList;
+        for (int i = mDaysList.size(); i < mProductList.size(); ++i)
+        {
+            mDaysList.add(dayOffset);
+        }
     }
 
     /**

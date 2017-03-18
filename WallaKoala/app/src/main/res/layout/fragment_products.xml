@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context="com.wallakoala.wallakoala.Fragments.ProductsFragment">
 
-    <!-- Recylcer Grid -->
+    <!-- Recycler Grid -->
     <com.wallakoala.wallakoala.Views.StaggeredRecyclerView
         android:id="@+id/grid_recycler"
         android:layout_width="match_parent"
@@ -84,10 +84,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:layout_gravity="bottom|center"
         android:alpha="0.75"
         style="@style/SpinKitView.ChasingDots"
         app:SpinKit_Color="@color/colorAccent"/>
+
+    <include layout="@layout/aux_day_footer"/>
 
 </FrameLayout>
