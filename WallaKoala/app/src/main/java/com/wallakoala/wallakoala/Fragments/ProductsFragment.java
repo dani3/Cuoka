@@ -87,6 +87,7 @@ public class ProductsFragment extends Fragment
     private Deque<Product> mProductsCandidatesDeque;
     private List<Product> mProductsDisplayedList;
     private List<String> mShopsList;
+    private Timer mDayTimer;
 
     private int mCurrentDay;
 
@@ -227,6 +228,8 @@ public class ProductsFragment extends Fragment
             mShopsList.add(shop);
         }
 
+        mDayTimer = new Timer();
+
         start = count = 0;
 
         SEARCH_QUERY = null;
@@ -301,8 +304,6 @@ public class ProductsFragment extends Fragment
             boolean hasStopped = false;
             boolean hasStarted = false;
 
-            Timer timer = new Timer();
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState)
             {
@@ -312,7 +313,7 @@ public class ProductsFragment extends Fragment
                 // Si se inicia el scroll paramos el contador.
                 if (hasStarted && (DAYS_OFFSET != -1))
                 {
-                    timer.cancel();
+                    mDayTimer.cancel();
                 }
 
                 // Si se para, ponemos en marcha el contador.
@@ -320,9 +321,9 @@ public class ProductsFragment extends Fragment
                 {
                     try
                     {
-                        timer = new Timer();
+                        mDayTimer = new Timer();
 
-                        timer.schedule(new TimerTask()
+                        mDayTimer.schedule(new TimerTask()
                         {
                             @Override
                             public void run()
@@ -479,6 +480,11 @@ public class ProductsFragment extends Fragment
     public void onDestroy()
     {
         super.onDestroy();
+
+        if (mDayTimer != null)
+        {
+            mDayTimer.cancel();
+        }
 
         // Cancelamos cualquier conexion que se este haciendo.
         if (mRetrieveNewProductsTask != null)
