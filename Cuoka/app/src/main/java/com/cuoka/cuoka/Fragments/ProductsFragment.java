@@ -1194,6 +1194,11 @@ public class ProductsFragment extends Fragment
             // Lo ponemos a -1 para detectar cuando estamos en los filtros.
             DAYS_OFFSET = -1;
 
+            if (mDaysOffsetView != null)
+            {
+                mDaysOffsetView.setVisibility(View.GONE);
+            }
+
             // Si ha marcado todas las tiendas, tenemos que traerlas antes.
             if ((shopsList != null) && (shopsList.get(0).equals(ALL)))
             {
