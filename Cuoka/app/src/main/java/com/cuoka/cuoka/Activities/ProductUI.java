@@ -62,7 +62,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
                                                     , GestureDetector.OnDoubleTapListener
 {
     /* Constants */
-    private static final int SHARE_REQUEST_CODE = 0;
     private static final TimeInterpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     private static final int ANIM_DURATION = 250;
     private static boolean EXITING;
@@ -500,7 +499,7 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
             shareIntent.putExtra(Intent.EXTRA_TEXT, message);
             shareIntent.setType("*/*");
 
-            startActivityForResult(Intent.createChooser(shareIntent, getResources().getString(R.string.share_action)), SHARE_REQUEST_CODE);
+            startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_action)));
         }
     }
 
@@ -714,12 +713,6 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
         super.finish();
 
         overridePendingTransition(0, 0);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-
     }
 
     /**
