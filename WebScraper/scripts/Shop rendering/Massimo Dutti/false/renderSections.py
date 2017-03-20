@@ -29,6 +29,7 @@ urls = [("Abrigos", "https://www.massimodutti.com/es/mujer/abrigos-c680658.html"
         ("Pantalones", "https://www.massimodutti.com/es/mujer/pantalones/ver-todo-c911198.html"),
         ("Jeans", "https://www.massimodutti.com/es/mujer/denim-c675012.html"),
         ("Bolsos", "https://www.massimodutti.com/es/mujer/bolsos-y-monederos/ver-todo-c914508.html"),
+        ("Complementos", "https://www.massimodutti.com/es/mujer/accesorios/ver-todo-c1522503.html"),
         ("Zapatos", "https://www.massimodutti.com/es/mujer/zapatos/ver-todo-c1475029.html")]
     
 chrome_options = Options()

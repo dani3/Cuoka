@@ -29,6 +29,7 @@ urls = [("Cazadoras", "http://www.zara.com/es/es/hombre/cazadoras-c586542.html")
         ("Sudaderas","http://www.zara.com/es/es/hombre/sudaderas-c799012.html"),
         ("Jerseys","http://www.zara.com/es/es/hombre/jerseys-y-chaquetas/ver-todo-c719526.html"),
         ("Zapatos","http://www.zara.com/es/es/hombre/zapatos/ver-todo-c719027.html"),
+        ("Accesorios","https://www.zara.com/es/es/hombre/accesorios/ver-todo-c719529.html"),
         ("Sport","http://www.zara.com/es/es/hombre/jogging-c726529.html")]
 
 chrome_options = Options()

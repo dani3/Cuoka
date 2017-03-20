@@ -26,6 +26,7 @@ urls = [("Camisetas", "http://www2.hm.com/es_es/hombre/compra-por-producto/camis
         ("Vaqueros", "http://www2.hm.com/es_es/hombre/compra-por-producto/vaqueros.html"),
         ("Shorts", "http://www2.hm.com/es_es/hombre/compra-por-producto/pantalones-cortos.html"),
         ("Sport", "http://www2.hm.com/es_es/hombre/compra-por-producto/sport.html"),
+        ("Complementos", "http://www2.hm.com/es_es/hombre/compra-por-producto/accesorios.html"),
         ("Calzado", "http://www2.hm.com/es_es/hombre/compra-por-producto/calzado.html")]
    
 chrome_options = Options()

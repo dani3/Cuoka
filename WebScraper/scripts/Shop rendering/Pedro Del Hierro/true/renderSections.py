@@ -24,6 +24,8 @@ urls = [("Abrigos", "http://pedrodelhierro.com/es/es/hombre/cazadoras"),
         ("Pantalones", "http://pedrodelhierro.com/es/es/hombre/pantalones"),
         ("Jeans", "http://pedrodelhierro.com/es/es/hombre/jeans"),
         ("Trajes", "http://pedrodelhierro.com/es/es/hombre/trajes"),
+        ("Complementos", "http://pedrodelhierro.com/es/es/hombre/tailoring/complementos"),
+        ("Corbatas", "http://pedrodelhierro.com/es/es/hombre/tailoring/corbatas"),
         ("Zapatos", "http://pedrodelhierro.com/es/es/hombre/zapatos")]
     
 chrome_options = Options()

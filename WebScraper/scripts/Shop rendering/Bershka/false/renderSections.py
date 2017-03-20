@@ -19,6 +19,7 @@ path = sys.argv[2]
 
 # Lista de secciones con sus URL's
 urls = [("Abrigos", "http://www.bershka.com/es/mujer/ropa/abrigos-y-chaquetas-c1010193212.html"),
+        ("Cazadoras", "https://www.bershka.com/es/mujer/ropa/abrigos-y-chaquetas/bikers-c1010196003.html"),
         ("Vestidos", "https://www.bershka.com/es/mujer/ropa/vestidos-c1010193213.html"),
         ("Monos", "https://www.bershka.com/es/mujer/ropa/monos-c1010193214.html"),
         ("Jeans", "https://www.bershka.com/es/mujer/ropa/jeans-c1010193215.html"),
@@ -29,7 +30,9 @@ urls = [("Abrigos", "http://www.bershka.com/es/mujer/ropa/abrigos-y-chaquetas-c1
         ("Sudaderas", "https://www.bershka.com/es/mujer/ropa/sudaderas-c1010193222.html"),
         ("Jerseis", "https://www.bershka.com/es/mujer/ropa/jerseis-c1010193532.html"),
         ("Faldas", "https://www.bershka.com/es/mujer/ropa/faldas-c1010193224.html"),
-        ("Shorts", "https://www.bershka.com/es/mujer/ropa/shorts-c1010194517.html")]
+        ("Shorts", "https://www.bershka.com/es/mujer/ropa/shorts-c1010194517.html"),
+        ("Bolsos", "https://www.bershka.com/es/mujer/accesorios/bolsos-c1010193138.html"),
+        ("Relojes", "https://www.bershka.com/es/mujer/ropa/shorts-c1010194517.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
