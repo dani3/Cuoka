@@ -3,13 +3,13 @@ Americanas:Chaqueta,Chaquetas,Blazer,Blazers,Chaleco,Chalecos,Cazadora,Cazadoras
 Camisas:Blusa,Blusas,Camisola,Camisolas,Bluson,Blusón,Blusones,Camisa,Camisas
 Polos:Polo,Polos
 Camisetas:Top,Tops,Bodies,Camiseta,Camisetas,Henley,T-Shirt
-Jerseys:Jersey,Jerseys,Jerséy,Jerséis,Sudadera,Sudaderas,Cardigan,Cardigans,Jersei,Jerseis,Jerséi,Jerséis
+Jerseis:Jersey,Jerseys,Jerséy,Jerséis,Jerseis,Sudadera,Sudaderas,Cardigan,Cardigans,Jersei,Jerséi
 Pantalones:Vaqueros,Vaquero,Jeans,Jean,Chinos,Chinos,Pantalon,Pantalones,Leggins,Leggin
-Short:Shorts,Short,Pantalonescortos,Pantaloncorto,Bermuda,Bermudas,Pantalón
+Shorts:Shorts,Short,Pantalones cortos,Pantalon corto,Bermuda,Bermudas
 Trajes:Chaqueta,Chaquetas,Blazer,Blazers,Americana,Americanas,Traje,Trajes
 Vestidos:Vestido,Vestidos
 Faldas:Falda,Faldas,Shorts,Short,Bermuda,Bermudas
-PonchosyMonos:Mono,Monos,Kimono,Kimonos,Quimono,Quimonos,Peto,Petos,Poncho,Ponchos,Body
+Ponchos y Monos:Mono,Monos,Kimono,Kimonos,Quimono,Quimonos,Peto,Petos,Poncho,Ponchos,Body
 Sudaderas:Sudadera,Sudaderas,Jersey,Jerseys,Jersei,Jerseis,Jerséy,Jerséys,Jerséi,Jerséis
 Sport:Leggin,Leggins,Sport,Gym,Gimnasia,Jogging,Easywear,Deportivo,Deportivos,Sportwear,Beachwear
 Zapatos:Zapato,Zapatos,Calzado,Bota,Botas,Botin,Botines,Sandalia,Sandalias,Manoletina,Manoletinas,Bailarina,Zapatilla,Zapatillas,Zueco,Zuecos,Cuñas,Chancla,Chanclas,Chancleta,Chancletas

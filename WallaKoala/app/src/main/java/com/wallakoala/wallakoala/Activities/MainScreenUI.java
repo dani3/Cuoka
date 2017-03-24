@@ -642,6 +642,9 @@ public class MainScreenUI extends AppCompatActivity
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se puede filtrar");
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Estado del mapa de filtros:");
 
+                // Ocultamos la Snackbar en caso de que esté visible
+                mProductsFragment.hideSnackbar();
+
                 // Creamos un Intent.
                 Intent intent = new Intent(MainScreenUI.this, FilterUI.class);
 

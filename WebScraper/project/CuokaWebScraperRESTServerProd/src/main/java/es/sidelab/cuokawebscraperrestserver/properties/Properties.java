@@ -8,7 +8,7 @@ package es.sidelab.cuokawebscraperrestserver.properties;
 public class Properties 
 {        
     /* Version */
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.1.1";
     
     /* Posibles respuestas del servidor */
     public static final String ALREADY_EXISTS    = "USER_ALREADY_EXISTS";
@@ -31,8 +31,10 @@ public class Properties
     public static final String PROPERTIES_PATH        = "/root/cuoka_01/properties/";
     public static final String PYTHON_PATH            = "/usr/bin/python";
     
-    public static final String SECTIONS_FILE = "secciones.txt";
-    public static final String COLORS_FILE   = "colores.txt";
+    public static final String SECTIONS_FILE                = "secciones.txt";
+    public static final String COLORS_FILE                  = "colores.txt";
+    public static final String SUGGESTED_MALE_COLORS_FILE   = "sugerencias_colores_male.txt";
+    public static final String SUGGESTED_FEMALE_COLORS_FILE = "sugerencias_colores_female.txt";
     
     /* Files */
     public static final String WELCOME_EMAIL_NAME      = "bienvenida.html";

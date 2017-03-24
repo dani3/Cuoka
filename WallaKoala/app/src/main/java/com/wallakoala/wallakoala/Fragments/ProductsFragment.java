@@ -109,6 +109,9 @@ public class ProductsFragment extends Fragment
     private View mNoShopsView;
     private View mDaysOffsetView;
 
+    /* Snackbar */
+    private Snackbar mSnackbar;
+
     /* Buttons */
     protected Button mAddShopsButton;
 
@@ -437,15 +440,15 @@ public class ProductsFragment extends Fragment
                                     Log.d(Properties.TAG
                                             , "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                                    Snackbar snackbar = Snackbar.make(
+                                    mSnackbar = Snackbar.make(
                                             mFrameLayout, "No hay más novedades", Snackbar.LENGTH_SHORT);
 
-                                    snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
-                                    snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                    ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                                    mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                                    mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                    ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
                                             .setTextColor(getResources().getColor(R.color.colorText));
 
-                                    snackbar.show();
+                                    mSnackbar.show();
 
                                     mLoadingServerView.setVisibility(View.GONE);
                                     mLoadingView.setVisibility(View.GONE);
@@ -790,14 +793,14 @@ public class ProductsFragment extends Fragment
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                        Snackbar snackbar = Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG);
+                        mSnackbar = Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG);
 
-                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
-                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
-                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                        mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
                                 .setTextColor(getResources().getColor(R.color.colorText));
 
-                        snackbar.show();
+                        mSnackbar.show();
 
                         mState = Properties.STATE.OK;
 
@@ -823,14 +826,14 @@ public class ProductsFragment extends Fragment
                     } else {
                         Log.d(Properties.TAG, "[PRODUCTS_FRAGMENT] Se ha superado el máximo de dias, no se traen más productos");
 
-                        Snackbar snackbar = Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG);
+                        mSnackbar = Snackbar.make(mFrameLayout, "No hay más novedades", Snackbar.LENGTH_LONG);
 
-                        snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
-                        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
-                        ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                        mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
                                 .setTextColor(getResources().getColor(R.color.colorText));
 
-                        snackbar.show();
+                        mSnackbar.show();
 
                         mState = Properties.STATE.OK;
 
@@ -976,7 +979,7 @@ public class ProductsFragment extends Fragment
     {
         if (!isFiltering)
         {
-            Snackbar snackbar = Snackbar.make(mFrameLayout
+            mSnackbar = Snackbar.make(mFrameLayout
                 , getResources().getString(R.string.error_message)
                 , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
                 {
@@ -987,15 +990,15 @@ public class ProductsFragment extends Fragment
                     }
                 });
 
-            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
-            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
-            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
                     .setTextColor(getResources().getColor(R.color.colorText));
 
-            snackbar.show();
+            mSnackbar.show();
 
         } else {
-            Snackbar snackbar = Snackbar.make(mFrameLayout
+            mSnackbar = Snackbar.make(mFrameLayout
                 , getResources().getString( R.string.error_message )
                 , Snackbar.LENGTH_INDEFINITE ).setAction("Reintentar", new View.OnClickListener()
                 {
@@ -1006,12 +1009,12 @@ public class ProductsFragment extends Fragment
                     }
                 });
 
-            snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
-            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
-            ((TextView)snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
                     .setTextColor(getResources().getColor(R.color.colorText));
 
-            snackbar.show();
+            mSnackbar.show();
         }
 
         mState = Properties.STATE.ERROR;
@@ -1362,6 +1365,17 @@ public class ProductsFragment extends Fragment
         if (mProductAdapter != null)
         {
             mProductAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Metodo que oculta la snackbar si esta visible.
+     */
+    public void hideSnackbar()
+    {
+        if (mSnackbar != null && mSnackbar.isShown())
+        {
+            mSnackbar.dismiss();
         }
     }
 }

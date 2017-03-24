@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -56,9 +55,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller 
 {
     private static final Log LOG = LogFactory.getLog(Controller.class);
-    
-    @Autowired
-    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
     
     @Autowired 
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR = Executors.newScheduledThreadPool(2);
@@ -701,8 +697,9 @@ public class Controller
             
         LOG.info("[SCRAPER] Llamando a ImageManager para descargar las imagenes que no existan");
         List<Product> productsScraped = ImageManager.downloadImages(products, shop);
-          
-        Runnable task = () -> {                        
+                   
+        synchronized (Controller.this)
+        {            
             // Obtenemos los productos que ya tenemos en base de datos.
             List<Product> productsInDB = productsRepository.findByShop(shop);  
             
@@ -819,9 +816,7 @@ public class Controller
             
             LOG.info("[SCRAPER] " + productsScraped.size() + " productos de " + shop + " insertados correctamente");        
             LOG.info("[SCRAPER] Saliendo del metodo addProducts");
-        };
-        
-        EXECUTOR.execute(task);       
+        }
                 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
