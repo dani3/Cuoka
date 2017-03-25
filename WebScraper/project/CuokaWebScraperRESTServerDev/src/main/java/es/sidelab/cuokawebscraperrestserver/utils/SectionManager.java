@@ -73,7 +73,7 @@ public class SectionManager
         {
             BufferedReader br = new BufferedReader(
                 new FileReader(
-                    new File(Properties.PROPERTIES_PATH + Properties.SUGGESTED_MALE_COLORS_FILE)));
+                    new File(Properties.PROPERTIES_PATH + Properties.SUGGESTED_SECTIONS_FILE)));
             
             String line;
             while((line = br.readLine()) != null)
@@ -91,7 +91,7 @@ public class SectionManager
         {
             BufferedReader br = new BufferedReader(
                 new FileReader(
-                    new File(Properties.PROPERTIES_PATH + Properties.SUGGESTED_FEMALE_COLORS_FILE)));
+                    new File(Properties.PROPERTIES_PATH + Properties.SECTIONS_MALE_FILE)));
             
             String line;
             while((line = br.readLine()) != null)
