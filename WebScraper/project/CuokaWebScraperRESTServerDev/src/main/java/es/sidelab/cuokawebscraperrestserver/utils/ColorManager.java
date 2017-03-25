@@ -41,12 +41,12 @@ public class ColorManager
     }
     
     /**
-     * Metodo que actualiza el mapa de colores.
+     * Metodo que actualiza el mapa de colores y el resto de ED's.
      */
     public final void refreshProperties()
     {
-        colorsMap = new HashMap<>();
-        suggestedMaleColors = new ArrayList<>();
+        colorsMap             = new HashMap<>();
+        suggestedMaleColors   = new ArrayList<>();
         suggestedFemaleColors = new ArrayList<>();
         
         try 

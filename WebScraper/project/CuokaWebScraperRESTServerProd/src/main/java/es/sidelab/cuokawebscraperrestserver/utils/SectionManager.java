@@ -27,31 +27,26 @@ public class SectionManager
 {
     private static final Log LOG = LogFactory.getLog(SectionManager.class);
     
+    // Mapa con todas las secciones y sus equivalencias.
     private Map<String, String[]> sectionsMap;
-    private final List<String> suggestedSections;
-    private final List<String> maleSections;
+    // Lista de secciones sugeridas.
+    private List<String> suggestedSections;
+    // Lista de secciones de hombre.
+    private List<String> maleSections;
     
     public SectionManager()
     {
         refreshProperties();
-        
-        suggestedSections = Arrays.asList(new String[] { "Cazadora", "Bomber", "Chaqueta", "Chaquetón", "Abrigo", "Blazer"
-                                        , "Americana", "Blusa", "Camisa", "Camiseta", "Polo", "Top", "Vaqueros", "Jeans", "Jersey"
-                                        , "Sudadera", "Cardigan", "Chinos", "Pantalones", "Pantalones cortos", "Bermuda", "Shorts", "Traje" 
-                                        , "Vestido", "Falda", "Chaleco", "Mono", "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Ropa deportiva"
-                                        , "Poncho", "Parka", "Zapatos", "Botas", "Sandalias", "Zapatillas" });
-    
-        maleSections = Arrays.asList(new String[] { "Chaquetón", "Abrigo", "Polo", "Top", "Vaqueros", "Jeans", "Jersey", "Cardigan"
-                                  , "Chinos", "Pantalones", "Pantalones cortos", "Shorts", "Traje", "Vestido", "Chaleco", "Mono"
-                                  , "Kimono", "Quimono", "Peto", "Leggin", "Sport", "Gym", "Poncho", "Zapatos" });
     }
     
     /**
-     * Metodo que actualiza el mapa.
+     * Metodo que actualiza el mapa y el resto de ED's.
      */
     public final void refreshProperties()
     {
-        sectionsMap = new HashMap<>();
+        sectionsMap       = new HashMap<>();
+        suggestedSections = new ArrayList<>();
+        maleSections      = new ArrayList<>();
         
         try 
         {
@@ -72,6 +67,42 @@ public class SectionManager
             LOG.error("[SECTION_MANAGER] Error abriendo el fichero de secciones (" + ex.getMessage() + ")");
         } catch (IOException ex) {
             LOG.error("[SECTION_MANAGER] Error leyendo el fichero de secciones (" + ex.getMessage() + ")");
+        }
+        
+        try 
+        {
+            BufferedReader br = new BufferedReader(
+                new FileReader(
+                    new File(Properties.PROPERTIES_PATH + Properties.SUGGESTED_MALE_COLORS_FILE)));
+            
+            String line;
+            while((line = br.readLine()) != null)
+            {
+                suggestedSections.add(line.trim().replace("\n", ""));
+            }
+        
+        } catch (FileNotFoundException ex) {
+            LOG.error("[SECTION_MANAGER] Error abriendo el fichero de sugerencias de secciones (" + ex.getMessage() + ")");
+        } catch (IOException ex) {
+            LOG.error("[SECTION_MANAGER] Error leyendo el fichero de sugerencias de secciones (" + ex.getMessage() + ")");
+        }
+        
+        try 
+        {
+            BufferedReader br = new BufferedReader(
+                new FileReader(
+                    new File(Properties.PROPERTIES_PATH + Properties.SUGGESTED_FEMALE_COLORS_FILE)));
+            
+            String line;
+            while((line = br.readLine()) != null)
+            {
+                maleSections.add(line.trim().replace("\n", ""));
+            }
+            
+        } catch (FileNotFoundException ex) {
+            LOG.error("[SECTION_MANAGER] Error abriendo el fichero de secciones de hombre (" + ex.getMessage() + ")");
+        } catch (IOException ex) {
+            LOG.error("[SECTION_MANAGER] Error leyendo el fichero de secciones de hombre (" + ex.getMessage() + ")");
         }
     }
     
@@ -137,7 +168,7 @@ public class SectionManager
     }
     
     /**
-     * Metodo que devuelve un máximo de cinco secciones sugeridas.
+     * Metodo que devuelve un mÃ¡ximo de cinco secciones sugeridas.
      * @param word palabra con la que se buscan las sugerencias.
      * @return lista de secciones sugeridas.
      */

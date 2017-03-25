@@ -35,6 +35,8 @@ public class Properties
     public static final String COLORS_FILE                  = "colores.txt";
     public static final String SUGGESTED_MALE_COLORS_FILE   = "sugerencias_colores_male.txt";
     public static final String SUGGESTED_FEMALE_COLORS_FILE = "sugerencias_colores_female.txt";
+    public static final String SUGGESTED_SECTIONS_FILE      = "sugerencias_secciones.txt";
+    public static final String SECTIONS_MALE_FILE           = "secciones_male.txt";
     
     /* Files */
     public static final String WELCOME_EMAIL_NAME      = "bienvenida.html";
