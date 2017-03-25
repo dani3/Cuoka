@@ -55,7 +55,14 @@ public class MultithreadManager
                     LOG.info("Scraper de " + shop.getName() + " obtenido");
 
                     // Creamos un executor que creara tantos threads como secciones tenga la tienda
-                    ExecutorService executorSections = Executors.newFixedThreadPool(Properties.MAX_THREADS_SECTIONS);
+                    ExecutorService executorSections;                    
+                    if (shop.getName().equalsIgnoreCase("Zara"))
+                    {
+                        executorSections = Executors.newFixedThreadPool(Properties.ZARA_THREADS);
+                    } else {
+                        executorSections = Executors.newFixedThreadPool(Properties.MAX_THREADS_SECTIONS);
+                    }
+                    
                     // Creamos la lista donde se van a volcar todos los tasks.
                     List<Callable<Map<String, Object>>> listOfTasks = new ArrayList<>();    
 

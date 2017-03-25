@@ -11,7 +11,9 @@ public class Properties
     public static final boolean DEV = false;
     
     public static final int MAX_THREADS_SHOP = 2;
-    public static final int MAX_THREADS_SECTIONS = 1;
+    public static final int MAX_THREADS_SECTIONS = 2;
+    
+    public static final int ZARA_THREADS = 1;
     
     public static final String SERVER_PROD = "http://46.183.117.22:8080";
     public static final String SERVER_DEV = "http://46.183.116.208:8080";
