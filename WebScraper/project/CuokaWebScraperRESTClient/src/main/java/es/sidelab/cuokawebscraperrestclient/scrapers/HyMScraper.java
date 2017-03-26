@@ -188,8 +188,13 @@ public class HyMScraper implements Scraper
         description = br.readLine();
         price       = br.readLine();      
         
-        if (price.contains("null"))
+        if (price == null || price.contains("null"))
         {
+            if (price == null)
+            {
+                return null;
+            }
+            
             scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
             
             // Leemos la linea de guiones
@@ -287,7 +292,7 @@ public class HyMScraper implements Scraper
             String colorName = br.readLine();
             String colorIcon = br.readLine();
             String reference = br.readLine();
-            if (colorName.contains("null") || reference.contains("null"))
+            if (colorName == null || reference == null || colorName.contains("null") || reference.contains("null"))
             {
                 correct = false;
                 
@@ -356,8 +361,11 @@ public class HyMScraper implements Scraper
                     }
                 }
 
-                color.setImages(images);
-                colors.add(color); 
+                if (images != null && !images.isEmpty())
+                {
+                    color.setImages(images);
+                    colors.add(color);  
+                }
             }
         }
         

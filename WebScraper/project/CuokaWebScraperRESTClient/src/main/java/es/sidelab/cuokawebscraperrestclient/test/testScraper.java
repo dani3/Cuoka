@@ -40,7 +40,7 @@ public class testScraper
         
         /***************** Massimo Dutti *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
-        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_true\\false\\", false);
+        Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\true\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         /*Runtime.getRuntime().exec(new String[] {"python"
@@ -153,12 +153,14 @@ public class testScraper
         description = br.readLine();
         price       = br.readLine();      
         
-        if (price.contains("null"))
+        if (price == null || price.contains("null"))
         {
-            if (price.contains("null"))
+            if (price == null)
             {
-                br.readLine();
+                return null;
             }
+            
+            br.readLine();            
             
             return null;
         }
@@ -247,7 +249,7 @@ public class testScraper
             String colorName = br.readLine();
             String colorIcon = br.readLine();
             String reference = br.readLine();
-            if (colorName.contains("null") || reference.contains("null"))
+            if (colorName == null || reference == null || colorName.contains("null") || reference.contains("null"))
             {
                 correct = false;
                 
@@ -302,8 +304,11 @@ public class testScraper
                     }
                 }
 
-                color.setImages(images);
-                colors.add(color); 
+                if (images != null && !images.isEmpty())
+                {
+                    color.setImages(images);
+                    colors.add(color);  
+                }  
             }
         }
         
