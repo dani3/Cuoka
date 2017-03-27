@@ -133,62 +133,62 @@ for link in listOfLinks:
         continue
 
     if (len(colors) == 0):
-            # Si no encuentra nada, es que sólo hay un color.
+        # Si no encuentra nada, es que sólo hay un color.
+        try:
+            # ****** C O L O R   N O M B R E ****** #
+            colorName = dr.find_element_by_css_selector("p.color > span").text
+
+            result.write("*********************************************************\n")
+            result.write("  Color: " + colorName + "\n")
+                    
+        except:
+            result.write("*********************************************************\n")
+            result.write("  Color: null\n")
+            result.write("  Icono: null\n")
+            result.write("  Referencia: null\n")
+            file_error.write("Color no encontrado en: " + link + "\n")
+            continue
+
+        try:
+            # ****** C O L O R   I C O N O ****** #
+            # Zara no tiene iconos de color, solo imagenes por tanto lo ponemos directamente a null
+            result.write("  Icono: null\n")
+                    
+        except:
+            result.write("  Icono: null\n")
+
+        try:
+            # ****** C O L O R   R E F E R E N C I A ****** #
+            reference = dr.find_element_by_css_selector("p.reference").text.replace("/", "")
+                    
+            if (len(reference) == 0):
+                raise Exception("Referencia vacia")
+            
+            result.write("  Referencia: " + reference + "\n")
+                    
+        except:
+            result.write("  Referencia: null\n")
+            file_error.write("Referencia no encontrado en: " + link + "\n")
+            continue 
+
+        # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande
+        try:
+            images = dr.find_elements_by_css_selector("#detail-images > div.image-wrap")
+            if (len(images) == 0):
+                raise Exception("Imagenes no encontradas")
+
+        except:
+            file_error.write("Imagenes no encontradas en: " + link + "\n")
+            continue
+
+        # ****** I M A G E N E S ****** #
+        for image in images:
             try:
-                # ****** C O L O R   N O M B R E ****** #
-                colorName = dr.find_element_by_css_selector("p.color > span").text
-
-                result.write("*********************************************************\n")
-                result.write("  Color: " + colorName + "\n")
-                
-            except:
-                result.write("*********************************************************\n")
-                result.write("  Color: null\n")
-                result.write("  Icono: null\n")
-                result.write("  Referencia: null\n")
-                file_error.write("Color no encontrado en: " + link + "\n")
-                continue
-
-            try:
-                # ****** C O L O R   I C O N O ****** #
-                # Zara no tiene iconos de color, solo imagenes por tanto lo ponemos directamente a null
-                result.write("  Icono: null\n")
-                
-            except:
-                result.write("  Icono: null\n")
-
-            try:
-                # ****** C O L O R   R E F E R E N C I A ****** #
-                reference = dr.find_element_by_css_selector("p.reference").text.replace("/", "")
-                
-                if (len(reference) == 0):
-                    raise Exception("Referencia vacia")
-        
-                result.write("  Referencia: " + reference + "\n")
-                
-            except:
-                result.write("  Referencia: null\n")
-                file_error.write("Referencia no encontrado en: " + link + "\n")
-                continue 
-
-            # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande
-            try:
-                images = dr.find_elements_by_css_selector("#detail-images > div.image-wrap")
-                if (len(images) == 0):
-                    raise Exception("Imagenes no encontradas")
+                image = image.find_element_by_css_selector("a > img")
+                result.write("     Imagen: " + image.get_attribute("src") + "\n")
 
             except:
-                file_error.write("Imagenes no encontradas en: " + link + "\n")
-                continue
-
-            # ****** I M A G E N E S ****** #
-            for image in images:
-                try:
-                    image = image.find_element_by_css_selector("a > img")
-                    result.write("     Imagen: " + image.get_attribute("src") + "\n")
-
-                except:
-                    result.write("     Imagen: null" + "\n")
+                result.write("     Imagen: null" + "\n")
 
     else:
         for i in range(len(colors)):
@@ -216,7 +216,7 @@ for link in listOfLinks:
                         colors = dr.find_elements_by_css_selector("div.colors > label._color")
                         continue
 
-                element = WebDriverWait(dr, 10).until(
+                WebDriverWait(dr, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "image-big"))
                 )
                             

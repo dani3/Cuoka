@@ -30,7 +30,7 @@ public class Properties
     public static final String NO_COLORS = "Productos sin ningun color";
     public static final String IMAGE_NOT_FOUND = "Imagenes vacias";
     
-    public static final String FROM = "elena.fernandez.guzman@cuoka.es";
+    public static final String FROM = "soporte.cuoka@gmail.com";
     public static final String PASSWORD = "Millonarios2017";
     public static final String HOST = "smtp.gmail.com";
     public static final String PORT = "587";

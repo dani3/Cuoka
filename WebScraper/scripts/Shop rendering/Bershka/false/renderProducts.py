@@ -65,7 +65,7 @@ for link in listOfLinks:
 
     try:
         # Esperamos a que aparezca la imagen un maximo de 10 segundos.
-        element = WebDriverWait(dr, 10).until(
+        WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-image-image"))
         )
         
@@ -152,7 +152,7 @@ for link in listOfLinks:
                 # Hacemos click en cada icono
                 color.find_element_by_xpath(".//a").click()
 
-                element = WebDriverWait(dr, 60).until(
+                WebDriverWait(dr, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-image-image"))
                 )
             

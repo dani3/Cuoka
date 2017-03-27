@@ -64,7 +64,7 @@ for link in listOfLinks:
 
     try:
         # Esperamos a que aparezca la imagen un maximo de 60 segundos.
-        element = WebDriverWait(dr, 60).until(
+        WebDriverWait(dr, 60).until(
             EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
         )
         

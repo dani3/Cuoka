@@ -93,5 +93,5 @@ public class Properties
     public static final String SHOP_SUGGESTION_EMAIL_SUBJECT  = "Nueva tienda sugerida";
     public static final String SHOP_SUGGESTION_EMAIL_FROM     = "elena.fernandez.guzman@cuoka.es";
     public static final String SCRAPING_STATS_EMAIL_SUBJECT   = "[SCRAPER_STATS] ?1";
-    public static final String SCRAPING_STATS_EMAIL_FROM      = "elena.fernandez.guzman@cuoka.es";
+    public static final String SCRAPING_STATS_EMAIL_FROM      = "soporte.cuoka@gmail.com";
 }
