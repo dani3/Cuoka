@@ -25,15 +25,25 @@ public class RestClient
         this.server = server;
     }
     
-    /*
-     * Metodo que envia una lista de productos al servidor REST.
+    /**
+     * Metodo que envia la lista de productos de una tienda al servidor.
+     * @param products: lista de productos.
+     * @param shop: tienda a la que pertenecen los productos.
      */
     public synchronized void saveProducts(List<Product> products, Shop shop)
     {
         LOG.info("Enviando lista de productos de " + shop.getName() + " al servidor...");
         LOG.info("Se envian " + products.size() + " products!");
-        restClient.postForObject(server.toString() 
+        
+        if (shop.isDescubre())
+        {
+            restClient.postForObject(server.toString() 
+                + "/descubre/" + shop.getName(), products.toArray(), Product[].class);
+        } else {
+            restClient.postForObject(server.toString() 
                 + "/products/" + shop.getName(), products.toArray(), Product[].class);
+        }
+        
         LOG.info("Procuctos enviados correctamente");
     }
 }

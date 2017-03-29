@@ -84,7 +84,7 @@ public class ScraperManager
 
                 if (folderName.contains("true"))
                 {               
-                    LOG.info(folderName.replace("_true" , "") + " esta ONLINE");
+                    LOG.info(folderName.replace("_true" , "").replace("Descubre_", "") + " esta ONLINE");
                     // Recorremos hombre y mujer si esta online
                     File[] subFolders = new File(Properties.SHOPS_PATH + "\\" + folderName).listFiles();
                     List<Section> sectionsList = new ArrayList<>();
@@ -123,17 +123,20 @@ public class ScraperManager
                         BufferedReader br = new BufferedReader(new FileReader(new File(folder + "\\url.txt")));
                         String url = br.readLine();
 
-                        shops.add(new Shop(folderName.substring(0, folderName.indexOf("_"))
-                                        , new URL(url)
-                                        , sectionsList
-                                        , true));
+                        String name = (folderName.contains("Descubre")) ? 
+                            folderName.substring(folderName.indexOf("_") + 1, folderName.lastIndexOf("_")) :
+                            folderName.substring(0, folderName.indexOf("_"));
+                        
+                        shops.add(new Shop(name
+                            , new URL(url)
+                            , sectionsList
+                            , true
+                            , folderName.contains("Descubre")));
 
                     } catch (FileNotFoundException ex) {
                         LOG.error("Error abriendo el fichero de 'url.txt'");
-
                     } catch (IOException ex) {
                         LOG.error("Error leyendo el fichero 'url.txt' o formando la URL");
-
                     } 
                 }
             }
