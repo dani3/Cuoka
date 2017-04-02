@@ -87,7 +87,7 @@ public class BershkaScraper implements Scraper
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
-            new FileReader(new File(section.getPath() + section.getName() + "_products.txt")));
+            new FileReader(new File(section.getPath() + "Productos_" + section.getName() + ".txt")));
                
         br.readLine();
         int count = 0;

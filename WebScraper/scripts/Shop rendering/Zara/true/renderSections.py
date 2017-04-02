@@ -39,13 +39,11 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k, v in urls:
-    file_error = open(path + k + "_links_error.txt", 'w')
-    
+for k, v in urls:    
     try:
         dr.get(v)
         # Esperamos a que aparezcan los productos un maximo de 10 segundos.
-        element = WebDriverWait(dr, 10).until(
+        WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "_product-grid-xmedia"))
         )
 
@@ -72,19 +70,17 @@ for k, v in urls:
             links.append(product.find_element_by_xpath(".//a").get_attribute("href"))
 
         # Escribimos los links de cada producto en fichero.
-        file = open(path + k + ".txt", 'w')
+        file = open(path + "Seccion_" + k + ".txt", 'w')
 
         for link in links:
             file.write(link + "\n")
 
         file.close()
-        
-    except Exception as e:
-        # Escribimos la sección que ha fallado
-        file_error.write(k + " (" + str(e) + ")")
-        
-    finally:
-        file_error.close()
+
+        except Exception as e:
+            with open(path + "Seccion_Error_" + k + ".txt", 'w') as file_error:
+                # Escribimos la sección que ha fallado
+                file_error.write(k + " (" + str(e) + ")")
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + 'done.dat', 'w')

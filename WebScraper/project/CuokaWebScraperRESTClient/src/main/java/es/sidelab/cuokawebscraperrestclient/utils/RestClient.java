@@ -35,14 +35,8 @@ public class RestClient
         LOG.info("Enviando lista de productos de " + shop.getName() + " al servidor...");
         LOG.info("Se envian " + products.size() + " products!");
         
-        if (shop.isDescubre())
-        {
-            restClient.postForObject(server.toString() 
-                + "/descubre/" + shop.getName(), products.toArray(), Product[].class);
-        } else {
-            restClient.postForObject(server.toString() 
-                + "/products/" + shop.getName(), products.toArray(), Product[].class);
-        }
+        restClient.postForObject(server.toString() 
+            + "/products/" + shop.getName() + "/" + shop.isDescubre(), products.toArray(), Product[].class);
         
         LOG.info("Procuctos enviados correctamente");
     }

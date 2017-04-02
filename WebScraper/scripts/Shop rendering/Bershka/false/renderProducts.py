@@ -38,8 +38,8 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Creamos fichero con los productos
-result = open(path + section + "_products.txt", 'w')
-file_error = open(path + section + "_error.txt", 'w')
+result = open(path + "Productos_" + section + ".txt", 'w')
+file_error = open(path + "Productos_Error" + section + ".txt", 'w')
 
 for link in listOfLinks:
     # Linea de guiones para separar cada producto
@@ -152,7 +152,7 @@ for link in listOfLinks:
                 # Hacemos click en cada icono
                 color.find_element_by_xpath(".//a").click()
 
-                WebDriverWait(dr, 10).until(
+                element = WebDriverWait(dr, 60).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-image-image"))
                 )
             

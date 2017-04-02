@@ -13,8 +13,8 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "SHOP")
-public class Shop 
+@Table(name = "DESCUBRE_SHOP")
+public class DescubreShop 
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,23 +33,20 @@ public class Shop
     @Column(name = "PRODUCTS")
     private int products;
     
-    public Shop() {}
+    public DescubreShop() {}
     
-    public Shop(String name, boolean man, boolean woman, int products)
+    public DescubreShop(String name, boolean man, boolean woman)
     {
         this.name = name;
         this.man = man;
         this.woman = woman;
-        this.products = products;
     }
     
     public String getName()   { return this.name; }
     public boolean getMan()   { return this.man; }
     public boolean getWoman() { return this.woman; }
-    public int getProducts() { return this.products; }
     
     public void setName(String name)    { this.name = name; }
     public void setMan(boolean man)     { this.man = man; }
     public void setWoman(boolean woman) { this.woman = woman; }
-    public void setProducts(int products) { this.products = products; }
 }
