@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,17 +22,21 @@ public class ShopManager
     @Autowired
     private ShopsRepository shopsRepository;
     
-    private Map<String, Map<String, Integer>> recommendationsMatrix;
+    private final Map<String, List<String>> stylesMap;
     
-    @PostConstruct
-    private void init()
+    public ShopManager()
     {
-        recommendationsMatrix = new HashMap<>();
-        
-        // TODO inicializar mapa de recomendaciones.
-        Map<String, Integer> auxMap = new HashMap<>();
-        
-        recommendationsMatrix.put("Blanco", auxMap);
+        stylesMap = new HashMap<>();
+    }
+    
+    /**
+     * Metodo que devuelve la lista de estilos de una tienda.
+     * @param shop: tienda.
+     * @return lista de estilos de la tienda.
+     */
+    public List<String> getStyles(String shop)
+    {
+        return stylesMap.get(shop);
     }
     
     /**

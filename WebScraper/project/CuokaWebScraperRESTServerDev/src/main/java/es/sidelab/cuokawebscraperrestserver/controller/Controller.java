@@ -1,6 +1,7 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
+import es.sidelab.cuokawebscraperrestserver.beans.DescubreShop;
 import es.sidelab.cuokawebscraperrestserver.beans.Feedback;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.Notification;
@@ -10,6 +11,7 @@ import es.sidelab.cuokawebscraperrestserver.beans.ShopSuggested;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.beans.UserModification;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import es.sidelab.cuokawebscraperrestserver.repositories.DescubreShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.FeedbackRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.NotificationsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
@@ -67,6 +69,9 @@ public class Controller
     
     @Autowired
     private ShopsRepository shopsRepository;
+    
+    @Autowired
+    private DescubreShopsRepository descubreShopsRepository;
     
     @Autowired
     private ShopSuggestedRepository shopSuggestedRepository;
@@ -689,9 +694,10 @@ public class Controller
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @CacheEvict(value = "products", allEntries = true)
-    @RequestMapping(value = "/products/{shop}", method = RequestMethod.POST)
+    @RequestMapping(value = "/products/{shop}/{descubre}", method = RequestMethod.POST)
     public ResponseEntity<Boolean> addProducts(@RequestBody List<Product> products
-                                        , @PathVariable String shop)
+                                        , @PathVariable String shop
+                                        , @PathVariable boolean descubre)
     {
         LOG.info("[SCRAPER] Peticion POST para anadir productos de " + shop + " recibida");
             
@@ -801,8 +807,15 @@ public class Controller
                 }
                 
                 // Se añade la tienda.
-                shopsRepository.save(new Shop(shop, man, woman, productsScraped.size()));
-                
+                if (!descubre)
+                {
+                    shopsRepository.save(
+                        new Shop(shop, man, woman, productsScraped.size()));
+                } else {
+                    descubreShopsRepository.save(
+                        new DescubreShop(shop, man, woman, productsScraped.size(), shopManager.getStyles(shop)));
+                }
+                    
                 LOG.info("[SCRAPER] No hay ningun producto de la tienda " + shop);
                 LOG.info("[SCRAPER] Los productos se insertan directamente");
                 for (Product productScraped : productsScraped)

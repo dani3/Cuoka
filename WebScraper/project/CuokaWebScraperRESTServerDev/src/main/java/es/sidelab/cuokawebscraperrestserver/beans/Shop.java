@@ -46,10 +46,10 @@ public class Shop
     public String getName()   { return this.name; }
     public boolean getMan()   { return this.man; }
     public boolean getWoman() { return this.woman; }
-    public int getProducts() { return this.products; }
+    public int getProducts()  { return this.products; }
     
-    public void setName(String name)    { this.name = name; }
-    public void setMan(boolean man)     { this.man = man; }
-    public void setWoman(boolean woman) { this.woman = woman; }
+    public void setName(String name)      { this.name = name; }
+    public void setMan(boolean man)       { this.man = man; }
+    public void setWoman(boolean woman)   { this.woman = woman; }
     public void setProducts(int products) { this.products = products; }
 }

@@ -58,6 +58,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
@@ -377,20 +378,24 @@ public class ProductsFragment extends Fragment
                     int[] firstItemsPosition = new int[2];
                     mStaggeredGridLayoutManager.findFirstVisibleItemPositions(firstItemsPosition);
 
-                    mCurrentDay = mProductAdapter.getDayOfProductsAt(firstItemsPosition);
-                    mDaysOffsetTextView.setText(Utils.getMessageFromDaysOffset((short) mCurrentDay));
-
-                    // Solo si no esta ya visible realizamos la animacion.
-                    if (mDaysOffsetView.getVisibility() != View.VISIBLE)
+                    // Comprobamos que se ha devuelto la posición correctamente.
+                    if (firstItemsPosition[0] != NO_POSITION)
                     {
-                        Animation showFromBotton = AnimationUtils.loadAnimation(getActivity()
-                                , R.anim.show_from_down_animation);
+                        mCurrentDay = mProductAdapter.getDayOfProductsAt(firstItemsPosition);
+                        mDaysOffsetTextView.setText(Utils.getMessageFromDaysOffset((short) mCurrentDay));
 
-                        showFromBotton.setDuration(100);
+                        // Solo si no esta ya visible realizamos la animacion.
+                        if (mDaysOffsetView.getVisibility() != View.VISIBLE)
+                        {
+                            Animation showFromBotton = AnimationUtils.loadAnimation(getActivity()
+                                    , R.anim.show_from_down_animation);
 
-                        mDaysOffsetView.setVisibility(View.VISIBLE);
+                            showFromBotton.setDuration(100);
 
-                        mDaysOffsetView.startAnimation(showFromBotton);
+                            mDaysOffsetView.setVisibility(View.VISIBLE);
+
+                            mDaysOffsetView.startAnimation(showFromBotton);
+                        }
                     }
                 }
 
