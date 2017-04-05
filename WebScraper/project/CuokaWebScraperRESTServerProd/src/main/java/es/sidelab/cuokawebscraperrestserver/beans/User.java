@@ -3,6 +3,7 @@ package es.sidelab.cuokawebscraperrestserver.beans;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -97,6 +98,11 @@ public class User
     @Column(name = "SHOPS")
     private Set<String> shops;
     
+    @JsonIgnore
+    @ElementCollection
+    @Column(name = "STYLES")
+    private Set<String> styles;
+    
     public User() {}
     
     public User(String name
@@ -114,6 +120,8 @@ public class User
         this.password = password;
         this.postalCode = postalCode;
         this.registrationDate = registrationDate;
+        
+        this.styles = new HashSet<>();
     }
     
     public String getName()     { return this.name; }
@@ -143,7 +151,9 @@ public class User
     @JsonIgnore
     public Set<String> getFilters() { return filters; }       
     @JsonProperty
-    public Set<String> getShops() { return shops; }    
+    public Set<String> getShops() { return shops; }       
+    @JsonProperty
+    public Set<String> getStyles() { return styles; }    
     @JsonIgnore
     public long getId() { return id; }
     
@@ -164,7 +174,9 @@ public class User
     @JsonIgnore
     public void setFilters(Set<String> filters) { this.filters = filters; }    
     @JsonIgnore
-    public void setShops(Set<String> shops)   { this.shops = shops; } 
+    public void setShops(Set<String> shops) { this.shops = shops; }    
+    @JsonIgnore
+    public void setStyles(Set<String> styles) { this.styles = styles; } 
     @JsonIgnore
     public void setEmailSent(boolean emailSent) { this.emailSent = emailSent; }
     @JsonIgnore

@@ -79,10 +79,10 @@ for k, v in urls:
 
         file.close()
 
-        except Exception as e:
-            with open(path + "Seccion_Error_" + k + ".txt", 'w') as file_error:
-                # Escribimos la sección que ha fallado
-                file_error.write(k + " (" + str(e) + ")")
+    except Exception as e:
+        with open(path + "Seccion_Error_" + k + ".txt", 'w') as file_error:
+            # Escribimos la sección que ha fallado
+            file_error.write(k + " (" + str(e) + ")")
 
 # Creamos un fichero vacio para indicar que ya hemos terminado.
 open(path + 'done.dat', 'w')
