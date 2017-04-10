@@ -64,6 +64,7 @@ public class MainScreenUI extends AppCompatActivity
     private static final int MANAGE_SHOPS_REQUEST     = 2;
     private static final int MANAGE_FAVORITES_REQUEST = 3;
     private static final int NOTIFICATION_REQUEST     = 4;
+    private static final int MANAGE_STYLES_REQUEST    = 5;
     private static final int EXIT_TIME_INTERVAL       = 2000;
 
     /* Container Views */
@@ -170,25 +171,6 @@ public class MainScreenUI extends AppCompatActivity
         // Marcamos como activo la segunda pestaña (NOVEDADES)
         mViewPager.setCurrentItem(1);
         tabLayout.setupWithViewPager(mViewPager);
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-        {
-            @Override
-            @SuppressWarnings("ConstantConditions")
-            public void onTabSelected(TabLayout.Tab tab)
-            {
-                if (tab.getText().toString().equalsIgnoreCase("DESCUBRE"))
-                {
-                    mRecommendedFragment.select();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
 
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
@@ -494,6 +476,23 @@ public class MainScreenUI extends AppCompatActivity
     }
 
     /**
+     * Metodo que abre la pantalla de estilos.
+     */
+    private void _openActivityStyles()
+    {
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se hace CLICK -> Mis estilos");
+        Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Se abre activity -> StylesUI");
+
+        Intent intent = new Intent(MainScreenUI.this, StylesUI.class);
+
+        // Iniciamos la activity StylesUI
+        startActivityForResult(intent, MANAGE_STYLES_REQUEST);
+
+        // Animacion de transicion para pasar de una activity a otra.
+        overridePendingTransition(R.anim.right_in_animation, R.anim.right_out_animation);
+    }
+
+    /**
      * Metodo que abre la pantalla de Mas tiendas.
      */
     private void _openActivitySuggested()
@@ -518,10 +517,11 @@ public class MainScreenUI extends AppCompatActivity
     {
         Typeface font = TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf");
 
-        SpannableString mNewTitle = new SpannableString(mi.getTitle());
-        mNewTitle.setSpan(new CustomTypeFaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        SpannableString newTitle = new SpannableString(mi.getTitle());
+        newTitle.setSpan(
+                new CustomTypeFaceSpan("" , font), 0 , newTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
-        mi.setTitle(mNewTitle);
+        mi.setTitle(newTitle);
     }
 
     /**
@@ -552,6 +552,14 @@ public class MainScreenUI extends AppCompatActivity
         _openActivityShops();
     }
 
+    /**
+     * Metodo publico llamado desde un fragmento para abrir la pantalla de mis estilos.
+     */
+    public void openActivityStyles()
+    {
+        _openActivityStyles();
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void onBackPressed()
@@ -571,6 +579,7 @@ public class MainScreenUI extends AppCompatActivity
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI] Saliendo de la aplicación");
 
                 super.onBackPressed();
+
                 return;
 
             } else {
@@ -644,6 +653,7 @@ public class MainScreenUI extends AppCompatActivity
 
                 // Ocultamos la Snackbar en caso de que esté visible
                 mProductsFragment.hideSnackbar();
+                mRecommendedFragment.hideSnackbar();
 
                 // Creamos un Intent.
                 Intent intent = new Intent(MainScreenUI.this, FilterUI.class);
@@ -658,7 +668,7 @@ public class MainScreenUI extends AppCompatActivity
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("discount"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("minPrice"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("maxPrice"));
-                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " +  mProductsFragment.getMan());
+                Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + mProductsFragment.getMan());
 
                 // Lo mandamos en el Intent
                 intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)filterMap.get("newness"));
@@ -744,10 +754,10 @@ public class MainScreenUI extends AppCompatActivity
             } else if (requestCode == MANAGE_SHOPS_REQUEST) {
                 // Si venimos de la pantalla de Mis tiendas
 
+                // Se cambia al fragmento de Novedades
                 mViewPager.setCurrentItem(1);
-
+                // Se reinicia el fragmento con los cambios.
                 mProductsFragment.restart();
-                mRecommendedFragment.restart();
 
             } else if (requestCode == MANAGE_FAVORITES_REQUEST) {
                 // Si venimos de la pantalla de Mis favoritos
@@ -760,10 +770,10 @@ public class MainScreenUI extends AppCompatActivity
 
                 if (data.getBooleanExtra("shops", false))
                 {
+                    // Se cambia al fragmento de Novedades
                     mViewPager.setCurrentItem(1);
-
+                    // Se reinicia el fragmento con los cambios.
                     mProductsFragment.restart();
-                    mRecommendedFragment.restart();
                 }
 
                 // Cambiamos el Hamburger Icon
@@ -772,6 +782,10 @@ public class MainScreenUI extends AppCompatActivity
                 // Cambiamos el icono de las notificaciones en el menu
                 MenuItem menuItem = mNavigationVew.getMenu().findItem(R.id.nav_notifications);
                 menuItem.setIcon(this.getResources().getDrawable(R.drawable.ic_notification));
+
+            } else if (requestCode == MANAGE_STYLES_REQUEST) {
+                // Si venimos de la pantalla de Mis estilos.
+                // TODO pedir recomendaciones al servidor.
             }
         }
 
@@ -785,7 +799,6 @@ public class MainScreenUI extends AppCompatActivity
                     mViewPager.setCurrentItem(1);
 
                     mProductsFragment.restart();
-                    mRecommendedFragment.restart();
                 }
             }
         }

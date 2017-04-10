@@ -781,6 +781,7 @@ public class LoginUI extends AppCompatActivity
                                             user.setFavoriteProducts(new HashSet<Long>());
                                             user.setNotificationsRead(new HashSet<Long>());
                                             user.setShops(new HashSet<String>());
+                                            user.setStyles(new HashSet<String>());
 
                                             mSharedPreferencesManager.insertUser(user);
                                             mSharedPreferencesManager.insertLoggedIn(true);

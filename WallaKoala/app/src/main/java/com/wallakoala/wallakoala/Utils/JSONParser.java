@@ -150,6 +150,20 @@ public class JSONParser
             user.setShops(new HashSet<String>());
         }
 
+        // Sacamos la lista de estilos
+        JSONArray stylesJsonArray = jsonObject.getJSONArray("styles");
+        Set<String> styles = new HashSet<>();
+        for (int i = 0; i < stylesJsonArray.length(); i++)
+        {
+            styles.add((String.valueOf(stylesJsonArray.get(i))));
+        }
+
+        if (!styles.isEmpty()) {
+            user.setStyles(styles);
+        } else {
+            user.setStyles(new HashSet<String>());
+        }
+
         Log.d(Properties.TAG, "[JSON_PARSER] Datos del usuario: ");
         Log.d(Properties.TAG, "[JSON_PARSER] - ID: " + id);
         Log.d(Properties.TAG, "[JSON_PARSER] - Nombre: " + user.getName());
@@ -161,6 +175,7 @@ public class JSONParser
         Log.d(Properties.TAG, "[JSON_PARSER] - Numero de favoritos: " + user.getFavoriteProducts().size());
         Log.d(Properties.TAG, "[JSON_PARSER] - Numero de notificaciones leídas: " + user.getNotificationsRead().size());
         Log.d(Properties.TAG, "[JSON_PARSER] - Tiendas: " + jsonArray);
+        Log.d(Properties.TAG, "[JSON_PARSER] - Estilos: " + stylesJsonArray);
 
         return user;
     }

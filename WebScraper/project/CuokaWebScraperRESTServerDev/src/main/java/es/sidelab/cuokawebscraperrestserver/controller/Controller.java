@@ -585,6 +585,32 @@ public class Controller
     }
     
     /**
+     * Metodo que añade los estilos de un usuario.
+     * @param id: id del usuario.
+     * @param styles: lista de estilos.
+     * @return resultado de la operacion.
+     */
+    @RequestMapping(value = "/users/styles/{id}", method = RequestMethod.POST)
+    public String addStylesToUser(@PathVariable long id, @RequestBody Set<String> styles)
+    {
+        LOG.info("[UPDATE] Peticion POST para anadir los estilos del usuario (ID: " + id + ")");
+        User user = usersRepository.findOne(id);
+        
+        if (user == null)
+        {
+            LOG.warn("[UPDATE] No se encuentra al usuario (ID: " + id + ")");
+            return Properties.USER_NOT_FOUND;
+        }
+        
+        LOG.info("[UPDATE] Usuario encontrado, se actualizan sus estilos.");
+        user.setStyles(styles);
+        
+        usersRepository.save(user);
+        
+        return Properties.ACCEPTED;
+    }
+    
+    /**
      * Metodo que añade una tienda.
      * @param shop: tienda a añadir.
      * @return true si ha ido correctamente.
@@ -691,6 +717,7 @@ public class Controller
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos.
      * @param products: Lista de los productos a insertar.
      * @param shop: Tienda a la que pertenecen los productos.
+     * @param descubre: flag para indicar si la tienda es de Descubre.
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @CacheEvict(value = "products", allEntries = true)

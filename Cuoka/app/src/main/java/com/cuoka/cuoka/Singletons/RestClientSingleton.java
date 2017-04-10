@@ -813,6 +813,90 @@ public class RestClientSingleton
     }
 
     /**
+     * Metodo que envia la lista de estilos del usuario.
+     * @param context: contexto.
+     * @param listOfStyles: lista de estilos a enviar.
+     * @return true si se han enviado correctamente.
+     */
+    public static boolean sendStyles(final Context context, List<String> listOfStyles)
+    {
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
+
+        final User user = sharedPreferencesManager.retrieveUser();
+        final long id = user.getId();
+
+        final String fixedURL = Utils.fixUrl(
+                Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/styles/" + id);
+
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para añadir los estilos");
+
+        // Creamos el JSON con la lista de los estilos.
+        final JSONArray jsonArray = new JSONArray();
+        for (String style : listOfStyles)
+        {
+            jsonArray.put(style);
+        }
+
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] JSON con los estilos:\n - " + jsonArray.toString());
+
+        RequestFuture<String> future = RequestFuture.newFuture();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST
+                , fixedURL
+                , future
+                , future)
+        {
+            @Override
+            public byte[] getBody() throws AuthFailureError
+            {
+                return jsonArray.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/json";
+            }
+        };
+
+        // Enviamos la peticion.
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+        Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Petición creada y enviada");
+
+        try
+        {
+            String response = future.get(20, TimeUnit.SECONDS);
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Respuesta recibida: " + response);
+
+            if (response.equals(Properties.ACCEPTED))
+            {
+                Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Estilos actualizados correctamente");
+
+                // Metemos las tiendas en un Set
+                Set<String> stylesShet = new HashSet<>();
+                for (String style : listOfStyles)
+                {
+                    stylesShet.add(style);
+                }
+
+                // Guardamos el conjunto de tiendas en las preferencias.
+                user.setStyles(stylesShet);
+                sharedPreferencesManager.insertUser(user);
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            Log.e(Properties.TAG, "[REST_CLIENT_SINGLETON] Error enviando tiendas: " + e.getMessage());
+            ExceptionPrinter.printException("REST_CLIENT_SINGLETON", e);
+
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
      * Metodo que borra la cuenta del usuario.
      * @param context: contexto
      * @return true si se ha borrado correctamente.

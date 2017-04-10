@@ -19,12 +19,12 @@ section = sys.argv[2]
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
 
-file = open(path + section + ".txt", 'r')
+file = open(path + "Seccion_" + section + ".txt", 'r')
 for link in file:
     # Quitamos los saltos de linea
     listOfLinks.append(link.rstrip())
@@ -38,7 +38,7 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Creamos fichero con los productos
 result = open(path + "Productos_" + section + ".txt", 'w')
-file_error = open(path + "Productos_Error" + section + ".txt", 'w')
+file_error = open(path + "Productos_Error_" + section + ".txt", 'w')
 
 for link in listOfLinks:
     # Linea de guiones para separar cada producto
@@ -188,6 +188,7 @@ for link in listOfLinks:
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
             reference = dr.find_element_by_css_selector("div.c02__article-description.large-only > div.c02__article-number").text.replace("REF. ", "").rstrip()
+            reference = ''.join(ch for ch in reference if ch.isdigit())
             if (len(reference) == 0):
                 raise Exception("Referencia vacia")
 

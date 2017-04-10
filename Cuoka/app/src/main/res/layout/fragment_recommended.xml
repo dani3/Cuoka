@@ -13,6 +13,44 @@
         android:clipToPadding="false"
         android:layoutAnimation="@anim/grid_enter_animation"/>
 
+    <!-- Sin estilos -->
+    <LinearLayout
+        android:id="@+id/no_styles"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/no_styles_image"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:src="@drawable/ic_styles"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"/>
+
+        <com.cuoka.cuoka.Views.ExistenceTextView
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="@string/no_styles"
+            android:textSize="16dp"
+            android:textColor="@color/colorText"
+            app:customFont="Existence-StencilLight.otf"/>
+
+        <Button
+            android:id="@+id/add_styles_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_styles"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+
+    </LinearLayout>
+
     <!-- Loading View -->
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/recommended_avloadingIndicatorView"

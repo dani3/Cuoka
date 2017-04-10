@@ -23,7 +23,7 @@ path = sys.argv[3]
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
 
-file = open(path + section + ".txt", 'r')
+file = open(path + "Seccion_" + section + ".txt", 'r')
 for link in file:
     # Quitamos los saltos de linea
     listOfLinks.append(link.rstrip())
@@ -37,7 +37,7 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Creamos fichero con los productos
 result = open(path + "Productos_" + section + ".txt", 'w')
-file_error = open(path + "Productos_Error" + section + ".txt", 'w')
+file_error = open(path + "Productos_Error_" + section + ".txt", 'w')
 
 for link in listOfLinks:
     # Linea de guiones para separar cada producto
@@ -74,6 +74,9 @@ for link in listOfLinks:
     try:
         # ****** N O M B R E ****** #
         name = dr.find_element_by_css_selector("div.product-info > h1").text
+        if (len(name) == 0):
+            raise Exception("Nombre vacio")
+        
         result.write("Nombre: " + name + "\n")
         
     except:
@@ -94,6 +97,9 @@ for link in listOfLinks:
         price_container = dr.find_element_by_class_name("product-price").text.replace(",", ".").replace("€", "")
         prices_list = price_container.split()
         price = prices_list[0]
+        if (len(price) == 0):
+            raise Exception("Precio vacio")
+        
         result.write("Precio: " + price + "\n")       
     except:
         result.write("Precio: null\n")
@@ -115,6 +121,8 @@ for link in listOfLinks:
         # ****** C O L O R E S ****** #
 
         colors = dr.find_element_by_class_name("product-colors").find_elements_by_css_selector("a")
+        if (len(colors) == 0):
+            raise Exception("Colores no encontrados")
         
     except:
         result.write("*********************************************************\n")
@@ -147,6 +155,9 @@ for link in listOfLinks:
         try:
             # ****** C O L O R   N O M B R E ****** #
             colorName = dr.find_element_by_css_selector("div.product-info > h3").text.upper().replace("/", "-")
+            if (len(colorName) == 0):
+                raise Exception("Nombre del color vacio")
+
             result.write("*********************************************************\n")
             result.write("  Color: " + colorName + "\n")
             
@@ -155,7 +166,7 @@ for link in listOfLinks:
             result.write("  Color: null\n")
             result.write("  Icono: null\n")
             result.write("  Referencia: null\n")
-            file_error.write("Nombre de color no encontrado en: " + link + "\n")
+            file_error.write("Color no encontrado en: " + link + "\n")
             continue
 
         try:
@@ -170,7 +181,12 @@ for link in listOfLinks:
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
             reference = dr.find_element_by_class_name("reference").text.replace("Ref. ", "").replace("/", "").rstrip()
+
+            if (len(reference) == 0):
+                raise Exception("Referencia vacia")
+            
             result.write("  Referencia: " + reference + "\n")
+            
             
         except:
             result.write("  Referencia: null\n")

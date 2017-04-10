@@ -3,6 +3,7 @@
 
     <string name="toolbar_filter">Filtros</string>
     <string name="toolbar_shops">Mis tiendas</string>
+    <string name="toolbar_styles">Mis estilos</string>
     <string name="toolbar_notifications">Notificaciones</string>
     <string name="toolbar_favorites">Mis favoritos</string>
     <string name="toolbar_feedback">Feedback</string>
@@ -124,6 +125,9 @@
 
     <string name="no_shops">Parece que no has añadido ninguna tienda</string>
     <string name="add_shops"><b>Añade tus tiendas</b></string>
+
+    <string name="no_styles">Parece que no has seleccionado ningún estilo. Añade alguno para encontrar nuevas tiendas.</string>
+    <string name="add_styles"><b>Añade tu estilo</b></string>
 
     <string name="colors"><b>Colores: </b></string>
 

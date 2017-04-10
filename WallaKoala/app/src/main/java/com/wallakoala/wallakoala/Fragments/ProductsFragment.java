@@ -194,6 +194,14 @@ public class ProductsFragment extends Fragment
             }
         });
 
+        View noShopsImage = getView().findViewById(R.id.no_shops_image);
+        noShopsImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainScreenUI)getActivity()).openActivityShops();
+            }
+        });
+
         // Si el usuario no tiene tiendas.
         if (mUser.getShops().isEmpty())
         {

@@ -28,9 +28,10 @@
         android:background="@android:color/transparent">
 
         <ImageView
+            android:id="@+id/no_shops_image"
             android:layout_width="92dp"
             android:layout_height="92dp"
-            android:src="@drawable/ic_shop_medium"
+            android:src="@drawable/ic_no_shops"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"/>
 

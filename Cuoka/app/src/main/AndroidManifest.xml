@@ -46,6 +46,11 @@
             android:configChanges="orientation|keyboardHidden">
         </activity>
 
+        <activity android:name="com.cuoka.cuoka.Activities.StylesUI"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+        </activity>
+
         <activity android:name="com.cuoka.cuoka.Activities.SuggestedUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
