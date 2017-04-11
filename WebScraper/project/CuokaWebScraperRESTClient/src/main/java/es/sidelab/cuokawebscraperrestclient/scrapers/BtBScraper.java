@@ -1,54 +1,73 @@
-package es.sidelab.cuokawebscraperrestclient.test;
+package es.sidelab.cuokawebscraperrestclient.scrapers;
 
 import es.sidelab.cuokawebscraperrestclient.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestclient.beans.Image;
 import es.sidelab.cuokawebscraperrestclient.beans.Product;
 import es.sidelab.cuokawebscraperrestclient.beans.Section;
+import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.ScrapingAnalyzer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
+import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
-public class testScraper 
+/**
+ * Scraper especifico para Pedro Del Hierro.
+ * @author Daniel Mancebo Aldea
+ */
+
+public class BtBScraper implements Scraper
 {
-    private static boolean finished = false;
+    private static final Logger LOG = Logger.getLogger(BtBScraper.class);
     
-    public static void main(String[] args) throws Exception 
-    {              
-        List<Product> productList = new ArrayList<>();
+    // Lista preparada para la concurrencia donde escribiran todos los scrapers.
+    @SuppressWarnings("FieldMayBeFinal")
+    private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
+    
+    // Lista preparada para la concurrencia donde se guardaran las estadisticas de los scrapers.
+    @SuppressWarnings("FieldMayBeFinal")
+    private static List<ScrapingAnalyzer> scrapingAnalyzerList = Collections.synchronizedList(new ArrayList<>());
+    
+    // Atributo local para comprobar que se ha terminado.
+    private final ThreadLocal<Boolean> threadFinished = 
+            new ThreadLocal<Boolean>() 
+            {
+                @Override 
+                protected Boolean initialValue() 
+                {
+                    return false;
+                }
+            };
+    
+    // Analizador que almacena los resultados del proceso de scraping.
+    private ThreadLocal<ScrapingAnalyzer> scrapingAnalyzer;
+    
+    @Override
+    public Map<String, Object> scrap(Shop shop, Section section) throws IOException
+    {        
+        scrapingAnalyzer = 
+            new ThreadLocal<ScrapingAnalyzer>() 
+            {
+                @Override 
+                protected ScrapingAnalyzer initialValue() 
+                {
+                    return new ScrapingAnalyzer(shop, section);
+                }
+            };
         
-        /***************** HyM *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\", false);
-        //Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\", false);
+        threadFinished.set(false);
         
-        /***************** Pedro Del Hierro *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Pedro Del Hierro_true\\false\\", false);
-        //Section section = new Section("Abrigos", "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\true\\", false);
-        
-        /***************** Bershka *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\", false);
-        //Section section = new Section("Scraping_validation", "C:\\Users\\Dani\\Documents\\shops\\Bershka_false\\false\\", false);
-        
-        /***************** Zara *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Zara_true\\false\\", false);
-        //Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Zara_true\\false\\", false);
-        
-        /***************** Massimo Dutti *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Massimo Dutti_false\\false\\", false);
-        //Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\true\\", false);
-        
-        /***************** Mango *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Mango_false\\false\\", false);
-        Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Mango_false\\true\\", false);
-        
-        /***************** Bordeaux the Brand *****************/
-        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Descubre_Bordeaux the Brand_false\\false\\", false);
-        //Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Descubre_Bordeaux the Brand_false\\true\\", false);
+        LOG.info("Se inicia el scraping de la seccion " + section.getName() + "(" 
+            + ((section.isMan()) ? "Hombre)" : "Mujer)") + " de la tienda " + shop.getName());
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         Runtime.getRuntime().exec(new String[] {"python"
@@ -69,48 +88,53 @@ public class testScraper
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(
             new FileReader(new File(section.getPath() + "Productos_" + section.getName() + ".txt")));
-        
+               
         br.readLine();
-        while (!finished)
-        {   
-            // Empezamos nuevo producto
-            Product product = _readProductGeneralInfo(br);
-            if (product != null)
+        int count = 0;
+        while (!_isFinished())
+        {               
+            try
             {
-                product = _readProductColors(product, br);
-                if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
-                {                       
-                    productList.add(product);                                            
-                }
-            }
-        }        
-
-        /*********************************************************************/
-
-        System.out.println("Total: " + productList.size());
-        
-        for (Product p: productList) 
-        {
-            System.out.println("-------- INFO PRODUCTO ----------");
-            System.out.println("Nombre: " + p.getName());
-            System.out.println("Link: " + p.getLink());
-            System.out.println("Descripcion: " + p.getDescription());
-            System.out.println("Precio: " + p.getPrice() + " €");
-            System.out.println("Descuento: " + p.getDiscount()+ " €");
-            System.out.println("-------- INFO COLORES -----------");
-            for (ColorVariant cv : p.getColors())
-            {
-                System.out.println(" - Color: " + cv.getName());
-                System.out.println(" - Icono: " + cv.getColorURL());
-                System.out.println(" - Referencia: " + cv.getReference());
-                for (Image image : cv.getImages())
+                // Empezamos nuevo producto
+                Product product = _readProductGeneralInfo(br);
+                if (product != null) 
                 {
-                    System.out.println(" - " + image.getUrl());
+                    // Si todo ha ido bien, seguimos
+                    product = _readProductColors(product, br);
+
+                    // Si todo ha ido bien, añadimos a la lista
+                    if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
+                    {
+                        product.setShop(shop.getName());
+                        product.setSection(section.getName());
+                        product.setMan(section.isMan());
+
+                        productList.add(product);
+
+                        count++;
+                    }
                 }
                 
-                System.out.println("\n");     
+            } catch (Exception e) {
+                LOG.error("Excepcion producida en el scraping de la seccion " + section.getName() + "(" 
+                        + ((section.isMan()) ? "Hombre)" : "Mujer)") + " de la tienda " + shop.getName());
+                
+                e.printStackTrace();
             }
         }
+        
+        scrapingAnalyzerList.add(scrapingAnalyzer.get());
+        
+        LOG.info("El scraping de la seccion " + section.getName() + "(" 
+            + ((section.isMan()) ? "Hombre)" : "Mujer)") + " de la tienda " + shop.getName() + " ha terminado");
+        LOG.info("Ha sacado " + count + " productos");
+        
+        Map<String, Object> map = new HashMap<>();
+        
+        map.put(Properties.KEY_LIST, productList);
+        map.put(Properties.KEY_ANALYZER, scrapingAnalyzerList);
+        
+        return map;
     }
     
     /**
@@ -120,7 +144,7 @@ public class testScraper
      * @throws IOException 
      */
     @Nullable
-    private static Product _readProductGeneralInfo(BufferedReader br) throws IOException
+    private Product _readProductGeneralInfo(BufferedReader br) throws IOException
     {
         Product product = new Product();
         
@@ -137,7 +161,9 @@ public class testScraper
         if (name == null || name.contains("null") || name.contains("---------"))
         {
             if ((name != null) && name.contains("null"))
-            {                
+            {
+                scrapingAnalyzer.get().saveError(Properties.NAME_NOT_FOUND);
+                
                 // Leemos la linea de guiones
                 br.readLine();
             }
@@ -151,7 +177,7 @@ public class testScraper
             // Si leemos el EOF marcamos finished a true.
             if (name == null)
             {
-                finished = true;
+                _setFinished(true);
             }
             
             return null;
@@ -168,7 +194,10 @@ public class testScraper
                 return null;
             }
             
-            br.readLine();            
+            scrapingAnalyzer.get().saveError(Properties.PRICE_NOT_FOUND);
+            
+            // Leemos la linea de guiones
+            br.readLine();
             
             return null;
         }
@@ -183,6 +212,11 @@ public class testScraper
         discount    = discount.replace("Descuento: ", "").trim();   
         price       = price.replace("Precio: ", "").trim();
         link        = link.replace("Link: ", "");
+        
+        if (description.isEmpty())
+        {
+            scrapingAnalyzer.get().saveError(Properties.DESCRIPTION_NOT_FOUND);
+        }
         
         // Eliminamos el primer '.' en caso de que el precio supere los 1000 euros.
         if (StringUtils.countOccurrencesOf(price, ".") > 1)
@@ -240,7 +274,7 @@ public class testScraper
      * @throws IOException 
      */
     @Nullable
-    private static Product _readProductColors(Product product, BufferedReader br) throws IOException
+    private Product _readProductColors(Product product, BufferedReader br) throws IOException
     {        
         List<ColorVariant> colors = new ArrayList<>();
         boolean doneColor = false;
@@ -261,11 +295,21 @@ public class testScraper
             {
                 correct = false;
                 
+                if (colorName.contains("null"))
+                {
+                    scrapingAnalyzer.get().saveError(Properties.COLOR_NAME_NOT_FOUND);
+                }
+                
+                if (reference.contains("null"))
+                {
+                    scrapingAnalyzer.get().saveError(Properties.REFERENCE_NOT_FOUND);
+                }
+                
                 String line = br.readLine();                
                 // Podemos llegar al final de fichero.
                 if (line == null)
                 {
-                    finished = true;
+                    _setFinished(true);
                     break;
                 }
                 
@@ -279,7 +323,7 @@ public class testScraper
             if (correct)
             {
                 color.setName(colorName.replace("  Color: ", ""));
-                color.setColorURL(colorIcon.replace("  Icono: ", ""));
+                color.setColorURL(colorIcon.replace("  Icono: ", ""));  
                 color.setReference(reference.replace("  Referencia: ", ""));
 
                 // Leemos las imagenes
@@ -292,7 +336,8 @@ public class testScraper
                         // Si la url es null, es que hemos llegado al final del fichero.
                         doneImages = true;
                         doneColor  = true;
-                        finished   = true;
+                        
+                        _setFinished(true);
 
                     } else if (url.contains("***")) {
                         // Hemos acabado con las imágenes pero no con los colores
@@ -301,14 +346,17 @@ public class testScraper
                     } else if (url.contains("------") || url.length() == 0) {
                         // Producto final == 0
                         doneImages = true;
-                        doneColor  = true;
+                        doneColor = true;
 
                     } else {
                         if (!url.replace("     Imagen: ", "").isEmpty() && !url.contains("null"))
                         {
                             Image image = new Image(fixURL(url.replace("     Imagen: ", "")));
                             images.add(image);
-                        }  
+                            
+                        } else {
+                            scrapingAnalyzer.get().saveError(Properties.IMAGE_NOT_FOUND);
+                        } 
                     }
                 }
 
@@ -316,20 +364,48 @@ public class testScraper
                 {
                     color.setImages(images);
                     colors.add(color);  
-                }  
+                }
             }
         }
         
         // Nos aseguramos de que no insertamos productos sin ningun color.
         if (colors.isEmpty()) 
         {
+            scrapingAnalyzer.get().saveError(Properties.NO_COLORS);
+            
             return null;
         }
         
         product.setColors(colors);
         
         return product;
-    }   
+    }  
+    
+    /**
+     * Metodo que corrige una url si es incorrecta. Codifica los espacios y añade la cabecera HTTP.
+     * @param url: url a corregir.
+     * @return url corregida.
+     */
+    @Override
+    public String fixURL(String url)
+    {
+        if (url.startsWith("//"))
+        {
+            return "http:".concat(url).replace(" " , "%20");
+        }
+            
+        return url.replace(" " , "%20");
+    }
+    
+    private boolean _isFinished() 
+    {
+        return threadFinished.get();
+    }
+
+    private void _setFinished(Boolean value) 
+    {
+        threadFinished.set(value);
+    }
     
     /**
      * Metodo que comprueba si el producto esta ya en la lista.
@@ -339,32 +415,20 @@ public class testScraper
      */
     private static boolean _containsProduct(List<Product> productList, String reference)
     {
-        for (Product p : productList)
+        synchronized (productList)
         {
-            for (ColorVariant cv : p.getColors())
+            for (Product p : productList)
             {
-                if (cv.getReference().equals(reference))
+                for (ColorVariant cv : p.getColors())
                 {
-                     return true;
+                    if (cv.getReference().equals(reference))
+                    {
+                        return true;
+                    }
                 }
-            }
+            }            
         }
-        
+            
         return false;
     }
-    
-    /**
-     * Metodo que corrige una url si es incorrecta. Codifica los espacios y añade la cabecera HTTP.
-     * @param url: url a corregir.
-     * @return url corregida.
-     */
-    private static String fixURL(String url)
-    {
-        if (url.startsWith("//"))
-        {
-            return "http:".concat(url).replace(" " , "%20");
-        }
-        
-        return url.replace(" " , "%20");
-    }  
 }

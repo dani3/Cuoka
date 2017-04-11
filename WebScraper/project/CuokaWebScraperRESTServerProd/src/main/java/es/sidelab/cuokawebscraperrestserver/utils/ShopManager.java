@@ -4,6 +4,8 @@ import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,8 @@ public class ShopManager
     public ShopManager()
     {
         stylesMap = new HashMap<>();
+        
+        stylesMap.put(Properties.BORDEAUX_THE_BRAND, Properties.BORDEAUX_THE_BRAND_STYLES);
     }
     
     /**

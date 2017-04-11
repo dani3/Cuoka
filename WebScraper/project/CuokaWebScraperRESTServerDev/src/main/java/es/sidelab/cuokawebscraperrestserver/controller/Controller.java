@@ -741,9 +741,25 @@ public class Controller
             int sameProducts = 0;
             if (!productsInDB.isEmpty())
             {
-                Shop s = shopsRepository.findByName(shop);                
-                s.setProducts(productsScraped.size());                
-                shopsRepository.save(s);
+                String name;
+                int numProducts;
+                if (!descubre)
+                {
+                    Shop s = shopsRepository.findByName(shop);                
+                    s.setProducts(productsScraped.size());                
+                    shopsRepository.save(s);
+                    
+                    name = s.getName();
+                    numProducts = s.getProducts();
+                    
+                } else {
+                    DescubreShop s = descubreShopsRepository.findByName(shop);                
+                    s.setProducts(productsScraped.size());                
+                    descubreShopsRepository.save(s);
+                    
+                    name = s.getName();
+                    numProducts = s.getProducts();
+                }
                 
                 // Si hay productos de esta tienda en BD, miramos que productos necesitan actualizarse o añadirse.
                 for (Product productScraped : productsScraped)
@@ -810,7 +826,7 @@ public class Controller
                     }
                 }
                 
-                mailManager.sendScrapingStatsEmail(s.getName(), s.getProducts(), newProducts, sameProducts, obsoleteProducts);
+                mailManager.sendScrapingStatsEmail(name, numProducts, newProducts, sameProducts, obsoleteProducts);
                 
             } else {         
                 boolean woman = false;

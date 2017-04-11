@@ -209,6 +209,12 @@ public class ImageManager
 
         if (shop.equalsIgnoreCase("Massimo Dutti"))
             aspectRatio = Properties.MASSIMO_DUTTI_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Mango"))
+            aspectRatio = Properties.MANGO_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase(Properties.BORDEAUX_THE_BRAND))
+            aspectRatio = Properties.BTB_ASPECT_RATIO;
         
         return aspectRatio;
     }

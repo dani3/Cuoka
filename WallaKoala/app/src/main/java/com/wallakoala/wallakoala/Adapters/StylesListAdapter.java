@@ -24,13 +24,17 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
     private static final int MALE_NUMBER_IMAGES = 6;
     private static final int FEMALE_NUMBER_IMAGES = 9;
 
+    private final int[] maleDrawablesBw =
+        new int[] { R.drawable.style_alternative_man_bw, R.drawable.style_classic_man_bw, R.drawable.style_hipster_man_bw, R.drawable.style_sporty_man_bw, R.drawable.style_trendy_man_bw, R.drawable.style_urban_man_bw };
+    private final int[] maleDrawables =
+            new int[] { R.drawable.style_alternative_man, R.drawable.style_classic_man, R.drawable.style_hipster_man, R.drawable.style_sporty_man, R.drawable.style_trendy_man, R.drawable.style_urban_man };
     private final int[] femaleDrawablesBw =
             new int[] { R.drawable.style_alternative_bw, R.drawable.style_boho_bw, R.drawable.style_classic_bw, R.drawable.style_girly_bw, R.drawable.style_preppy_bw, R.drawable.style_rocker_bw, R.drawable.style_sporty_bw, R.drawable.style_trendy_bw, R.drawable.style_vintage_bw };
-
     private final int[] femaleDrawables =
             new int[] { R.drawable.style_alternative, R.drawable.style_boho, R.drawable.style_classic, R.drawable.style_girly, R.drawable.style_preppy, R.drawable.style_rocker, R.drawable.style_sporty, R.drawable.style_trendy, R.drawable.style_vintage };
 
-    private final String[] maleStyles = new String[] {};
+    private final String[] maleStyles =
+            new String[] {"Alternative", "Classic", "Hipster", "Sporty", "Trendy", "Urban"};
     private final String[] femaleStyles =
             new String[] {"Alternative", "Boho", "Classic", "Girly", "Preppy", "Rocker", "Sporty", "Trendy", "Vintage"};
 
@@ -64,7 +68,7 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
 
             if (mIsMan)
             {
-                //_loadImage(maleStyles[pos], maleDrawablesBw[pos], maleDrawables[pos]);
+                _loadImage(maleStyles[pos], maleDrawablesBw[pos], maleDrawables[pos]);
             } else {
                 _loadImage(femaleStyles[pos], femaleDrawablesBw[pos], femaleDrawables[pos]);
             }
@@ -76,6 +80,7 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
          * @param drawableBw: imagen en blanco y negro.
          * @param drawable: imagen a color.
          */
+        @SuppressWarnings("deprecation")
         private void _loadImage(String style, int drawableBw, int drawable)
         {
             boolean selected = mStylesList.contains(style);
@@ -104,7 +109,7 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
 
             if (mIsMan)
             {
-                //_loadImage(maleStyles[mPosition], maleDrawablesBw[mPosition], maleDrawables[mPosition]);
+                _loadImage(maleStyles[mPosition], maleDrawablesBw[mPosition], maleDrawables[mPosition]);
             } else {
                 _loadImage(femaleStyles[mPosition], femaleDrawablesBw[mPosition], femaleDrawables[mPosition]);
             }
@@ -123,7 +128,7 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
 
     /**
      * Metodo que devuelve el estado de los estilos seleccionados.
-     * @return: lista de estados seleccionados.
+     * @return lista de estados seleccionados.
      */
     public List<String> getStylesSelected()
     {

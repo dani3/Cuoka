@@ -39,6 +39,8 @@ public class ScraperManager
                 className = "PdH";
             } else if (shop.getName().equalsIgnoreCase("Massimo Dutti")) {
                 className = "MassimoDutti";                
+            } else if (shop.getName().equalsIgnoreCase("Bordeaux the Brand")) {
+                className = "BtB";     
             } else {
                 className = shop.getName();
             }
