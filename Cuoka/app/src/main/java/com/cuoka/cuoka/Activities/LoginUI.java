@@ -280,7 +280,7 @@ public class LoginUI extends AppCompatActivity
                                         enterButton.setProgress(0);
 
                                         Snackbar snackbar = Snackbar.make(mAlertDialogView
-                                                , "Email y/o contraseña incorectos"
+                                                , "Email y/o contraseña incorrectos"
                                                 , Snackbar.LENGTH_LONG);
 
                                         snackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
