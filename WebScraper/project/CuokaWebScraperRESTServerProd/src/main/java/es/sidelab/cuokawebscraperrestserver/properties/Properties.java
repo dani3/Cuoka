@@ -67,7 +67,8 @@ public class Properties
     public static final String BORDEAUX_THE_BRAND = "Bordeaux the Brand";
     
     /* Lista de estilos de cada tienda de Descubre */
-    public static final List<String> BORDEAUX_THE_BRAND_STYLES = Arrays.asList(new String[] { "Sporty" });
+    public static final List<String> BORDEAUX_THE_BRAND_STYLES = 
+        Arrays.asList(new String[] { "Sporty", "Boho", "Urban" });
     
     /* Parametros para las busquedas */
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;
