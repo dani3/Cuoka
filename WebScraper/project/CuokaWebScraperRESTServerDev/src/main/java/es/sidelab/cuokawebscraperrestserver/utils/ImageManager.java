@@ -3,14 +3,12 @@ package es.sidelab.cuokawebscraperrestserver.utils;
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
 import es.sidelab.cuokawebscraperrestserver.beans.Product;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
-import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.LogFactory;
@@ -154,32 +152,57 @@ public class ImageManager
      * @param path: path donde se quiere dejar la imagen.
      * @return true si todo ha ido correctamente.
      */
+    @SuppressWarnings("ConvertToTryWithResources")
     private static boolean downloadImage(String imageURL, String path)
     {
-        InputStream in;
-                
         try 
-        {            
+        {
             URL url = new URL(imageURL);
             
-            in = new BufferedInputStream(url.openStream());
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setRequestProperty("User-agent", "Mozilla/5.0");
             
-            Files.copy(in, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
-                        
+            int responseCode = httpConn.getResponseCode();
+            
+            // Se comprueba la HTTP response code.
+            if (responseCode == HttpURLConnection.HTTP_OK) 
+            {
+                // Se abre el input stream.
+                InputStream inputStream = httpConn.getInputStream();
+                // Se abre el output stream donde guardar la imagen
+                FileOutputStream outputStream = new FileOutputStream(path);
+                
+                int bytesRead;
+                byte[] buffer = new byte[1024];
+                while ((bytesRead = inputStream.read(buffer)) != -1)
+                {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                
+                outputStream.close();
+                inputStream.close();
+                
+            } else {
+                LOG.error("ERROR: Error al descargar la imagen (" + imageURL + ") Respuesta: " + responseCode);
+                
+                return false;
+            }
+            
+            httpConn.disconnect();
+            
         } catch (MalformedURLException ex) {
-            LOG.error("ERROR: Error al formar la URL de la imagen");
-            LOG.error("URL: " + imageURL);
+            LOG.error("ERROR: Error al formar la URL (" + imageURL + ")");
             LOG.error(ex.toString());
             
             return false;
             
         } catch (IOException ex) {
-            LOG.error("ERROR: Error en la conexion");
+            LOG.error("ERROR: Error al descargar la imagen (" + imageURL + ")");
             LOG.error(ex.toString());
             
             return false;
         }
-                        
+        
         return true;
     }
     
