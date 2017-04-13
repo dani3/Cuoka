@@ -149,7 +149,7 @@ public class StylesUI extends AppCompatActivity
         });
 
         Animation explode = AnimationUtils.loadAnimation(StylesUI.this, R.anim.explode_animation);
-        explode.setStartOffset(275);
+        explode.setStartOffset(375);
         explode.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation)
@@ -250,6 +250,14 @@ public class StylesUI extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(RESULT_CANCELED);
+
+        super.onBackPressed();
     }
 
     @Override

@@ -785,7 +785,10 @@ public class MainScreenUI extends AppCompatActivity
 
             } else if (requestCode == MANAGE_STYLES_REQUEST) {
                 // Si venimos de la pantalla de Mis estilos.
-                // TODO pedir recomendaciones al servidor.
+                // Se cambia al fragmento de Descubre
+                mViewPager.setCurrentItem(0);
+                // Se reinicia el fragmento con los cambios.
+                mRecommendedFragment.restart();
             }
         }
 

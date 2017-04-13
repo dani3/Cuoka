@@ -44,14 +44,14 @@ public class testScraper
         
         /***************** Mango *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Mango_false\\false\\", false);
-        Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Mango_false\\true\\", false);
+        //Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Mango_false\\true\\", false);
         
         /***************** Bordeaux the Brand *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Descubre_Bordeaux the Brand_false\\false\\", false);
-        //Section section = new Section("Polos", "C:\\Users\\Dani\\Documents\\shops\\Descubre_Bordeaux the Brand_false\\true\\", false);
+        Section section = new Section("Camisetas", "C:\\Users\\Dani\\Documents\\shops\\Descubre_Bordeaux the Brand_true\\false\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
-        Runtime.getRuntime().exec(new String[] {"python"
+        /*Runtime.getRuntime().exec(new String[] {"python"
             , section.getPath() + "renderProducts.py"
             , Properties.CHROME_DRIVER
             , section.getName()
@@ -64,7 +64,7 @@ public class testScraper
             file = new File(section.getPath() + section.getName() + "_done.dat");
         }
 
-        file.delete();
+        file.delete();*/
         
         // Una vez ha terminado de generar el fichero de productos, lo leemos.
         BufferedReader br = new BufferedReader(

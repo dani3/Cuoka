@@ -4,11 +4,10 @@ import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,13 +43,32 @@ public class ShopManager
     }
     
     /**
-     * Metodo que devuelve las tiendas recomendadas segun las tiendas del usuario.
-     * @param userShops: lista de tiendas del usuario.
+     * Metodo que devuelve las tiendas recomendadas segun los estilos del usuario.
+     * @param styles: lista de estilos del usuario.
+     * @param man: sexo del usuario.
      * @return lista con las tiendas recomendadas.
      */
-    public List<Shop> getRecommendedShops(Set<String> userShops)
+    public List<String> getRecommendedShops(Set<String> styles, boolean man)
     {
-        List<Shop> recommendedShops = new ArrayList<>();
+        List<String> recommendedShops = new ArrayList<>();
+        
+        // Se recorre la lista de tiendas de Descubre.
+        for (Entry<String, List<String>> entry : stylesMap.entrySet())
+        {
+            List<String> shopStyles = entry.getValue();
+            
+            // Por cada tienda, se mira si tiene alguno de los estilos del usuairo.
+            for (String style : styles)
+            {
+                // Si lo contiene, la tienda se añade a la lista.
+                if (shopStyles.contains(style))
+                {
+                    recommendedShops.add(entry.getKey());
+                    
+                    break;
+                }
+            }
+        }
         
         return recommendedShops;
     }

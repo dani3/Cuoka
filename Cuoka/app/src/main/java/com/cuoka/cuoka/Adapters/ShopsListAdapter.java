@@ -83,6 +83,8 @@ public class ShopsListAdapter extends RecyclerView.Adapter<ShopsListAdapter.Shop
             mNumberTextView       = (TextView)itemView.findViewById(R.id.shops_number);
 
             mActionButton.setTypeface(TypeFaceSingleton.getTypeFace(mContext, "Existence-StencilLight.otf"));
+
+            mNameTextView.setSelected(true);
         }
 
         /**

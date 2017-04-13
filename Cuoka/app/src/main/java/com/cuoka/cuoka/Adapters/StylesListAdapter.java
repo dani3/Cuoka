@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -51,13 +52,15 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
     public class StyleHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private ImageView mImageView;
+        private TextView mFooterTextView;
         private int mPosition;
 
         public StyleHolder(View itemView)
         {
             super(itemView);
 
-            mImageView = (ImageView) itemView.findViewById(R.id.style_image);
+            mImageView      = (ImageView) itemView.findViewById(R.id.style_image);
+            mFooterTextView = (TextView) itemView.findViewById(R.id.footer_style);
 
             mImageView.setOnClickListener(this);
         }
@@ -69,8 +72,13 @@ public class StylesListAdapter extends RecyclerView.Adapter<StylesListAdapter.St
             if (mIsMan)
             {
                 _loadImage(maleStyles[pos], maleDrawablesBw[pos], maleDrawables[pos]);
+
+                mFooterTextView.setText(maleStyles[pos]);
+
             } else {
                 _loadImage(femaleStyles[pos], femaleDrawablesBw[pos], femaleDrawables[pos]);
+
+                mFooterTextView.setText(femaleStyles[pos]);
             }
         }
 

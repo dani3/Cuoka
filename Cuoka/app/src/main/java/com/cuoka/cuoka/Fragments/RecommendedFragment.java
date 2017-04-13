@@ -48,9 +48,6 @@ public class RecommendedFragment extends Fragment
     private View mLoadingView;
     private View mNoStylesView;
 
-    /* Buttons */
-    private Button mAddStylesButton;
-
     /* Layouts */
     private FrameLayout mFrameLayout;
 
@@ -104,13 +101,13 @@ public class RecommendedFragment extends Fragment
         mProductsRecyclerView = (StaggeredRecyclerView) getView().findViewById(R.id.recommended_grid_recycler);
 
         // No styles
-        mNoStylesView    = getView().findViewById(R.id.no_styles);
-        mAddStylesButton = (Button) getView().findViewById(R.id.add_styles_button);
+        mNoStylesView = getView().findViewById(R.id.no_styles);
+        Button addStylesButton = (Button) getView().findViewById(R.id.add_styles_button);
 
-        mAddStylesButton.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
+        addStylesButton.setTypeface(TypeFaceSingleton.getTypeFace(getActivity(), "Existence-StencilLight.otf"));
 
         // Listener para abrir el dialogo para anadir tiendas.
-        mAddStylesButton.setOnClickListener(new View.OnClickListener()
+        addStylesButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -127,7 +124,7 @@ public class RecommendedFragment extends Fragment
             }
         });
 
-        // Si el usuario no tiene ninguna tienda,
+        // Si el usuario no tiene ningun estilo.
         if (mUser.getStyles().isEmpty())
         {
             Log.d(Properties.TAG, "[RECOMMENDED_FRAGMENT] El usuario no tiene ningun estilo seleccionado");
@@ -139,8 +136,14 @@ public class RecommendedFragment extends Fragment
 
         } else {
             Log.d(Properties.TAG, "[RECOMMENDED_FRAGMENT] El usuario tiene " + mUser.getStyles().size() + " estilos");
+            for (String style : mUser.getStyles())
+            {
+                Log.d(Properties.TAG, "[RECOMMENDED_FRAGMENT] - " + style);
+            }
 
             mNoStylesView.setVisibility(View.GONE);
+
+            new RetrieveRecommendationsTask().execute();
         }
     }
 
@@ -207,7 +210,7 @@ public class RecommendedFragment extends Fragment
     private class RetrieveRecommendationsTask extends AsyncTask<String, Void, Void>
     {
         private JSONArray content = null;
-        private String error = null;
+        private boolean error = false;
 
         @Override
         protected void onPreExecute()
@@ -223,12 +226,7 @@ public class RecommendedFragment extends Fragment
         {
             content = RestClientSingleton.retrieveRecommendedProducts(getActivity());
 
-            if (content == null)
-            {
-                error = "Error obteniendo productos recomendados";
-
-                Log.d(Properties.TAG, error);
-            }
+            error = (content == null);
 
             return null;
         }
@@ -236,7 +234,7 @@ public class RecommendedFragment extends Fragment
         @Override
         protected void onPostExecute(Void unused)
         {
-            if (error != null)
+            if (error)
             {
                 _loading(false, false);
                 _errorConnectingToServer();
@@ -399,6 +397,33 @@ public class RecommendedFragment extends Fragment
         if (mSnackbar != null && mSnackbar.isShown())
         {
             mSnackbar.dismiss();
+        }
+    }
+
+    /**
+     * Metodo que reinicia la pantalla ya que se han realizado cambios.
+     */
+    public void restart()
+    {
+        _initData();
+
+        // Ocultamos el RecyclerView
+        if (mProductsRecyclerView != null)
+        {
+            mProductsRecyclerView.setVisibility(View.GONE);
+        }
+
+        // Si el usuario no tiene estilos.
+        if (mUser.getStyles().isEmpty())
+        {
+            mNoStylesView.setVisibility(View.VISIBLE);
+
+            mLoadingView.setVisibility(View.GONE);
+
+        } else {
+            mNoStylesView.setVisibility(View.GONE);
+
+            new RetrieveRecommendationsTask().execute();
         }
     }
 }

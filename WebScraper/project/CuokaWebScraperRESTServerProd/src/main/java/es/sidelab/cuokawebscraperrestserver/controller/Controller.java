@@ -26,9 +26,9 @@ import es.sidelab.cuokawebscraperrestserver.utils.ShopManager;
 import es.sidelab.cuokawebscraperrestserver.utils.Utils;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -127,38 +127,15 @@ public class Controller
         } else {
             LOG.info("[NOTIFICATION] Usuario con ID (" + userId + ") encontrado, se devuelven las notificaciones activas");
             List<Notification> notifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
-            List<Notification> userNotifications = new ArrayList<>();
-            
-            // Recorremos las notificaciones en busca de una relacionada con la pantalla Descubre
-            for (Notification notification : notifications)
-            {
-                if (notification.getAction() == Properties.RECOMMENDED_NOTIFICATION)
-                {
-                    // Sacamos la lista de tiendas recomendadas del usuario.
-                    List<Shop> recommendedShops = shopManager.getRecommendedShops(user.getShops());
-                    for (Shop recommendedShop : recommendedShops)
-                    {
-                        // Si la tienda nueva se recomienda, entonces la notificacion debe aparecerle.
-                        if (user.getShops().contains(recommendedShop.getName()))
-                        {
-                            userNotifications.add(notification);
-                            break;
-                        }
-                    }
-                    
-                } else {
-                    userNotifications.add(notification);
-                }
-            }
             
             // Calculamos la diferencia de dias.
-            for (Notification notification : userNotifications)
+            for (Notification notification : notifications)
             {
                 notification.setOffset(Utils.daysBetween(notification.getInsert_date().getTimeInMillis()
                                 , Calendar.getInstance().getTimeInMillis()));
             }
             
-            return userNotifications;
+            return notifications;
         }
     }
     
@@ -179,33 +156,10 @@ public class Controller
             return Properties.USER_NOT_FOUND;
             
         } else {
-            List<Notification> allNotifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);
-            List<Notification> userNotifications = new ArrayList<>();
-            
-            // Recorremos las notificaciones en busca de una relacionada con la pantalla Descubre
-            for (Notification notification : allNotifications)
-            {
-                if (notification.getAction() == Properties.RECOMMENDED_NOTIFICATION)
-                {
-                    // Sacamos la lista de tiendas recomendadas del usuario.
-                    List<Shop> recommendedShops = shopManager.getRecommendedShops(user.getShops());
-                    for (Shop recommendedShop : recommendedShops)
-                    {
-                        // Si la tienda nueva se recomienda, entonces la notificacion debe aparecerle.
-                        if (user.getShops().contains(recommendedShop.getName()))
-                        {
-                            userNotifications.add(notification);
-                            break;
-                        }
-                    }
-                    
-                } else {
-                    userNotifications.add(notification);
-                }
-            }            
+            List<Notification> allNotifications = notificationRepository.findActive(Properties.NOTIFICATION_LIFESPAN);       
             
             Set<Long> notificationsRead = user.getNotificationsRead();
-            for (Notification notification : userNotifications)
+            for (Notification notification : allNotifications)
             {
                 if (!notificationsRead.contains(notification.getId()))
                 {
@@ -899,21 +853,32 @@ public class Controller
     @RequestMapping(value = "/recommended/{id}", method = RequestMethod.GET)
     public List<Product> getRecommendedProducts(@PathVariable long id)
     {
-        LOG.info("[PRODUCTS] Peticion GET para obtener todos los productos recomendados del usuario (ID: " + id + ")");
+        LOG.info("[RECOMMENDED] Peticion GET para obtener todos los productos recomendados del usuario (ID: " + id + ")");
         
         User user = usersRepository.findOne(id);
         
-        List<Product> aux = productsRepository.findByMan(user.getMan());
+        if (user == null)
+        {
+            LOG.warn("[RECOMMENDED] Usuario no encontrado (ID: " + id + ")");
+            
+            return new ArrayList<>();
+        }
         
         List<Product> recommendedProducts = new ArrayList<>();
-        for (int i = 0; i < 20; i++)
+        List<String> recommendedShops = shopManager.getRecommendedShops(user.getStyles(), user.getMan());
+        for (String shop : recommendedShops)
         {
-            Random rand = new Random();
-
-            int randomNum = rand.nextInt((aux.size() - 1) + 1) + 1;
-
-            recommendedProducts.add(aux.get(randomNum));
+            DescubreShop descubreShop = descubreShopsRepository.findByName(shop);
+            
+            // Si el usuario es hombre y la tienda es de hombre, o es mujer y la tienda es de mujer.
+            if ((user.getMan() && descubreShop.getMan()) || (!user.getMan() && descubreShop.getWoman()))
+            {
+                recommendedProducts.addAll(productsRepository.findByManAndShop(user.getMan(), shop));                
+            }            
         }
+        
+        // Se aleatorizan los productos.
+        Collections.shuffle(recommendedProducts);
         
         return recommendedProducts;
     }
