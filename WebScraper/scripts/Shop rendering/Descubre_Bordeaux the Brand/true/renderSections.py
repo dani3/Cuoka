@@ -18,9 +18,9 @@ path = sys.argv[2]
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bordeaux the Brand\\true\\"
 
 # Lista de secciones con sus URL's
-urls = [("Camisetas", "https://bordeauxthebrand.com/categoria-producto/camisetas-para-chico/"),
+urls = [("Camiseta", "https://bordeauxthebrand.com/categoria-producto/camisetas-para-chico/"),
         ("Accesorios", "https://bordeauxthebrand.com/categoria-producto/accesorios-chico/"),
-        ("Camiseta", "https://bordeauxthebrand.com/categoria-producto/unisex/")]
+        ("CamisetaUni", "https://bordeauxthebrand.com/categoria-producto/unisex/")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

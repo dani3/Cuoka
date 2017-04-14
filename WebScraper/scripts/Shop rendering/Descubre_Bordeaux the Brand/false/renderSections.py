@@ -9,18 +9,16 @@ from selenium.webdriver.chrome.options import Options
 path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
-#path_to_chromedriver = "D:\\Documentos\\1. Cuoka\\Scraping\\chromedriver"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bordeaux the Brand_false\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
-#path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bordeaux the Brand\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Bordeaux the Brand_true\\false\\"
 
 # Lista de secciones con sus URL's
 urls = [("Camisetas", "https://bordeauxthebrand.com/categoria-producto/camisetas-para-chica/"),
         ("Accesorios", "https://bordeauxthebrand.com/categoria-producto/accesorios-chica/"),
-        ("Camisetas", "https://bordeauxthebrand.com/categoria-producto/unisex/")]
+        ("CamisetasUni", "https://bordeauxthebrand.com/categoria-producto/unisex/")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
@@ -29,8 +27,8 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k,v in urls:
-    
+for k, v in urls:
+ 
     try:
         dr.get(v)
         # Esperamos a que aparezcan los productos un maximo de 10 segundos.

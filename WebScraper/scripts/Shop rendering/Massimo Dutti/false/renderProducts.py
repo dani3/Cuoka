@@ -100,7 +100,8 @@ for link in listOfLinks:
         if (len(price) == 0):
             raise Exception("Precio vacio")
         
-        result.write("Precio: " + price + "\n")       
+        result.write("Precio: " + price + "\n")
+        
     except:
         result.write("Precio: null\n")
         file_error.write("Precio no encontrado en: " + link + "\n")
@@ -109,17 +110,16 @@ for link in listOfLinks:
     try:
         # ****** D E S C U E N T O ****** #
         discount = prices_list[1]
-        result.write("Descuento: " + discount + "\n")     
+        result.write("Descuento: " + discount + "\n")
+        
     except:
         result.write("Descuento: \n")
-
 
     result.write("Link: " + link + "\n")
 
     # Colores
     try:
         # ****** C O L O R E S ****** #
-
         colors = dr.find_element_by_class_name("product-colors").find_elements_by_css_selector("a")
         if (len(colors) == 0):
             raise Exception("Colores no encontrados")
@@ -171,7 +171,6 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   I C O N O ****** #
-
             colorIcon = color.find_element_by_css_selector("img").get_attribute("src")
             result.write("  Icono: " + colorIcon + "\n")
             
@@ -186,7 +185,6 @@ for link in listOfLinks:
                 raise Exception("Referencia vacia")
             
             result.write("  Referencia: " + reference + "\n")
-            
             
         except:
             result.write("  Referencia: null\n")

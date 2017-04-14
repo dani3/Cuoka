@@ -103,7 +103,7 @@ public class BtBScraper implements Scraper
                     product = _readProductColors(product, br);
 
                     // Si todo ha ido bien, añadimos a la lista
-                    if ((product != null) && (!_containsProduct(productList, product.getColors().get(0).getReference()))) 
+                    if (product != null) 
                     {
                         product.setShop(shop.getName());
                         product.setSection(section.getName());
@@ -405,30 +405,5 @@ public class BtBScraper implements Scraper
     private void _setFinished(Boolean value) 
     {
         threadFinished.set(value);
-    }
-    
-    /**
-     * Metodo que comprueba si el producto esta ya en la lista.
-     * @param productList: lista de productos.
-     * @param reference: producto a buscar.
-     * @return true si el producto ya se encuentra en la lista.
-     */
-    private static boolean _containsProduct(List<Product> productList, String reference)
-    {
-        synchronized (productList)
-        {
-            for (Product p : productList)
-            {
-                for (ColorVariant cv : p.getColors())
-                {
-                    if (cv.getReference().equals(reference))
-                    {
-                        return true;
-                    }
-                }
-            }            
-        }
-            
-        return false;
     }
 }

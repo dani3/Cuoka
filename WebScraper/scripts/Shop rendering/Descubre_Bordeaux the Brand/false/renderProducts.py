@@ -10,7 +10,6 @@ from selenium.webdriver.chrome.options import Options
 path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
-#path_to_chromedriver = "D:\\Documentos\\1. Cuoka\\Scraping\\chromedriver"
 
 # Nombre de la seccion
 section = sys.argv[2]
@@ -20,7 +19,6 @@ section = sys.argv[2]
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bordeaux the Brand_false\\false\\"
 #path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
-#path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bordeaux the Brand_false\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -127,7 +125,10 @@ for link in listOfLinks:
                 colorName = colors[x].text
                 result.write("*********************************************************\n")
                 result.write("  Color: " + colorName + "\n")
-                
+
+                # ****** C O L O R   I C O N O ****** #
+                result.write("  Icono: null\n")
+                    
                 try:
                     # ****** C O L O R   R E F E R E N C I A ****** #
                     reference = dr.find_element_by_css_selector("div.summary.entry-summary > div.product_meta > span.sku_wrapper > span").text.replace("/", "").rstrip()
