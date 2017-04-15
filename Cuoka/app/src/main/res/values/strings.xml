@@ -16,6 +16,7 @@
     <string name="profile_item">Mi cuenta</string>
     <string name="shops_item">Mis tiendas</string>
     <string name="favorites_item">Mis favoritos</string>
+    <string name="styles_item">Mis estilos</string>
     <string name="feedback_item">Danos tu opinión</string>
     <string name="notification_item">Notificaciones</string>
     <string name="more_shops_item">¿Más tiendas?</string>
@@ -34,6 +35,7 @@
 
     <string name="error_message">¡Ops! Algo ha ido mal</string>
     <string name="nodata_message">No hay ningún resultado…</string>
+    <string name="norecommended_message">Parece que no tenemos ninguna recomendación para ti todavía.</string>
     <string name="nofav_message">Todavía no tienes ningún favorito</string>
     <string name="nonotification_message">No tienes ninguna notificación nueva</string>
     <string name="exit_message">Pulsa otra vez para SALIR</string>

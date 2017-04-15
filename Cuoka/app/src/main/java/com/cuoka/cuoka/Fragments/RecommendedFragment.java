@@ -41,12 +41,16 @@ import java.util.List;
 
 public class RecommendedFragment extends Fragment
 {
+    /* Flags */
+    private static boolean SELECTED;
+
     /* Container Views */
     private StaggeredRecyclerView mProductsRecyclerView;
 
     /* Views */
     private View mLoadingView;
     private View mNoStylesView;
+    private View mNoDataView;
 
     /* Layouts */
     private FrameLayout mFrameLayout;
@@ -100,6 +104,9 @@ public class RecommendedFragment extends Fragment
         // RecyclerView
         mProductsRecyclerView = (StaggeredRecyclerView) getView().findViewById(R.id.recommended_grid_recycler);
 
+        // No data TextView
+        mNoDataView = getView().findViewById(R.id.norecommended_textview);
+
         // No styles
         mNoStylesView = getView().findViewById(R.id.no_styles);
         Button addStylesButton = (Button) getView().findViewById(R.id.add_styles_button);
@@ -142,8 +149,6 @@ public class RecommendedFragment extends Fragment
             }
 
             mNoStylesView.setVisibility(View.GONE);
-
-            new RetrieveRecommendationsTask().execute();
         }
     }
 
@@ -157,6 +162,8 @@ public class RecommendedFragment extends Fragment
         mUser = sharedPreferences.retrieveUser();
 
         mProductList = new ArrayList<>();
+
+        SELECTED = false;
     }
 
     /**
@@ -211,6 +218,7 @@ public class RecommendedFragment extends Fragment
     {
         private JSONArray content = null;
         private boolean error = false;
+        private boolean empty = false;
 
         @Override
         protected void onPreExecute()
@@ -240,7 +248,17 @@ public class RecommendedFragment extends Fragment
                 _errorConnectingToServer();
 
             } else {
-                new JSONConversion().execute(content);
+                empty = (content.length() == 0);
+
+                if (!empty)
+                {
+                    new JSONConversion().execute(content);
+                } else {
+                    mLoadingView.setVisibility(View.GONE);
+                    mNoDataView.setVisibility(View.VISIBLE);
+
+                    mState = Properties.STATE.NODATA;
+                }
             }
         }
 
@@ -327,6 +345,8 @@ public class RecommendedFragment extends Fragment
         } else {
             // Pantalla de carga cuando es la primera conexion
             mLoadingView.setVisibility(View.VISIBLE);
+
+            mNoDataView.setVisibility(View.GONE);
 
             mState = Properties.STATE.LOADING;
         }
@@ -422,6 +442,19 @@ public class RecommendedFragment extends Fragment
 
         } else {
             mNoStylesView.setVisibility(View.GONE);
+
+            new RetrieveRecommendationsTask().execute();
+        }
+    }
+
+    /**
+     * Metodo que carga los productos por primera vez.
+     */
+    public void loadProducts()
+    {
+        if (!SELECTED)
+        {
+            SELECTED = true;
 
             new RetrieveRecommendationsTask().execute();
         }

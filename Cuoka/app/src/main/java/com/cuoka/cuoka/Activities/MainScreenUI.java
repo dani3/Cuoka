@@ -187,6 +187,25 @@ public class MainScreenUI extends AppCompatActivity
                 }
             }
         }
+
+        // Solo se cargan los productos cuando se cambie de pestaña.
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+        {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
+            {
+                if (tab.getPosition() == 0)
+                {
+                    mRecommendedFragment.loadProducts();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
 
     /**
@@ -284,6 +303,10 @@ public class MainScreenUI extends AppCompatActivity
 
                     case (R.id.nav_terms):
                         _redirectToTerms();
+                        break;
+
+                    case (R.id.nav_styles):
+                        _openActivityStyles();
                         break;
                 }
 

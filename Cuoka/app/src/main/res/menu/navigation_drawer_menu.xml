@@ -19,6 +19,11 @@
             android:icon="@drawable/ic_favorite_grey"
             android:title="@string/favorites_item"/>
 
+        <item
+            android:id="@+id/nav_styles"
+            android:icon="@drawable/ic_styles"
+            android:title="@string/styles_item"/>
+
     </group>
 
     <group

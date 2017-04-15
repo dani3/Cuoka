@@ -62,4 +62,21 @@
         style="@style/SpinKitView.Large.ChasingDots"
         app:SpinKit_Color="@color/colorAccent"/>
 
+    <!-- Texto de no productos -->
+    <com.wallakoala.wallakoala.Views.ExistenceTextView
+        android:id="@+id/norecommended_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/action_bar_height"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/norecommended_message"
+        android:textSize="20dp"
+        android:textColor="@color/colorText"
+        app:customFont="Existence-StencilLight.otf"/>
+
 </FrameLayout>
