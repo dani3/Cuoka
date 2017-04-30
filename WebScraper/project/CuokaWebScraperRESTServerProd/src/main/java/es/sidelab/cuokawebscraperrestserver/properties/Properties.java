@@ -61,7 +61,7 @@ public class Properties
     public static final float BERSHKA_ASPECT_RATIO       = 1.28f;
     public static final float MASSIMO_DUTTI_ASPECT_RATIO = 1.33f;
     public static final float MANGO_ASPECT_RATIO         = 1.39f;
-    public static final float BTB_ASPECT_RATIO           = 1.5f;
+    public static final float BTB_ASPECT_RATIO           = 1.0f;
     
     /* Lista de tiendas de Descubre */
     public static final String BORDEAUX_THE_BRAND = "Bordeaux the Brand";
