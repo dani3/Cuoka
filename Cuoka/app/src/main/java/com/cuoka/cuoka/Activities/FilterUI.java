@@ -982,6 +982,8 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mRangeSeekBar.setSelectedMaxValue(mRangeSeekBar.getAbsoluteMaxValue());
         mRangeSeekBar.setSelectedMinValue(mRangeSeekBar.getAbsoluteMinValue());
 
+        mDiscountCheckBox.setChecked(false);
+
         mPriceFromEditText.setText("");
         mPriceToEditText.setText("");
     }
