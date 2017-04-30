@@ -8,7 +8,6 @@ from selenium.webdriver.chrome.options import Options
 
 # Path al driver de Chrome -> "C:\\..\\chromedriver"
 path_to_chromedriver = sys.argv[1]
-#path_to_chromedriver = "D:\\Documentos\\1. Cuoka\\Scraping\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
 
@@ -18,9 +17,8 @@ section = sys.argv[2]
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
-#path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bershka_true\\false\\"
-#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\true\\"
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -65,7 +63,7 @@ for link in listOfLinks:
 
     try:
         # Esperamos a que aparezca la imagen un maximo de 10 segundos.
-        element = WebDriverWait(dr, 10).until(
+        WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-image-image"))
         )
         
@@ -75,7 +73,7 @@ for link in listOfLinks:
 
     try:
         # ****** N O M B R E ****** #
-        name = dr.find_element_by_class_name("product-description-name").text
+        name = dr.find_element_by_css_selector("div.prodInfo span.product-description-name").text
         if (len(name) == 0):
             raise Exception("Nombre vacio")
         
