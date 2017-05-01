@@ -112,6 +112,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private View mFilterSectionMenuLayout;
     private View mFilterPriceMenuLayout;
     private View mFilterColorMenuLayout;
+    private View mFilterManMenuLayout;
     private View mFilterNewnessMenuLayout;
 
     /* ImageViews */
@@ -119,17 +120,20 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private ImageView mFilterSectionImageView;
     private ImageView mFilterPriceImageView;
     private ImageView mFilterColorImageView;
+    private ImageView mFilterManImageView;
     private ImageView mFilterNewnessImageView;
 
     /* TextViews */
     private TextView mFilterShopTextView;
     private TextView mFilterSectionTextView;
     private TextView mFilterColorTextView;
+    private TextView mFilterManTextView;
     private TextView mFilterPriceTextView;
 
     /* RadioButtons */
     private AppCompatRadioButton mNewnessAllRadioButton;
     private AppCompatRadioButton mNewnessNewRadioButton;
+    private AppCompatRadioButton mManRadioButton;
 
     /* CheckBoxes */
     private List<AppCompatCheckBox> mShopsCheckBoxesList;
@@ -155,12 +159,14 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private int mFilterMinPrice;
     private int mFilterMaxPrice;
 
+    private boolean mFilterMan;
     private boolean mFilterNewness;
     private boolean mFilterDiscount;
     private boolean SHOP_FILTER_ACTIVE;
     private boolean SECTION_FILTER_ACTIVE;
     private boolean PRICE_FILTER_ACTIVE;
     private boolean COLOR_FILTER_ACTIVE;
+    private boolean MAN_FILTER_ACTIVE;
     private boolean NEWNESS_FILTER_ACTIVE;
 
     @Override
@@ -177,6 +183,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
             MAN = intent.getBooleanExtra(Properties.PACKAGE + ".man", false);
 
+            mFilterMan      = intent.getBooleanExtra(Properties.PACKAGE + ".sex", MAN);
             mFilterNewness  = intent.getBooleanExtra(Properties.PACKAGE + ".newness", false);
             mFilterDiscount = intent.getBooleanExtra(Properties.PACKAGE + ".discount", false);
             mFilterMinPrice = intent.getIntExtra(Properties.PACKAGE + ".minPrice", -1);
@@ -203,6 +210,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         SECTION_FILTER_ACTIVE = (mFilterSections != null);
         COLOR_FILTER_ACTIVE = (mFilterColors != null);
         PRICE_FILTER_ACTIVE = (mFilterMinPrice != -1) || (mFilterMaxPrice != -1 || mFilterDiscount);
+        MAN_FILTER_ACTIVE = (MAN != mFilterMan);
         NEWNESS_FILTER_ACTIVE = true;
 
         mColorCheckBoxesList   = new ArrayList<>();
@@ -317,6 +325,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                     !SHOP_FILTER_ACTIVE &&
                     !SECTION_FILTER_ACTIVE &&
                     !PRICE_FILTER_ACTIVE &&
+                    !MAN_FILTER_ACTIVE &&
                     !NEWNESS_FILTER_ACTIVE)
                 {
                     Log.d(Properties.TAG, "[FILTER_UI] No hay ningún filtro establecido");
@@ -413,6 +422,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         }
                     }
 
+                    boolean man = MAN;
+                    if (MAN_FILTER_ACTIVE)
+                    {
+                        Log.d(Properties.TAG, "[FILTER_UI] Sólo de hombre: " + mManRadioButton.isChecked());
+                        man = mManRadioButton.isChecked();
+                    }
+
                     ArrayList<String> sectionsList = null;
                     if (SECTION_FILTER_ACTIVE)
                     {
@@ -480,6 +496,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                         Log.d(Properties.TAG, "[FILTER_UI] Todos los filtros introducidos son correctos");
                         Log.d(Properties.TAG, "[FILTER_UI] Se vuelve a la Activity -> MainScreenUI");
 
+                        intent.putExtra(Properties.PACKAGE + ".sex", man);
                         intent.putExtra(Properties.PACKAGE + ".shops", shopsList);
                         intent.putExtra(Properties.PACKAGE + ".colors", colorsList);
                         intent.putExtra(Properties.PACKAGE + ".sections", sectionsList);
@@ -503,15 +520,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
      */
     protected void _initFilterItemViews()
     {
-        RelativeLayout mFilterShopItemLayout    = (RelativeLayout) findViewById(R.id.filter_shop);
-        RelativeLayout mFilterSectionItemLayout = (RelativeLayout) findViewById(R.id.filter_section);
-        RelativeLayout mFilterPriceItemLayout   = (RelativeLayout) findViewById(R.id.filter_price);
-        RelativeLayout mFilterColorItemLayout   = (RelativeLayout) findViewById(R.id.filter_color);
+        RelativeLayout filterShopItemLayout    = (RelativeLayout) findViewById(R.id.filter_shop);
+        RelativeLayout filterSectionItemLayout = (RelativeLayout) findViewById(R.id.filter_section);
+        RelativeLayout filterPriceItemLayout   = (RelativeLayout) findViewById(R.id.filter_price);
+        RelativeLayout filterColorItemLayout   = (RelativeLayout) findViewById(R.id.filter_color);
+        RelativeLayout filterManItemLayout     = (RelativeLayout) findViewById(R.id.filter_man);
 
         mFilterShopImageView    = (ImageView)findViewById(R.id.filter_image_shop);
         mFilterSectionImageView = (ImageView)findViewById(R.id.filter_image_section);
         mFilterPriceImageView   = (ImageView)findViewById(R.id.filter_image_price);
         mFilterColorImageView   = (ImageView)findViewById(R.id.filter_image_color);
+        mFilterManImageView     = (ImageView)findViewById(R.id.filter_image_man);
         mFilterNewnessImageView = (ImageView)findViewById(R.id.filter_image_newness);
 
         mFilterShopImageView.setAlpha((mFilterShops == null || mFilterShops.isEmpty())
@@ -522,12 +541,15 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
                 ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
         mFilterColorImageView.setAlpha((mFilterColors == null || mFilterColors.isEmpty())
                 ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
+        mFilterManImageView.setAlpha(mFilterMan == MAN
+                ? ALPHA_INACTIVE_FILTER : ALPHA_ACTIVE_FILTER);
         mFilterNewnessImageView.setAlpha(ALPHA_ACTIVE_FILTER);
 
-        mFilterShopItemLayout.setOnClickListener(this);
-        mFilterSectionItemLayout.setOnClickListener(this);
-        mFilterPriceItemLayout.setOnClickListener(this);
-        mFilterColorItemLayout.setOnClickListener(this);
+        filterShopItemLayout.setOnClickListener(this);
+        filterSectionItemLayout.setOnClickListener(this);
+        filterPriceItemLayout.setOnClickListener(this);
+        filterColorItemLayout.setOnClickListener(this);
+        filterManItemLayout.setOnClickListener(this);
     }
 
     /**
@@ -539,23 +561,27 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterSectionMenuLayout = findViewById(R.id.filter_item_section_menu);
         mFilterPriceMenuLayout   = findViewById(R.id.filter_item_price_menu);
         mFilterColorMenuLayout   = findViewById(R.id.filter_item_color_menu);
+        mFilterManMenuLayout     = findViewById(R.id.filter_item_man_menu);
         mFilterNewnessMenuLayout = findViewById(R.id.filter_item_newness_menu);
 
-        ImageButton mFilterShopRemove    = (ImageButton) findViewById(R.id.filter_item_shop_clear);
-        ImageButton mFilterSectionRemove = (ImageButton) findViewById(R.id.filter_item_section_clear);
-        ImageButton mFilterPriceRemove   = (ImageButton) findViewById(R.id.filter_item_price_clear);
-        ImageButton mFilterColorRemove   = (ImageButton) findViewById(R.id.filter_item_color_clear);
+        ImageButton filterShopRemove    = (ImageButton) findViewById(R.id.filter_item_shop_clear);
+        ImageButton filterSectionRemove = (ImageButton) findViewById(R.id.filter_item_section_clear);
+        ImageButton filterPriceRemove   = (ImageButton) findViewById(R.id.filter_item_price_clear);
+        ImageButton filterColorRemove   = (ImageButton) findViewById(R.id.filter_item_color_clear);
+        ImageButton filterManRemove     = (ImageButton) findViewById(R.id.filter_item_man_clear);
 
-        mFilterShopRemove.setOnClickListener(this);
-        mFilterSectionRemove.setOnClickListener(this);
-        mFilterPriceRemove.setOnClickListener(this);
-        mFilterColorRemove.setOnClickListener(this);
+        filterShopRemove.setOnClickListener(this);
+        filterSectionRemove.setOnClickListener(this);
+        filterPriceRemove.setOnClickListener(this);
+        filterColorRemove.setOnClickListener(this);
+        filterManRemove.setOnClickListener(this);
 
         _initFilterColor();
         _initFilterSection();
         _initFilterNewness();
         _initFilterPrice();
         _initFilterShop();
+        _initFilterMan();
     }
 
     /**
@@ -720,12 +746,46 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mNewnessNewRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
             mNewnessNewRadioButton.setChecked(false);
-            mNewnessNewRadioButton.setChecked(false);
 
             if (mFilterNewness)
+            {
                 mNewnessNewRadioButton.setChecked(true);
-            else
+            } else {
                 mNewnessAllRadioButton.setChecked(true);
+            }
+        }
+    }
+
+    /**
+     * Metodo para inicializar el menu de hombre/mujer.
+     */
+    @SuppressWarnings("deprecation")
+    protected void _initFilterMan()
+    {
+        TextView filterManTextView = (TextView) findViewById(R.id.filter_text_newness);
+
+        filterManTextView.setTextColor(getResources().getColor(R.color.colorText));
+
+        mFilterManTextView = (TextView) findViewById(R.id.filter_text_man);
+
+        mManRadioButton = (AppCompatRadioButton) findViewById(R.id.man_radio_button);
+        AppCompatRadioButton womanRadioButton = (AppCompatRadioButton) findViewById(R.id.woman_radio_button);
+
+        mManRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        womanRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+
+        mManRadioButton.setChecked(mFilterMan);
+        womanRadioButton.setChecked(!mFilterMan);
+
+        ((ViewGroup)mFilterManMenuLayout.getParent()).removeView(mFilterManMenuLayout);
+
+        if (MAN_FILTER_ACTIVE)
+        {
+            mItemsMenuViewGroup.addView(mFilterManMenuLayout, 0);
+
+            mFilterManImageView.setScaleX(1.1f);
+            mFilterManImageView.setScaleY(1.1f);
+            mFilterManImageView.setAlpha(ALPHA_ACTIVE_FILTER);
         }
     }
 
@@ -952,6 +1012,17 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     }
 
     /**
+     * Metodo que resetea el filtro del sexo.
+     */
+    protected void _resetFilterMan()
+    {
+        AppCompatRadioButton womanRadioButton = (AppCompatRadioButton) findViewById(R.id.woman_radio_button);
+
+        mManRadioButton.setChecked(MAN);
+        womanRadioButton.setChecked(!MAN);
+    }
+
+    /**
      * Metodo que resetea el filtro de secciones.
      */
     protected void _resetFilterSection()
@@ -1046,16 +1117,34 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mItemsMenuViewGroup.removeView(mFilterSectionMenuLayout);
         }
 
+        _resetFilterMan();
+        if (MAN_FILTER_ACTIVE)
+        {
+            MAN_FILTER_ACTIVE = false;
+
+            mFilterManImageView.animate()
+                               .setDuration(250)
+                               .scaleXBy(-0.1f)
+                               .scaleYBy(-0.1f)
+                               .alpha(ALPHA_INACTIVE_FILTER)
+                               .setInterpolator(new OvershootInterpolator());
+
+            mFilterManTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterManMenuLayout);
+        }
+
         _resetFilterColor();
         if (COLOR_FILTER_ACTIVE)
         {
             COLOR_FILTER_ACTIVE = false;
 
-            mFilterColorImageView.animate().setDuration(250)
-                    .scaleXBy(-0.1f)
-                    .scaleYBy(-0.1f)
-                    .alpha(ALPHA_INACTIVE_FILTER)
-                    .setInterpolator(new OvershootInterpolator());
+            mFilterColorImageView.animate()
+                                 .setDuration(250)
+                                 .scaleXBy(-0.1f)
+                                 .scaleYBy(-0.1f)
+                                 .alpha(ALPHA_INACTIVE_FILTER)
+                                 .setInterpolator(new OvershootInterpolator());
 
             mFilterColorTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
@@ -1067,11 +1156,12 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         {
             PRICE_FILTER_ACTIVE = false;
 
-            mFilterPriceImageView.animate().setDuration(250)
-                    .scaleXBy(-0.1f)
-                    .scaleYBy(-0.1f)
-                    .alpha(ALPHA_INACTIVE_FILTER)
-                    .setInterpolator(new OvershootInterpolator());
+            mFilterPriceImageView.animate()
+                                 .setDuration(250)
+                                 .scaleXBy(-0.1f)
+                                 .scaleYBy(-0.1f)
+                                 .alpha(ALPHA_INACTIVE_FILTER)
+                                 .setInterpolator(new OvershootInterpolator());
 
             mFilterPriceTextView.setTextColor(getResources().getColor(R.color.colorLightText));
 
@@ -1246,6 +1336,46 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             }
         }
 
+        if (view.getId() == R.id.filter_man)
+        {
+            if (!MAN_FILTER_ACTIVE)
+            {
+                MAN_FILTER_ACTIVE = true;
+
+                mFilterManImageView.animate().setDuration(250)
+                        .scaleXBy(0.1f)
+                        .scaleYBy(0.1f)
+                        .alpha(ALPHA_ACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mFilterManTextView.setTextColor(getResources().getColor(R.color.colorText));
+
+                mItemsMenuViewGroup.addView(mFilterManMenuLayout, 0);
+
+            } else {
+                MAN_FILTER_ACTIVE = false;
+
+                mFilterManImageView.animate().setDuration(250)
+                        .scaleXBy(-0.1f)
+                        .scaleYBy(-0.1f)
+                        .alpha(ALPHA_INACTIVE_FILTER)
+                        .setInterpolator(new OvershootInterpolator());
+
+                mFilterManTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+                mItemsMenuViewGroup.removeView(mFilterManMenuLayout);
+
+                mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+                mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+                mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+                ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                        .setTextColor(getResources().getColor(R.color.colorText));
+
+                mSnackbar.show();
+            }
+        }
+
         /* [BEGIN Listeners en los botones para cerrar un filtro] */
         if (view.getId() == R.id.filter_item_shop_clear)
         {
@@ -1343,6 +1473,30 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mSnackbar.show();
         }
 
+        if (view.getId() == R.id.filter_item_man_clear)
+        {
+            MAN_FILTER_ACTIVE = false;
+
+            mFilterManImageView.animate().setDuration(250)
+                    .scaleXBy(-0.1f)
+                    .scaleYBy(-0.1f)
+                    .alpha(ALPHA_INACTIVE_FILTER)
+                    .setInterpolator(new OvershootInterpolator());
+
+            mFilterManTextView.setTextColor(getResources().getColor(R.color.colorLightText));
+
+            mItemsMenuViewGroup.removeView(mFilterManMenuLayout);
+
+            mSnackbar = Snackbar.make(mCoordinatorLayout, "Filtro eliminado", Snackbar.LENGTH_SHORT);
+
+            mSnackbar.getView().setBackgroundColor(getResources().getColor(android.R.color.white));
+            mSnackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            ((TextView)mSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(getResources().getColor(R.color.colorText));
+
+            mSnackbar.show();
+        }
+
     } /* [END OnClick] */
 
     @Override
@@ -1383,12 +1537,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
 
                     Intent intent = new Intent();
 
-                    intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>)null);
-                    intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>)null);
-                    intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)null);
+                    intent.putExtra(Properties.PACKAGE + ".shops", (ArrayList<String>) null);
+                    intent.putExtra(Properties.PACKAGE + ".colors", (ArrayList<String>) null);
+                    intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>) null);
                     intent.putExtra(Properties.PACKAGE + ".minPrice", -1);
                     intent.putExtra(Properties.PACKAGE + ".maxPrice", -1);
                     intent.putExtra(Properties.PACKAGE + ".newness", false);
+                    intent.putExtra(Properties.PACKAGE + ".sex", MAN);
                     intent.putExtra(Properties.PACKAGE + ".search", query);
 
                     setResult(RESULT_OK, intent);

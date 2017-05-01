@@ -1202,7 +1202,7 @@ public class RestClientSingleton
 
                 jsonObject.put("newness", filterMap.get("newness"));
                 jsonObject.put("discount", filterMap.get("discount"));
-                jsonObject.put("man", user.getMan());
+                jsonObject.put("man", filterMap.get("sex"));
                 jsonObject.put("priceFrom", filterMap.get("minPrice"));
                 jsonObject.put("priceTo", filterMap.get("maxPrice"));
                 jsonObject.put("colors", new JSONArray(colorsList));

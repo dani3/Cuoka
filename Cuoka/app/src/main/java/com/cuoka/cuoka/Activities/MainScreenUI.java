@@ -693,7 +693,7 @@ public class MainScreenUI extends AppCompatActivity
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + filterMap.get("maxPrice"));
                 Log.d(Properties.TAG, "[MAIN_SCREEN_UI]  - " + mProductsFragment.getMan());
 
-                // Lo mandamos en el Intent
+                // Lo mandamos en el Intent.
                 intent.putExtra(Properties.PACKAGE + ".newness", (Boolean)filterMap.get("newness"));
                 intent.putExtra(Properties.PACKAGE + ".discount", (Boolean)filterMap.get("discount"));
                 intent.putExtra(Properties.PACKAGE + ".sections", (ArrayList<String>)filterMap.get("sections"));
@@ -702,6 +702,8 @@ public class MainScreenUI extends AppCompatActivity
                 intent.putExtra(Properties.PACKAGE + ".minPrice", (Integer)filterMap.get("minPrice"));
                 intent.putExtra(Properties.PACKAGE + ".maxPrice", (Integer)filterMap.get("maxPrice"));
                 intent.putExtra(Properties.PACKAGE + ".man", mProductsFragment.getMan());
+                intent.putExtra(Properties.PACKAGE + ".sex", ((filterMap.containsKey("sex"))
+                        ? (Boolean)filterMap.get("sex") : mProductsFragment.getMan()));
 
                 // Iniciamos la activity FilterUI.
                 startActivityForResult(intent, FILTER_REQUEST);
@@ -743,6 +745,7 @@ public class MainScreenUI extends AppCompatActivity
 
                     filterMap.put("newness", data.getBooleanExtra(Properties.PACKAGE + ".newness", false));
                     filterMap.put("discount", data.getBooleanExtra(Properties.PACKAGE + ".discount", false));
+                    filterMap.put("sex", data.getBooleanExtra(Properties.PACKAGE + ".sex", mProductsFragment.getMan()));
                     filterMap.put("sections", data.getSerializableExtra(Properties.PACKAGE + ".sections"));
                     filterMap.put("colors", data.getSerializableExtra(Properties.PACKAGE + ".colors"));
                     filterMap.put("shops", data.getSerializableExtra(Properties.PACKAGE + ".shops"));

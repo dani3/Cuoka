@@ -50,12 +50,16 @@
     <string name="filter_item_sections">Secciones</string>
     <string name="filter_item_price">Precio</string>
     <string name="filter_item_colors">Colores</string>
+    <string name="filter_item_man">Sexo</string>
     <string name="filter_item_newness">Novedades</string>
 
     <string name="filter_default">Reestablecer filtros</string>
 
     <string name="filter_newness_1">Sólo novedades</string>
     <string name="filter_newness_2">Todos los productos</string>
+
+    <string name="filter_man_1">Sólo de hombre</string>
+    <string name="filter_man_2">Sólo de mujer</string>
 
     <string name="filter_color_yellow">Amarillos</string>
     <string name="filter_color_blue">Azules</string>

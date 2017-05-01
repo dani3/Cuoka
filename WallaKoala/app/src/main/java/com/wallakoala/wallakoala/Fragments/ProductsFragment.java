@@ -1172,6 +1172,7 @@ public class ProductsFragment extends Fragment
         List<String> shopsList    = (ArrayList<String>) mFilterMap.get("shops");
         List<String> sectionsList = (ArrayList<String>) mFilterMap.get("sections");
         List<String> colorsList   = (ArrayList<String>) mFilterMap.get("colors");
+        boolean sex               = (boolean) mFilterMap.get("sex");
         boolean newness           = (boolean) mFilterMap.get("newness");
         boolean discount          = (boolean) mFilterMap.get("discount");
         int from                  = (int) mFilterMap.get("minPrice");
@@ -1195,6 +1196,7 @@ public class ProductsFragment extends Fragment
             (sectionsList == null) &&
             (!newness) &&
             (!discount) &&
+            (sex == MAN) &&
             (from < 0) &&
             (to < 0))
         {
