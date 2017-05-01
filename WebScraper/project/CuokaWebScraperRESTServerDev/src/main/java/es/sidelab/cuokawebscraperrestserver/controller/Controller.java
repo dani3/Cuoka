@@ -1151,13 +1151,30 @@ public class Controller
             usersRepository.save(user);
         }
         
+        boolean man = user.getMan();
+        
         // Eliminamos palabras irrelevantes ('a', 'de', 'con', etc.)
         List<String> keywords = new ArrayList<>();
         for (String keyword : aux)
         {
-            if ((keyword.length() > 2) && (!keyword.equalsIgnoreCase("con")) && (!keyword.equalsIgnoreCase("color")))
+            if ((keyword.length() > 2) && 
+                (!keyword.equalsIgnoreCase("con")) && 
+                (!keyword.equalsIgnoreCase("para")) && 
+                (!keyword.equalsIgnoreCase("color")) &&
+                (!keyword.equalsIgnoreCase("hombre")) && 
+                (!keyword.equalsIgnoreCase("mujer")))
             {
                 keywords.add(keyword);
+            }
+            
+            if (keyword.equalsIgnoreCase("Hombre"))
+            {
+                man = true;
+            }
+            
+            if (keyword.equalsIgnoreCase("Mujer"))
+            {
+                man = false;
             }
         }
         
@@ -1178,7 +1195,7 @@ public class Controller
         // Si se ha recibido mas de una palabra.
         if (keywords.size() > 1)
         {
-            List<Object> result = shopManager.findShop(keywords, user.getMan());
+            List<Object> result = shopManager.findShop(keywords, man);
             
             // Si se ha encontrado la tienda, hay dos opciones, que la nueva lista de keywords este vacia, o no.
             if (result != null)
@@ -1190,12 +1207,12 @@ public class Controller
                 if (keywords.isEmpty())
                 {
                     LOG.info("[SEARCH] Se buscan varias palabras y es una tienda: " + shop.getName());
-                    return productsRepository.findByManAndShop(user.getMan(), shop.getName());
+                    return productsRepository.findByManAndShop(man, shop.getName());
                     
                 } else {
                     LOG.info("[SEARCH] Se buscan varias palabras, se encuentra la tienda: " + shop.getName());
                     LOG.info("[SEARCH] Quedan por buscar las palabras: " + keywords.toString());
-                    productList = productsRepository.findByManAndShop(user.getMan(), shop.getName());
+                    productList = productsRepository.findByManAndShop(man, shop.getName());
                 }
             }
         }        
@@ -1209,7 +1226,7 @@ public class Controller
             // Añadimos en este caso todos los productos de las tiendas del usuario.
             for (String shop : user.getShops())
             {
-                productList.addAll(productsRepository.findByManAndShop(user.getMan(), shop));
+                productList.addAll(productsRepository.findByManAndShop(man, shop));
             }            
         }        
         
