@@ -80,6 +80,7 @@ public class ColorIconListAdapter extends BaseAdapter
         return position;
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
@@ -123,6 +124,7 @@ public class ColorIconListAdapter extends BaseAdapter
 
         Picasso.with(mContext)
                .load(url)
+               .error(mContext.getResources().getDrawable(R.drawable.ic_no_color))
                .into(colorIconHolder.mIconView);
 
         return convertView;
