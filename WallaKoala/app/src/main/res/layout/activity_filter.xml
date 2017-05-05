@@ -179,7 +179,7 @@
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/icono_color_color"/>
+                            android:src="@drawable/icono_genero_color"/>
 
                         <com.wallakoala.wallakoala.Views.ExistenceTextView
                             android:id="@+id/filter_text_man"
