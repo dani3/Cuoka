@@ -440,6 +440,8 @@ public class RecommendedFragment extends Fragment
 
             mLoadingView.setVisibility(View.GONE);
 
+            mNoDataView.setVisibility(View.GONE);
+
         } else {
             mNoStylesView.setVisibility(View.GONE);
 
