@@ -2,6 +2,7 @@ package es.sidelab.cuokawebscraperrestclient;
 
 import es.sidelab.cuokawebscraperrestclient.beans.Shop;
 import es.sidelab.cuokawebscraperrestclient.properties.Properties;
+import es.sidelab.cuokawebscraperrestclient.utils.FileManager;
 import es.sidelab.cuokawebscraperrestclient.utils.MultithreadManager;
 import es.sidelab.cuokawebscraperrestclient.utils.PythonManager;
 import es.sidelab.cuokawebscraperrestclient.utils.ScraperManager;
@@ -23,6 +24,8 @@ public class main
     public static void main(String[] args) throws Exception
     {    
         Runnable runnable = () -> {
+            FileManager.cleanTemporalDirectory();
+            
             LOG.info("Renderizando paginas");
             
             try
@@ -39,7 +42,8 @@ public class main
                     // Ejecutamos concurrentemente los scrapers
                     MultithreadManager.parallelScrap(shops);
                 }
-            } catch(IOException | InterruptedException e) {}
+                
+            } catch(IOException | InterruptedException unused) {}
         };
         
         if (!Properties.DEBUG)

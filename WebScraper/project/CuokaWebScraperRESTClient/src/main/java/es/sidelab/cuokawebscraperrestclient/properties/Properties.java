@@ -19,6 +19,7 @@ public class Properties
     public static final String SERVER_DEV = "http://46.183.116.208:8080";
     public static final int TIMEOUT = 60000;   
     
+    public static final String TEMP_PATH = "C:\\Users\\Dani\\AppData\\Local\\Temp\\";
     public static final String SHOPS_PATH = "C:\\Users\\Dani\\Documents\\shops\\";
     public static final String CHROME_DRIVER = "C:\\Users\\Dani\\Documents\\chromedriver";
     

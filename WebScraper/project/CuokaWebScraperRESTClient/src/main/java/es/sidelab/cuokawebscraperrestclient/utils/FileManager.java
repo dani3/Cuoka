@@ -1,7 +1,10 @@
 package es.sidelab.cuokawebscraperrestclient.utils;
 
+import es.sidelab.cuokawebscraperrestclient.properties.Properties;
 import java.io.File;
+import java.io.IOException;
 import org.apache.log4j.Logger;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Clase que se encarga del tema de ficheros.
@@ -31,5 +34,20 @@ public class FileManager
         LOG.error("No ha sido posible borrar el fichero: " + path);
         
         return false;
+    }
+    
+    /**
+     * Metodo que elimina los ficheros dentro de la carpeta de Temp.
+     */
+    public static void cleanTemporalDirectory()
+    {
+        try 
+        {
+            FileUtils.cleanDirectory(new File(Properties.TEMP_PATH));
+            
+        } catch (IOException ex) {
+            LOG.error("No ha sido posible borrar el fichero: " + Properties.TEMP_PATH);
+            LOG.error(ex.toString());
+        }
     }
 }

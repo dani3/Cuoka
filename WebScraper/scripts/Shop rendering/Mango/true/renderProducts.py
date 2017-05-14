@@ -39,7 +39,7 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Creamos fichero con los productos
 result = open(path + "Productos_" + section + ".txt", 'w')
-file_error = open(path + "Productos_Error" + section + ".txt", 'w')
+file_error = open(path + "Productos_Error_" + section + ".txt", 'w')
 
 for link in listOfLinks:
     # Linea de guiones para separar cada producto
