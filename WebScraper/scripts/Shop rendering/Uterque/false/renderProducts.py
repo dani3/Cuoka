@@ -76,6 +76,9 @@ for link in listOfLinks:
     try:
         # ****** N O M B R E ****** #
         name = dr.find_element_by_class_name("text").text
+        if (len(name) == 0):
+            raise Exception("Nombre vacio")
+            
         result.write("Nombre: " + name + "\n")
         
     except:
@@ -94,7 +97,6 @@ for link in listOfLinks:
     try:
         # ****** P R E C I O   Y   D E S C U E N T O ****** #
         price = dr.find_element_by_class_name("price_old").text.replace(",", ".").replace("€", "")
-
         if (len(price) == 0):
             raise Exception("Precio vacio")
         
@@ -107,7 +109,6 @@ for link in listOfLinks:
         # Si salta la excepción significa que el precio no tiene descuento
         try:
             price = dr.find_element_by_class_name("price").text.replace(",", ".").replace("€", "")
-
             if (len(price) == 0):
                 raise Exception("Precio vacio")
             
@@ -125,7 +126,6 @@ for link in listOfLinks:
     # Colores
     try:
         # ****** C O L O R E S ****** #
-
         colors = dr.find_elements_by_css_selector("div.color_div_product > ul > li")
         
     except:
@@ -172,7 +172,6 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   I C O N O ****** #
-
             colorIcon = color.find_element_by_css_selector("img").get_attribute("src")
             result.write("  Icono: " + colorIcon + "\n")
             
