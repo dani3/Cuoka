@@ -236,6 +236,9 @@ public class ImageManager
         if (shop.equalsIgnoreCase("Mango"))
             aspectRatio = Properties.MANGO_ASPECT_RATIO;
 
+        if (shop.equalsIgnoreCase("Uterque"))
+            aspectRatio = Properties.UTERQUE_ASPECT_RATIO;
+
         if (shop.equalsIgnoreCase(Properties.BORDEAUX_THE_BRAND))
             aspectRatio = Properties.BTB_ASPECT_RATIO;
         

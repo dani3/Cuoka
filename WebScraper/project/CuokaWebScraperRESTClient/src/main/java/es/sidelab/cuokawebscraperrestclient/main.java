@@ -24,8 +24,11 @@ public class main
     public static void main(String[] args) throws Exception
     {    
         Runnable runnable = () -> {
-            FileManager.cleanTemporalDirectory();
-            
+            if (Properties.CLEAN)
+            {
+                FileManager.cleanTemporalDirectory();
+            }
+                
             LOG.info("Renderizando paginas");
             
             try

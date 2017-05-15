@@ -55,13 +55,14 @@ public class Properties
     
     /* Aspect ratios de las imagenes de cada tienda */
     public static final float PDH_ASPECT_RATIO           = 1.5f;
-    public static final float SPRINGFIELD_ASPECT_RATIO   = 1.12f;
+    public static final float SPRINGFIELD_ASPECT_RATIO   = 1.5f;
     public static final float HYM_ASPECT_RATIO           = 1.5f;
     public static final float ZARA_ASPECT_RATIO          = 1.24f;
     public static final float BERSHKA_ASPECT_RATIO       = 1.28f;
     public static final float MASSIMO_DUTTI_ASPECT_RATIO = 1.33f;
     public static final float MANGO_ASPECT_RATIO         = 1.39f;
-    public static final float BTB_ASPECT_RATIO           = 1.0f;
+    public static final float BTB_ASPECT_RATIO           = 0.75f;
+    public static final float UTERQUE_ASPECT_RATIO       = 1.37f;
     
     /* Lista de tiendas de Descubre */
     public static final String BORDEAUX_THE_BRAND = "Bordeaux the Brand";
