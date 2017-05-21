@@ -63,6 +63,7 @@ public class Properties
     public static final float MANGO_ASPECT_RATIO         = 1.39f;
     public static final float BTB_ASPECT_RATIO           = 0.75f;
     public static final float UTERQUE_ASPECT_RATIO       = 1.37f;
+    public static final float PULLBEAR_ASPECT_RATIO      = 1.27f;
     
     /* Lista de tiendas de Descubre */
     public static final String BORDEAUX_THE_BRAND = "Bordeaux the Brand";
