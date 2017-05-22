@@ -20,7 +20,7 @@ path = sys.argv[2]
 # Lista de secciones con sus URL's
 urls = [("Abrigos", "https://www.uterque.com/es/colecci%C3%B3n/abrigos/ver-todo-c1751032.html"),
         ("Pantalones", "https://www.uterque.com/es/colecci%C3%B3n/pantalones/ver-todo-c1753572.html"),
-        ("Vestidos y faldas", "https://www.uterque.com/es/colecci%C3%B3n/vestidos-y-faldas-c1748462.html"),
+        ("Faldas", "https://www.uterque.com/es/colecci%C3%B3n/vestidos-y-faldas-c1748462.html"),
         ("Monos", "https://www.uterque.com/es/colecci%C3%B3n/monos-c1748463.html"),
         ("Camisas y blusas", "https://www.uterque.com/es/colecci%C3%B3n/camisas-y-blusas-c1748458.html"),
         ("Camisetas", "https://www.uterque.com/es/colecci%C3%B3n/tops-y-camisetas-c1748464.html"),
@@ -41,7 +41,6 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Se recorren la lista de secciones
 for k,v in urls:
-    file_error = open(path + k + "_links_error.txt", 'w')
     
     try:
         dr.get(v)
