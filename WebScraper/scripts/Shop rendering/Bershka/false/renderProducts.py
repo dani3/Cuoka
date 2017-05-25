@@ -18,7 +18,7 @@ section = sys.argv[2]
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_false\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -214,8 +214,11 @@ for link in listOfLinks:
 
         # ****** I M A G E N E S ****** #
         for image in images:
-            try:                
-                result.write("     Imagen: " + image.find_element_by_css_selector("a > img").get_attribute("src") + "\n")
+            try:
+                image.click()
+                time.sleep(1)                
+                
+                result.write("     Imagen: " + dr.find_element_by_css_selector("div.product-image-image img").get_attribute("src") + "\n")
 
             except:
                 result.write("     Imagen: null" + "\n")
