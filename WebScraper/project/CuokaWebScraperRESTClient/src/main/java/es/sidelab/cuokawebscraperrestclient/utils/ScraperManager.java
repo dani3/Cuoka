@@ -34,15 +34,21 @@ public class ScraperManager
         {
             String className;
             
-            if (shop.getName().equalsIgnoreCase("Pedro Del Hierro"))
-            {
+            if (shop.getName().equalsIgnoreCase("Pedro Del Hierro")){
                 className = "PdH";
+                
             } else if (shop.getName().equalsIgnoreCase("Massimo Dutti")) {
-                className = "MassimoDutti";                
+                className = "MassimoDutti";  
+                
             } else if (shop.getName().equalsIgnoreCase("Bordeaux the Brand")) {
-                className = "BtB";     
+                className = "BtB";  
+                
             } else if (shop.getName().equalsIgnoreCase("Pull&Bear")) {
-                className = "PullBear"; 
+                className = "PullBear";
+                
+            } else if (shop.getName().equalsIgnoreCase("Polar Company")) {
+                className = "PolarCompany";
+                
             } else {
                 className = shop.getName();
             }
