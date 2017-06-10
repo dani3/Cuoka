@@ -14,7 +14,7 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Camisetas"
+#section = "Vestidos"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
@@ -174,6 +174,25 @@ for link in listOfLinks:
 
             # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande
             try:
+                images = dr.find_elements_by_css_selector("#main-images > div.image-wrap")
+                if (len(images) == 0):
+                    raise Exception("Imagenes no encontradas")
+
+            except:
+                file_error.write("Imagenes no encontradas en: " + link + "\n")
+                continue
+            
+            # ****** I M A G E N E S ****** #
+            for image in images:
+                try:
+                    image = image.find_element_by_css_selector("a > img")
+                    result.write("     Imagen: " + image.get_attribute("src") + "\n")
+
+                except:
+                    result.write("     Imagen: null" + "\n")
+                    
+            # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande       
+            try:
                 images = dr.find_elements_by_css_selector("#detail-images > div.image-wrap")
                 if (len(images) == 0):
                     raise Exception("Imagenes no encontradas")
@@ -260,6 +279,24 @@ for link in listOfLinks:
                 file_error.write("Referencia no encontrado en: " + link + "\n")
                 continue    
 
+            try:
+                images = dr.find_elements_by_css_selector("#main-images > div.image-wrap")
+                if (len(images) == 0):
+                    raise Exception("Imagenes no encontradas")
+
+            except:
+                file_error.write("Imagenes no encontradas en: " + link + "\n")
+                continue
+            
+            # ****** I M A G E N E S ****** #
+            for image in images:
+                try:
+                    image = image.find_element_by_css_selector("a > img")
+                    result.write("     Imagen: " + image.get_attribute("src") + "\n")
+
+                except:
+                    result.write("     Imagen: null" + "\n")
+            
             # Sacamos las imagenes, tenemos que hacer click para que se cargue la imagen grande
             try:
                 images = dr.find_elements_by_css_selector("#detail-images > div.image-wrap")
@@ -272,7 +309,7 @@ for link in listOfLinks:
 
             # ****** I M A G E N E S ****** #
             for image in images:
-                try:                    
+                try:
                     image = image.find_element_by_css_selector("a > img")
                     
                     result.write("     Imagen: " + image.get_attribute("src") + "\n")
