@@ -38,7 +38,6 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Se recorren la lista de secciones
 for k, v in urls:
-    file_error = open(path + k + "_links_error.txt", 'w')
     
     try:
         dr.get(v)
