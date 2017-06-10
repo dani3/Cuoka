@@ -242,8 +242,17 @@ public class ImageManager
         if (shop.equalsIgnoreCase("Pull&Bear"))
             aspectRatio = Properties.PULLBEAR_ASPECT_RATIO;
 
+        if (shop.equalsIgnoreCase("Oysho"))
+            aspectRatio = Properties.OYSHO_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Dolores Promesas"))
+            aspectRatio = Properties.DOLORES_PROMESAS_ASPECT_RATIO;
+
         if (shop.equalsIgnoreCase(Properties.BORDEAUX_THE_BRAND))
             aspectRatio = Properties.BTB_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase(Properties.POLAR_COMPANY))
+            aspectRatio = Properties.POLAR_COMPANY_ASPECT_RATIO;
         
         return aspectRatio;
     }

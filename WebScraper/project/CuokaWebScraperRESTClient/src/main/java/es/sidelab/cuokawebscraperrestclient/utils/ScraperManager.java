@@ -49,6 +49,12 @@ public class ScraperManager
             } else if (shop.getName().equalsIgnoreCase("Polar Company")) {
                 className = "PolarCompany";
                 
+            } else if (shop.getName().equalsIgnoreCase("Dolores Promesas")) {
+                className = "DoloresPromesas";
+                
+            } else if (shop.getName().equalsIgnoreCase("Womens Secret")) {
+                className = "WomensSecret";
+                
             } else {
                 className = shop.getName();
             }
