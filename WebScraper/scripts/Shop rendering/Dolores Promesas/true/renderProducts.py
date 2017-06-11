@@ -25,7 +25,7 @@ path = sys.argv[3]
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
 
-file = open(path + section + ".txt", 'r')
+file = open(path + "Seccion_" + section + ".txt", 'r')
 for link in file:
     # Quitamos los saltos de linea
     listOfLinks.append(link.rstrip())
