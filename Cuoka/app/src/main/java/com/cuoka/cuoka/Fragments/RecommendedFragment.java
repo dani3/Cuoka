@@ -253,6 +253,7 @@ public class RecommendedFragment extends Fragment
                 if (!empty)
                 {
                     new JSONConversion().execute(content);
+
                 } else {
                     mLoadingView.setVisibility(View.GONE);
                     mNoDataView.setVisibility(View.VISIBLE);
@@ -458,7 +459,10 @@ public class RecommendedFragment extends Fragment
         {
             SELECTED = true;
 
-            new RetrieveRecommendationsTask().execute();
+            if (!mUser.getStyles().isEmpty())
+            {
+                new RetrieveRecommendationsTask().execute();
+            }
         }
     }
 }
