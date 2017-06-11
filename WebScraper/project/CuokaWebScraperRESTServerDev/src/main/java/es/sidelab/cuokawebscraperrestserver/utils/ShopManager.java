@@ -30,6 +30,7 @@ public class ShopManager
         stylesMap = new HashMap<>();
         
         stylesMap.put(Properties.BORDEAUX_THE_BRAND, Properties.BORDEAUX_THE_BRAND_STYLES);
+        stylesMap.put(Properties.POLAR_COMPANY, Properties.POLAR_COMPANY_STYLES);
     }
     
     /**
