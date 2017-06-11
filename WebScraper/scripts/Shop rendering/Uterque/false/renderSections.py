@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,7 +18,7 @@ path = sys.argv[2]
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Uterque\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Abrigos", "https://www.uterque.com/es/colecci%C3%B3n/abrigos/ver-todo-c1751032.html"),
+urls = [("Bañadores", "https://www.uterque.com/es/colecci%C3%B3n/ba%C3%B1adores-c1771032.html"),
         ("Pantalones", "https://www.uterque.com/es/colecci%C3%B3n/pantalones/ver-todo-c1753572.html"),
         ("Faldas", "https://www.uterque.com/es/colecci%C3%B3n/vestidos-y-faldas-c1748462.html"),
         ("Monos", "https://www.uterque.com/es/colecci%C3%B3n/monos-c1748463.html"),

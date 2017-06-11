@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -26,9 +26,9 @@ urls = [("Camisetas", "http://www.zara.com/es/es/mujer/camisetas/ver-todo-c71901
         ("Body","http://www.zara.com/es/es/mujer/body-c602501.html"),
         ("Pantalones","http://www.zara.com/es/es/mujer/pantalones/ver-todo-c719022.html"),
         ("Jeans","http://www.zara.com/es/es/mujer/jeans/ver-todo-c719019.html"),
+        ("Shorts","https://www.zara.com/es/es/mujer/shorts-c404505.html"),
         ("Faldas","http://www.zara.com/es/es/mujer/faldas/ver-todo-c719016.html"),
         ("Punto","http://www.zara.com/es/es/mujer/punto/ver-todo-c719015.html"),
-        ("Camisetas","http://www.zara.com/es/es/mujer/camisetas/ver-todo-c719014.html"),
         ("Sudaderas","http://www.zara.com/es/es/mujer/sudaderas-c364001.html"),
         ("Bolsos","https://www.zara.com/es/es/mujer/bolsos/ver-todo-c819022.html"),
         ("Accesorios","https://www.zara.com/es/es/mujer/accesorios/ver-todo-c719013.html"),

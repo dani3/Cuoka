@@ -64,7 +64,7 @@ for link in listOfLinks:
 
     try:
         # Esperamos a que aparezca la imagen un maximo de 60 segundos.
-        element = WebDriverWait(dr, 60).until(
+        WebDriverWait(dr, 60).until(
             EC.presence_of_element_located((By.CLASS_NAME, "c01__media"))
         )
         
@@ -109,8 +109,6 @@ for link in listOfLinks:
     try:
         # ****** D E S C U E N T O ****** #
         discount = dr.find_element_by_css_selector("div.c02__pricing.large-only > span.c02__pricing-item.c02__standard-price").text.replace(",", ".").replace("€", "")
-        if (len(colors) == 0):
-            raise Exception("Colores no encontrados")
 
         result.write("Descuento: " + discount + "\n")
         

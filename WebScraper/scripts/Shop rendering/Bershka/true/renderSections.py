@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -28,7 +28,7 @@ urls = [("Abrigos", "https://www.bershka.com/es/hombre/ropa/abrigos-y-cazadoras-
         ("Punto", "https://www.bershka.com/es/hombre/ropa/punto-c1010193243.html"),
         ("Sudaderas", "https://www.bershka.com/es/hombre/ropa/sudaderas-c1010193244.html"),
         ("Sport", "https://www.bershka.com/es/hombre/ropa/gymwear-c1010193247.html"),
-        ("Relojes", "https://www.bershka.com/es/hombre/accesorios/relojes-c1010193177.html")]
+        ("Accesorios", "https://www.bershka.com/es/hombre/accesorios/ver-todo-c1010193172.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

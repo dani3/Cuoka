@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -27,6 +27,7 @@ urls = [("Camisetas", "http://www2.hm.com/es_es/hombre/compra-por-producto/camis
         ("Shorts", "http://www2.hm.com/es_es/hombre/compra-por-producto/pantalones-cortos.html"),
         ("Sport", "http://www2.hm.com/es_es/hombre/compra-por-producto/sport.html"),
         ("Complementos", "http://www2.hm.com/es_es/hombre/compra-por-producto/accesorios.html"),
+        ("Bañadores", "http://www2.hm.com/es_es/hombre/compra-por-producto/moda-de-bano.html"),
         ("Calzado", "http://www2.hm.com/es_es/hombre/compra-por-producto/calzado.html")]
    
 chrome_options = Options()

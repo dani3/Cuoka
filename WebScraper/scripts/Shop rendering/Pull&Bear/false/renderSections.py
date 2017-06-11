@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,6 +21,7 @@ urls = [("Abrigos", "https://www.pullandbear.com/es/mujer/ropa/abrigos-y-cazador
         ("Monos", "https://www.pullandbear.com/es/mujer/ropa/petos-y-monos-c1073503.html"),
         ("Jerseis", "https://www.pullandbear.com/es/mujer/ropa/punto-c29017.html"),
         ("Sudaderas", "https://www.pullandbear.com/es/mujer/ropa/sudaderas-c29018.html"),
+        ("Tops y brallettes", "https://www.pullandbear.com/es/mujer/ropa/tops-y-brallettes-c1030061504.html"),
         ("Blusas y camisas", "https://www.pullandbear.com/es/mujer/ropa/blusas-y-camisas-c29019.html"),
         ("Camisetas", "https://www.pullandbear.com/es/mujer/ropa/camisetas-c29020.html"),
         ("Jeans", "https://www.pullandbear.com/es/mujer/ropa/jeans-c29022.html"),

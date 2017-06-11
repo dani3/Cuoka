@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -16,7 +16,8 @@ path = sys.argv[2]
 #path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Abrigos", "http://pedrodelhierro.com/es/es/hombre/cazadoras"),
+urls = [("Bermudas", "http://pedrodelhierro.com/es/es/hombre/bermudas"),
+        ("Cazadoras","http://pedrodelhierro.com/es/es/hombre/cazadoras"),
         ("Americanas","http://pedrodelhierro.com/es/es/hombre/americanas"),
         ("Punto", "http://pedrodelhierro.com/es/es/hombre/punto"),
         ("Camisas", "http://pedrodelhierro.com/es/es/hombre/camisas"),
@@ -26,6 +27,7 @@ urls = [("Abrigos", "http://pedrodelhierro.com/es/es/hombre/cazadoras"),
         ("Trajes", "http://pedrodelhierro.com/es/es/hombre/trajes"),
         ("Complementos", "http://pedrodelhierro.com/es/es/hombre/tailoring/complementos"),
         ("Corbatas", "http://pedrodelhierro.com/es/es/hombre/tailoring/corbatas"),
+        ("Bañadores", "http://pedrodelhierro.com/es/es/hombre/bano"),
         ("Zapatos", "http://pedrodelhierro.com/es/es/hombre/zapatos")]
     
 chrome_options = Options()

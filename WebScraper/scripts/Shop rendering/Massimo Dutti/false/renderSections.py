@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,6 +21,7 @@ urls = [("Abrigos", "https://www.massimodutti.com/es/mujer/abrigos-c680658.html"
         ("Piel", "https://www.massimodutti.com/es/mujer/piel-c675010.html"),
         ("Americanas", "https://www.massimodutti.com/es/mujer/americanas/ver-todo-c911146.html"),
         ("Trajes", "https://www.massimodutti.com/es/mujer/trajes-c1383007.html"),
+        ("Monos", "https://www.massimodutti.com/es/mujer/monos-c1759512.html"),
         ("Vestidos", "https://www.massimodutti.com/es/mujer/vestidos-y-monos-c1472056.html"),
         ("Faldas", "https://www.massimodutti.com/es/mujer/faldas-c675013.html"),
         ("Jerseis", "https://www.massimodutti.com/es/mujer/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c911188.html"),

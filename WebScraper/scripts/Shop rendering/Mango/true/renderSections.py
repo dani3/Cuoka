@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,20 +18,20 @@ path = sys.argv[2]
 #path = "C:\\Users\\Dani\\Documents\\shops\\Pedro Del Hierro_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Vestidos", "http://shop.mango.com/ES/m/mujer/prendas/vestidos?m=familia&v=32"),
-        ("Monos", "http://shop.mango.com/ES/m/mujer/prendas/monos?m=familia&v=34"),
-        ("Camisas", "http://shop.mango.com/ES/m/mujer/prendas/camisas?m=familia&v=14"),
-        ("Camisetas", "http://shop.mango.com/ES/m/mujer/prendas/camisetas?m=familia&v=18%2C318"),
-        ("Jerseis", "http://shop.mango.com/ES/m/mujer/prendas/cardigans-y-jerseis?m=familia&v=55%2C355"),
-        ("Sudaderas", "http://shop.mango.com/ES/m/mujer/prendas/sudaderas?m=familia&v=610%2C810"),
-        ("Chaquetas", "http://shop.mango.com/ES/m/mujer/prendas/chaquetas?m=familia&v=4%2C304"),
-        ("Abrigos", "http://shop.mango.com/ES/m/mujer/prendas/abrigos?m=familia&v=2"),
-        ("Pantalones", "http://shop.mango.com/ES/m/mujer/prendas/pantalones?m=familia&v=26%2C326"),
-        ("Jeans", "http://shop.mango.com/ES/m/mujer/prendas/pantalones?m=familia&v=26%2C326"),
-        ("Shorts", "http://shop.mango.com/ES/m/mujer/prendas/shorts?m=familia&v=22%2C322"),
-        ("Faldas", "http://shop.mango.com/ES/m/mujer/prendas/faldas?m=familia&v=20"),
-        ("Lenceria", "http://shop.mango.com/ES/m/mujer/prendas/lenceria?m=familia&v=338"),
-        ("Sport", "http://shop.mango.com/ES/m/mujer/prendas/deporte?m=familia&v=46")]
+urls = [("Polos", "http://shop.mango.com/ES/m/hombre/prendas/polos?m=familia&v=116"),
+        ("Trajes", "http://shop.mango.com/ES/m/hombre/prendas/trajes?m=familia&v=117"),
+        ("Camisas", "http://shop.mango.com/ES/m/hombre/prendas/camisas?m=familia&v=120"),
+        ("Camisetas", "http://shop.mango.com/ES/m/hombre/prendas/camisetas?m=familia&v=115"),
+        ("Jerseis", "http://shop.mango.com/ES/m/hombre/prendas/jerseis-y-cardigans?m=familia&v=110"),
+        ("Sudaderas", "http://shop.mango.com/ES/m/hombre/prendas/sudaderas?m=familia&v=612"),
+        ("Chaquetas", "http://shop.mango.com/ES/m/hombre/prendas/chaquetas?m=familia&v=109"),
+        ("Abrigos", "http://shop.mango.com/ES/m/hombre/prendas/abrigos?m=familia&v=106"),
+        ("Pantalones", "http://shop.mango.com/ES/m/hombre/prendas/pantalones?m=familia&v=131"),
+        ("Jeans", "http://shop.mango.com/ES/m/hombre/prendas/jeans?m=familia&v=130"),
+        ("Shorts", "http://shop.mango.com/ES/m/hombre/prendas/bermudas?m=familia&v=132"),
+        ("Bañadores", "http://shop.mango.com/ES/m/hombre/prendas/banadores?m=familia&v=150"),
+        ("Ropa interior", "http://shop.mango.com/ES/m/hombre/prendas/ropa-interior?m=familia&v=142")]
+        
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

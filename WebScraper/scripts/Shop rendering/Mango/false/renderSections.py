@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -19,6 +19,7 @@ path = sys.argv[2]
 
 # Lista de secciones con sus URL's
 urls = [("Vestidos", "http://shop.mango.com/ES/m/mujer/prendas/vestidos?m=familia&v=32"),
+        ("Abrigos", "http://shop.mango.com/ES/m/mujer/prendas/abrigos?m=familia&v=2"),
         ("Monos", "http://shop.mango.com/ES/m/mujer/prendas/monos?m=familia&v=34"),
         ("Camisas", "http://shop.mango.com/ES/m/mujer/prendas/camisas?m=familia&v=14"),
         ("Camisetas", "http://shop.mango.com/ES/m/mujer/prendas/camisetas?m=familia&v=18%2C318"),
@@ -29,6 +30,7 @@ urls = [("Vestidos", "http://shop.mango.com/ES/m/mujer/prendas/vestidos?m=famili
         ("Jeans", "http://shop.mango.com/ES/m/mujer/prendas/jeans?m=familia&v=28"),
         ("Shorts", "http://shop.mango.com/ES/m/mujer/prendas/shorts?m=familia&v=22%2C322"),
         ("Faldas", "http://shop.mango.com/ES/m/mujer/prendas/vestidos?m=familia&v=32"),
+        ("Bikinis", "http://shop.mango.com/ES/m/mujer/prendas/bano?m=familia&v=36"),
         ("Sport","http://shop.mango.com/ES/m/mujer/prendas/deporte?m=familia&v=46")]
     
 chrome_options = Options()

@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -19,7 +19,7 @@ path = sys.argv[2]
 urls = [("Cazadoras", "http://www.zara.com/es/es/hombre/cazadoras-c586542.html"),
         ("Bombers", "http://www.zara.com/es/es/hombre/bombers-c813531.html"),
         ("Blazers","http://www.zara.com/es/es/hombre/blazers-c392502.html"),
-        ("Trajes","http://www.zara.com/es/es/hombre/trajes-c358052.html"),
+        ("Trajes","https://www.zara.com/es/es/hombre/tailoring/ver-todo-c597508.html"),
         ("Pantalones","http://www.zara.com/es/es/hombre/pantalones/ver-todo-c719514.html"),
         ("Bermudas","http://www.zara.com/es/es/hombre/bermudas-c381001.html"),
         ("Jeans","http://www.zara.com/es/es/hombre/jeans-c368001.html"),
@@ -30,6 +30,7 @@ urls = [("Cazadoras", "http://www.zara.com/es/es/hombre/cazadoras-c586542.html")
         ("Jerseys","http://www.zara.com/es/es/hombre/jerseys-y-chaquetas/ver-todo-c719526.html"),
         ("Zapatos","http://www.zara.com/es/es/hombre/zapatos/ver-todo-c719027.html"),
         ("Accesorios","https://www.zara.com/es/es/hombre/accesorios/ver-todo-c719529.html"),
+        ("Bañadores","https://www.zara.com/es/es/hombre/ba%C3%B1adores-c822511.html"),
         ("Sport","http://www.zara.com/es/es/hombre/jogging-c726529.html")]
 
 chrome_options = Options()

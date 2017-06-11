@@ -1,4 +1,4 @@
-import os, time, sys
+﻿import os, time, sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -23,15 +23,15 @@ urls = [("Abrigos", "https://www.massimodutti.com/es/hombre/abrigos-y-chaquetas-
         ("Chalecos", "https://www.massimodutti.com/es/hombre/chalecos-c1543502.html"),
         ("Trajes", "https://www.massimodutti.com/es/hombre/trajes/ver-todo-c1547001.html"),
         ("Jerseys", "https://www.massimodutti.com/es/hombre/jers%C3%A9is-y-c%C3%A1rdigans/ver-todo-c911154.html"),
-        ("Camisas casual", "https://www.massimodutti.com/es/hombre/camisas-casual/ver-todo-c911139.html"),
-        ("Camisas vestir", "https://www.massimodutti.com/es/hombre/camisas-vestir/ver-todo-c1510002.html"),
+        ("Camisetas", "https://www.massimodutti.com/es/hombre/camisetas-c911158.html"),
+        ("Camisas", "https://www.massimodutti.com/es/hombre/camisas/ver-todo-c911139.html"),
         ("Polos", "https://www.massimodutti.com/es/hombre/polos-y-camisetas/ver-todo-c911160.html"),
         ("Pantalones", "https://www.massimodutti.com/es/hombre/pantalones/ver-todo-c911166.html"),
         ("Vaqueros", "https://www.massimodutti.com/es/hombre/denim-c680509.html"),
+        ("Bermudas", "https://www.massimodutti.com/es/hombre/pantalones/bermudas-c925008.html"),
         ("Zapatos", "https://www.massimodutti.com/es/hombre/zapatos/ver-todo-c1313029.html"),
-        ("Pantalones", "https://www.massimodutti.com/es/hombre/pantalones/ver-todo-c1748220.html"),
         ("Accesorios", "https://www.massimodutti.com/es/hombre/accesorios/ver-todo-c1178003.html"),
-        ("Corbatas", "https://www.massimodutti.com/es/hombre/corbatas-c1660501.html")]
+        ("Bañadores", "https://www.massimodutti.com/es/hombre/ba%C3%B1o-c1639003.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
