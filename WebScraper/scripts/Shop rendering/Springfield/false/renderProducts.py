@@ -14,12 +14,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Camisas"
+#section = "Jerseis"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Springfield_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\true\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -108,7 +108,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C U E N T O ****** #
-        discount = dr.find_element_by_css_selector("div.c02__pricing.large-only > span").text.replace(",", ".").replace("€", "")
+        discount = dr.find_element_by_css_selector("div.c02__pricing.large-only > span.c02__sales-price").text.replace(",", ".").replace("€", "")
 
         result.write("Descuento: " + discount + "\n")
         

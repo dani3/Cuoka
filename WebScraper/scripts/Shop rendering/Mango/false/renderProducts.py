@@ -10,17 +10,17 @@ from selenium.webdriver.chrome.options import Options
 path_to_chromedriver = sys.argv[1]
 #path_to_chromedriver = "D:\\Documentos\\1. Cuoka\\Scraping\\chromedriver"
 #path_to_chromedriver = "C:\\Users\\lux_f\\Documents\\chromedriver"
-#path_to_chromedriver = "C:\\Users\\Dani\\Documents\\chromedriver"
+#path_to_chromedriver = "C:\\Users\\administrator\\Cuoka\Chromedriver\\chromedriver"
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Bermudas"
+#section = "Vestidos"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\MANGO_true\\false\\"
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Mango_false\\true\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Mango_false\\false\\"
+#path = "C:\\Users\\administrator\\Cuoka\\shops\\Mango_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -39,7 +39,7 @@ dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = c
 
 # Creamos fichero con los productos
 result = open(path + "Productos_" + section + ".txt", 'w')
-file_error = open(path + "Productos_Error" + section + ".txt", 'w')
+file_error = open(path + "Productos_Error_" + section + ".txt", 'w')
 
 for link in listOfLinks:
     # Linea de guiones para separar cada producto
@@ -68,14 +68,16 @@ for link in listOfLinks:
         WebDriverWait(dr, 60).until(
             EC.presence_of_element_located((By.CLASS_NAME, "ficha_foto"))
         )
+
+        time.sleep(1)
         
     except:
         file_error.write("Imagen no encontrada en: " + link + "\n")
         continue
 
-    #pinchamos el icono de quitar provincia
+    # Pinchamos el icono de quitar provincia
     try:
-        dr.find_element_by_css_selector("div.modalSeleccionProvinciaForm__buttonContainer").click()
+        dr.find_element_by_css_selector("#FormSeleccionProvincia > div > div > div > div > div > div.icon__close").click()
         
     except:
         pass
@@ -149,7 +151,7 @@ for link in listOfLinks:
             if (len(colors) > 1):                
                 # Hacemos click en cada icono
                 color.click()
-                time.sleep(1)
+                time.sleep(2)
 
                 WebDriverWait(dr, 60).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "ficha_foto"))
@@ -165,7 +167,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   N O M B R E ****** #
-            colorName = dr.find_element_by_class_name("producto_color_texto").text.upper().replace("/", "-")
+            colorName = dr.find_element_by_class_name("producto_color_texto").text.upper().replace("/", "-").replace("COLOR: ", "")
             result.write("*********************************************************\n")
             result.write("  Color: " + colorName + "\n")
             

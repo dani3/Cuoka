@@ -13,7 +13,7 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Rebajas"
+#section = "Abrigos"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
@@ -73,7 +73,7 @@ for link in listOfLinks:
 
     try:
         # ****** N O M B R E ****** #
-        name = dr.find_element_by_css_selector("div.product-info > h1").text
+        name = dr.find_element_by_css_selector("div.active-product div.product-detail-container > div > h1").text
         if (len(name) == 0):
             raise Exception("Nombre vacio")
         
@@ -86,7 +86,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C R I P T I O N ****** #
-        description = "".join(dr.find_element_by_css_selector("div.product-description > p:nth-child(2)").text.splitlines())[:255]
+        description = "".join(dr.find_element_by_css_selector("div.active-product div.product-description > p:nth-child(2)").text.splitlines())[:255]
         result.write("Descripcion: " + description + "\n")
         
     except:
@@ -94,9 +94,7 @@ for link in listOfLinks:
 
     try:
         # ****** P R E C I O ****** #
-        price_container = dr.find_element_by_class_name("product-price").text.replace(",", ".").replace("€", "")
-        prices_list = price_container.split()
-        price = prices_list[0]
+        price = dr.find_element_by_css_selector("div.active-product div.product-detail-container div > span.price").text.replace(",", ".").replace("€", "")
         if (len(price) == 0):
             raise Exception("Precio vacio")
         
@@ -109,7 +107,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C U E N T O ****** #
-        discount = prices_list[1]
+        price = dr.find_element_by_css_selector("div.active-product div.product-detail-container div > span.old_price").text.replace(",", ".").replace("€", "")
         result.write("Descuento: " + discount + "\n")
         
     except:
@@ -154,7 +152,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   N O M B R E ****** #
-            colorName = dr.find_element_by_css_selector("div.product-info > h3").text.upper().replace("/", "-")
+            colorName = dr.find_element_by_css_selector("div.active-product div.product-detail-container > div > h3").text.upper().replace("/", "-")
             if (len(colorName) == 0):
                 raise Exception("Nombre del color vacio")
 
@@ -179,8 +177,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
-            reference = dr.find_element_by_class_name("reference").text.replace("Ref. ", "").replace("/", "").rstrip()
-
+            reference = dr.find_element_by_css_selector("div.active-product div.product-detail-container p.reference").text.replace("Ref. ", "").replace("/", "").rstrip()
             if (len(reference) == 0):
                 raise Exception("Referencia vacia")
             
@@ -193,7 +190,7 @@ for link in listOfLinks:
 
         # Sacamos las imagenes
         try:
-            images = dr.find_elements_by_class_name("image")
+            images = dr.find_elements_by_css_selector("div.active-product div.product-detail-related-desktop #product-images-grid div.image")
 
         except:
             file_error.write("Imagenes no encontradas en: " + link + "\n")
