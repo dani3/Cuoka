@@ -1,4 +1,5 @@
 import sys, time
+from random import randint
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -131,7 +132,7 @@ for link in listOfLinks:
                     
                 try:
                     # ****** C O L O R   R E F E R E N C I A ****** #
-                    reference = dr.find_element_by_css_selector("div.summary.entry-summary > div.product_meta > span.sku_wrapper > span").text.replace("/", "").rstrip()
+                    reference = str(randint(0, 9999999))
                     result.write("  Referencia: " + reference + "\n")
                     
                 except:
