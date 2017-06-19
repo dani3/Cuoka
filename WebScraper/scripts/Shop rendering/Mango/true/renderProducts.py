@@ -100,7 +100,7 @@ for link in listOfLinks:
         description_list = dr.find_elements_by_css_selector("div.panel_descripcion > span")
         full_descr = ""        
         for description_elem in description_list:
-            description = description_elem.find_element_by_css_selector("span").text
+            description = description_elem.find_element_by_css_selector("span").text.splitlines())[:255]
             if full_descr != "":
                 full_descr = full_descr + ". " + description
             else:
