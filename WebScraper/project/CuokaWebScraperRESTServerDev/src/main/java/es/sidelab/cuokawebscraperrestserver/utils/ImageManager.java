@@ -256,6 +256,9 @@ public class ImageManager
 
         if (shop.equalsIgnoreCase(Properties.POLAR_COMPANY))
             aspectRatio = Properties.POLAR_COMPANY_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase(Properties.BLUEDIP))
+            aspectRatio = Properties.BLUEDIP_ASPECT_RATIO;
         
         return aspectRatio;
     }

@@ -68,10 +68,12 @@ public class Properties
     public static final float OYSHO_ASPECT_RATIO            = 1.20f;
     public static final float DOLORES_PROMESAS_ASPECT_RATIO = 1.50f;
     public static final float WOMENS_SECRET_ASPECT_RATIO    = 1.50f;
+    public static final float BLUEDIP_ASPECT_RATIO          = 1.50f;
     
     /* Lista de tiendas de Descubre */
     public static final String BORDEAUX_THE_BRAND = "Bordeaux the Brand";
     public static final String POLAR_COMPANY = "Polar Company";
+    public static final String BLUEDIP = "Bluedip";
     
     /* Lista de estilos de cada tienda de Descubre */
     public static final List<String> BORDEAUX_THE_BRAND_STYLES = 
@@ -80,6 +82,10 @@ public class Properties
     /* Lista de estilos de cada tienda de Descubre */
     public static final List<String> POLAR_COMPANY_STYLES = 
         Arrays.asList(new String[] { "Trendy", "Hipster", "Urban" });
+    
+    /* Lista de estilos de cada tienda de Descubre */
+    public static final List<String> BLUEDIP_STYLES = 
+        Arrays.asList(new String[] { "Classic", "Sporty", "Urban", "Trendy" });
     
     /* Parametros para las busquedas */
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;

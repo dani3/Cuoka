@@ -31,6 +31,7 @@ public class ShopManager
         
         stylesMap.put(Properties.BORDEAUX_THE_BRAND, Properties.BORDEAUX_THE_BRAND_STYLES);
         stylesMap.put(Properties.POLAR_COMPANY, Properties.POLAR_COMPANY_STYLES);
+        stylesMap.put(Properties.BLUEDIP, Properties.BLUEDIP_STYLES);
     }
     
     /**
