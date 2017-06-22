@@ -31,7 +31,8 @@ urls = [("Vestidos", "http://shop.mango.com/ES/m/mujer/prendas/vestidos?m=famili
         ("Shorts", "http://shop.mango.com/ES/m/mujer/prendas/shorts?m=familia&v=22%2C322"),
         ("Faldas", "http://shop.mango.com/ES/m/mujer/prendas/vestidos?m=familia&v=32"),
         ("Bikinis", "http://shop.mango.com/ES/m/mujer/prendas/bano?m=familia&v=36"),
-        ("Sport","http://shop.mango.com/ES/m/mujer/prendas/deporte?m=familia&v=46")]
+        ("Sport","http://shop.mango.com/ES/m/mujer/prendas/deporte?m=familia&v=46"),
+        ("Zapatos","http://shop.mango.com/ES/mujer/accesorios/zapatos")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
