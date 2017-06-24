@@ -248,8 +248,11 @@ public class ImageManager
         if (shop.equalsIgnoreCase("Dolores Promesas"))
             aspectRatio = Properties.DOLORES_PROMESAS_ASPECT_RATIO;
 
-        if (shop.equalsIgnoreCase("Womens Secret"))
+        if (shop.equalsIgnoreCase("Womens secret"))
             aspectRatio = Properties.WOMENS_SECRET_ASPECT_RATIO;
+
+        if (shop.equalsIgnoreCase("Stradivarius"))
+            aspectRatio = Properties.STRADIVARIUS_ASPECT_RATIO;
 
         if (shop.equalsIgnoreCase(Properties.BORDEAUX_THE_BRAND))
             aspectRatio = Properties.BTB_ASPECT_RATIO;

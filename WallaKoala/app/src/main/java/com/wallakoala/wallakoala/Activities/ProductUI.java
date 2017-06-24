@@ -489,7 +489,8 @@ public class ProductUI extends AppCompatActivity implements GestureDetector.OnGe
 
             String message = subject
                     + "\n" + mProduct.getName()
-                    + "\nRef: " + mProduct.getColors().get(mCurrentColor).getReference();
+                    + "\nRef: " + mProduct.getColors().get(mCurrentColor).getReference()
+                    + "\nLink: " + mProduct.getLink();
 
             Intent shareIntent = new Intent();
 
