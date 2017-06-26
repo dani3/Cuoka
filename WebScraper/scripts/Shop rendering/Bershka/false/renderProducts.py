@@ -204,9 +204,9 @@ for link in listOfLinks:
 
         # Sacamos las imagenes
         try:
-            images = dr.find_elements_by_css_selector("div.product-module.product-image-list > ul > li")
+            images = dr.find_elements_by_css_selector("div.product-module.product-image-list div.product-image-image a")
             if (len(images) == 0):
-                raise Exception("Imagenes no encontradas")
+                raise Exception("Imagenes no encontradas")  
 
         except:
             file_error.write("Imagenes no encontradas en: " + link + "\n")
@@ -218,7 +218,7 @@ for link in listOfLinks:
                 image.click()
                 time.sleep(1)                
                 
-                result.write("     Imagen: " + dr.find_element_by_css_selector("div.product-image-image img").get_attribute("src") + "\n")
+                result.write("     Imagen: " + dr.find_element_by_css_selector("img").get_attribute("src") + "\n")
 
             except:
                 result.write("     Imagen: null" + "\n")
