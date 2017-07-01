@@ -118,7 +118,9 @@ public class ScraperManager
 
                             for (File section : sections)
                             {      
-                                if (section.getName().contains(".txt") && !section.getName().contains("Error"))
+                                if (section.getName().contains(".txt") && 
+                                    !section.getName().contains("Error") && 
+                                    !section.getName().contains("Productos"))
                                 {                             
                                     Section s = new Section();
                                     String sectionName = section.getName().replace(".txt", "").replace("Seccion_", "");
