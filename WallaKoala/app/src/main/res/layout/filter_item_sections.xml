@@ -98,6 +98,16 @@
                     app:customFontCh="Existence-StencilLight.otf"/>
 
                 <com.wallakoala.wallakoala.Views.ExistenceCheckBox
+                    android:id="@+id/filter_section_13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_section_bano"
+                    android:textColor="@color/colorText"
+                    android:layout_marginBottom="8dp"
+                    app:buttonTint="@color/colorAccent"
+                    app:customFontCh="Existence-StencilLight.otf"/>
+
+                <com.wallakoala.wallakoala.Views.ExistenceCheckBox
                     android:id="@+id/filter_section_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

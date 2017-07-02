@@ -82,6 +82,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private String SECTION_FILTER_MAN_10;
     private String SECTION_FILTER_MAN_11;
     private String SECTION_FILTER_MAN_12;
+    private String SECTION_FILTER_MAN_13;
     private String SECTION_FILTER_WOMAN_1;
     private String SECTION_FILTER_WOMAN_2;
     private String SECTION_FILTER_WOMAN_3;
@@ -94,6 +95,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private String SECTION_FILTER_WOMAN_10;
     private String SECTION_FILTER_WOMAN_11;
     private String SECTION_FILTER_WOMAN_12;
+    private String SECTION_FILTER_WOMAN_13;
     private boolean MAN;
 
     /* Snackbar */
@@ -235,6 +237,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         SECTION_FILTER_MAN_10 = getResources().getString(R.string.filter_section_sudaderas);
         SECTION_FILTER_MAN_11 = getResources().getString(R.string.filter_section_trajes);
         SECTION_FILTER_MAN_12 = getResources().getString(R.string.filter_section_zapatos);
+        SECTION_FILTER_MAN_13 = getResources().getString(R.string.filter_section_bano);
 
         SECTION_FILTER_WOMAN_1  = getResources().getString(R.string.filter_section_abrigos);
         SECTION_FILTER_WOMAN_2  = getResources().getString(R.string.filter_section_americanas);
@@ -248,6 +251,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         SECTION_FILTER_WOMAN_10 = getResources().getString(R.string.filter_section_sport);
         SECTION_FILTER_WOMAN_11 = getResources().getString(R.string.filter_section_vestidos);
         SECTION_FILTER_WOMAN_12 = getResources().getString(R.string.filter_section_zapatos);
+        SECTION_FILTER_WOMAN_13 = getResources().getString(R.string.filter_section_bano);
     }
 
     /**
@@ -654,6 +658,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         AppCompatCheckBox mSection10CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_10);
         AppCompatCheckBox mSection11CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_11);
         AppCompatCheckBox mSection12CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_12);
+        AppCompatCheckBox mSection13CheckBox = (AppCompatCheckBox) findViewById(R.id.filter_section_13);
 
         mSectionCheckBoxesList.add(mSection1CheckBox); mSectionCheckBoxesList.add(mSection2CheckBox);
         mSectionCheckBoxesList.add(mSection3CheckBox); mSectionCheckBoxesList.add(mSection4CheckBox);
@@ -661,6 +666,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mSectionCheckBoxesList.add(mSection7CheckBox); mSectionCheckBoxesList.add(mSection8CheckBox);
         mSectionCheckBoxesList.add(mSection9CheckBox); mSectionCheckBoxesList.add(mSection10CheckBox);
         mSectionCheckBoxesList.add(mSection11CheckBox); mSectionCheckBoxesList.add(mSection12CheckBox);
+        mSectionCheckBoxesList.add(mSection13CheckBox);
 
         mFilterSectionTextView = (TextView)findViewById(R.id.filter_text_section);
 
@@ -680,6 +686,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mSectionCheckBoxesList.get(9).setText(SECTION_FILTER_MAN_10);
             mSectionCheckBoxesList.get(10).setText(SECTION_FILTER_MAN_11);
             mSectionCheckBoxesList.get(11).setText(SECTION_FILTER_MAN_12);
+            mSectionCheckBoxesList.get(12).setText(SECTION_FILTER_MAN_13);
 
         } else {
             mSectionCheckBoxesList.get(0).setText(SECTION_FILTER_WOMAN_1);
@@ -694,6 +701,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
             mSectionCheckBoxesList.get(9).setText(SECTION_FILTER_WOMAN_10);
             mSectionCheckBoxesList.get(10).setText(SECTION_FILTER_WOMAN_11);
             mSectionCheckBoxesList.get(11).setText(SECTION_FILTER_WOMAN_12);
+            mSectionCheckBoxesList.get(12).setText(SECTION_FILTER_WOMAN_13);
         }
 
         if (SECTION_FILTER_ACTIVE)

@@ -52,7 +52,11 @@ public class testScraper
         
         /***************** Springfield *****************/
         //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Springfield_true\\false\\", false);
-        Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\", false);
+        //Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\Springfield_true\\false\\", false);
+        
+        /***************** Stradivarius *****************/
+        //Section section = new Section("Camisetas", "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Springfield_true\\false\\", false);
+        Section section = new Section("Camisas", "C:\\Users\\Dani\\Documents\\shops\\Stradivarius_true\\true\\", false);
         
         // Ejecutamos el script que crea el fichero con todos los productos.
         Runtime.getRuntime().exec(new String[] {"python"

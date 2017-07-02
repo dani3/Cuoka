@@ -72,7 +72,8 @@ for k, v in urls:
         file = open(path + "Seccion_" + k + ".txt", 'w')
 
         for link in links:
-            file.write(link + "\n")
+            if "javascript:void(0)" not in link:
+                file.write(link + "\n")
 
         file.close()
         

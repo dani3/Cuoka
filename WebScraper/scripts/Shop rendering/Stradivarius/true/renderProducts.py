@@ -20,7 +20,7 @@ section = sys.argv[2]
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Stradivarius_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Stradivarius_true\\true\\"
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Stradivarius\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
