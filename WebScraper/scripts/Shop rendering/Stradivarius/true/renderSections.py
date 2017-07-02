@@ -18,7 +18,17 @@ path = sys.argv[2]
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Stradivarius\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Camisas", "https://www.stradivarius.com/es/mujer/ropa/camisas/ver-todo-c1020047030.html")]
+urls = [("Camisas", "https://www.stradivarius.com/es/mujer/ropa/camisas/ver-todo-c1020047030.html"),
+        ("Cazadoras", "https://www.stradivarius.com/es/hombre/ropa/cazadoras-c1020084558.html"),
+        ("Blazers", "https://www.stradivarius.com/es/hombre/ropa/blazers-c1020084560.html"),
+        ("Parkas", "https://www.stradivarius.com/es/hombre/ropa/parkas-c1020084561.html"),
+        ("Camisetas", "https://www.stradivarius.com/es/hombre/ropa/camisetas-c1020084563.html"),
+        ("Polos", "https://www.stradivarius.com/es/hombre/ropa/polos-c1020084564.html"),
+        ("Sudaderas", "https://www.stradivarius.com/es/hombre/ropa/sudaderas-c1020084565.html"),
+        ("Pantalones", "https://www.stradivarius.com/es/hombre/ropa/pantalones-c1020084566.html"),
+        ("Bermudas", "https://www.stradivarius.com/es/hombre/ropa/bermudas-c1020084567.html"),
+        ("Punto", "https://www.stradivarius.com/es/hombre/ropa/punto-c1020084568.html"),
+        ("Vaqueros", "https://www.stradivarius.com/es/hombre/ropa/jeans-c1020084569.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
