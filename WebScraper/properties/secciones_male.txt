@@ -22,3 +22,6 @@ Sport
 Gym
 Poncho
 Zapatos
+Bañador
+Bikini
+Trikini

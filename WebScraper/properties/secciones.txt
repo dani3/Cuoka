@@ -13,3 +13,4 @@ Ponchos y Monos:Mono,Monos,Kimono,Kimonos,Quimono,Quimonos,Peto,Petos,Poncho,Pon
 Sudaderas:Sudadera,Sudaderas,Jersey,Jerseys,Jersei,Jerseis,Jerséy,Jerséys,Jerséi,Jerséis
 Sport:Leggin,Leggins,Sport,Gym,Gimnasia,Jogging,Easywear,Deportivo,Deportivos,Sportwear,Beachwear
 Zapatos:Zapato,Zapatos,Calzado,Bota,Botas,Botin,Botines,Sandalia,Sandalias,Manoletina,Manoletinas,Bailarina,Zapatilla,Zapatillas,Zueco,Zuecos,Cuñas,Chancla,Chanclas,Chancleta,Chancletas
+Baño:Bikini,Bañador,Trikini
