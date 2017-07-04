@@ -136,6 +136,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
     private AppCompatRadioButton mNewnessAllRadioButton;
     private AppCompatRadioButton mNewnessNewRadioButton;
     private AppCompatRadioButton mManRadioButton;
+    private AppCompatRadioButton mWomanRadioButton;
 
     /* CheckBoxes */
     private List<AppCompatCheckBox> mShopsCheckBoxesList;
@@ -777,13 +778,13 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         mFilterManTextView = (TextView) findViewById(R.id.filter_text_man);
 
         mManRadioButton = (AppCompatRadioButton) findViewById(R.id.man_radio_button);
-        AppCompatRadioButton womanRadioButton = (AppCompatRadioButton) findViewById(R.id.woman_radio_button);
+        mWomanRadioButton = (AppCompatRadioButton) findViewById(R.id.woman_radio_button);
 
         mManRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
-        womanRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
+        mWomanRadioButton.setTypeface(TypeFaceSingleton.getTypeFace(this, "Existence-StencilLight.otf"));
 
         mManRadioButton.setChecked(mFilterMan);
-        womanRadioButton.setChecked(!mFilterMan);
+        mWomanRadioButton.setChecked(!mFilterMan);
 
         ((ViewGroup)mFilterManMenuLayout.getParent()).removeView(mFilterManMenuLayout);
 
@@ -1027,7 +1028,7 @@ public class FilterUI extends AppCompatActivity implements View.OnClickListener
         AppCompatRadioButton womanRadioButton = (AppCompatRadioButton) findViewById(R.id.woman_radio_button);
 
         mManRadioButton.setChecked(MAN);
-        womanRadioButton.setChecked(!MAN);
+        mWomanRadioButton.setChecked(!MAN);
     }
 
     /**
