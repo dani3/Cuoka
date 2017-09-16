@@ -50,15 +50,15 @@ public class DescubreShop
         this.styles = styles;
     } 
     
-    public String getName()   { return this.name; }
-    public boolean getMan()   { return this.man; }
-    public boolean getWoman() { return this.woman; }
-    public int getProducts()  { return this.products; }
+    public String getName()         { return this.name; }
+    public boolean getMan()         { return this.man; }
+    public boolean getWoman()       { return this.woman; }
+    public int getProducts()        { return this.products; }
     public List<String> getStyles() { return styles; }
 
     public void setStyles(List<String> styles) { this.styles = styles; }
-    public void setName(String name)      { this.name = name; }
-    public void setMan(boolean man)       { this.man = man; }
-    public void setWoman(boolean woman)   { this.woman = woman; }
-    public void setProducts(int products) { this.products = products; }
+    public void setName(String name)           { this.name = name; }
+    public void setMan(boolean man)            { this.man = man; }
+    public void setWoman(boolean woman)        { this.woman = woman; }
+    public void setProducts(int products)      { this.products = products; }
 }

@@ -37,7 +37,7 @@ public class MultithreadManager
     {
         LOG.info("Iniciando proceso de scraping concurrentemente...");
         
-        // Creamos un executor que creara un thread por cada tienda que haya.
+        // Se crea un executor que creara un thread por cada tienda que haya.
         ExecutorService executorShops = Executors.newFixedThreadPool(Properties.MAX_THREADS_SHOP);
         
         countDownLatch = new CountDownLatch(shops.size());
@@ -46,7 +46,7 @@ public class MultithreadManager
         {            
             final Shop shop = shops.get(i);
             Runnable task = () -> {
-                // Sacamos el scraper especifico de la tienda
+                // Se saca el scraper especifico de la tienda
                 LOG.info("Llamamos al ScraperManager para obtener el scraper de " + shop.getName());
                 Scraper scraper = ScraperManager.getScraper(shop);
                 
@@ -54,7 +54,7 @@ public class MultithreadManager
                 {
                     LOG.info("Scraper de " + shop.getName() + " obtenido");
 
-                    // Creamos un executor que creara tantos threads como secciones tenga la tienda
+                    // Se crea un executor que creara tantos threads como secciones tenga la tienda
                     ExecutorService executorSections;                    
                     if (shop.getName().equalsIgnoreCase("Zara"))
                     {
@@ -63,7 +63,7 @@ public class MultithreadManager
                         executorSections = Executors.newFixedThreadPool(Properties.MAX_THREADS_SECTIONS);
                     }
                     
-                    // Creamos la lista donde se van a volcar todos los tasks.
+                    // Se crea la lista donde se van a volcar todos los tasks.
                     List<Callable<Map<String, Object>>> listOfTasks = new ArrayList<>();    
 
                     for (int j = 0; j < shop.getSections().size(); j++)
@@ -95,11 +95,14 @@ public class MultithreadManager
                         LOG.info("Llamando al servidor REST para almacenar los productos!");
                         LOG.info("URL del servidor REST: " + ((Properties.DEV) ? Properties.SERVER_DEV : Properties.SERVER_PROD));
 
-                        // LLamamos al servidor para enviar los productos.
-                        RestClient restClient = new RestClient(new URL(((Properties.DEV) ? Properties.SERVER_DEV : Properties.SERVER_PROD)));                            
+                        // Se envian los productos a los dos servidores.
+                        RestClient restClient = new RestClient(new URL(Properties.SERVER_DEV));                            
+                        restClient.saveProducts(productList, shop);
+                        
+                        restClient = new RestClient(new URL(Properties.SERVER_PROD));                            
                         restClient.saveProducts(productList, shop);
 
-                        // Enviamos el correo con las estadisticas del proceso de scraping.
+                        // Se envia el correo con las estadisticas del proceso de scraping.
                         LOG.info("Enviando el correo con las estadísticas del proceso de scraping.");
                         MailSender.sendEmail(analyzerList, shop);
 
