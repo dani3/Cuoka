@@ -13,12 +13,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Uterque\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Dolores Promesas_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Dolores Promesas_false\\false\\"
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Dolores Promesas\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Baño", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/BANO"),
+urls = [("Abrigos", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/ABRIGOS"),
         ("Bisuteria", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/BISUTERIA"),
         ("Bolsos", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/BOLSOS"),
         ("Camisas", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/CAMISAS"),
@@ -27,13 +27,9 @@ urls = [("Baño", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLEC
         ("Faldas", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/FALDAS%20"),
         ("Monos", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/MONOS"),
         ("Pantalones", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/PANTALONES"),
-        ("Shorts", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/SHORTS"),
         ("Sudaderas", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/SUDADERAS"),
         ("Tops", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/TOP"),
         ("Vestidos", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/VESTIDOS"),
-        ("Zapatos", "http://tienda.dolorespromesas.com/catalogo/seccion/MI%20COLECCION/ZAPATOS"),
-        ("Falda", "http://tienda.dolorespromesas.com/catalogo/seccion/RESORT%20PV17/FALDAS%20"),
-        ("Vestido", "http://tienda.dolorespromesas.com/catalogo/seccion/RESORT%20PV17/VESTIDOS"),
         ("Outlet", "http://tienda.dolorespromesas.com/catalogo/seccion/OUTLET")]
     
 chrome_options = Options()

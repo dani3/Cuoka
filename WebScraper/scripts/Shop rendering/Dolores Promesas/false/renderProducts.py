@@ -14,12 +14,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Baño"
+#section = "Camisas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
-#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Uterque\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Dolores Promesas_true\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Dolores Promesas_true\\false\\"
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Dolores Promesas\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
@@ -87,7 +87,7 @@ for link in listOfLinks:
         continue 
 
     try:
-        # ****** D E S C R I P T I O N ****** #
+        # ****** D E S C R I P C I O N ****** #
         result.write("Descripcion: " + "" + "\n")
         
     except:
@@ -162,6 +162,8 @@ for link in listOfLinks:
         if (len(images) == 0):
             raise Exception("Imagenes no encontradas")
 
+        dr.execute_script("arguments[0].scrollIntoView();", images[0])
+
     except:
         file_error.write("Imagenes no encontradas en: " + link + "\n")
         continue
@@ -170,6 +172,8 @@ for link in listOfLinks:
     for image in images:
         try:
             image.find_element_by_css_selector("img").click()
+            time.sleep(1)
+            
             result.write("     Imagen: " + dr.find_element_by_id("Zoomer").get_attribute("href") + "\n")
 
         except:
