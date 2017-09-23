@@ -77,7 +77,7 @@ public class MultithreadManager
                     }
 
                     LOG.info("Se han iniciado todos los threads de la tienda " + shop.getName());
-                    LOG.info("A la espera de que acaben todos los threads...");
+                    LOG.info("A la espera de que acaben todos los threads.");
 
                     try 
                     {
@@ -92,16 +92,22 @@ public class MultithreadManager
                         LOG.info("Todos los threads de " + shop.getName() + " han acabado");
                         LOG.info("Han sacado un total de " + productList.size() + " productos");
 
-                        LOG.info("Llamando al servidor REST para almacenar los productos!");
-                        LOG.info("URL del servidor REST: " + ((Properties.DEV) ? Properties.SERVER_DEV : Properties.SERVER_PROD));
+                        LOG.info("Llamando al servidor REST de DEV para almacenar los productos");
+                        LOG.info("URL del servidor REST: " + Properties.SERVER_DEV);
 
-                        // Se envian los productos a los dos servidores.
+                        // Se envian los productos a los servidores.
                         RestClient restClient = new RestClient(new URL(Properties.SERVER_DEV));                            
                         restClient.saveProducts(productList, shop);
                         
-                        restClient = new RestClient(new URL(Properties.SERVER_PROD));                            
-                        restClient.saveProducts(productList, shop);
-
+                        if (Properties.DEV)
+                        {
+                            LOG.info("Llamando al servidor REST de PROD para almacenar los productos");
+                            LOG.info("URL del servidor REST: " + Properties.SERVER_PROD);
+                        
+                            restClient = new RestClient(new URL(Properties.SERVER_PROD));                            
+                            restClient.saveProducts(productList, shop);
+                        }
+                            
                         // Se envia el correo con las estadisticas del proceso de scraping.
                         LOG.info("Enviando el correo con las estadísticas del proceso de scraping.");
                         MailSender.sendEmail(analyzerList, shop);
@@ -124,15 +130,15 @@ public class MultithreadManager
                 }
             };
             
-            LOG.info("El thread " + i + "(" + shop.getName() + ") ha empezado...");
+            LOG.info("El thread " + i + "(" + shop.getName() + ") ha empezado.");
             executorShops.execute(task);            
         } 
         
         try
         {
-            LOG.info("MAIN THREAD : Esperando a que acaben todas las tiendas...");
+            LOG.info("MAIN THREAD : Esperando a que acaben todas las tiendas.");
             countDownLatch.await();
-            LOG.info("MAIN THREAD : Me despierto...");
+            LOG.info("MAIN THREAD : Me despierto.");
             
         } catch (InterruptedException ex) {
             LOG.error("ERROR: Se ha producido un error con el CountDownLatch");   
