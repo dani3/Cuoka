@@ -13,12 +13,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Abrigos"
+#section = "Bodies"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -66,6 +66,8 @@ for link in listOfLinks:
         WebDriverWait(dr, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "product-image-image"))
         )
+
+        time.sleep(1)
         
     except:
         file_error.write("Imagen no encontrada en: " + link + "\n")
@@ -73,7 +75,7 @@ for link in listOfLinks:
 
     try:
         # ****** N O M B R E ****** #
-        name = dr.find_element_by_css_selector("div.prodInfo span.product-description-name").text
+        name = dr.find_element_by_css_selector("h1.product-description-name").text
         if (len(name) == 0):
             raise Exception("Nombre vacio")
         
@@ -86,7 +88,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C R I P C I O N ****** #
-        description = "".join(dr.find_element_by_class_name('product-description-name').text.splitlines()).replace("-", "")[:255]
+        description = "".join(dr.find_element_by_css_selector('div.product-detail-model-data > span').text.splitlines()).replace("-", "")[:255]
         result.write("Descripcion: " + description + "\n")
         
     except:
@@ -94,27 +96,20 @@ for link in listOfLinks:
 
     try:
         # ****** P R E C I O   Y   D E S C U E N T O ****** #
-        price_units = dr.find_element_by_css_selector("div.product-price-old > div > span.integer").text.replace(",", ".").replace("€", "")
-        price_cents = dr.find_element_by_css_selector("div.product-price-old > div > span.decimal").text.replace(",", ".").replace("€", "")
-        price = price_units + price_cents
+        price = dr.find_element_by_css_selector("span.product-description-price > span.productPrice").text.replace(",", ".").replace("€", "")
 
         if (len(price) == 0):
             raise Exception("Precio vacio")
         
+        discount = dr.find_element_by_css_selector("div.product-price-new> div > span.integer").text.replace(",", ".").replace("€", "")
+        
         result.write("Precio: " + price + "\n")
-        
-        discount_units = dr.find_element_by_css_selector("div.product-price-new> div > span.integer").text.replace(",", ".").replace("€", "")
-        discount_cents = dr.find_element_by_css_selector("div.product-price-new> div > span.decimal").text.replace(",", ".").replace("€", "")
-        discount = discount_units + discount_cents
-        
         result.write("Descuento: " + discount + "\n")
         
     except:
         # Si salta la excepción significa que el precio no tiene descuento
         try:
-            price_units = dr.find_element_by_css_selector("div.product-description-price> div > div > span.integer").text.replace(",", ".").replace("€", "")
-            price_cents = dr.find_element_by_css_selector("div.product-description-price> div > div > span.decimal").text.replace(",", ".").replace("€", "")
-            price = price_units + price_cents
+            price = dr.find_element_by_css_selector("span.product-description-price > span.productPrice").text.replace(",", ".").replace("€", "")
 
             if (len(price) == 0):
                 raise Exception("Precio vacio")
@@ -150,9 +145,11 @@ for link in listOfLinks:
                 # Hacemos click en cada icono
                 color.find_element_by_xpath(".//a").click()
 
-                element = WebDriverWait(dr, 60).until(
+                element = WebDriverWait(dr, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-image-image"))
                 )
+
+                time.sleep(1)
             
         except:
             result.write("*********************************************************\n")
@@ -189,7 +186,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
-            reference = dr.find_element_by_class_name("product-detail-reference").text.replace("Ref ", "").replace("/", "").rstrip()
+            reference = dr.find_element_by_css_selector("p.product-detail-reference").text.rstrip()
             reference = ''.join(ch for ch in reference if ch.isdigit())
             
             if (len(reference) == 0):
@@ -202,9 +199,9 @@ for link in listOfLinks:
             file_error.write("Referencia no encontrada en: " + link + "\n")
             continue    
 
-        # Sacamos las imagenes
+        # ****** I M A G E N E S ****** #
         try:
-            images = dr.find_elements_by_css_selector("div.product-module.product-image-list div.product-image-image a")
+            images = dr.find_elements_by_css_selector("ul.product-image-list-images li.product-image-list-image a")
             if (len(images) == 0):
                 raise Exception("Imagenes no encontradas")  
 
@@ -212,13 +209,28 @@ for link in listOfLinks:
             file_error.write("Imagenes no encontradas en: " + link + "\n")
             continue
 
-        # ****** I M A G E N E S ****** #
+        # Se hace click en la primera imagen ya que cuando hay varios colores, al recorrer las imagenes, no se resetea la posicion de la imagen actual
+        # al cambiar de color, se queda en la ultima clickada.
+        if (len(colors) > 1):        
+            images[0].click()
+
+        # Se hace click en las imagenes.
+        for i in range(len(images)):
+            try:
+                # Se hace click en el boton de siguiente menos en la ultima foto.
+                if (i < len(images) - 1):
+                    dr.find_element_by_css_selector("div.product-module a.bx-next").click()
+                    time.sleep(1)
+
+            except:
+                result.write("     Imagen: null" + "\n")
+
+        images = dr.find_elements_by_css_selector("div.product-image-image a")
+
+        # Se sacan las imagenes.
         for image in images:
             try:
-                image.click()
-                time.sleep(1)                
-                
-                result.write("     Imagen: " + dr.find_element_by_css_selector("img").get_attribute("src") + "\n")
+                result.write("     Imagen: " + image.get_attribute("href") + "\n")
 
             except:
                 result.write("     Imagen: null" + "\n")

@@ -13,22 +13,21 @@ path_to_chromedriver = sys.argv[1]
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
-#path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bershka_true\\true\\"
-#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_false\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\true\\"
+#path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Bershka_true\\false\\"
+#path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Bershka_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Bershka_true\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Abrigos", "https://www.bershka.com/es/hombre/ropa/abrigos-y-cazadoras-c1010193236.html"),
-        ("Bombers", "https://www.bershka.com/es/hombre/ropa/bombers-c1010193237.html"),
+urls = [("Abrigos", "https://www.bershka.com/es/hombre/ropa/cazadoras-y-abrigos-c1010193236.html"),
         ("Jeans", "https://www.bershka.com/es/hombre/ropa/jeans-c1010193238.html"),
         ("Camisetas", "https://www.bershka.com/es/hombre/ropa/camisetas-c1010193239.html"),
+        ("Sudaderas", "https://www.bershka.com/es/hombre/ropa/sudaderas-c1010193244.html"),
+        ("Punto", "https://www.bershka.com/es/hombre/ropa/punto-c1010193243.html"),
         ("Camisas", "https://www.bershka.com/es/hombre/ropa/camisas-c1010193240.html"),
         ("Pantalones", "https://www.bershka.com/es/hombre/ropa/pantalones-c1010193241.html"),
         ("Bermudas", "https://www.bershka.com/es/hombre/ropa/bermudas-c1010193242.html"),
-        ("Punto", "https://www.bershka.com/es/hombre/ropa/punto-c1010193243.html"),
-        ("Sudaderas", "https://www.bershka.com/es/hombre/ropa/sudaderas-c1010193244.html"),
-        ("Sport", "https://www.bershka.com/es/hombre/ropa/gymwear-c1010193247.html"),
-        ("Accesorios", "https://www.bershka.com/es/hombre/accesorios/ver-todo-c1010193172.html")]
+        ("Zapatos", "https://www.bershka.com/es/hombre/zapatos/novedades-c1010193201.html"),
+        ("Relojes", "https://www.bershka.com/es/hombre/accesorios/relojes-c1010193177.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")
@@ -37,19 +36,18 @@ chrome_options.add_argument("--start-maximized")
 dr = webdriver.Chrome(executable_path = path_to_chromedriver, chrome_options = chrome_options)
 
 # Se recorren la lista de secciones
-for k, v in urls:
-    
+for k, v in urls:    
     try:
         dr.get(v)
-        # Esperamos a que aparezcan los productos un maximo de 10 segundos.
+        # Se espera a que aparezcan los productos un maximo de 10 segundos.
         WebDriverWait(dr, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "principalImg"))
+            EC.presence_of_element_located((By.CLASS_NAME, "image"))
         )
 
-        # Sacamos el tamano del html.
+        # Se saca el tamano del html.
         lastHeight = dr.execute_script("return document.body.scrollHeight")
 
-        # Hacemos scroll hasta abajo hasta que el tamano del html no cambie.
+        # Se hace scroll hasta abajo hasta que el tamano del html no cambie.
         while True:
             dr.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(1)
@@ -61,14 +59,14 @@ for k, v in urls:
         links = []
         products = dr.find_elements_by_class_name("image")
 
-        # Si no se encuentra ningun producto lanzamos una excepcion
+        # Si no se encuentra ningun producto se lanza una excepcion.
         if (len(products) == 0):
             raise Exception("Ningun elemento encontrado")
         
         for product in products:
             links.append(product.find_element_by_xpath(".//a").get_attribute("href"))
 
-        # Escribimos los links de cada producto en fichero.
+        # Se escriben los links de cada producto en fichero.
         file = open(path + "Seccion_" + k + ".txt", 'w')
 
         for link in links:
@@ -78,11 +76,11 @@ for k, v in urls:
         
     except Exception as e:
         with open(path + "Seccion_Error_" + k + ".txt", 'w') as file_error:
-            # Escribimos la sección que ha fallado
+            # Se escribe la sección que ha fallado
             file_error.write(k + " (" + str(e) + ")")
 
-# Creamos un fichero vacio para indicar que ya hemos terminado.
+# Se crea un fichero vacio para indicar que ya hemos terminado.
 open(path + 'done.dat', 'w')
 
-# Cerramos el navegador
+# Se cierra el navegador.
 dr.quit()
