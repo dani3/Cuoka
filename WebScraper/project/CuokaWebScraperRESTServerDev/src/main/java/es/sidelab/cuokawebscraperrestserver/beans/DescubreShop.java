@@ -26,6 +26,9 @@ public class DescubreShop
     @Column(name = "NAME")
     private String name;
     
+    @Column(name = "DESCRIPTION")
+    private String description;
+    
     @Column(name = "MAN")
     private boolean man;
     
@@ -44,9 +47,17 @@ public class DescubreShop
     
     public DescubreShop() {}
     
-    public DescubreShop(String name, boolean man, boolean woman, String url, String urlBanner, List<String> styles)
+    public DescubreShop(
+          String name
+        , String description
+        , boolean man
+        , boolean woman
+        , String url
+        , String urlBanner
+        , List<String> styles)
     {
         this.name = name;
+        this.description = description;
         this.man = man;
         this.woman = woman;
         this.url = url;
@@ -55,16 +66,18 @@ public class DescubreShop
     } 
     
     public String getName()         { return this.name; }
+    public String getDescription()  { return this.description; }
     public boolean getMan()         { return this.man; }
     public boolean getWoman()       { return this.woman; }
     public String getUrl()          { return this.url; }
     public String getUrlBanner()    { return this.urlBanner; }
     public List<String> getStyles() { return this.styles; }
 
-    public void setStyles(List<String> styles) { this.styles = styles; }
-    public void setName(String name)           { this.name = name; }
-    public void setMan(boolean man)            { this.man = man; }
-    public void setWoman(boolean woman)        { this.woman = woman; }
-    public void setUrl(String url)             { this.url = url; }
-    public void setUrlBanner(String urlBanner) { this.urlBanner = urlBanner; }
+    public void setStyles(List<String> styles)     { this.styles = styles; }
+    public void setName(String name)               { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setMan(boolean man)                { this.man = man; }
+    public void setWoman(boolean woman)            { this.woman = woman; }
+    public void setUrl(String url)                 { this.url = url; }
+    public void setUrlBanner(String urlBanner)     { this.urlBanner = urlBanner; }
 }
