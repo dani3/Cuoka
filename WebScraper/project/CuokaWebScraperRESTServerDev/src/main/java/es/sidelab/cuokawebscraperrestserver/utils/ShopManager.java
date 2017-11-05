@@ -47,10 +47,9 @@ public class ShopManager
     /**
      * Metodo que devuelve las tiendas recomendadas segun los estilos del usuario.
      * @param styles: lista de estilos del usuario.
-     * @param man: sexo del usuario.
      * @return lista con las tiendas recomendadas.
      */
-    public List<String> getRecommendedShops(Set<String> styles, boolean man)
+    public List<String> getRecommendedShops(Set<String> styles)
     {
         List<String> recommendedShops = new ArrayList<>();
         

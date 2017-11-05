@@ -41,7 +41,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,9 +68,6 @@ public class Controller
     
     @Autowired
     private ShopsRepository shopsRepository;
-    
-    @Autowired
-    private DescubreShopsRepository descubreShopsRepository;
     
     @Autowired
     private ShopSuggestedRepository shopSuggestedRepository;
@@ -671,14 +667,12 @@ public class Controller
      * Metodo que elimina los productos de la tienda e inserta los nuevos recibidos.
      * @param products: Lista de los productos a insertar.
      * @param shop: Tienda a la que pertenecen los productos.
-     * @param descubre: flag para indicar si la tienda es de Descubre.
      * @return Codigo HTTP con el resultado de la ejecucion.
      */
     @CacheEvict(value = "products", allEntries = true)
-    @RequestMapping(value = "/products/{shop}/{descubre}", method = RequestMethod.POST)
+    @RequestMapping(value = "/products/{shop}", method = RequestMethod.POST)
     public ResponseEntity<Boolean> addProducts(@RequestBody List<Product> products
-                                        , @PathVariable String shop
-                                        , @PathVariable boolean descubre)
+                                        , @PathVariable String shop)
     {
         LOG.info("[SCRAPER] Peticion POST para anadir productos de " + shop + " recibida");
             
@@ -697,23 +691,13 @@ public class Controller
             {
                 String name;
                 int numProducts;
-                if (!descubre)
-                {
-                    Shop s = shopsRepository.findByName(shop);                
-                    s.setProducts(productsScraped.size());                
-                    shopsRepository.save(s);
-                    
-                    name = s.getName();
-                    numProducts = s.getProducts();
-                    
-                } else {
-                    DescubreShop s = descubreShopsRepository.findByName(shop);                
-                    s.setProducts(productsScraped.size());                
-                    descubreShopsRepository.save(s);
-                    
-                    name = s.getName();
-                    numProducts = s.getProducts();
-                }
+                
+                Shop s = shopsRepository.findByName(shop);                
+                s.setProducts(productsScraped.size());                
+                shopsRepository.save(s);
+
+                name = s.getName();
+                numProducts = s.getProducts();
                 
                 // Si hay productos de esta tienda en BD, miramos que productos necesitan actualizarse o añadirse.
                 for (Product productScraped : productsScraped)
@@ -804,14 +788,8 @@ public class Controller
                 }
                 
                 // Se añade la tienda.
-                if (!descubre)
-                {
-                    shopsRepository.save(
-                        new Shop(shop, man, woman, productsScraped.size()));
-                } else {
-                    descubreShopsRepository.save(
-                        new DescubreShop(shop, man, woman, productsScraped.size(), shopManager.getStyles(shop)));
-                }
+                shopsRepository.save(
+                    new Shop(shop, man, woman, productsScraped.size()));                
                     
                 LOG.info("[SCRAPER] No hay ningun producto de la tienda " + shop);
                 LOG.info("[SCRAPER] Los productos se insertan directamente");
@@ -843,44 +821,6 @@ public class Controller
         productsRepository.deleteByShop(shop);
         
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    /**
-     * Metodo que devuelve la lista de productos recomendados de un usuario.
-     * @param id: id del usuario.
-     * @return Lista de productos recomendados.
-     */
-    @RequestMapping(value = "/recommended/{id}", method = RequestMethod.GET)
-    public List<Product> getRecommendedProducts(@PathVariable long id)
-    {
-        LOG.info("[RECOMMENDED] Peticion GET para obtener todos los productos recomendados del usuario (ID: " + id + ")");
-        
-        User user = usersRepository.findOne(id);
-        
-        if (user == null)
-        {
-            LOG.warn("[RECOMMENDED] Usuario no encontrado (ID: " + id + ")");
-            
-            return new ArrayList<>();
-        }
-        
-        List<Product> recommendedProducts = new ArrayList<>();
-        List<String> recommendedShops = shopManager.getRecommendedShops(user.getStyles(), user.getMan());
-        for (String shop : recommendedShops)
-        {
-            DescubreShop descubreShop = descubreShopsRepository.findByName(shop);
-            
-            // Si el usuario es hombre y la tienda es de hombre, o es mujer y la tienda es de mujer.
-            if ((user.getMan() && descubreShop.getMan()) || (!user.getMan() && descubreShop.getWoman()))
-            {
-                recommendedProducts.addAll(productsRepository.findByManAndShop(user.getMan(), shop));                
-            }            
-        }
-        
-        // Se aleatorizan los productos.
-        Collections.shuffle(recommendedProducts);
-        
-        return recommendedProducts;
     }
     
     /**
@@ -1574,15 +1514,5 @@ public class Controller
         }
         
         return false;
-    }
-    
-    @Scheduled(cron = "0 0 8 * * ?")
-    private void _generateStatistics()
-    {
-        // Se obtiene el total de usuarios distinguiendo por sexo.
-        int maleUsers   = usersRepository.findByMan(true).size();
-        int femaleUsers = usersRepository.findByMan(false).size();
-        
-        
     }
 }

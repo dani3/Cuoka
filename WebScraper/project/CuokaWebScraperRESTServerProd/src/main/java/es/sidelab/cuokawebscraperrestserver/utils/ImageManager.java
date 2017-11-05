@@ -253,15 +253,6 @@ public class ImageManager
 
         if (shop.equalsIgnoreCase("Stradivarius"))
             aspectRatio = Properties.STRADIVARIUS_ASPECT_RATIO;
-
-        if (shop.equalsIgnoreCase(Properties.BORDEAUX_THE_BRAND))
-            aspectRatio = Properties.BTB_ASPECT_RATIO;
-
-        if (shop.equalsIgnoreCase(Properties.POLAR_COMPANY))
-            aspectRatio = Properties.POLAR_COMPANY_ASPECT_RATIO;
-
-        if (shop.equalsIgnoreCase(Properties.BLUEDIP))
-            aspectRatio = Properties.BLUEDIP_ASPECT_RATIO;
         
         return aspectRatio;
     }

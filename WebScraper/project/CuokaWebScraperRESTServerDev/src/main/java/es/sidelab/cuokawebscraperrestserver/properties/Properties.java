@@ -61,14 +61,11 @@ public class Properties
     public static final float BERSHKA_ASPECT_RATIO          = 1.28f;
     public static final float MASSIMO_DUTTI_ASPECT_RATIO    = 1.33f;
     public static final float MANGO_ASPECT_RATIO            = 1.39f;
-    public static final float BTB_ASPECT_RATIO              = 0.75f;
     public static final float UTERQUE_ASPECT_RATIO          = 1.37f;
     public static final float PULLBEAR_ASPECT_RATIO         = 1.27f;
-    public static final float POLAR_COMPANY_ASPECT_RATIO    = 1.00f;
     public static final float OYSHO_ASPECT_RATIO            = 1.20f;
     public static final float DOLORES_PROMESAS_ASPECT_RATIO = 1.50f;
     public static final float WOMENS_SECRET_ASPECT_RATIO    = 1.50f;
-    public static final float BLUEDIP_ASPECT_RATIO          = 1.50f;
     public static final float STRADIVARIUS_ASPECT_RATIO     = 1.28f;
     
     /* Lista de tiendas de Descubre */
@@ -118,7 +115,7 @@ public class Properties
     public static final String WELCOME_EMAIL_SUBJECT          = "CUOKA te da la bienvenida a la nueva red de moda";
     public static final String WELCOME_EMAIL_FROM             = "bienvenido@cuoka.es";
     public static final String RECOVER_PASSWORD_EMAIL_SUBJECT = "Tu contraseña de CUOKA";
-    public static final String FEEDBACK_EMAIL_SUBJECT         = "Nueva valoración de ?1 estrallas";
+    public static final String FEEDBACK_EMAIL_SUBJECT         = "Nueva valoración de ?1 estrellas";
     public static final String FEEDBACK_EMAIL_FROM            = "elena.fernandez.guzman@cuoka.es";
     public static final String SHOP_SUGGESTION_EMAIL_SUBJECT  = "Nueva tienda sugerida";
     public static final String SHOP_SUGGESTION_EMAIL_FROM     = "elena.fernandez.guzman@cuoka.es";

@@ -38,16 +38,10 @@ public class ScraperManager
                 className = "PdH";
                 
             } else if (shop.getName().equalsIgnoreCase("Massimo Dutti")) {
-                className = "MassimoDutti";  
-                
-            } else if (shop.getName().equalsIgnoreCase("Bordeaux the Brand")) {
-                className = "BtB";  
+                className = "MassimoDutti";   
                 
             } else if (shop.getName().equalsIgnoreCase("Pull&Bear")) {
                 className = "PullBear";
-                
-            } else if (shop.getName().equalsIgnoreCase("Polar Company")) {
-                className = "PolarCompany";
                 
             } else if (shop.getName().equalsIgnoreCase("Dolores Promesas")) {
                 className = "DoloresPromesas";

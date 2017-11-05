@@ -36,7 +36,7 @@ public class RestClient
         LOG.info("Se envian " + products.size() + " products!");
         
         restClient.postForObject(server.toString() 
-            + "/products/" + shop.getName() + "/" + shop.isDescubre(), products.toArray(), Product[].class);
+            + "/products/" + shop.getName(), products.toArray(), Product[].class);
         
         LOG.info("Procuctos enviados correctamente");
     }

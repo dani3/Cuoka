@@ -8,7 +8,7 @@ package es.sidelab.cuokawebscraperrestclient.properties;
 public class Properties 
 {    
     public static final boolean DEBUG = true;
-    public static final boolean DEV = true;
+    public static final boolean DEV = false;
     public static final boolean CLEAN = false;
     
     public static final int MAX_THREADS_SHOP = 2;
