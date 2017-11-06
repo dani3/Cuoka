@@ -2,6 +2,8 @@ package com.cuoka.cuoka.Activities;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -42,6 +44,7 @@ public class IntroUI extends AppCompatActivity
         setContentView(R.layout.activity_intro);
 
         _initLogFile();
+        //_scheduleAlarm();
 
         new RetrieveUserTask(this).execute();
     }
@@ -249,5 +252,25 @@ public class IntroUI extends AppCompatActivity
         String state = Environment.getExternalStorageState();
 
         return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    private void _scheduleAlarm()
+    {
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, NotificationReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Setup periodic alarm every every half hour from this point onwards
+        long firstMillis = System.currentTimeMillis();
+
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, pIntent);
     }
 }

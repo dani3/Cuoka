@@ -45,6 +45,7 @@ public class Properties
     public static final String PREDEFINED_ICONS_PATH = "/images/colors/";
     public static final String ICONS_PATH            = "/images/products/";
     public static final String LOGOS_PATH            = "/images/logos/";
+    public static final String BANNERS_PATH          = "/images/banners/";
     public static final String NOTIFICATION_PATH     = "/images";
 
     public static final String ALREADY_EXISTS    = "USER_ALREADY_EXISTS";

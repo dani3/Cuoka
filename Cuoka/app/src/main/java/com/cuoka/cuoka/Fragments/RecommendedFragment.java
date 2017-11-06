@@ -58,16 +58,13 @@ public class RecommendedFragment extends Fragment
     /* Snackbar */
     private Snackbar mSnackbar;
 
-    /* Adapters */
-    private RecommendedListAdapter mProductAdapter;
-
     /* Animations */
     private Animation mMoveAndFadeAnimation;
 
     /* Data */
     private User mUser;
     private Properties.STATE mState;
-    private List<Product> mProductList;
+    private List<DescubreShop> mShopList;
 
     /* Constructor por defecto NECESARIO */
     public RecommendedFragment() {}
@@ -161,7 +158,7 @@ public class RecommendedFragment extends Fragment
 
         mUser = sharedPreferences.retrieveUser();
 
-        mProductList = new ArrayList<>();
+        mShopList = new ArrayList<>();
 
         SELECTED = false;
     }
@@ -184,30 +181,15 @@ public class RecommendedFragment extends Fragment
         mProductsRecyclerView.setVisibility(View.VISIBLE);
 
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        mProductAdapter = new RecommendedListAdapter(getActivity()
-                , mProductList
-                , mFrameLayout);
+        DescubreAdapter shopAdapter = new DescubreAdapter(getActivity(), mShopList);
 
         mProductsRecyclerView.setItemViewCacheSize(Properties.CACHED_PRODUCTS_MAX);
         mProductsRecyclerView.setLayoutManager(gridLayoutManager);
-        mProductsRecyclerView.setAdapter(mProductAdapter);
+        mProductsRecyclerView.setAdapter(shopAdapter);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             mProductsRecyclerView.scheduleLayoutAnimation();
-        }
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        // Si venimos de un producto, tenemos que actualizar los cambios (si los hay)
-        if ((mProductAdapter != null) && (mProductAdapter.productClicked()))
-        {
-            Log.d(Properties.TAG, "Volviendo de ProductUI");
-            mProductAdapter.restore();
         }
     }
 
@@ -232,7 +214,7 @@ public class RecommendedFragment extends Fragment
         @Override
         protected Void doInBackground(String... unused)
         {
-            content = RestClientSingleton.retrieveRecommendedProducts(getActivity());
+            content = RestClientSingleton.retrieveDescubreShops(getActivity());
 
             error = (content == null);
 
@@ -279,7 +261,7 @@ public class RecommendedFragment extends Fragment
 
             try
             {
-                mProductList = JSONParser.convertJSONsToProducts(content);
+                mShopList = JSONParser.convertJSONsToDescubreShops(content);
 
             } catch (Exception e) {
                 ExceptionPrinter.printException("RECOMMENDED_FRAGMENT", e);
@@ -400,17 +382,6 @@ public class RecommendedFragment extends Fragment
     }
 
     /**
-     * Metodo que para notificar que algo ha cambiado.
-     */
-    public void notifyDataSetChanged()
-    {
-        if (mProductAdapter != null)
-        {
-            mProductAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
      * Metodo que oculta la snackbar si esta visible.
      */
     public void hideSnackbar()
@@ -451,9 +422,9 @@ public class RecommendedFragment extends Fragment
     }
 
     /**
-     * Metodo que carga los productos por primera vez.
+     * Metodo que carga las tiendas por primera vez.
      */
-    public void loadProducts()
+    public void loadShops()
     {
         if (!SELECTED)
         {

@@ -1,6 +1,10 @@
 package com.cuoka.cuoka.Activities;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -35,10 +39,12 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.cuoka.cuoka.Beans.User;
+import com.cuoka.cuoka.BroadcastReceivers.NotificationReceiver;
 import com.cuoka.cuoka.Fragments.ProductsFragment;
 import com.cuoka.cuoka.Fragments.RecommendedFragment;
 import com.cuoka.cuoka.Properties.Properties;
 import com.cuoka.cuoka.R;
+import com.cuoka.cuoka.Services.NotificationService;
 import com.cuoka.cuoka.Singletons.RestClientSingleton;
 import com.cuoka.cuoka.Singletons.TypeFaceSingleton;
 import com.cuoka.cuoka.Utils.CustomTypeFaceSpan;
@@ -102,6 +108,7 @@ public class MainScreenUI extends AppCompatActivity
         _initViewPager();
         _initNavigationDrawer();
         _checkForNotifications();
+        _scheduleAlarm();
     }
 
     /**
@@ -196,7 +203,7 @@ public class MainScreenUI extends AppCompatActivity
             {
                 if (tab.getPosition() == 0)
                 {
-                    mRecommendedFragment.loadProducts();
+                    mRecommendedFragment.loadShops();
                 }
             }
 
@@ -789,7 +796,6 @@ public class MainScreenUI extends AppCompatActivity
                 // Si venimos de la pantalla de Mis favoritos
 
                 mProductsFragment.notifyDataSetChanged();
-                mRecommendedFragment.notifyDataSetChanged();
 
             } else if (requestCode == NOTIFICATION_REQUEST) {
                 // Si venimos de la pantalla de Notificaciones con OK, es que todas las notificaciones se han leido.
@@ -866,5 +872,65 @@ public class MainScreenUI extends AppCompatActivity
         {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    /**
+     * Metodo que arranca una alarma que saltara cada día para verificar si hay notificationes.
+     */
+    private void _scheduleAlarm()
+    {
+        if (_isNotificationServiceRunning(NotificationService.class))
+        {
+            // Intent que ejecutara el NotificationReceiver
+            Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+
+            // PendingIntent que sera disparado cuando la alarma salte.
+            final PendingIntent pIntent = PendingIntent.getBroadcast(
+                    this, NotificationReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            // Se establece la alarma cada dia a partir de este momento.
+            long firstMillis = System.currentTimeMillis();
+
+            AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+            // El primer parametro puede ser: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+            // Interval puede ser INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+            alarm.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP, firstMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pIntent);
+        }
+    }
+
+    /**
+     * Metodo que cancela la notificacion.
+     */
+    private void _cancelAlarm()
+    {
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+
+        final PendingIntent pIntent = PendingIntent.getBroadcast(
+                this, NotificationReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        alarm.cancel(pIntent);
+    }
+
+    /**
+     * Metodo que comprueba que el servicio esta lanzado para no lanzarlo otra vez.
+     * @param serviceClass: nombre del servicio.
+     * @return True si el servicio esta lanzado.
+     */
+    private boolean _isNotificationServiceRunning(Class<?> serviceClass)
+    {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (serviceClass.getName().equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

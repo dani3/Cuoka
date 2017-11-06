@@ -24,6 +24,9 @@
     <string name="terms_item">Términos y condiciones</string>
     <string name="logout_item">Cerrar sesión</string>
 
+    <string name="descubre_header_name">Tienda</string>
+    <string name="descubre_header_slogan">Descripción de la tienda</string>
+
     <string name="footer_shop">TIENDA</string>
     <string name="footer_section">SECCION</string>
 

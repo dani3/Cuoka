@@ -21,6 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <service
+            android:name="com.cuoka.cuoka.Services.NotificationService"
+            android:exported="false"/>
+
+        <receiver
+            android:name="com.cuoka.cuoka.BroadcastReceivers.NotificationReceiver"
+            android:process=":remote" >
+        </receiver>
+
         <activity android:name="com.cuoka.cuoka.Activities.IntroUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
@@ -52,11 +61,6 @@
         </activity>
 
         <activity android:name="com.cuoka.cuoka.Activities.SuggestedUI"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
-        </activity>
-
-        <activity android:name="com.cuoka.cuoka.Activities.TourUI"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
         </activity>

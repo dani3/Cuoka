@@ -62,6 +62,45 @@ public class JSONParser
         Log.d(Properties.TAG, "[JSON_PARSER] Tiendas parseadas correctamente, se devuelven " + shopList.size() + " tiendas");
         return shopList;
     }
+    /**
+     * Metodo que parsea un array de JSONs en una lista de DescubreShop.
+     * @param jsonArray: array de JSONs.
+     * @return lista de tiendas de Descubre.
+     * @throws JSONException
+     */
+    public static List<DescubreShop> convertJSONsToDescubreShops(final JSONArray jsonArray) throws JSONException
+    {
+        Log.d(Properties.TAG, "[JSON_PARSER] Array de JSONs recibido para parsearlos a una lista de Shops");
+
+        List<JSONObject> jsonList = new ArrayList<>();
+        List<DescubreShop> shopList = new ArrayList<>();
+
+        // Se saca cada JSON (tienda).
+        for (int j = 0; j < jsonArray.length(); j++)
+        {
+            JSONObject js = jsonArray.getJSONObject(j);
+
+            jsonList.add(js);
+        }
+
+        // Se parsea cada JSON.
+        for (JSONObject jsonObject : jsonList)
+        {
+            String name = jsonObject.getString("name");
+            String description = jsonObject.getString("description");
+            String url = jsonObject.getString("url");
+            String urlBanner = jsonObject.getString("urlBanner");
+
+            DescubreShop shop = new DescubreShop(name, description, url, urlBanner);
+
+            shopList.add(shop);
+
+            Log.d(Properties.TAG, "[JSON_PARSER] Tienda (" + name + ") parseada y añadida");
+        }
+
+        Log.d(Properties.TAG, "[JSON_PARSER] Tiendas parseadas correctamente, se devuelven " + shopList.size() + " tiendas");
+        return shopList;
+    }
 
     /**
      * Metodo que convierte un JSON en un objeto Notification.

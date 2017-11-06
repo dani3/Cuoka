@@ -62,9 +62,9 @@ public class RestClientSingleton
         {
             RequestFuture<String> future = RequestFuture.newFuture();
 
-            SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            User user = mSharedPreferencesManager.retrieveUser();
+            User user = sharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/notification/" + user.getId() + "/" + notifId);
@@ -92,11 +92,11 @@ public class RestClientSingleton
                 {
                     Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se añade la notificación como leída");
 
-                    user = mSharedPreferencesManager.retrieveUser();
+                    user = sharedPreferencesManager.retrieveUser();
 
                     user.addNotificationAsRead(notifId);
 
-                    mSharedPreferencesManager.insertUser(user);
+                    sharedPreferencesManager.insertUser(user);
                 }
 
             } catch (InterruptedException e) {
@@ -128,9 +128,9 @@ public class RestClientSingleton
         {
             final RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
-            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User user = mSharedPreferencesManager.retrieveUser();
+            final User user = sharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/notification/" + user.getId());
@@ -184,9 +184,9 @@ public class RestClientSingleton
     @SuppressWarnings("deprecation")
     public static void hasNotification(final Context context, final Toolbar toolbar, final NavigationView navigationVew)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retrieveUser();
+        final User user = sharedPreferencesManager.retrieveUser();
 
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/hasNotification/" + user.getId());
@@ -359,9 +359,9 @@ public class RestClientSingleton
         {
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
-            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final User user = mSharedPreferencesManager.retrieveUser();
+            final User user = sharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                     + "/shops/" + user.getMan());
@@ -424,9 +424,9 @@ public class RestClientSingleton
         {
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
-            SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            User user = mSharedPreferencesManager.retrieveUser();
+            User user = sharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggest/" + user.getId() + "/" + word);
@@ -472,27 +472,27 @@ public class RestClientSingleton
     }
 
     /**
-     * Metodo que obtiene los productos recomendados de un usuario.
+     * Metodo que obtiene las tiendas recomendadas de un usuario.
      * @param context: contexto.
      * @return Array de JSONs con las recomendaciones del usuario.
      */
     @Nullable
-    public static JSONArray retrieveRecommendedProducts(final Context context)
+    public static JSONArray retrieveDescubreShops(final Context context)
     {
         JSONArray content;
 
         try
         {
-            SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            long id = mSharedPreferencesManager.retrieveUser().getId();
+            long id = sharedPreferencesManager.retrieveUser().getId();
 
             RequestFuture<JSONArray> future = RequestFuture.newFuture();
 
             final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
-                    + "/recommended/" + id);
+                    + "/descubre/" + id);
 
-            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para traer los productos recomendados");
+            Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Conectando con: " + fixedURL + " para traer las tiendas recomendadas");
 
             // Creamos una peticion
             final JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.GET
@@ -547,9 +547,9 @@ public class RestClientSingleton
 
         try
         {
-            final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+            final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            final boolean man = mSharedPreferencesManager.retrieveUser().getMan();
+            final boolean man = sharedPreferencesManager.retrieveUser().getMan();
 
             final List<RequestFuture<JSONArray>> futures = new ArrayList<>();
 
@@ -617,9 +617,9 @@ public class RestClientSingleton
      */
     public static boolean retrieveUser(final Context context)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final long id = mSharedPreferencesManager.retrieveUser().getId();
+        final long id = sharedPreferencesManager.retrieveUser().getId();
 
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/" + id);
@@ -648,7 +648,7 @@ public class RestClientSingleton
             User user = JSONParser.convertJSONtoUser(response, id);
 
             Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] User creado, se inserta en las SharedPreferences");
-            mSharedPreferencesManager.insertUser(user);
+            sharedPreferencesManager.insertUser(user);
 
             return true;
 
@@ -674,9 +674,9 @@ public class RestClientSingleton
     @Nullable
     public static List<Product> getFavoriteProducts(final Context context)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final User user = mSharedPreferencesManager.retrieveUser();
+        final User user = sharedPreferencesManager.retrieveUser();
 
         final String fixedURL = Utils.fixUrl(
                 Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/users/favorites/" + user.getId());
@@ -710,7 +710,7 @@ public class RestClientSingleton
 
             Log.d(Properties.TAG, "[REST_CLIENT_SINGLENTON] Se actualiza la lista de favoritos del usuario");
             user.setFavoriteProducts(userFavorites);
-            mSharedPreferencesManager.insertUser(user);
+            sharedPreferencesManager.insertUser(user);
 
             return favorites;
 
@@ -903,9 +903,9 @@ public class RestClientSingleton
      */
     public static boolean deleteUser(final Context context)
     {
-        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        User user = mSharedPreferencesManager.retrieveUser();
+        User user = sharedPreferencesManager.retrieveUser();
         long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
@@ -934,7 +934,7 @@ public class RestClientSingleton
             {
                 Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Usuario borrado correctamente (ID: " + id + ")");
 
-                mSharedPreferencesManager.clear();
+                sharedPreferencesManager.clear();
 
                 return true;
             }
@@ -964,9 +964,9 @@ public class RestClientSingleton
                                     , short age
                                     , int postalCode)
     {
-        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        User user = mSharedPreferencesManager.retrieveUser();
+        User user = sharedPreferencesManager.retrieveUser();
         long id = user.getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
@@ -1046,7 +1046,7 @@ public class RestClientSingleton
                         user.setAge(age);
                     }
 
-                    mSharedPreferencesManager.insertUser(user);
+                    sharedPreferencesManager.insertUser(user);
 
                     return true;
                 }
@@ -1073,9 +1073,9 @@ public class RestClientSingleton
      */
     public static void sendFavoriteProduct(final Context context, final Product product)
     {
-        final SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        final long id = mSharedPreferencesManager.retrieveUser().getId();
+        final long id = sharedPreferencesManager.retrieveUser().getId();
 
         final String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/" + id + "/" + product.getId() + "/" + Properties.ACTION_FAVORITE);
@@ -1100,7 +1100,7 @@ public class RestClientSingleton
                                 {
                                     if (!response.equals(Properties.PRODUCT_NOT_FOUND) || !response.equals(Properties.USER_NOT_FOUND))
                                     {
-                                        User user = mSharedPreferencesManager.retrieveUser();
+                                        User user = sharedPreferencesManager.retrieveUser();
 
                                         // Si contiene el producto, es que se quiere quitar de favoritos.
                                         if (user.getFavoriteProducts().contains(product.getId()))
@@ -1114,7 +1114,7 @@ public class RestClientSingleton
                                         }
 
                                         Log.d(Properties.TAG, "[REST_CLIENT_SINGLETON] Se actualiza el usuario en las SharedPreferences");
-                                        mSharedPreferencesManager.insertUser(user);
+                                        sharedPreferencesManager.insertUser(user);
                                     }
                                 }
                             }
@@ -1140,9 +1140,9 @@ public class RestClientSingleton
      */
     public static void sendViewedProduct(final Context context, final Product product)
     {
-        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        User user = mSharedPreferencesManager.retrieveUser();
+        User user = sharedPreferencesManager.retrieveUser();
         long id = user.getId();
 
         String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
@@ -1179,9 +1179,9 @@ public class RestClientSingleton
     {
         List<JSONArray> content = new ArrayList<>();
 
-        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        User user = mSharedPreferencesManager.retrieveUser();
+        User user = sharedPreferencesManager.retrieveUser();
 
         List<RequestFuture<JSONArray>> futures = new ArrayList<>();
 
@@ -1259,9 +1259,9 @@ public class RestClientSingleton
     {
         List<JSONArray> content = new ArrayList<>();
 
-        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        User user = mSharedPreferencesManager.retrieveUser();
+        User user = sharedPreferencesManager.retrieveUser();
 
         String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/search/" + user.getId() + "/" + query);
@@ -1301,9 +1301,9 @@ public class RestClientSingleton
      */
     public static void requestForgottenPassword(final Context context)
     {
-        SharedPreferencesManager mSharedPreferencesManager = new SharedPreferencesManager(context);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-        User user = mSharedPreferencesManager.retrieveUser();
+        User user = sharedPreferencesManager.retrieveUser();
 
         String fixedURL = Utils.fixUrl(Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT
                 + "/users/password/" + user.getId());
