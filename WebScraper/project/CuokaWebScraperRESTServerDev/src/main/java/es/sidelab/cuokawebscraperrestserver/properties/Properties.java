@@ -69,13 +69,8 @@ public class Properties
     public static final float STRADIVARIUS_ASPECT_RATIO     = 1.28f;
     
     /* Lista de tiendas de Descubre */
-    public static final String BORDEAUX_THE_BRAND = "Bordeaux the Brand";
     public static final String POLAR_COMPANY = "Polar Company";
     public static final String BLUEDIP = "Bluedip";
-    
-    /* Lista de estilos de cada tienda de Descubre */
-    public static final List<String> BORDEAUX_THE_BRAND_STYLES = 
-        Arrays.asList(new String[] { "Sporty", "Boho", "Urban" });
     
     /* Lista de estilos de cada tienda de Descubre */
     public static final List<String> POLAR_COMPANY_STYLES = 
