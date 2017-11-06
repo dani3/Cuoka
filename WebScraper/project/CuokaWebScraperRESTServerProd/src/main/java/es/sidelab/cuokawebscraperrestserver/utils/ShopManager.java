@@ -1,13 +1,12 @@
 package es.sidelab.cuokawebscraperrestserver.utils;
 
+import es.sidelab.cuokawebscraperrestserver.beans.DescubreShop;
 import es.sidelab.cuokawebscraperrestserver.beans.Shop;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
+import es.sidelab.cuokawebscraperrestserver.repositories.DescubreShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ShopsRepository;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,26 +22,8 @@ public class ShopManager
     @Autowired
     private ShopsRepository shopsRepository;
     
-    private final Map<String, List<String>> stylesMap;
-    
-    public ShopManager()
-    {
-        stylesMap = new HashMap<>();
-        
-        stylesMap.put(Properties.BORDEAUX_THE_BRAND, Properties.BORDEAUX_THE_BRAND_STYLES);
-        stylesMap.put(Properties.POLAR_COMPANY, Properties.POLAR_COMPANY_STYLES);
-        stylesMap.put(Properties.BLUEDIP, Properties.BLUEDIP_STYLES);
-    }
-    
-    /**
-     * Metodo que devuelve la lista de estilos de una tienda.
-     * @param shop: tienda.
-     * @return lista de estilos de la tienda.
-     */
-    public List<String> getStyles(String shop)
-    {
-        return stylesMap.get(shop);
-    }
+    @Autowired
+    private DescubreShopsRepository descubreShopsRepository;
     
     /**
      * Metodo que devuelve las tiendas recomendadas segun los estilos del usuario.
@@ -51,12 +32,13 @@ public class ShopManager
      */
     public List<String> getRecommendedShops(Set<String> styles)
     {
+        List<DescubreShop> descubreShops = descubreShopsRepository.findAll();
         List<String> recommendedShops = new ArrayList<>();
         
         // Se recorre la lista de tiendas de Descubre.
-        for (Entry<String, List<String>> entry : stylesMap.entrySet())
+        for (DescubreShop descubreShop : descubreShops)
         {
-            List<String> shopStyles = entry.getValue();
+            List<String> shopStyles = descubreShop.getStyles();
             
             // Por cada tienda, se mira si tiene alguno de los estilos del usuairo.
             for (String style : styles)
@@ -64,7 +46,7 @@ public class ShopManager
                 // Si lo contiene, la tienda se añade a la lista.
                 if (shopStyles.contains(style))
                 {
-                    recommendedShops.add(entry.getKey());
+                    recommendedShops.add(descubreShop.getName());
                     
                     break;
                 }
