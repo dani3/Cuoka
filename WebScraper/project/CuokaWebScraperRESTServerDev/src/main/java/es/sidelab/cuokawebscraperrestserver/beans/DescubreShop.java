@@ -41,6 +41,9 @@ public class DescubreShop
     @Column(name = "URL_BANNER")
     private String urlBanner;
     
+    @Column(name = "ASPECT_RATIO")
+    private float aspectRatio;
+    
     @ElementCollection
     @Column(name = "STYLES")
     private List<String> styles;
@@ -54,6 +57,7 @@ public class DescubreShop
         , boolean woman
         , String url
         , String urlBanner
+        , float aspectRatio
         , List<String> styles)
     {
         this.name = name;
@@ -62,6 +66,7 @@ public class DescubreShop
         this.woman = woman;
         this.url = url;
         this.urlBanner = urlBanner;
+        this.aspectRatio = aspectRatio;
         this.styles = styles;
     } 
     
@@ -71,6 +76,7 @@ public class DescubreShop
     public boolean getWoman()       { return this.woman; }
     public String getUrl()          { return this.url; }
     public String getUrlBanner()    { return this.urlBanner; }
+    public float getAspectRatio()   { return this.aspectRatio; }
     public List<String> getStyles() { return this.styles; }
 
     public void setStyles(List<String> styles)     { this.styles = styles; }
@@ -80,4 +86,5 @@ public class DescubreShop
     public void setWoman(boolean woman)            { this.woman = woman; }
     public void setUrl(String url)                 { this.url = url; }
     public void setUrlBanner(String urlBanner)     { this.urlBanner = urlBanner; }
+    public void setAspectRatio(float aspectRatio)  { this.aspectRatio = aspectRatio; }
 }
