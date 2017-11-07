@@ -1,4 +1,4 @@
-package com.wallakoala.wallakoala.Beans;
+package com.cuoka.cuoka.Beans;
 
 /**
  * Clase DescubreShop que representa una tienda de Descubre.

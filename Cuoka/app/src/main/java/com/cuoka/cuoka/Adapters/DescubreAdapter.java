@@ -1,4 +1,4 @@
-package com.wallakoala.wallakoala.Adapters;
+package com.cuoka.cuoka.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.wallakoala.wallakoala.Beans.DescubreShop;
-import com.wallakoala.wallakoala.Properties.Properties;
-import com.wallakoala.wallakoala.R;
-import com.wallakoala.wallakoala.Utils.Utils;
+import com.cuoka.cuoka.Beans.DescubreShop;
+import com.cuoka.cuoka.Properties.Properties;
+import com.cuoka.cuoka.R;
+import com.cuoka.cuoka.Utils.Utils;
 
 import java.util.List;
 

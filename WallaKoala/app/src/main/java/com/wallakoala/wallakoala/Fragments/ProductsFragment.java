@@ -235,10 +235,7 @@ public class ProductsFragment extends Fragment
         mProductsCandidatesDeque = new ArrayDeque<>();
         mShopsList               = new ArrayList<>();
 
-        for (String shop : sharedPreferencesManager.retrieveUser().getShops())
-        {
-            mShopsList.add(shop);
-        }
+        mShopsList.addAll(sharedPreferencesManager.retrieveUser().getShops());
 
         mDayTimer = new Timer();
 

@@ -3,6 +3,7 @@ package com.cuoka.cuoka.Utils;
 import android.util.Log;
 
 import com.cuoka.cuoka.Beans.ColorVariant;
+import com.cuoka.cuoka.Beans.DescubreShop;
 import com.cuoka.cuoka.Beans.Notification;
 import com.cuoka.cuoka.Beans.Product;
 import com.cuoka.cuoka.Beans.Shop;
@@ -90,8 +91,9 @@ public class JSONParser
             String description = jsonObject.getString("description");
             String url = jsonObject.getString("url");
             String urlBanner = jsonObject.getString("urlBanner");
+            float aspectRatio = (float) jsonObject.getDouble("aspectRatio");
 
-            DescubreShop shop = new DescubreShop(name, description, url, urlBanner);
+            DescubreShop shop = new DescubreShop(name, description, url, urlBanner, aspectRatio);
 
             shopList.add(shop);
 

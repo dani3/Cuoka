@@ -426,7 +426,7 @@ public class RestClientSingleton
 
             SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
 
-            User user = mSharedPreferencesManager.retrieveUser();
+            User user = sharedPreferencesManager.retrieveUser();
 
             final String fixedURL = Utils.fixUrl(
                     Properties.SERVER_URL + ":" + Properties.SERVER_SPRING_PORT + "/suggest/" + user.getId() + "/" + word);

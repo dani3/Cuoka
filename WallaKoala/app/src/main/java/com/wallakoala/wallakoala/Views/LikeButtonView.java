@@ -8,7 +8,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -20,8 +19,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.wallakoala.wallakoala.R;
-
-import static com.wallakoala.wallakoala.Properties.Properties.TAG;
 
 /**
  *

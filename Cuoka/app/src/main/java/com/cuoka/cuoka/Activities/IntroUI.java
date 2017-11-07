@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cuoka.cuoka.BroadcastReceivers.NotificationReceiver;
 import com.cuoka.cuoka.Properties.Properties;
 import com.cuoka.cuoka.R;
 import com.cuoka.cuoka.Singletons.RestClientSingleton;

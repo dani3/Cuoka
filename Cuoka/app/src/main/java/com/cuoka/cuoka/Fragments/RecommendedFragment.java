@@ -17,7 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.cuoka.cuoka.Activities.MainScreenUI;
+import com.cuoka.cuoka.Adapters.DescubreAdapter;
 import com.cuoka.cuoka.Adapters.RecommendedListAdapter;
+import com.cuoka.cuoka.Beans.DescubreShop;
 import com.cuoka.cuoka.Beans.Product;
 import com.cuoka.cuoka.Beans.User;
 import com.cuoka.cuoka.Properties.Properties;
