@@ -1,8 +1,10 @@
 package com.wallakoala.wallakoala.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,9 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
         private Target mBannerTarget;
         private Target mLogoTarget;
 
+        private boolean LOADED;
+        private DescubreShop mDescubreShop;
+
         public DescubreShopViewHolder(View itemView)
         {
             super(itemView);
@@ -57,6 +62,24 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
 
             mShopNameTextView        = (TextView) itemView.findViewById(R.id.descubre_shop_name);
             mShopDescriptionTextView = (TextView) itemView.findViewById(R.id.descubre_shop_description);
+
+            mShopBannerImageView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (LOADED)
+                    {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                        intent.setData(Uri.parse(mDescubreShop.getUrl()));
+
+                        mContext.startActivity(intent);
+                    }
+                }
+            });
+
+            LOADED = false;
         }
 
         /**
@@ -72,6 +95,10 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
 
             mShopNameTextView.setText(shop.getName());
             mShopDescriptionTextView.setText(shop.getDescription());
+
+            mDescubreShop = shop;
+
+            LOADED = false;
 
             mBannerTarget = new Target()
             {
@@ -89,6 +116,8 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
                     fadeOut.setInterpolator(new AccelerateInterpolator());
                     fadeOut.setDuration(250);
                     mShopBannerImageView.startAnimation(fadeOut);
+
+                    LOADED = true;
                 }
 
                 @Override
