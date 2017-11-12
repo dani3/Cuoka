@@ -177,8 +177,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   I C O N O ****** #
-            colorIcon = "http://myspringfield.com" + 
-                colors[i].find_element_by_css_selector("a").get_attribute("style").replace('background: url("', '').replace('");', '')
+            colorIcon = "http://myspringfield.com" + colors[i].find_element_by_css_selector("span").get_attribute("style").replace('background: url("', '').replace('");', '')
             
             result.write("  Icono: " + colorIcon + "\n")
             
