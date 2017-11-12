@@ -1,7 +1,6 @@
 package es.sidelab.cuokawebscraperrestserver.controller;
 
 import es.sidelab.cuokawebscraperrestserver.beans.ColorVariant;
-import es.sidelab.cuokawebscraperrestserver.beans.DescubreShop;
 import es.sidelab.cuokawebscraperrestserver.beans.Feedback;
 import es.sidelab.cuokawebscraperrestserver.beans.Filter;
 import es.sidelab.cuokawebscraperrestserver.beans.Notification;
@@ -11,7 +10,6 @@ import es.sidelab.cuokawebscraperrestserver.beans.ShopSuggested;
 import es.sidelab.cuokawebscraperrestserver.beans.User;
 import es.sidelab.cuokawebscraperrestserver.beans.UserModification;
 import es.sidelab.cuokawebscraperrestserver.properties.Properties;
-import es.sidelab.cuokawebscraperrestserver.repositories.DescubreShopsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.FeedbackRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.NotificationsRepository;
 import es.sidelab.cuokawebscraperrestserver.repositories.ProductsRepository;
@@ -26,7 +24,6 @@ import es.sidelab.cuokawebscraperrestserver.utils.ShopManager;
 import es.sidelab.cuokawebscraperrestserver.utils.Utils;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

@@ -99,7 +99,7 @@ public class MultithreadManager
                         RestClient restClient = new RestClient(new URL(Properties.SERVER_DEV));                            
                         restClient.saveProducts(productList, shop);
                         
-                        if (Properties.DEV)
+                        if (!Properties.DEV)
                         {
                             LOG.info("Llamando al servidor REST de PROD para almacenar los productos");
                             LOG.info("URL del servidor REST: " + Properties.SERVER_PROD);

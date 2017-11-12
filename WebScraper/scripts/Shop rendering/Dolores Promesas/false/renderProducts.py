@@ -14,7 +14,7 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Camisas"
+#section = "Abrigos"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
