@@ -132,6 +132,13 @@ for link in listOfLinks:
         file_error.write("Colores no encontrados en: " + link + "\n")
         continue
 
+    # Quitar PopUp de las Cookies
+    try:
+        dr.find_element_by_css_selector("div.c09--cookie a.btn-cancel").click()
+
+    except:
+        pass
+    
     for i in range(len(colors)):
         if (len(colors) > 1):
             ok = False
