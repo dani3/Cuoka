@@ -20,4 +20,8 @@
     <dimen name="mb_height_56">56dp</dimen>
     <dimen name="mb_height_8">8dp</dimen>
     <dimen name="mb_height_4">4dp</dimen>
+
+    <dimen name="radius">1dp</dimen>
+
+    <dimen name="cpb_stroke_width">4dp</dimen>
 </resources>

@@ -214,7 +214,7 @@
 
         </ScrollView>
 
-        <com.dd.CircularProgressButton
+        <com.wallakoala.wallakoala.CircularProgressButton.CircularProgressButton
             android:id="@+id/sign_up_accept"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"

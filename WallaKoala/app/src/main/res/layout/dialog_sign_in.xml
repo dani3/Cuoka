@@ -107,7 +107,7 @@
                 android:layout_margin="24dp"
                 app:buttonTint="@color/colorAccent"/>
 
-            <com.dd.CircularProgressButton
+            <com.wallakoala.wallakoala.CircularProgressButton.CircularProgressButton
                 android:id="@+id/enter"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_width="match_parent"
