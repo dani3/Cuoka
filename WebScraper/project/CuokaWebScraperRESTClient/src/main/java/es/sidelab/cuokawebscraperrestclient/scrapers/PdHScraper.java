@@ -243,7 +243,7 @@ public class PdHScraper implements Scraper
         
         try
         {
-            _discount = (discount.isEmpty()) ? 0.0f : Double.valueOf(discount);
+            _discount = (discount.isEmpty() || (discount.equals(price))) ? 0.0f : Double.valueOf(discount);
             
         } catch (Exception e) {
             _discount = 0.0f;
