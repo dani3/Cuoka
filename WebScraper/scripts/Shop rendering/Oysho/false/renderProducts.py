@@ -13,12 +13,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Homewear"
+#section = "Bodies"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Oysho_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Oysho_false\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []

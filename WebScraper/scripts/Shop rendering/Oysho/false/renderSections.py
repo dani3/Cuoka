@@ -14,7 +14,7 @@ path_to_chromedriver = sys.argv[1]
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[2]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\Uterque\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\Massimo Dutti_false\\false\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\Oysho_false\\false\\"
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Oysho\\false\\"
 
 # Lista de secciones con sus URL's
@@ -23,11 +23,6 @@ urls = [("Sujetadores", "https://www.oysho.com/es/sujetadores/ver-todo-c10101550
         ("Braguitas", "https://www.oysho.com/es/lencer%C3%ADa/braguitas/ver-todo-c1470541.html"),
         ("Pijamas", "https://www.oysho.com/es/pijamas/ver-todo-c1010166027.html"),
         ("Homewear", "https://www.oysho.com/es/homewear/ver-todo-c1010200547.html"),
-        ("Baño", "https://www.oysho.com/es/ba%C3%B1o/ver-todo-c1010209050.html"),
-        ("Vestidos", "https://www.oysho.com/es/beachwear/vestidos-c1469150.html"),
-        ("Pantalones", "https://www.oysho.com/es/beachwear/pantalones/ver-todo-c1010216015.html"),
-        ("Camisetas","https://www.oysho.com/es/beachwear/camisetas-c1469151.html"),
-        ("Monos", "https://www.oysho.com/es/beachwear/monos-c1511519.html"),
         ("Sport", "https://www.oysho.com/es/deporte/ver-todo-c1010200548.html"),
         ("Zapatos", "https://www.oysho.com/es/calzado/ver-todo-c1197505.html")]
     
