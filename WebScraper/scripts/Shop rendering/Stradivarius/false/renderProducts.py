@@ -1,5 +1,6 @@
 import os, sys, time, shutil
 import color_finder, image_downloader, image_processor, color_translator
+from random import randint
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -187,7 +188,6 @@ for link in listOfLinks:
             result.write("  Color: " + color_name + "\n")
             
         except Exception as e:
-            print(str(e))
             result.write("*********************************************************\n")
             result.write("  Color: null\n")
             result.write("  Icono: null\n")
@@ -204,8 +204,10 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   R E F E R E N C I A ****** #
-            reference = dr.find_element_by_class_name("product-ref-details").text.replace("REF. ", "").replace("/", "").replace("| ver detalles", "").rstrip()
+            reference = dr.find_element_by_class_name("product-ref-details").text.replace("REF. ", "").replace("/", "-").replace("I2017 | Ver detalles", "").rstrip()
 
+            reference += str(randint(0, 9999));
+    
             if (len(reference) == 0):
                 raise Exception("Referencia vacia")
 

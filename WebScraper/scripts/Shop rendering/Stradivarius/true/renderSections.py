@@ -18,17 +18,18 @@ path = sys.argv[2]
 #path = "D:\\Documentos\\1. Cuoka\\Scraping\\shops\\Stradivarius\\false\\"
 
 # Lista de secciones con sus URL's
-urls = [("Camisas", "https://www.stradivarius.com/es/mujer/ropa/camisas/ver-todo-c1020047030.html"),
-        ("Cazadoras", "https://www.stradivarius.com/es/hombre/ropa/cazadoras-c1020084558.html"),
-        ("Blazers", "https://www.stradivarius.com/es/hombre/ropa/blazers-c1020084560.html"),
-        ("Parkas", "https://www.stradivarius.com/es/hombre/ropa/parkas-c1020084561.html"),
-        ("Camisetas", "https://www.stradivarius.com/es/hombre/ropa/camisetas-c1020084563.html"),
-        ("Polos", "https://www.stradivarius.com/es/hombre/ropa/polos-c1020084564.html"),
-        ("Sudaderas", "https://www.stradivarius.com/es/hombre/ropa/sudaderas-c1020084565.html"),
-        ("Pantalones", "https://www.stradivarius.com/es/hombre/ropa/pantalones-c1020084566.html"),
-        ("Bermudas", "https://www.stradivarius.com/es/hombre/ropa/bermudas-c1020084567.html"),
-        ("Punto", "https://www.stradivarius.com/es/hombre/ropa/punto-c1020084568.html"),
-        ("Vaqueros", "https://www.stradivarius.com/es/hombre/ropa/jeans-c1020084569.html")]
+urls = [("Abrigos", "https://www.stradivarius.com/es/hombre/ropa/abrigos-c1390578.html"),
+        ("Chaquetas", "https://www.stradivarius.com/es/hombre/ropa/chaquetas/ver-todo-c1710526.html"),
+        ("Piel", "https://www.stradivarius.com/es/hombre/ropa/piel-c1020081590.html"),
+        ("Parkas", "https://www.stradivarius.com/es/hombre/ropa/parkas-c1020081592.html"),
+        ("Bombers", "https://www.stradivarius.com/es/hombre/ropa/bombers-c1020081593.html"),
+        ("Punto", "https://www.stradivarius.com/es/hombre/ropa/punto-c1020081601.html"),
+        ("Camisas", "https://www.stradivarius.com/es/hombre/ropa/camisas-c1020081594.html"),
+        ("Camisetas", "https://www.stradivarius.com/es/hombre/ropa/camisetas-c1020081596.html"),
+        ("Sudaderas", "https://www.stradivarius.com/es/hombre/ropa/sudaderas-c1020081598.html"),
+        ("Pantalones", "https://www.stradivarius.com/es/hombre/ropa/pantalones/ver-todo-c1718537.html"),
+        ("Zapatos", "https://www.stradivarius.com/es/hombre/zapatos/todos-c1020081613.html"),
+        ("Jeans", "https://www.stradivarius.com/es/hombre/ropa/jeans/ver-todo-c1020081576.html")]
     
 chrome_options = Options()
 chrome_options.add_argument("--lang=es")

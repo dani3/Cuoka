@@ -14,7 +14,7 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Vestidos"
+#section = "Camisetas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
@@ -98,9 +98,11 @@ for link in listOfLinks:
 
     try:
         # ****** P R E C I O ****** #
-        price = dr.find_element_by_class_name("_product-price").text.replace(",", ".").replace("EUR", "")
+        price = dr.find_element_by_class_name("_product-price").text.replace(",", ".")
         if (len(price) == 0):
             raise Exception("Precio vacio")
+
+        price = price[:price.index(" EUR")]
 
         result.write("Precio: " + price + "\n")
         
@@ -111,7 +113,7 @@ for link in listOfLinks:
 
     try:
         # ****** D E S C U E N T O ****** #
-        discount = dr.find_element_by_class_name("price-value-not-found").text.replace(",", ".").replace("€", "")
+        discount = dr.find_element_by_css_selector("div._product-price > span.sale").text.replace(",", ".").replace("EUR", "")
         result.write("Descuento: " + discount + "\n")
         
     except:

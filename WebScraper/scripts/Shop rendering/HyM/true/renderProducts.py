@@ -13,12 +13,12 @@ path_to_chromedriver = sys.argv[1]
 
 # Nombre de la seccion
 section = sys.argv[2]
-#section = "Camisetas"
+#section = "Camisas"
 
 # Path donde se encuentra el script -> "C:\\..\\false\\"
 path = sys.argv[3]
 #path = "C:\\Users\\lux_f\\OneDrive\\Documentos\\shops\\HyM_true\\false\\"
-#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\true\\"
+#path = "C:\\Users\\Dani\\Documents\\shops\\HyM_true\\false\\"
 
 # Se recorre el fichero de links y se guardan en una lista
 listOfLinks = []
@@ -72,6 +72,12 @@ for link in listOfLinks:
         continue
 
     try:
+        dr.find_element_by_css_selector("div.cookie-notification button.close").click()
+    
+    except:
+        pass
+
+    try:
         # ****** N O M B R E ****** #
         name = dr.find_element_by_class_name('product-item-headline').text
         if (len(name) == 0):
@@ -92,15 +98,16 @@ for link in listOfLinks:
     except:
         result.write("Descripcion: null\n")
 
-    try:
+    try:        
         # ****** P R E C I O ****** #
-        price = dr.find_element_by_class_name("price-value").text.replace(",", ".").replace("€", "")
+        price = dr.find_element_by_css_selector("section.product-detail-meta div.product-detail-options div.product-item-price span.price-value").text.replace(",", ".").replace("€", "")
         if (len(price) == 0):
             raise Exception("Precio vacio")
 
         result.write("Precio: " + price + "\n")
         
-    except:
+    except Exception as e:
+        print(str(e))
         result.write("Precio: null\n")
         file_error.write("Precio no encontrado en: " + link + "\n")
         continue
@@ -132,9 +139,11 @@ for link in listOfLinks:
 
     for color in colors:
         try:
-            if (len(colors) > 1):   
+            if (len(colors) > 1):
+                time.sleep(1)
+                
                 # Hacemos click en cada icono
-                color.find_element_by_css_selector("img.pattern").click()
+                color.find_element_by_css_selector("a").click()
 
                 element = WebDriverWait(dr, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, "product-detail-main-image-container"))
@@ -150,7 +159,7 @@ for link in listOfLinks:
 
         try:
             # ****** C O L O R   N O M B R E ****** #
-            colorName = dr.find_element_by_css_selector("div.product-colors > div.product-input-label > span").text.upper().replace("/","-")
+            colorName = dr.find_element_by_css_selector("div.product-colors > div.product-input-label").text.upper().replace("/","-")
             if (len(colorName) == 0):
                 raise Exception("Nombre del color vacio")
 
