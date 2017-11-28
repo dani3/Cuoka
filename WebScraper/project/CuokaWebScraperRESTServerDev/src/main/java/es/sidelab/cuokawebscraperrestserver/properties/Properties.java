@@ -70,15 +70,10 @@ public class Properties
     
     /* Lista de tiendas de Descubre */
     public static final String POLAR_COMPANY = "Polar Company";
-    public static final String BLUEDIP = "Bluedip";
     
     /* Lista de estilos de cada tienda de Descubre */
     public static final List<String> POLAR_COMPANY_STYLES = 
         Arrays.asList(new String[] { "Trendy", "Hipster", "Urban" });
-    
-    /* Lista de estilos de cada tienda de Descubre */
-    public static final List<String> BLUEDIP_STYLES = 
-        Arrays.asList(new String[] { "Classic", "Sporty", "Urban", "Trendy" });
     
     /* Parametros para las busquedas */
     public static final double MAX_SIMILARITY_THRESHOLD    = 0.98f;
