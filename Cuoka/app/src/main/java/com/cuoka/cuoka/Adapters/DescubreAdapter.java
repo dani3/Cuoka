@@ -33,11 +33,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.DescubreShopViewHolder>
 {
+    /* Constants */
+    private static final int ANIM_DURATION = 250;
+    
     /* Context */
     private Context mContext;
 
     /* Data */
     private List<DescubreShop> mShopList;
+    private int mBannerWidth;
 
     public class DescubreShopViewHolder extends RecyclerView.ViewHolder
     {
@@ -62,6 +66,16 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
 
             mShopNameTextView        = (TextView) itemView.findViewById(R.id.descubre_shop_name);
             mShopDescriptionTextView = (TextView) itemView.findViewById(R.id.descubre_shop_description);
+
+            // Se guarda el ancho de la imagen una vez se vaya a mostrar en pantalla.
+            mShopBannerImageView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mBannerWidth = mShopBannerImageView.getWidth();
+                }
+            });
 
             mShopBannerImageView.setOnClickListener(new View.OnClickListener()
             {
@@ -114,7 +128,7 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
 
                     Animation fadeOut = new AlphaAnimation(0, 1);
                     fadeOut.setInterpolator(new AccelerateInterpolator());
-                    fadeOut.setDuration(250);
+                    fadeOut.setDuration(ANIM_DURATION);
                     mShopBannerImageView.startAnimation(fadeOut);
 
                     LOADED = true;
@@ -132,11 +146,12 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
                 @Override
                 public void onPrepareLoad(Drawable placeHolderDrawable)
                 {
+                    // Debido a que los ViewHolder se reciclan, eliminamos el Bitmap antiguo.
                     mShopBannerImageView.setImageBitmap(null);
 
                     // Establecemos la altura usando el AspectRatio del banner.
                     mShopBannerImageView.getLayoutParams().height =
-                            (int) (mShopBannerImageView.getWidth() * shop.getAspectRatio());
+                            (int) (mBannerWidth * shop.getAspectRatio());
 
                     // Establecemos un color de fondo aleatorio y un 25% de opacidad.
                     mShopBannerImageView.setBackgroundColor(
@@ -154,7 +169,7 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
 
                     Animation fadeOut = new AlphaAnimation(0, 1);
                     fadeOut.setInterpolator(new AccelerateInterpolator());
-                    fadeOut.setDuration(250);
+                    fadeOut.setDuration(ANIM_DURATION);
                     mShopLogoImageView.startAnimation(fadeOut);
                 }
 

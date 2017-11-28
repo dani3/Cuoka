@@ -84,27 +84,4 @@ public class SharedPreferencesManager
 
         return gson.fromJson(json, User.class);
     }
-
-    /**
-     * Metodo que devuelve si se debe mostrar el tour.
-     * @return true si se debe mostrar el tour.
-     */
-    public boolean retrieveTourVisited()
-    {
-        return mSharedPreferences.getBoolean(KEY_FIRST_USE, false);
-    }
-
-    /**
-     * Metodo que inserta si se ha visitado el tour.
-     * @param tourVisited: true si se ha visitado el tour
-     * @return true si se ha insertado correctamente.
-     */
-    public synchronized boolean insertTourVisited(boolean tourVisited)
-    {
-        mEditor = mSharedPreferences.edit();
-
-        mEditor.putBoolean(KEY_FIRST_USE, tourVisited);
-
-        return mEditor.commit();
-    }
 }
