@@ -20,6 +20,7 @@ import com.squareup.picasso.Target;
 import com.wallakoala.wallakoala.Beans.DescubreShop;
 import com.wallakoala.wallakoala.Properties.Properties;
 import com.wallakoala.wallakoala.R;
+import com.wallakoala.wallakoala.Utils.SharedPreferencesManager;
 import com.wallakoala.wallakoala.Utils.Utils;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
     /* Data */
     private List<DescubreShop> mShopList;
     private int mBannerWidth;
+    private boolean mMan;
 
     public class DescubreShopViewHolder extends RecyclerView.ViewHolder
     {
@@ -105,7 +107,7 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
             String fixedUrlLogo = Utils.fixUrl(
                 Properties.SERVER_URL + Properties.LOGOS_PATH + shop.getName() + "-logo.jpg");
             String fixedUrlBanner = Utils.fixUrl(
-                    Properties.SERVER_URL + Properties.BANNERS_PATH + shop.getUrlBanner() + "-banner.jpg");
+                    Properties.SERVER_URL + Properties.BANNERS_PATH + shop.getUrlBanner() + "-" + mMan +  "-banner.jpg");
 
             mShopNameTextView.setText(shop.getName());
             mShopDescriptionTextView.setText(shop.getDescription());
@@ -211,6 +213,10 @@ public class DescubreAdapter extends RecyclerView.Adapter<DescubreAdapter.Descub
         mContext = context;
 
         mShopList = shops;
+
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(mContext);
+
+        mMan = sharedPreferencesManager.retrieveUser().getMan();
     }
 
     @Override
