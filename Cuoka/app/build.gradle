@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'CuokaKey'
             keyPassword 'Millonarios2017'
-            storeFile file('C:/Users/Dani/Documents/keystores.jks')
+            storeFile file('C:/Users/danim/Documents/keystores.jks')
             storePassword 'Millonarios2017'
         }
     }
